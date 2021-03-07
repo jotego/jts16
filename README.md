@@ -6,6 +6,17 @@ SEGA System 16 compatible verilog core for FPGA by Jose Tejada (jotego).
 
 HSync/VSync (OSSC) 15.73kHz, 60.28Hz
 
+# Memory Size
+
+Item      |  Size (kB)
+----------|------------
+Main ROM  |  512
+Main RAM  |   16
+Object    |    2
+Palette   |    4
+Char      |    4
+Scroll    |   32 (?)
+
 # Support
 
 You can show your appreciation through
