@@ -24,6 +24,7 @@ module jts16_video(
 
     // CPU interface
     input              char_cs,
+    input              pal_cs,
     input      [12:1]  cpu_addr,
     input      [15:0]  cpu_dout,
     input      [ 1:0]  dsn,
@@ -110,6 +111,14 @@ jts16_colmix u_colmix(
     .clk       ( clk        ),
     .pxl2_cen  ( pxl2_cen   ),
     .pxl_cen   ( pxl_cen    ),
+
+    // CPU interface
+    .pal_cs    ( pal_cs         ),
+    .cpu_addr  ( cpu_addr[11:1] ),
+    .cpu_dout  ( cpu_dout       ),
+    .dsn       ( dsn            ),
+    .cpu_din   ( cpu_din        ),
+
 
     .LHBL      ( LHBL       ),
     .LVBL      ( LVBL       ),

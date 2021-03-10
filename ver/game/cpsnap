@@ -20,7 +20,7 @@ if [ ! -d $MAMESNAP ]; then
 else
     # copy latest snap file from MAME
     LATEST=$(ls $MAMESNAP/$1 -t | head -n 1)
-    mv $MAMESNAP/$LATEST $1/$2.png
+    cp $MAMESNAP/$LATEST $1/$2.png
 fi
 
 git add $1/*$2.bin $1/$2.png

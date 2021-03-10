@@ -114,7 +114,7 @@ wire [31:0]  char_data;
 wire [12:1]  cpu_addr;
 wire [15:0]  cpu_dout, cpu_din;
 wire [ 1:0]  dsn;
-wire         char_cs;
+wire         char_cs, pal_cs;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -136,6 +136,7 @@ jts16_video u_video(
     // CPU interface
     .cpu_addr   ( cpu_addr  ),
     .char_cs    ( char_cs   ),
+    .pal_cs     ( pal_cs    ),
     .cpu_dout   ( cpu_dout  ),
     .dsn        ( dsn       ),
     .cpu_din    ( cpu_din   ),

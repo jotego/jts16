@@ -193,13 +193,13 @@ void JTSim::clock(int n) {
 
 void JTSim::video_dump() {
     if( game.pxl_cen && game.LHBL_dly && game.LVBL_dly ) {
-        int red   = game.red   & 0xf;
-        int green = game.green & 0xf;
-        int blue  = game.blue  & 0xf;
+        int red   = game.red   & 0x1f;
+        int green = game.green & 0x1f;
+        int blue  = game.blue  & 0x1f;
         int mix = 0xFF000000 |
-            ( ((blue<<4)|blue)   << 16 ) |
-            ( ((green<<4)|green) <<  8 ) |
-            ( ((red<<4)|red)           );
+            ( ((blue <<3)|(blue>>2 )) << 16 ) |
+            ( ((green<<3)|(green>>2)) <<  8 ) |
+            ( ((red  <<3)|(red>>2))         );
         dump.buffer[dump.ptr++] = mix;
         if( dump.ptr==256 ) {
             dump.fout.write( (char*)dump.buffer, VIDEO_BUFLEN*4 );

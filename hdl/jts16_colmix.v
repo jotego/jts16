@@ -25,6 +25,13 @@ module jts16_colmix(
     input              LHBL,
     input              LVBL,
 
+    // CPU interface
+    input              pal_cs,
+    input      [11:1]  cpu_addr,
+    input      [15:0]  cpu_dout,
+    input      [ 1:0]  dsn,
+    output     [15:0]  cpu_din,
+
     input  [6:0]       char_pxl,
 
     output [4:0]       red,
@@ -34,11 +41,59 @@ module jts16_colmix(
     output             LHBL_dly
 );
 
-assign LVBL_dly = LVBL;
-assign LHBL_dly = LHBL;
+wire [ 1:0] we;
+wire [10:0] pal_addr;
+wire [15:0] pal;
+wire [14:0] rgb;
 
-assign red   = {1'b0, char_pxl[2:0],1'b0 };
-assign green = {1'b0, char_pxl[2:0],1'b0 };
-assign blue  = {1'b0, char_pxl[2:0],1'b0 };
+assign we = ~dsn & {2{pal_cs}};
+
+assign red   = { rgb[ 3:0], rgb[12] };
+assign green = { rgb[ 7:4], rgb[13] };
+assign blue  = { rgb[11:8], rgb[14] };
+
+assign pal_addr = { 5'd0, char_pxl[5:0] };
+
+jtframe_dual_ram #(.aw(11),.simfile("pal_lo.bin")) u_low(
+    // CPU writes
+    .clk0   ( clk           ),
+    .addr0  ( cpu_addr      ),
+    .data0  ( cpu_dout[7:0] ),
+    .we0    ( we[0]         ),
+    .q0     ( cpu_din[7:0]  ),
+    // Video reads
+    .clk1   ( clk           ),
+    .addr1  ( pal_addr      ),
+    .data1  (               ),
+    .we1    ( 1'b0          ),
+    .q1     ( pal[7:0]      )
+);
+
+jtframe_dual_ram #(.aw(11),.simfile("pal_hi.bin")) u_hi(
+    // CPU writes
+    .clk0   ( clk           ),
+    .addr0  ( cpu_addr      ),
+    .data0  ( cpu_dout[7:0] ),
+    .we0    ( we[0]         ),
+    .q0     ( cpu_din[7:0]  ),
+    // Video reads
+    .clk1   ( clk           ),
+    .addr1  ( pal_addr      ),
+    .data1  (               ),
+    .we1    ( 1'b0          ),
+    .q1     ( pal[15:8]     )
+);
+
+jtframe_blank #(.DLY(8),.DW(15)) u_blank(
+    .clk        ( clk       ),
+    .pxl_cen    ( pxl_cen   ),
+    .LHBL       ( LHBL      ),
+    .LVBL       ( LVBL      ),
+    .LHBL_dly   ( LHBL_dly  ),
+    .LVBL_dly   ( LVBL_dly  ),
+    .preLBL     (           ),
+    .rgb_in     ( pal[14:0] ),
+    .rgb_out    ( rgb[14:0] )
+);
 
 endmodule

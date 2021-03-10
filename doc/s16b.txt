@@ -997,7 +997,7 @@
  Text layer name table format:
 
  MSB          LSB
- p???cccnnnnnnnnn
+ p???cccn nnnn nnnn
 
  p : Priority. If 0, sprites with priority level 3 are shown over the text.
      If 1, the text layer is shown over sprites regardless of priority.

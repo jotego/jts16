@@ -1,8 +1,33 @@
 #!/bin/bash
 
-drop1    < shinobi/char1.bin > char_hi.bin
-drop1 -l < shinobi/char1.bin > char_lo.bin
+GAME=shinobi
+SCENE=1
+OTHER=
+
+while [ $# -gt 0 ]; do
+    case $1 in
+    	-s)
+            shift
+    		SCENE=$1;;
+    	*)
+            OTHER="$OTHER $1";;
+    esac
+    shift
+done
+
+echo "Simulating scene $SCENE"
+
+if [ ! -e $GAME/char$SCENE.bin ]; then
+    echo Cannot open scene files
+    exit 1
+fi
+
+drop1    < $GAME/char${SCENE}.bin > char_hi.bin
+drop1 -l < $GAME/char${SCENE}.bin > char_lo.bin
+
+drop1    < $GAME/pal${SCENE}.bin > pal_hi.bin
+drop1 -l < $GAME/pal${SCENE}.bin > pal_lo.bin
 
 jtsim -mist -sysname s16 -verilator \
 	-videow 320 -videoh 224 \
-    -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $*
+    -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER
