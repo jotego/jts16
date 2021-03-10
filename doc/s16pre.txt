@@ -1,0 +1,872 @@
+ Sega Pre-System 16 hardware notes
+ by Charles MacDonald
+ WWW: http://cgfm2.emuviews.com
+
+ Unpublished work Copyright 2003-2004 Charles MacDonald
+
+ This document is in a very preliminary state and is subject to change.
+ Most everything within has been tested and verified on a Pre-System 16 board,
+ but please be aware that my testing methods or interpretations of
+ results could be flawed. I can't guarantee that everything is 100% accurate.
+
+ Last updated: 03/29/2004.
+
+ ----------------------------------------------------------------------------
+ Overview
+ ----------------------------------------------------------------------------
+
+ The Pre-System 16 hardware is the unofficial name given to one of Sega's
+ 16-bit platforms that was introduced between the Hang-On and System 16A
+ boards.
+
+ From a programming point of view it is very similar to System 16, with
+ less RAM and different sprite / sound hardware.
+
+ Main CPU       68000
+ Sound CPU      Z80
+ Sample CPU     N7751
+ Sound hardware YM2151, YM3012
+                Signed 8-bit DAC
+
+ Memory         68K work RAM    16K
+                Z80 work RAM    2K
+                Tile RAM        32K
+                Text RAM        4K
+                Color RAM       4K
+                Sprite RAM      2K
+                Line buffers    512x12-bit (x2)
+
+ Game list:
+
+ Name               Year    CPU     MCU         Program         Notes
+
+ Alien Syndrome     1987    68000   ?           ?               None
+ Body Slam          1987    68000   317-0015    10063-10068     None
+ Dump Matsumoto     1987    68000   ?           ?               None
+ Major League       1985    68000   ?           ?               Watchdog enabled
+ Quartet            1987    68000   317-00??    07455-07459     None
+ Quartet 2          1987    68000   317-0010    07692-07697     None
+
+ There may be another version of Alien Syndrome on this hardware.
+
+ Body Slam is the export version of Dump Matsumoto.
+
+ Quartet is a 4-player game, Quartet 2 is a 2-player variation of the
+ original one.
+
+ ----------------------------------------------------------------------------
+ Timing
+ ----------------------------------------------------------------------------
+
+ 68000      10.000 MHz      Part is MC68000P10 (rated for 10 MHz)
+ Z80         4.000 MHz      Part is uPD780C-1 (Z80-A clone, rated for 4 MHz)
+ N7751       6.000 MHz      Part is uPD7751 (8048 clone)
+ 8751        8.000 MHz      Has a clock divider (runs at 4.000 MHz)
+ YM2151      4.000 MHz
+
+ There are two clock signals used by the video hardware:
+
+ 12.587400 MHz  Sprite line buffer render clock
+  6.293700 MHz  Sprite line buffer scan/erase and pixel clock
+
+ This gives about 800.75 ticks of the 12 MHz clock per scanline for sprite
+ processing, similar to the System 16 hardware.
+
+ ----------------------------------------------------------------------------
+ 68000 memory map
+ ----------------------------------------------------------------------------
+
+ The address decoding PAL @ 8J uses 68000 A23, A22, A18, A17 directly and
+ buffered A16 which is controlled by the current bus master (68000 or MCU).
+ Because of the partial decoding, the address space is divided into four
+ regions of eight 64K banks:
+
+ 00 : Program ROM pairs ROM0-E, ROM0-O
+ 01 : Program ROM pairs ROM1-E, ROM1-O
+ 02 : Program ROM pairs ROM2-E, ROM2-O
+ 03 : Lock up when accessed
+ 04 : Lock up when accessed
+ 05 : Lock up when accessed
+ 06 : Lock up when accessed
+ 07 : Lock up when accessed
+
+ Repeat for banks 08 through 3F.
+
+ If 27512's are used instead, there is most likely a jumper on the board
+ or a different PAL is needed to increase the size of each ROM area to 128K.
+
+ 40 : Tile RAM (32K)
+ 41 : Text RAM (4K)
+ 42 : Unused (returns $FFFF when read)
+ 43 : Unused (returns $FFFF when read)
+ 44 : Sprite RAM (2K)
+ 45 : Sprite RAM (2K)
+ 46 : Sprite RAM (2K)
+ 47 : Sprite RAM (2K)
+
+ Repeat for banks 48 through 7F.
+
+ Some games test $430000 to see if it returns zero in the memory test, if so
+ the chips are printed with their IC numbers rather than their relative
+ position on the main board.
+
+ 80 : Lock up when accessed
+ 81 : Lock up when accessed
+ 82 : Lock up when accessed
+ 83 : Lock up when accessed
+ 84 : Color RAM (4K)
+ 85 : Color RAM (4K)
+ 86 : Color RAM (4K)
+ 87 : Color RAM (4K)
+
+ Repeat for banks 88 through BF.
+
+ C0 : Tile RAM  (32K)
+ C1 : Text RAM  (4K)
+ C2 : Unused (returns $FFFF when read)
+ C3 : Unused (returns $FFFF when read)
+ C4 : I/O area
+ C5 : I/O area
+ C6 : $FFFF
+ C7 : Work RAM  (16K)
+
+ Repeat for banks C8 through FF.
+
+ Major League accesses a watchdog at $C60000. The hardware does seem to have
+ a jumper to enable the watchdog which is composed of a counter connected
+ to the reset generator. This seems to be disabled (jumper shorted) in all
+ other games.
+
+ The officially used address ranges are:
+
+ 400000-407FFF : Tile RAM
+ 410000-410FFF : Text RAM
+ 440000-4407FF : Sprite RAM
+ 840000-840FFF : Color RAM
+ C40000-C42FFF : I/O region
+ FFC000-FFFFFF : Work RAM
+
+ I/O hardware
+
+ The Pre-System 16 I/O hardware consists of two read-only DIP switches,
+ four read-only I/O ports, and a 8255 PPI which manages Z80 communication
+ and control of several output signals.
+
+ Memory map for banks C4, C5:
+
+ 0000-0FFF : 8255 PPI registers
+ 1000-1FFF : Input ports 0,1,2,3
+ 2000-2FFF : DIP switches 0,1
+ 3000-3FFF : Unused (returns $FFFF when read)
+
+ The PPI register, input ports, and DIP switches are mapped to odd bytes
+ within their respective ranges. All bits of the input ports and DIP
+ switches are active-low.
+
+ Reading the control register returns $FF/$F7 randomly. Some versions of
+ the 8255 have a readable control register, others have it mirror port C,
+ and some always return $FF (or are supposed to). I think the NEC uPD82C55
+ part used in the Pre-System 16 hardware falls in the latter category.
+
+ The officially used addresses are:
+
+ $C40001 : PPI port A
+ $C40003 : PPI port B
+ $C40005 : PPI port C
+ $C40007 : PPI control
+ $C41001 : Input port #0
+ $C41003 : Input port #1
+ $C41005 : Input port #2
+ $C41007 : Input port #3
+ $C42001 : DIP switch #2
+ $C42003 : DIP switch #1
+
+ Register summary
+
+ $0001 : Input port #0
+
+ D7 : Pin a
+ D6 : Pin Z
+ D5 : Pin Y
+ D4 : Pin X
+ D3 : Pin 23
+ D2 : Pin 22
+ D1 : Pin 21
+ D0 : Pin 20
+
+ $0003 : Input port #1
+
+ D7 : Pin 15
+ D6 : Pin 14
+ D5 : Pin 13
+ D4 : Pin 12
+ D3 : Pin 11
+ D2 : Pin 10
+ D1 : Pin 9
+ D0 : Pin 8
+
+ $0005 : Input port #2
+
+ D7 : Pin W
+ D6 : Pin V
+ D5 : Pin U
+ D4 : Pin T
+ D3 : Pin 19
+ D2 : Pin 18
+ D1 : Pin 17
+ D0 : Pin 16
+
+ $0007 : Input port #3
+
+ D7 : Pin S
+ D6 : Pin R
+ D5 : Pin P
+ D4 : Pin N
+ D3 : Pin M
+ D2 : Pin L
+ D1 : Pin K
+ D0 : Pin J
+
+ DIP switches
+
+ $2001 : DIP switch #2
+
+ D7 : Switch #1 (0= on, 1= off)
+ D6 : Switch #2 (0= on, 1= off)
+ D5 : Switch #3 (0= on, 1= off)
+ D4 : Switch #4 (0= on, 1= off)
+ D3 : Switch #5 (0= on, 1= off)
+ D2 : Switch #6 (0= on, 1= off)
+ D1 : Switch #7 (0= on, 1= off)
+ D0 : Switch #8 (0= on, 1= off)
+
+ $2003 : DIP switch #1
+
+ D7 : Switch #1 (0= on, 1= off)
+ D6 : Switch #2 (0= on, 1= off)
+ D5 : Switch #3 (0= on, 1= off)
+ D4 : Switch #4 (0= on, 1= off)
+ D3 : Switch #5 (0= on, 1= off)
+ D2 : Switch #6 (0= on, 1= off)
+ D1 : Switch #7 (0= on, 1= off)
+ D0 : Switch #8 (0= on, 1= off)
+
+ PPI port A
+
+ Port A is a bidirectional communication port in PPI mode 2 used to send
+ sound commands to the Z80. In all implementations I've seen, the port is
+ used in a write-only way.
+
+ PPI port B
+
+ D7 : Screen flip (1= flip, 0= normal orientation)
+ D6 : To 8751 pin 13 (/INT1)
+ D5 : To 315-5149 pin 17.
+ D4 : Screen enable (1= display, 0= blank)
+ D3 : Lamp #2 (1= on, 0= off)
+ D2 : Lamp #1 (1= on, 0= off)
+ D1 : Coin meter #2
+ D0 : Coin meter #1
+
+ When the screen is flipped, sprite are not flipped vertically. To do this,
+ the bank offset has to be set to the start of the last line in the sprite,
+ and the pitch should be set to a negative value. This bit is latched at
+ the start of each scanline.
+
+ Bit 6 is used to trigger an interrupt on the MCU. It could probably be
+ used as a generic input as well.
+
+ Bit 5 doesn't seem to affect the text or sprite layers when set, the PAL
+ it is connected to is in the sprite / timing section. Normally set to 0.
+
+ Bit 4 is latched by the hardware at each pixel. When the screen is blanked,
+ the color data being output to the video DAC is all zero (black).
+
+ The coin meters are incremented by the positive-going edge of the outputs
+ from bits 1,0.
+
+ PPI port C
+
+ D7 : Port A handshaking signal /OBF
+ D6 : Port A handshaking signal ACK
+ D5 : Port A handshaking signal IBF
+ D4 : Port A handshaking signal /STB
+ D3 : Port A handshaking signal INTR
+ D2 : To PAL 315-5107 pin 9 (SCONT1)
+ D1 : To PAL 315-5108 pin 19 (SCONT0)
+ D0 : To MUTE input on MB3733 amplifier.
+      0= Sound is disabled
+      1= sound is enabled
+
+ Bits 7-3 are used by the PPI chip to manage handshaking for port A.
+ This register is initialized to $07 in all games I have examined.
+
+ ----------------------------------------------------------------------------
+ Sprites
+ ----------------------------------------------------------------------------
+
+ The sprite hardware is similar to both Hang-On and System 16, with some
+ minor differences.
+
+ Sprite RAM is 2K in size and holds a list of 128 16-byte entries. Each
+ entry defines a single sprite.
+
+ Sprite entries are parsed from the start of the list to the end, with
+ subsequent sprites overwriting the previously drawn ones. This processing
+ occurs on each scanline,
+
+ Sprites are drawn into a line buffer with 512 12-bit entries. There are
+ two line buffers for double-buffering; on each line sprite data is rendered
+ into one buffer at 12 MHz, while the other is scanned out to the display
+ and simultaneously erased at 6 MHz.
+
+ Sprite entry format:
+
+ 00: bbbbbbbbtttttttt   b= Bottom line, t= Top line
+ 02: -------xxxxxxxxx   x= Horizontal position
+ 04: pppppppppppppppp   p= Pitch
+ 06: haaaaaaaaaaaaaaa   h= Horizontal flip enable, a= Bank offset
+ 08: --cccccc-bbb--pp   c= Palette, b= Bank select, p= Priority
+ 0A: rrrrrrrrrrrrrrrr   r= Current offset
+ 0C: ----------------
+ 0E: ----------------
+
+ The top and bottom lines define which scanlines the sprite is shown on.
+ The visible range of sprites is 0 to 223.
+
+ If the bottom line is equal to or bigger than 0xF0, the current sprite
+ being processed and all subsequent sprites are not displayed.
+
+ If the bottom line is equal to or bigger than the top line, the sprite
+ is not displayed at all.
+
+ The horizontal position ranges from 0x00BD (pixel 0 of display area) to
+ 0x01FC (pixel 319 of display area)
+
+ The pitch seems to be a 16-bit value. This is unique to the Pre-System 16
+ hardware, in (all?) other Sega games it's a signed 8-bit value.
+
+ The bank offset word is an index into the currently selected 64K bank of
+ sprite data. The bank offset word is copied to the current offset word when
+ drawing the first line of the sprite, and then the current offset word is
+ used as the start address for all subsequent lines the sprite is shown on.
+
+ The priority bits define the sprite priority when being mixed in with the
+ two background layers and text layer:
+
+ D1 D0
+  0  0 : Sprite is behind BG, FG, TXT
+  0  1 : Sprite is over BG, behind FG, TXT
+  1  0 : Sprite is over BG, FG, behind TXT
+  1  1 : Sprite is over BG, FG, TXT
+
+ This example assumes the other layers have the priority bits cleared.
+
+ Sprite banking
+
+ The ROM board uses bits 1,0 to select one of the four ROM pairs. Bit 2
+ is either unused (27256) or connected to ROM A15 (27512). Here is a list
+ of all possible values
+
+ D2 D1 D0   Selected ROM / offset
+
+  0  0  0   OBJ0 $0000-$7FFF
+  0  0  1   OBJ1 $0000-$7FFF
+  0  1  0   OBJ2 $0000-$7FFF
+  0  1  1   OBJ3 $0000-$7FFF
+  1  0  0   OBJ0 $8000-$FFFF
+  1  0  1   OBJ1 $8000-$FFFF
+  1  1  0   OBJ2 $8000-$FFFF
+  1  1  1   OBJ3 $8000-$FFFF
+
+ Words 6, 7 are unused.
+
+ /VENW from pin 18 of 315-5012 is the clock signal used by two hex latches
+ to load the palette / bank / priority word. Bits 15,14,7,3,2 are not used
+ by the hardware.
+
+ However, setting bits 15 through 12 of word 5 seemed to hide all sprites on
+ the same line the current sprite was being shown on. I can't get this to
+ work reliably, it may have been a bug in my test program.
+
+ Notice there is no support for sprite zooming. The closely related Hang-On
+ hardware has a ROM to look up zoom values which is not present in the
+ Pre-System 16 hardware.
+
+ ----------------------------------------------------------------------------
+ ROM board
+ ----------------------------------------------------------------------------
+
+ The standard ROM board has the following layout:
+
+ [1]   [2]   [3]   [4]   [5]   [6]   [7]   [8]   [9]   [10]  [11]
+
+ Z80   OBJ0E OBJ1E OBJ2E OBJ3E ROM0O ROM1O ROM2O ROM0E ROM1E ROM2E [B ROW]
+
+ SAM0  SAM1  SAM2  SAM3  OBJ0O OBJ1O OBJ2O OBJ3O SCR0  SCR1  SCR2  [C ROW]
+
+ Each ROM is a 27256. The board supports 27512's for everything but the
+ sample ROMs through jumpers, however there are no games that use them.
+ Also, it isn't clear how the system would know how to change the program
+ ROM layout if 27512's were used (there may be a jumper on the board for
+ this).
+
+ The four jumpers for determining ROM size are:
+
+ JP1 - 68K program ROM size (27256 or 27512)
+ JP2 - Object ROM size      (27256 or 27512)
+ JP3 - Z80 ROM size         (27256 or 27512)
+ JP4 - Tile ROM size        (27256 or 27512)
+
+ The jumpers connect pin 1 of the ROM socket which is VPP (27256) or A15
+ (27512) to a high-order address line from the 68000 / sprite generator
+ / Z80 / tilemap generator, or ground.
+
+ ----------------------------------------------------------------------------
+ Sound hardware
+ ----------------------------------------------------------------------------
+
+ A Z80 is used to manage a YM2151 and send requests to the N7751, which
+ drives a 8-bit signed DAC for sample playback.
+
+ Memory map
+
+ 0000-7FFF : Program ROM
+ 8000-F7FF : ?
+ F800-FFFF : Work RAM
+
+ I/O port map
+
+ 00-3F     : YM2151 register data (even addresses)
+             YM2151 register select (odd addresses)
+ 40-7F     : ?
+ 80-BF     : N7751 control latch (write-only).
+ C0-FF     : PPI port A for bidirectional communication with the 68000.
+             Used to read sound commands, accessing ports C0-FF strobes
+             the /ACK pin on the PPI.
+
+ N7751 control latch format:
+
+ D7 : N7751 sample number request (S2)
+ D6 : N7751 sample number request (S1)
+ D5 : N7751 sample number request (S0)
+ D4 : Sample ROM #0 enable (/SAM0_CS)
+ D3 : Sample ROM #1 enable (/SAM1_CS)
+ D2 : Sample ROM #2 enable (/SAM2_CS)
+ D1 : Sample ROM #3 enable (/SAM3_CS)
+ D0 : Currently enabled sample RAM A14
+
+ Writing to this register selects a sample ROM and 16K offset into the ROM.
+ If more than one ROM is enabled, there is bus contention and garbage data
+ is returned. If no ROMs are enabled, then nothing is driving the bus and
+ I think the last valid data left on the N7751 'BUS' input is returned.
+
+ N7751 interface
+
+ /RST = From YM2151 CT2
+ /INT = From YM2151 CT1
+ T1   = Ground
+ T0   = Ground
+ BUS  = Sample ROM data bus
+
+ P7.3 = (N.C.)
+ P7.2 = (N.C.)
+ P7.1 = Sample ROM A13
+ P7.0 = Sample ROM A12
+
+ P6.3 = Sample ROM A11
+ P6.2 = Sample ROM A10
+ P6.1 = Sample ROM A9
+ P6.0 = Sample ROM A8
+
+ P5.3 = Sample ROM A7
+ P5.2 = Sample ROM A6
+ P5.1 = Sample ROM A5
+ P5.0 = Sample ROM A4
+
+ P4.3 = Sample ROM A3
+ P4.2 = Sample ROM A2
+ P4.1 = Sample ROM A1
+ P4.0 = Sample ROM A0
+
+ P2.7 = (N.C.)
+ P2.6 = S2 (74LS373 Q7, Z80 D7)
+ P2.5 = S1 (74LS373 Q6, Z80 D6)
+ P2.4 = S0 (74LS373 Q5, Z80 D5)
+ P2.3 = 8243 AD3
+ P2.2 = 8243 AD2
+ P2.1 = 8243 AD1
+ P2.0 = 8243 AD0
+
+ P1.7 = DAC bit 7
+ P1.6 = DAC bit 6
+ P1.5 = DAC bit 5
+ P1.4 = DAC bit 4
+ P1.3 = DAC bit 3
+ P1.2 = DAC bit 2
+ P1.1 = DAC bit 1
+ P1.0 = DAC bit 0
+
+ The Z80 code in most games manages sample playback like so:
+
+ - Pulse bit 6 of YM2151 register $1B (CT2 - /RST) to reset the N7751.
+
+ - When sound command corresponding to a sample is received, store in
+   buffer with eight entries. If no free entries, drop sample.
+ - Go through buffer and trigger samples sounds from start to end if there
+   are any present:
+
+ - Output sample # (0-7), ROM offset, and ROM select to port $80.
+
+ - Pulse bit 7 of YM2151 register $1B (CT1 - /INT) to trigger an interrupt
+   on the N7751.
+
+ I have confirmed the following connections:
+
+ YM2151 pin 8 (CT1) to N7751 pin 6 (/INT, labeled 'START')
+ YM2151 pin 9 (CT2) to N7751 pin 4 (/RST, labeled 'RESET')
+
+ Body Slam expects bit 7 of YM2151 register $1B to control /INT, and bit 6
+ to control /RST. This would seem to be reversed from some documentation
+ I've seen about the YM2151. Any ideas?
+
+ ----------------------------------------------------------------------------
+ 8751 MCU
+ ----------------------------------------------------------------------------
+
+ The Pre-System 16 hardware uses a 8751 MCU for protection, which is tied
+ in to several parts of the system and is required for the board to operate.
+
+ Some later Sega games have a plug-in board with some TTL parts to mimic
+ what the MCU does, to allow unprotected games to run. There may be
+ something like this for the Pre-System 16 hardware, but I think all games
+ released for it are in fact protected.
+
+ After power-up, the 68000 is able to run for a few thousand cycles or so
+ before the MCU kicks in. This may depend more on the MCU program code than
+ any delays in the hardware.
+
+ The 315-0015 MCU on my Body Slam board does the following:
+
+ - Halt 68000 (which has been running for a bit beforehand)
+ - Set up palette
+ - Show warm-up counter in middle of the text layer.
+   I think it's checksumming the ROMs during this time.
+ - Let 68000 continue to run
+
+ During gameplay it updates a timer in work RAM at $FFC200, which the game
+ logic uses to time rounds. There are some other visual differences between
+ Body Slam in an emulator and running on the real hardware, so it may
+ control other aspects of the system.
+
+ Here is a more technical description of the MCU interface:
+
+ /EA/VPP = Pull-up resistor to +5V.
+ P1.0    = 68000 /IPL0
+ P1.1    = 68000 /IPL1
+ P1.2    = 68000 /IPL2
+ P1.3    = To pin 7 of PAL @ 8J (memory bank select bit)
+ P1.4    = To pin 8 of PAL @ 8J (memory bank select bit)
+ P1.5    = To pin 9 of PAL @ 8J (memory bank select bit)
+ P1.6    = To pin 11 of PAL @ 8J (memory bank select bit)
+ P1.7    = N.C.
+ P3.0    = 68000 /HALT
+ P3.1    = 68000 /BERR
+ P3.2    = Interrupt input from 74LS192 @ 2H. (/INT0)
+ P3.3    = Interrupt input from PPI PC6. (/INT1)
+ P3.4    = To TTL logic to control some kind of counter. (T0)
+ P3.5    = Gated with ALE to enable latching LSB of MCU address bus. (T1)
+ P3.6    = External memory read strobe.
+ P3.7    = External memory write strobe.
+ P0,P2   = Multiplexed data and address bus.
+
+ Quartet pulses bit 6 of PPI port C, which is done to trigger interrupts
+ to the MCU. Most games leave bit 6 set (no interrupt).
+
+ I think the TTL parts feeding /INT0 are from the timing section which
+ generates the V-Blank interrupt signal, as the MCU controls 68000 interrupts
+ directly (using level 4 autovector for V-Blank) and has no other inputs.
+
+ The lower 17 bits of the 68000 address bus are buffered and can be controlled
+ by the MCU. The remaining ones are fed to an address decoding PAL which
+ also has a direct connection from the MCU. (Note that the PAL also receives
+ buffered A16, which the MCU or 68000 can control)
+
+ The MCU uses it's 64K external memory space in an unusual way; bits 15-1
+ correspond to 68000 address bits 15-1, address bit 0 is 68000 address bit
+ 16. There is some additional logic to simulate a 16-bit address bus on
+ the MCU side with two pairs of latches for reads/writes.
+
+ ----------------------------------------------------------------------------
+ ROM connector pinouts
+ ----------------------------------------------------------------------------
+
+ ROMx   68K program ROM pair 0,1,2
+ OBJ    Sprite ROM pair
+ SOUND  Z80 program ROM
+ SCR    Tile ROM
+ SAM    Sample ROM
+
+ CNA (2x20 pin)
+
+ A01 - +5V
+ B01 - +5V
+ A02 - +5V
+ B02 - +5V
+ A03 - ROMx-E D1
+ B03 - ROMx-E D0
+ A04 - ROMx-E D3
+ B04 - ROMx-E D2
+ A05 - ROMx-E D5
+ B05 - ROMx-E D4
+ A06 - ROMx-E D7
+ B06 - ROMx-E D6
+ A07 - ROMx-x A1
+ B07 - ROMx-x A0
+ A08 - ROMx-x A3
+ B08 - ROMx-x A2
+ A09 - ROMx-x A5
+ B09 - ROMx-x A4
+ A10 - ROMx-x A7
+ B10 - ROMx-x A6
+ A11 - ROMx-x A9
+ B11 - ROMx-x A8
+ A12 - ROMx-x A11
+ B12 - ROMx-x A10
+ A13 - ROMx-x A13
+ B13 - ROMx-x A12
+ A14 - ROMx-x A15 (To JP1)
+ B14 - ROMx-x A14
+ A15 - N.C.
+ B15 - ROM2-O,E /OE
+ A16 - N.C.
+ B16 - ROM1-O,E /OE
+ A17 - Sprite bank bit 2 (To JP2)
+ B17 - ROM0-O,E /OE
+ A18 - Sprite bank bit 1
+ B18 - N.C.
+ A19 - Sprite bank bit 0
+ B19 - ROMx-O,E /CS (all pairs)        68000 /RD, buffered
+ A20 - ROMx-O D1
+ B20 - ROMx-O D0
+ A21 - ROMx-O D3
+ B21 - ROMx-O D2
+ A22 - ROMx-O D5
+ B22 - ROMx-O D4
+ A23 - ROMx-O D7
+ B23 - ROMx-O D6
+ A24 - Ground
+ B24 - Ground
+ A25 - Ground
+ B25 - Ground
+
+ CNB (2x20 pin)
+
+ A01 - Ground
+ B01 - Ground
+ A02 - Ground
+ B02 - Ground
+ A03 - OBJO D0
+ B03 - OBJO D4
+ A04 - OBJO D5
+ B04 - OBJO D1
+ A05 - OBJO D2
+ B05 - OBJO D6
+ A06 - OBJO D3
+ B06 - OBJO D7
+ A07 - OBJE D0
+ B07 - OBJE D4
+ A08 - OBJE D1
+ B08 - OBJE D5
+ A09 - OBJE D6
+ B09 - OBJE D2
+ A10 - OBJE D7
+ B10 - OBJE D3
+ A11 - SOUND D3
+ B11 - SOUND D4
+ A12 - SOUND D5
+ B12 - SOUND D6
+ A13 - SOUND D7
+ B13 - SOUND /CE
+ A14 - SOUND A10
+ B14 - SOUND A14
+ A15 - SOUND A13
+ B15 - SOUND A8
+ A16 - SOUND A9
+ B16 - SOUND A11
+ A17 - SOUND /OE (actually Z80 /RD, unbuffered)
+ B17 - SOUND D2
+ A18 - SOUND D1
+ B18 - SOUND D0
+ A19 - SOUND A0
+ B19 - SOUND A1
+ A20 - SOUND A2
+ B20 - SOUND A3
+ A21 - SOUND A4
+ B21 - SOUND A5
+ A22 - SOUND A6
+ B22 - SOUND A7
+ A23 - SOUND A15 (To JP3)
+ B23 - SOUND A12
+ A24 - +5V
+ B24 - +5V
+ A25 - +5V
+ B25 - +5V
+
+ CNC (2x20 pin)
+
+ A01 - +5V
+ B01 - +5V
+ A02 - +5V
+ B02 - +5V
+ A03 - SCR2 D4
+ B03 - SCR2 D1
+ A04 - SCR2 D5
+ B04 - SCR2 D0
+ A05 - SCR2 D3
+ B05 - SCR2 D2
+ A06 - SCR2 D6
+ B06 - SCR2 D7
+ A07 - SCR A4
+ B07 - SCR A3
+ A08 - SCR A6
+ B08 - SCR A5
+ A09 - SCR A7
+ B09 - SCR A8
+ A10 - SCR A9
+ B10 - SCR A10
+ A11 - SCR A0
+ B11 - SCR A1
+ A12 - SCR A2
+ B12 - SCR A14
+ A13 - SCR A11
+ B13 - SCR A13
+ A14 - SCR A15 (To JP4)
+ B14 - SCR A12
+ A15 - N.C.
+ B15 - N.C.
+ A16 - SCR1 D5
+ B16 - SCR1 D4
+ A17 - SCR1 D1
+ B17 - SCR1 D0
+ A18 - SCR1 D3
+ B18 - SCR1 D2
+ A19 - SCR1 D6
+ B19 - SCR1 D7
+ A20 - SCR0 D6
+ B20 - SCR0 D7
+ A21 - SCR0 D4
+ B21 - SCR0 D5
+ A22 - SCR0 D2
+ B22 - SCR0 D3
+ A23 - SCR0 D0
+ B23 - SCR0 D1
+ A24 - Ground
+ B24 - Ground
+ A25 - Ground
+ B25 - Ground
+
+ CND (2x20 pin)
+
+ A01 - Ground
+ B01 - Ground
+ A02 - Ground
+ B02 - Ground
+ A03 - OBJ A14
+ B03 - OBJ A13
+ A04 - OBJ A9
+ B04 - OBJ A8
+ A05 - OBJ A10
+ B05 - OBJ A11
+ A06 - OBJ A12
+ B06 - OBJ A6
+ A07 - OBJ A0
+ B07 - OBJ A1
+ A08 - OBJ A4
+ B08 - OBJ A5
+ A09 - OBJ A7
+ B09 - OBJ A3
+ A10 - OBJ A2
+ B10 - SAM D7
+ A11 - SAM0 /CS
+ B11 - SAM D6
+ A12 - SAM1 /CS
+ B12 - SAM D5
+ A13 - SAM A7
+ B13 - SAM D4
+ A14 - SAM A6
+ B14 - SAM D3
+ A15 - SAM A5
+ B15 - SAM D2
+ A16 - SAM A8
+ B16 - SAM D1
+ A17 - SAM A9
+ B17 - SAM D0
+ A18 - SAM A13
+ B18 - SAM A3
+ A19 - SAM A10
+ B19 - SAM A2
+ A20 - SAM A12
+ B20 - SAM A1
+ A21 - SAM A11
+ B21 - SAM A0
+ A22 - SAM3 /CS
+ B22 - SAM A4
+ A23 - SAM A14
+ B23 - SAM2 /CS
+ A24 - +5V
+ B24 - +5V
+ A25 - +5V
+ B25 - +5V
+
+ The SAM ROM /OE pin is tied to ground, they always output data when
+ their /CS signal (from the latch at Z80 port $80) is enabled.
+
+ ----------------------------------------------------------------------------
+ Assistance Needed
+ ----------------------------------------------------------------------------
+
+ What are the 8751 part numbers in some games, and in other revisions of the
+ same game?
+
+ What the are the custom 68000 part numbers, CPU type (FD1094, etc.), and
+ program ROM numbers used by some games?
+
+ Is there a variation of the Pre-System 16 hardware that has the IC numbers
+ silkscreened on the board?
+
+ Could anyone dump and verify the uPD7751 internal ROM (1K) for any
+ Pre-System 16 and System 16A games?
+
+ Does the System 16A hardware have a zoom ROM, if so could anyone dump it
+ or the one from Hang-On / Enduro Racer / Space Harrier?
+
+ Any details on the special Major League control and how it interfaces with
+ the rest of the system?
+
+ The Monster Bash N7751 has T0 tied to ground but uses the 'ENT0 CLK'
+ instruction which seems (from the documentation I've seen) to output a clock
+ signal on the T0 pin. What is the purpose of doing this?
+
+ ----------------------------------------------------------------------------
+ Credits and Acknowledgements
+ ----------------------------------------------------------------------------
+
+ - Spies Wiretap Archive for the Hang-On and Space Harrier schematics.
+ - Appolo.com for the Body Slam board.
+ - Chris MacDonald for program testing.
+
+ ----------------------------------------------------------------------------
+ Disclaimer
+ ----------------------------------------------------------------------------
+
+ If you use any information from this document, please credit me
+ (Charles MacDonald) and optionally provide a link to my webpage
+ (http://cgfm2.emuviews.com/) so interested parties can access it.
+
+ The credit text should be present in the accompanying documentation of
+ whatever project which used the information, or even in the program
+ itself (e.g. an about box).
+
+ Regarding distribution, you cannot put this document on another
+ website, nor link directly to it.
