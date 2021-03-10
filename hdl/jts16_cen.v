@@ -27,27 +27,29 @@ module jts16_cen(
     output             fm_cen
 );
 
-jtframe_frac_cen #(2) u_cpucen(
+wire nc, ncb;
+
+jtframe_frac_cen #(2) u_pxlcen(
     .clk    ( clk       ),
     .n      ( 10'd1     ),
-    .m      ( 10'd2     ),
-    .cen    ( {pxl2_cen, pxl_cen }   ),
+    .m      ( 10'd4     ),
+    .cen    ( {pxl_cen, pxl2_cen }   ),
     .cenb   (           )
 );
 
-jtframe_frac_cen #(1) u_cpucen(
+jtframe_frac_cen u_cpucen(
     .clk    ( clk       ),
     .n      ( 10'd29    ),
     .m      ( 10'd73    ),
-    .cen    ( cpu_cen   ),
-    .cenb   ( cpu_cenb  )
+    .cen    ( { cpu_cen, nc   } ),
+    .cenb   ( { cpu_cenb, ncb } )
 );
 
-jtframe_frac_cen #(1) u_sndcen(
+jtframe_frac_cen u_sndcen(
     .clk    ( clk       ),
-    .n      ( 10'd17    ),
-    .m      ( 10'd107   ),
-    .cen    ( { snd_cen, fm_cen } ),
+    .n      ( 10'd109   ),
+    .m      ( 10'd686   ),
+    .cen    ( { fm_cen, snd_cen } ),
     .cenb   (           )
 );
 

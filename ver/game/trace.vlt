@@ -1,0 +1,2 @@
+`verilator_config
+tracing_off -file "../../hdl/jts16_cen.v"
