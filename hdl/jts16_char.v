@@ -83,12 +83,27 @@ assign char_addr = { code, vdump[2:0], hdump[2:1] };
 // SDRAM runs at pxl_cen x 8, so new data from SDRAM takes about a
 // pxl_cen time to arrive. Data has information for four pixels
 
+reg [15:0] pxl_data;
+reg [ 3:0] attr, attr0;
+
+assign pxl = { attr0, pxl_data[3:0] };
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        code <= 9'd0;
+        code     <= 9'd0;
+        attr     <= 4'd0;
+        attr0    <= 4'd0;
+        pxl_data <= 16'd0;
     end else begin
         if( pxl_cen ) begin
-            if( hdump[1:0]==2'd0 ) code <= scan[8:0];
+            if( hdump[1:0]==2'd0 ) begin
+                code     <= scan[8:0];
+                pxl_data <= char_data;
+                attr0    <= { scan[15], scan[11:9] };
+                attr     <= attr0;
+            end else begin
+                pxl_data <= pxl_data >> 4;
+            end
         end
     end
 end

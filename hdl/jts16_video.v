@@ -105,4 +105,22 @@ jts16_char u_char(
     .pxl       ( char_pxl   )
 );
 
+jts16_colmix u_colmix(
+    .rst       ( rst        ),
+    .clk       ( clk        ),
+    .pxl2_cen  ( pxl2_cen   ),
+    .pxl_cen   ( pxl_cen    ),
+
+    .LHBL      ( LHBL       ),
+    .LVBL      ( LVBL       ),
+
+    .char_pxl  ( char_pxl   ),
+
+    .red       ( red        ),
+    .green     ( green      ),
+    .blue      ( blue       ),
+    .LVBL_dly  ( LVBL_dly   ),
+    .LHBL_dly  ( LHBL_dly   )
+);
+
 endmodule

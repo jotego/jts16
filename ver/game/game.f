@@ -3,6 +3,7 @@
 ../../hdl/jts16_video.v
 ../../hdl/jts16_char.v
 ../../hdl/jts16_sdram.v
+../../hdl/jts16_colmix.v
 
 ../../modules/jtframe/hdl/clocking/jtframe_frac_cen.v
 ../../modules/jtframe/hdl/video/jtframe_vtimer.v

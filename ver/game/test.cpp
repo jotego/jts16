@@ -22,17 +22,30 @@ public:
     void update();
 };
 
+const int VIDEO_BUFLEN = 256;
+
 class JTSim {
     vluint64_t simtime;
     const vluint64_t semi_period=9930;
 
     void parse_args( int argc, char *argv[] );
+    void video_dump();
     bool trace;
     VerilatedVcdC* tracer;
     SDRAM sdram;
+    int frame_cnt, last_VS;
+    // Video dump
+    struct {
+        ofstream fout;
+        int ptr;
+        int32_t buffer[VIDEO_BUFLEN];
+    } dump;
 public:
-    int finish_time;
-    bool done() { return simtime/1000'000'000 >= finish_time; };
+    int finish_time, finish_frame;
+    bool done() {
+        return (finish_time>0 ? frame_cnt > finish_frame : true) &&
+                simtime/1000'000'000 >= finish_time;
+    };
     Vjts16_game& game;
     JTSim( Vjts16_game& g, int argc, char *argv[] );
     ~JTSim();
@@ -123,6 +136,13 @@ SDRAM::~SDRAM() {
 
 JTSim::JTSim( Vjts16_game& g, int argc, char *argv[]) : game(g), sdram(g) {
     simtime=0;
+    frame_cnt=0;
+    last_VS = 0;
+
+    // Video dump
+    dump.fout.open("video.pipe", ios_base::binary );
+    dump.ptr = 0;
+
     parse_args( argc, argv );
     if( trace ) {
         Verilated::traceEverOn(true);
@@ -139,6 +159,7 @@ JTSim::JTSim( Vjts16_game& g, int argc, char *argv[]) : game(g), sdram(g) {
 }
 
 JTSim::~JTSim() {
+    dump.fout.write( (char*) dump.buffer, dump.ptr*4 ); // flushes the buffer
     delete tracer;
 }
 
@@ -153,11 +174,37 @@ void JTSim::clock(int n) {
         game.eval();
         simtime += semi_period;
         if( tracer ) tracer->dump(simtime);
+
+        // frame counter
+        if( game.VS && !last_VS ) frame_cnt++;
+        last_VS = game.VS;
+
+        // Video dump
+        video_dump();
+    }
+}
+
+void JTSim::video_dump() {
+    if( game.pxl_cen && game.LHBL_dly && game.LVBL_dly ) {
+        int red   = game.red   & 0xf;
+        int green = game.green & 0xf;
+        int blue  = game.blue  & 0xf;
+        int mix = 0xFF000000 |
+            ( ((blue<<4)|blue)   << 16 ) |
+            ( ((green<<4)|green) <<  8 ) |
+            ( ((red<<4)|red)           );
+        dump.buffer[dump.ptr++] = mix;
+        if( dump.ptr==256 ) {
+            dump.fout.write( (char*)dump.buffer, VIDEO_BUFLEN*4 );
+            dump.ptr=0;
+        }
     }
 }
 
 void JTSim::parse_args( int argc, char *argv[] ) {
     trace = false;
+    finish_frame = -1;
+    finish_time  = 10;
     for( int k=1; k<argc; k++ ) {
         if( strcmp( argv[k], "--trace")==0 ) {
             trace=true;
@@ -168,6 +215,14 @@ void JTSim::parse_args( int argc, char *argv[] ) {
                 cout << "ERROR: expecting time after -time argument\n";
             } else {
                 finish_time = atol(argv[k]);
+            }
+            continue;
+        }
+        if( strcmp( argv[k], "-frame")==0 ) {
+            if( ++k >= argc ) {
+                cout << "ERROR: expecting frame count after -frame argument\n";
+            } else {
+                finish_frame = atol(argv[k]);
             }
             continue;
         }
