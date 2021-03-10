@@ -39,6 +39,7 @@ module jts16_video(
     output             VS,
     output             HB,
     output             VB,
+    output             LVBL,
     output             LHBL_dly,
     output             LVBL_dly,
     output     [ 4:0]  red,
@@ -47,7 +48,7 @@ module jts16_video(
 );
 
 wire [8:0] V, H, vrender;
-wire LHBL, LVBL;
+wire LHBL;
 
 // video layers
 wire [7:0] char_pxl;

@@ -103,7 +103,7 @@ wire    cpu_cen, cpu_cenb,
         snd_cen, fm_cen;
 
 // video signals
-wire    HB, VB;
+wire    HB, VB, LVBL;
 
 // SDRAM interface
 wire         char_ok;
@@ -150,11 +150,33 @@ jts16_video u_video(
     .VS         ( VS        ),
     .HB         ( HB        ),
     .VB         ( VB        ),
+    .LVBL       ( LVBL      ),
     .LHBL_dly   ( LHBL_dly  ),
     .LVBL_dly   ( LVBL_dly  ),
     .red        ( red       ),
     .green      ( green     ),
     .blue       ( blue      )
+);
+
+jts16_sdram u_sdram(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .LVBL       ( LVBL      ),
+
+    // Char interface
+    .char_ok    ( char_ok   ),
+    .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    .char_data  ( char_data ),
+
+
+    // Bank 1: Read only
+    .ba1_addr   ( ba1_addr  ),
+    .ba1_rd     ( ba1_rd    ),
+    .ba1_rdy    ( ba1_rdy   ),
+    .ba1_ack    ( ba1_ack   ),
+
+    .data_read  ( data_read ),
+    .refresh_en ( refresh_en)
 );
 
 endmodule
