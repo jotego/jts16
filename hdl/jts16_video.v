@@ -22,6 +22,18 @@ module jts16_video(
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
 
+    // CPU interface
+    input              char_cs,
+    input      [12:1]  cpu_addr,
+    input      [15:0]  cpu_dout,
+    input      [ 1:0]  dsn,
+    output     [15:0]  cpu_din,
+
+    // SDRAM interface
+    input              char_ok,
+    output     [13:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    input      [15:0]  char_data,
+
     // Video signal
     output             HS,
     output             VS,
@@ -37,8 +49,10 @@ module jts16_video(
 wire [8:0] V, H, vrender;
 wire LHBL, LVBL;
 
-// Frame rate and blanking as the original
-// Sync pulses slightly adjusted
+// video layers
+wire [7:0] char_pxl;
+
+// Frame rate and horizontal frequency as the original
 jtframe_vtimer #(
     .HB_START  ( 9'h1FC ),
     .HB_END    ( 9'h0BC ),
@@ -62,10 +76,32 @@ jtframe_vtimer #(
     .HS        ( HS       ),
     .VS        ( VS       ),
     .Vinit     (          ),
-    // unused
     .vrender   ( vrender  ),
     .vrender1  (          )
 );
 
+jts16_char u_char(
+    .rst       ( rst        ),
+    .clk       ( clk        ),
+    .pxl2_cen  ( pxl2_cen   ),
+    .pxl_cen   ( pxl_cen    ),
+
+    // CPU interface
+    .char_cs   ( char_cs        ),
+    .cpu_addr  ( cpu_addr[11:1] ),
+    .cpu_dout  ( cpu_dout       ),
+    .dsn       ( dsn            ),
+    .cpu_din   ( cpu_din        ),
+
+    // SDRAM interface
+    .char_ok   ( char_ok    ),
+    .char_addr ( char_addr  ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    .char_data ( char_data  ),
+
+    // Video signal
+    .vdump     ( V          ),
+    .hdump     ( H          ),
+    .pxl       ( char_pxl   )
+);
 
 endmodule

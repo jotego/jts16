@@ -105,6 +105,17 @@ wire    cpu_cen, cpu_cenb,
 // video signals
 wire    HB, VB;
 
+// SDRAM interface
+wire         char_ok;
+wire [13:0]  char_addr;
+wire [15:0]  char_data;
+
+// CPU interface
+wire [12:1]  cpu_addr;
+wire [15:0]  cpu_dout, cpu_din;
+wire [ 1:0]  dsn;
+wire         char_cs;
+
 jts16_cen u_cen(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -121,6 +132,18 @@ jts16_video u_video(
     .clk        ( clk       ),
     .pxl2_cen   ( pxl2_cen  ),
     .pxl_cen    ( pxl_cen   ),
+
+    // CPU interface
+    .cpu_addr   ( cpu_addr  ),
+    .char_cs    ( char_cs   ),
+    .cpu_dout   ( cpu_dout  ),
+    .dsn        ( dsn       ),
+    .cpu_din    ( cpu_din   ),
+
+    // SDRAM interface
+    .char_ok    ( char_ok   ),
+    .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    .char_data  ( char_data ),
 
     // Video signal
     .HS         ( HS        ),

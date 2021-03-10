@@ -1,4 +1,7 @@
 #!/bin/bash
 
+drop1    < shinobi/char1.bin > char_hi.bin
+drop1 -l < shinobi/char1.bin > char_lo.bin
+
 jtsim -mist -sysname s16 -verilator \
     -def ../../hdl/jts16.def $*
