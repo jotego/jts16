@@ -1,0 +1,4 @@
+#!/bin/bash
+
+jtsim -mist -sysname s16 \
+    -def ../../hdl/jts16.def
