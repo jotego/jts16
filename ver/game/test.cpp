@@ -144,6 +144,7 @@ JTSim::JTSim( Vjts16_game& g, int argc, char *argv[]) : game(g), sdram(g) {
     dump.ptr = 0;
 
     parse_args( argc, argv );
+#ifdef VERILATOR_TRACE
     if( trace ) {
         Verilated::traceEverOn(true);
         tracer = new VerilatedVcdC;
@@ -152,6 +153,7 @@ JTSim::JTSim( Vjts16_game& g, int argc, char *argv[]) : game(g), sdram(g) {
     } else {
         tracer = nullptr;
     }
+#endif
     game.rst = 1;
     clock(10);
     game.rst = 0;
@@ -160,7 +162,9 @@ JTSim::JTSim( Vjts16_game& g, int argc, char *argv[]) : game(g), sdram(g) {
 
 JTSim::~JTSim() {
     dump.fout.write( (char*) dump.buffer, dump.ptr*4 ); // flushes the buffer
+#ifdef VERILATOR_TRACE
     delete tracer;
+#endif
 }
 
 void JTSim::clock(int n) {
@@ -169,12 +173,15 @@ void JTSim::clock(int n) {
         game.clk = 1;
         game.eval();
         simtime += semi_period;
+#ifdef VERILATOR_TRACE
         if( tracer ) tracer->dump(simtime);
+#endif
         game.clk = 0;
         game.eval();
         simtime += semi_period;
+#ifdef VERILATOR_TRACE
         if( tracer ) tracer->dump(simtime);
-
+#endif
         // frame counter
         if( game.VS && !last_VS ) frame_cnt++;
         last_VS = game.VS;
