@@ -29,38 +29,34 @@ module jts16_video(
     output             VB,
     output             LHBL_dly,
     output             LVBL_dly,
-    output     [ 7:0]  red,
-    output     [ 7:0]  green,
-    output     [ 7:0]  blue
+    output     [ 4:0]  red,
+    output     [ 4:0]  green,
+    output     [ 4:0]  blue
 );
 
 wire [8:0] V, H, vrender;
+wire LHBL, LVBL;
 
 // Frame rate and blanking as the original
 // Sync pulses slightly adjusted
 jtframe_vtimer #(
-    .HB_START ( 9'h1C7 ),
-    .HB_END   ( 9'h047 ),
-    //.HB_END   ( 9'h04F ),
-    .HCNT_END ( 9'h1FF ),
-    .VB_START ( 9'hF0  ),
-    .VB_END   ( 9'h10  ),
-    .VCNT_END ( 9'hFF  ),
+    .HB_START  ( 9'h1FC ),
+    .HB_END    ( 9'h0BC ),
+    .HCNT_START( 9'h70  ),
+    .HCNT_END  ( 9'h1FF ),
+    .VB_START  ( 9'h0E0 ),
+    .VB_END    ( 9'h104 ),
+    .VCNT_END  ( 9'h104 ),
     //.VS_START ( 9'h0   ),
-    .VS_START ( 9'hF8   ),
+    .VS_START ( 9'hF0   ),
     //.VS_END   ( 9'h8   ),
-    .HS_START ( 9'h1F8 ),
-    .HS_END   ( 9'h020 ),
-    .H_VB     ( 9'h7   ),
-    .H_VS     ( 9'h1FF ),
-    .H_VNEXT  ( 9'h1FF ),
-    .HINIT    ( 9'h20 )
+    .HS_START ( 9'h090 )
 ) u_timer(
     .clk       ( clk      ),
     .pxl_cen   ( pxl_cen  ),
     .vdump     ( V        ),
     .H         ( H        ),
-    .Hinit     ( HINIT    ),
+    .Hinit     (          ),
     .LHBL      ( LHBL     ),
     .LVBL      ( LVBL     ),
     .HS        ( HS       ),

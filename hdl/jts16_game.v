@@ -21,9 +21,9 @@ module jts16_game(
     input           clk,
     output          pxl2_cen,   // 12   MHz
     output          pxl_cen,    //  6   MHz
-    output   [3:0]  red,
-    output   [3:0]  green,
-    output   [3:0]  blue,
+    output   [4:0]  red,
+    output   [4:0]  green,
+    output   [4:0]  blue,
     output          LHBL_dly,
     output          LVBL_dly,
     output          HS,
@@ -102,6 +102,9 @@ module jts16_game(
 wire    cpu_cen, cpu_cenb,
         snd_cen, fm_cen;
 
+// video signals
+wire    HB, VB;
+
 jts16_cen u_cen(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -111,6 +114,24 @@ jts16_cen u_cen(
     .cpu_cenb   ( cpu_cenb  ),
     .snd_cen    ( snd_cen   ),
     .fm_cen     ( fm_cen    )
+);
+
+jts16_video u_video(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .pxl2_cen   ( pxl2_cen  ),
+    .pxl_cen    ( pxl_cen   ),
+
+    // Video signal
+    .HS         ( HS        ),
+    .VS         ( VS        ),
+    .HB         ( HB        ),
+    .VB         ( VB        ),
+    .LHBL_dly   ( LHBL_dly  ),
+    .LVBL_dly   ( LVBL_dly  ),
+    .red        ( red       ),
+    .green      ( green     ),
+    .blue       ( blue      )
 );
 
 endmodule
