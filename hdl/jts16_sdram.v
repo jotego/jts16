@@ -23,8 +23,8 @@ module jts16_sdram(
 
     // Char interface
     output          char_ok,
-    input   [13:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    output  [15:0]  char_data,
+    input   [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    output  [31:0]  char_data,
 
 
     // Bank 1: Read only
@@ -40,8 +40,8 @@ module jts16_sdram(
 assign refresh_en = LVBL;
 
 jtframe_rom_1slot #(
-    .SLOT0_DW(16),
-    .SLOT0_AW(14)
+    .SLOT0_DW(32),
+    .SLOT0_AW(13)
 ) u_bank1(
     .rst        ( rst       ),
     .clk        ( clk       ),

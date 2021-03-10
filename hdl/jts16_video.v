@@ -31,8 +31,8 @@ module jts16_video(
 
     // SDRAM interface
     input              char_ok,
-    output     [13:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    input      [15:0]  char_data,
+    output     [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    input      [31:0]  char_data,
 
     // Video signal
     output             HS,
@@ -51,7 +51,7 @@ wire [8:0] V, H, vrender;
 wire LHBL;
 
 // video layers
-wire [7:0] char_pxl;
+wire [6:0] char_pxl;
 
 // Frame rate and horizontal frequency as the original
 jtframe_vtimer #(

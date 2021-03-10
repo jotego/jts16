@@ -107,8 +107,8 @@ wire    HB, VB, LVBL;
 
 // SDRAM interface
 wire         char_ok;
-wire [13:0]  char_addr;
-wire [15:0]  char_data;
+wire [12:0]  char_addr;
+wire [31:0]  char_data;
 
 // CPU interface
 wire [12:1]  cpu_addr;

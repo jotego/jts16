@@ -31,13 +31,13 @@ module jts16_char(
 
     // SDRAM interface
     input              char_ok,
-    output reg [13:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    input      [15:0]  char_data,
+    output reg [12:0]  char_addr, // 9 addr + 3 vertical = 12 bits
+    input      [31:0]  char_data,
 
     // Video signal
     input      [ 8:0]  vdump,
     input      [ 8:0]  hdump,
-    output     [ 7:0]  pxl        // 1 priority + 3 palette + 4 colour = 8
+    output     [ 6:0]  pxl        // 1 priority + 3 palette + 3 colour = 7
 );
 
 wire [15:0] scan;
@@ -78,31 +78,33 @@ jtframe_dual_ram #(.aw(11),.simfile("char_hi.bin")) u_high(
 );
 
 assign scan_addr = { vdump[7:3], hdump[8:3] };
-assign char_addr = { code, vdump[2:0], hdump[2:1] };
+assign char_addr = { code, vdump[2:0], 1'b0 };
 
 // SDRAM runs at pxl_cen x 8, so new data from SDRAM takes about a
 // pxl_cen time to arrive. Data has information for four pixels
 
-reg [15:0] pxl_data;
+reg [23:0] pxl_data;
 reg [ 3:0] attr, attr0;
 
-assign pxl = { attr0, pxl_data[3:0] };
+assign pxl = { attr0, pxl_data[23], pxl_data[15], pxl_data[7] };
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         code     <= 9'd0;
         attr     <= 4'd0;
         attr0    <= 4'd0;
-        pxl_data <= 16'd0;
+        pxl_data <= 24'd0;
     end else begin
         if( pxl_cen ) begin
-            if( hdump[1:0]==2'd0 ) begin
+            if( hdump[2:0]==3'd0 ) begin
                 code     <= scan[8:0];
-                pxl_data <= char_data;
+                pxl_data <= char_data[23:0];
                 attr0    <= { scan[15], scan[11:9] };
                 attr     <= attr0;
             end else begin
-                pxl_data <= pxl_data >> 4;
+                pxl_data[23:16] <= pxl_data[23:16]<<1;
+                pxl_data[15: 8] <= pxl_data[15: 8]<<1;
+                pxl_data[ 7: 0] <= pxl_data[ 7: 0]<<1;
             end
         end
     end

@@ -25,7 +25,7 @@ module jts16_colmix(
     input              LHBL,
     input              LVBL,
 
-    input  [7:0]       char_pxl,
+    input  [6:0]       char_pxl,
 
     output [4:0]       red,
     output [4:0]       green,
@@ -37,8 +37,8 @@ module jts16_colmix(
 assign LVBL_dly = LVBL;
 assign LHBL_dly = LHBL;
 
-assign red   = {1'b0, char_pxl[3:0] };
-assign green = {1'b0, char_pxl[3:0] };
-assign blue  = {1'b0, char_pxl[3:0] };
+assign red   = {1'b0, char_pxl[2:0],1'b0 };
+assign green = {1'b0, char_pxl[2:0],1'b0 };
+assign blue  = {1'b0, char_pxl[2:0],1'b0 };
 
 endmodule

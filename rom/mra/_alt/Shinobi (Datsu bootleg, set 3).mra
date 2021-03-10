@@ -33,8 +33,8 @@
     <region>Datsu</region>
     <rom index="0" zip="shinobldb.zip|shinobi.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 05 00 08 00 
-        10 00 10 00 ff ff ff ff 
+        04 00 04 80 05 00 09 00 
+        11 00 11 00 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -50,10 +50,13 @@
         <!-- soundcpu - starts at 0x40000 -->
         <part name="16.bin" crc="52c8364e"/>
         <!-- gfx1 - starts at 0x50000 -->
-        <part name="9.bin" crc="565e11c6"/>
-        <part name="10.bin" crc="7cc40b6c"/>
-        <part name="11.bin" crc="0f6c7b1c"/>
-        <!-- sprites - starts at 0x80000 -->
+        <interleave output="32">
+            <part name="9.bin" crc="565e11c6" map="0001"/>
+            <part name="10.bin" crc="7cc40b6c" map="0010"/>
+            <part name="11.bin" crc="0f6c7b1c" map="0100"/>
+            <part name="11.bin" crc="0f6c7b1c" map="1000"/>
+        </interleave>
+        <!-- sprites - starts at 0x90000 -->
         <interleave output="16">
             <part name="3.bin" crc="5eb00fc1" map="01"/>
             <part name="5.bin" crc="611f413a" map="10"/>
@@ -70,7 +73,7 @@
             <part name="1.bin" crc="b6e1fd72" map="01"/>
             <part name="7.bin" crc="41f41063" map="10"/>
         </interleave>
-        <!-- Total 0x100000 bytes - 1024 kBytes -->
+        <!-- Total 0x110000 bytes - 1088 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>
