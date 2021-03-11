@@ -110,13 +110,13 @@ wire         char_ok;
 wire [12:0]  char_addr;
 wire [31:0]  char_data;
 
-wire         map1_ok;
-wire [13:0]  map1_addr; // 3 pages + 11 addr = 14 (32 kB)
-wire [15:0]  map1_data;
+wire         map1_ok, map2_ok;
+wire [13:0]  map1_addr, map2_addr; // 3 pages + 11 addr = 14 (32 kB)
+wire [15:0]  map1_data, map2_data;
 
-wire         scr1_ok;
-wire [15:0]  scr1_addr; // 1 bank + 12 addr + 3 vertical = 15 bits
-wire [31:0]  scr1_data;
+wire         scr1_ok, scr2_ok;
+wire [16:0]  scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
+wire [31:0]  scr1_data, scr2_data;
 
 // CPU interface
 wire [12:1]  cpu_addr;
@@ -165,6 +165,14 @@ jts16_video u_video(
     .scr1_addr  ( scr1_addr ),
     .scr1_data  ( scr1_data ),
 
+    .map2_ok    ( map2_ok   ),
+    .map2_addr  ( map2_addr ),
+    .map2_data  ( map2_data ),
+
+    .scr2_ok    ( scr2_ok   ),
+    .scr2_addr  ( scr2_addr ),
+    .scr2_data  ( scr2_data ),
+
     // Video signal
     .HS         ( HS        ),
     .VS         ( VS        ),
@@ -196,6 +204,15 @@ jts16_sdram u_sdram(
     .scr1_ok    ( scr1_ok   ),
     .scr1_addr  ( scr1_addr ),
     .scr1_data  ( scr1_data ),
+
+    // Scroll 1
+    .map2_ok    ( map2_ok   ),
+    .map2_addr  ( map2_addr ),
+    .map2_data  ( map2_data ),
+
+    .scr2_ok    ( scr2_ok   ),
+    .scr2_addr  ( scr2_addr ),
+    .scr2_data  ( scr2_data ),
 
     // Bank 0: allows R/W
     .ba0_addr   ( ba0_addr  ),

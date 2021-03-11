@@ -34,6 +34,7 @@ module jts16_colmix(
 
     input      [ 6:0]  char_pxl,
     input      [10:0]  scr1_pxl,
+    input      [10:0]  scr2_pxl,
 
     output     [ 4:0]  red,
     output     [ 4:0]  green,
@@ -54,8 +55,9 @@ assign green = { rgb[ 7:4], rgb[13] };
 assign blue  = { rgb[11:8], rgb[14] };
 
 always @(*) begin
-    pal_addr = char_pxl[3:0]!=0 ? { 5'd0, char_pxl[5:0] } :
-                                  { 1'b0, scr1_pxl[9:0] };
+    pal_addr = char_pxl[3:0]!=0 ? { 5'd0, char_pxl[5:0] } : (
+               scr1_pxl[3:0]!=0 ? { 1'b0, scr1_pxl[9:0] } : (
+               scr2_pxl[3:0]!=0 ? { 1'b0, scr2_pxl[9:0] } : 11'd0 ));
 end
 
 jtframe_dual_ram #(.aw(11),.simfile("pal_lo.bin")) u_low(

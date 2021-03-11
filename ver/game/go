@@ -32,4 +32,5 @@ cp $GAME/scr${SCENE}.bin scr.bin
 
 jtsim -mist -sysname s16 -verilator \
 	-videow 320 -videoh 224 \
-    -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER
+    -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER && \
+eom frame_1.jpg

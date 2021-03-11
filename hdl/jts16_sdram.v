@@ -21,19 +21,28 @@ module jts16_sdram(
     input           clk,
     input           LVBL,
 
-    // Char interface
+    // Char
     output          char_ok,
     input   [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
     output  [31:0]  char_data,
 
-    // Scroll 1 interface
+    // Scroll 1
     output             map1_ok,
     input      [13:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
     output     [15:0]  map1_data,
 
     output             scr1_ok,
-    input      [15:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    input      [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
     output     [31:0]  scr1_data,
+
+    // Scroll 1
+    output             map2_ok,
+    input      [13:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output     [15:0]  map2_data,
+
+    output             scr2_ok,
+    input      [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output     [31:0]  scr2_data,
 
     // Bank 0: allows R/W
     output   [21:0] ba0_addr,
@@ -88,13 +97,13 @@ jtframe_ram_4slots #(
     //.slot0_addr ( vram_addr ),
     //.slot1_addr ( main_addr  ),
     .slot2_addr ( map1_addr ),
-    //.slot3_addr ( map2_addr ),
+    .slot3_addr ( map2_addr ),
 
     //  output data
     //.slot0_dout ( main_dout ),
     //.slot1_dout ( vram_dout ),
     .slot2_dout ( map1_data ),
-    //.slot3_dout ( map2_dout ),
+    .slot3_dout ( map2_data ),
 
     .slot0_cs   ( 1'b0      ),
     .slot1_cs   ( 1'b0      ),
@@ -112,7 +121,7 @@ jtframe_ram_4slots #(
     //.slot0_ok   ( main_ok   ),
     //.slot1_ok   ( vram_ok   ),
     .slot2_ok   ( map1_ok   ),
-    //.slot3_ok   ( map2_ok   ),
+    .slot3_ok   ( map2_ok   ),
 
     // SDRAM controller interface
     .sdram_ack   ( ba0_ack   ),
@@ -126,29 +135,36 @@ jtframe_ram_4slots #(
 );
 /* verilator lint_on PINMISSING */
 
-jtframe_rom_2slots #(
+jtframe_rom_3slots #(
     .SLOT0_DW(32),
     .SLOT0_AW(13),
 
     .SLOT1_DW(32),
-    .SLOT1_AW(16)
+    .SLOT1_AW(17),
 
+    .SLOT2_DW(32),
+    .SLOT2_AW(17)
 ) u_bank1(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
     .slot0_addr ( char_addr ),
     .slot1_addr ( scr1_addr ),
+    .slot2_addr ( scr2_addr ),
 
     //  output data
     .slot0_dout ( char_data ),
     .slot1_dout ( scr1_data ),
+    .slot2_dout ( scr2_data ),
 
     .slot0_cs   ( LVBL      ),
     .slot1_cs   ( LVBL      ),
+    .slot2_cs   ( LVBL      ),
 
     .slot0_ok   ( char_ok   ),
     .slot1_ok   ( scr1_ok   ),
+    .slot2_ok   ( scr2_ok   ),
+
     // SDRAM controller interface
     .sdram_ack  ( ba1_ack   ),
     .sdram_req  ( ba1_rd    ),

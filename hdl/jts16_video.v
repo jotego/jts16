@@ -44,9 +44,16 @@ module jts16_video(
     input      [15:0]  map1_data,
 
     input              scr1_ok,
-    output reg [15:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output reg [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
     input      [31:0]  scr1_data,
 
+    input              map2_ok,
+    output     [13:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
+    input      [15:0]  map2_data,
+
+    input              scr2_ok,
+    output reg [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    input      [31:0]  scr2_data,
 
     // Video signal
     output             HS,
@@ -66,7 +73,12 @@ wire LHBL;
 
 // video layers
 wire [ 6:0] char_pxl;
-wire [10:0] scr1_pxl;
+wire [10:0] scr1_pxl, scr2_pxl;
+
+// MMR
+wire [15:0] scr1_pages, scr2_pages,
+            scr1_hpos,  scr1_vpos,
+            scr2_hpos,  scr2_vpos;
 
 // Frame rate and horizontal frequency as the original
 jtframe_vtimer #(
@@ -96,6 +108,27 @@ jtframe_vtimer #(
     .vrender1  (          )
 );
 
+jts16_mmr u_mmr(
+    .rst       ( rst            ),
+    .clk       ( clk            ),
+
+    // CPU interface
+    .char_cs   ( char_cs        ),
+    .cpu_addr  ( cpu_addr[11:1] ),
+    .cpu_dout  ( cpu_dout       ),
+    .dsn       ( dsn            ),
+    .cpu_din   ( mmr_dout       ),
+
+
+    // Video registers
+    .scr1_pages ( scr1_pages    ),
+    .scr2_pages ( scr2_pages    ),
+    .scr1_hpos  ( scr1_hpos     ),
+    .scr1_vpos  ( scr1_vpos     ),
+    .scr2_hpos  ( scr2_hpos     ),
+    .scr2_vpos  ( scr2_vpos     )
+);
+
 jts16_char u_char(
     .rst       ( rst        ),
     .clk       ( clk        ),
@@ -121,17 +154,14 @@ jts16_char u_char(
 );
 
 jts16_scr u_scr1(
-    .rst       ( rst        ),
-    .clk       ( clk        ),
-    .pxl2_cen  ( pxl2_cen   ),
-    .pxl_cen   ( pxl_cen    ),
+    .rst       ( rst            ),
+    .clk       ( clk            ),
+    .pxl2_cen  ( pxl2_cen       ),
+    .pxl_cen   ( pxl_cen        ),
 
-    // CPU interface
-    .scr_cs    ( scr1_cs        ),
-    .cpu_addr  ( cpu_addr[4:1]  ),
-    .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
-    .cpu_din   ( mmr_dout       ),
+    .pages     ( scr1_pages     ),
+    .hscr      ( scr1_hpos      ),
+    .vscr      ( scr1_vpos      ),
 
     // SDRAM interface
     .map_ok    ( map1_ok        ),
@@ -146,6 +176,31 @@ jts16_scr u_scr1(
     .vdump     ( V          ),
     .hdump     ( H          ),
     .pxl       ( scr1_pxl   )
+);
+
+jts16_scr u_scr2(
+    .rst       ( rst            ),
+    .clk       ( clk            ),
+    .pxl2_cen  ( pxl2_cen       ),
+    .pxl_cen   ( pxl_cen        ),
+
+    .pages     ( scr2_pages     ),
+    .hscr      ( scr2_hpos      ),
+    .vscr      ( scr2_vpos      ),
+
+    // SDRAM interface
+    .map_ok    ( map2_ok        ),
+    .map_addr  ( map2_addr      ), // 3 pages + 11 addr = 14 (32 kB)
+    .map_data  ( map2_data      ),
+
+    .scr_ok    ( scr2_ok        ),
+    .scr_addr  ( scr2_addr      ), // 1 bank + 12 addr + 3 vertical = 15 bits
+    .scr_data  ( scr2_data      ),
+
+    // Video signal
+    .vdump     ( V          ),
+    .hdump     ( H          ),
+    .pxl       ( scr2_pxl   )
 );
 
 jts16_colmix u_colmix(
@@ -167,6 +222,7 @@ jts16_colmix u_colmix(
 
     .char_pxl  ( char_pxl   ),
     .scr1_pxl  ( scr1_pxl   ),
+    .scr2_pxl  ( scr2_pxl   ),
 
     .red       ( red        ),
     .green     ( green      ),
