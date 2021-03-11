@@ -2,6 +2,7 @@
 ../../hdl/jts16_cen.v
 ../../hdl/jts16_video.v
 ../../hdl/jts16_char.v
+../../hdl/jts16_scr.v
 ../../hdl/jts16_sdram.v
 ../../hdl/jts16_colmix.v
 

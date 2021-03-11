@@ -32,17 +32,18 @@ module jts16_colmix(
     input      [ 1:0]  dsn,
     output     [15:0]  cpu_din,
 
-    input  [6:0]       char_pxl,
+    input      [ 6:0]  char_pxl,
+    input      [10:0]  scr1_pxl,
 
-    output [4:0]       red,
-    output [4:0]       green,
-    output [4:0]       blue,
+    output     [ 4:0]  red,
+    output     [ 4:0]  green,
+    output     [ 4:0]  blue,
     output             LVBL_dly,
     output             LHBL_dly
 );
 
 wire [ 1:0] we;
-wire [10:0] pal_addr;
+reg  [10:0] pal_addr;
 wire [15:0] pal;
 wire [14:0] rgb;
 
@@ -52,7 +53,10 @@ assign red   = { rgb[ 3:0], rgb[12] };
 assign green = { rgb[ 7:4], rgb[13] };
 assign blue  = { rgb[11:8], rgb[14] };
 
-assign pal_addr = { 5'd0, char_pxl[5:0] };
+always @(*) begin
+    pal_addr = char_pxl[3:0]!=0 ? { 5'd0, char_pxl[5:0] } :
+                                  { 1'b0, scr1_pxl[9:0] };
+end
 
 jtframe_dual_ram #(.aw(11),.simfile("pal_lo.bin")) u_low(
     // CPU writes
@@ -84,7 +88,7 @@ jtframe_dual_ram #(.aw(11),.simfile("pal_hi.bin")) u_hi(
     .q1     ( pal[15:8]     )
 );
 
-jtframe_blank #(.DLY(8),.DW(15)) u_blank(
+jtframe_blank #(.DLY(12),.DW(15)) u_blank(
     .clk        ( clk       ),
     .pxl_cen    ( pxl_cen   ),
     .LHBL       ( LHBL      ),

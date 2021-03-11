@@ -977,21 +977,23 @@
  $000-DFF : Text layer name table (64x28)
  $E00-E7F : Unused
  $E80-EFF : Unused, except for the following addresses:
+
  $E80     : Foreground page select
- $E82     : Background page select
  $E84     : Foreground page select (alternate)
- $E86     : Background page select (alternate)
  $E90     : Foreground vertical scroll / column scroll enable
- $E92     : Background vertical scroll / column scroll enable
  $E94     : Foreground vertical scroll (alternate)
- $E96     : Background vertical scroll (alternate)
  $E98     : Foreground horizontal scroll / row scroll enable
- $E9A     : Background horizontal scroll / row scroll enable
  $E9C     : Foreground horizontal scroll (alternate)
- $E9E     : Background horizontal scroll (alternate)
  $F00-F3F : Foreground column scroll table
- $F40-F7F : Background column scroll table
  $F80-FBF : Foreground row scroll table
+
+ $E82     : Background page select
+ $E86     : Background page select (alternate)
+ $E92     : Background vertical scroll / column scroll enable
+ $E96     : Background vertical scroll (alternate)
+ $E9A     : Background horizontal scroll / row scroll enable
+ $E9E     : Background horizontal scroll (alternate)
+ $F40-F7F : Background column scroll table
  $FC0-FFF : Background row scroll table
 
  Text layer name table format:

@@ -87,11 +87,6 @@ reg [23:0] pxl_data;
 reg [ 3:0] attr, attr0;
 
 assign pxl = { attr, pxl_data[23], pxl_data[15], pxl_data[7] };
-//assign pxl = { attr, pxl_data[23], pxl_data[7], pxl_data[15] };
-//assign pxl = { attr, pxl_data[15], pxl_data[23], pxl_data[7] };
-//assign pxl = { attr, pxl_data[15], pxl_data[7], pxl_data[23] };
-//assign pxl = { attr, pxl_data[7], pxl_data[15], pxl_data[23] };
-//assign pxl = { attr, pxl_data[7], pxl_data[23], pxl_data[15] };
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -101,7 +96,7 @@ always @(posedge clk, posedge rst) begin
         pxl_data <= 24'd0;
     end else begin
         if( pxl_cen ) begin
-            if( hdump[2:0]==3'd0 ) begin
+            if( hdump[2:0]==3'd4 ) begin
                 code     <= {1'b0,scan[7:0]};
                 pxl_data <= char_data[23:0];
                 attr0    <= scan[11:8];

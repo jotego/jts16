@@ -35,6 +35,15 @@ module jts16_video(
     output     [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
     input      [31:0]  char_data,
 
+    input              map1_ok,
+    output     [13:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
+    input      [15:0]  map1_data,
+
+    input              scr1_ok,
+    output reg [15:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    input      [31:0]  scr1_data,
+
+
     // Video signal
     output             HS,
     output             VS,
@@ -52,7 +61,8 @@ wire [8:0] V, H, vrender;
 wire LHBL;
 
 // video layers
-wire [6:0] char_pxl;
+wire [ 6:0] char_pxl;
+wire [10:0] scr1_pxl;
 
 // Frame rate and horizontal frequency as the original
 jtframe_vtimer #(
@@ -106,6 +116,34 @@ jts16_char u_char(
     .pxl       ( char_pxl   )
 );
 
+jts16_scr u_scr1(
+    .rst       ( rst        ),
+    .clk       ( clk        ),
+    .pxl2_cen  ( pxl2_cen   ),
+    .pxl_cen   ( pxl_cen    ),
+
+    // CPU interface
+    .scr_cs    ( scr1_cs        ),
+    .cpu_addr  ( cpu_addr[4:1]  ),
+    .cpu_dout  ( cpu_dout       ),
+    .dsn       ( dsn            ),
+    .cpu_din   ( cpu_din        ),
+
+    // SDRAM interface
+    .map_ok    ( map1_ok        ),
+    .map_addr  ( map1_addr      ), // 3 pages + 11 addr = 14 (32 kB)
+    .map_data  ( map1_data      ),
+
+    .scr_ok    ( scr1_ok        ),
+    .scr_addr  ( scr1_addr      ), // 1 bank + 12 addr + 3 vertical = 15 bits
+    .scr_data  ( scr1_data      ),
+
+    // Video signal
+    .vdump     ( V          ),
+    .hdump     ( H          ),
+    .pxl       ( scr1_pxl   )
+);
+
 jts16_colmix u_colmix(
     .rst       ( rst        ),
     .clk       ( clk        ),
@@ -124,6 +162,7 @@ jts16_colmix u_colmix(
     .LVBL      ( LVBL       ),
 
     .char_pxl  ( char_pxl   ),
+    .scr1_pxl  ( scr1_pxl   ),
 
     .red       ( red        ),
     .green     ( green      ),

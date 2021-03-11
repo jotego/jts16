@@ -786,10 +786,10 @@ void draw_virtual_tilemap(screen_device &screen, segaic16_video_device::tilemap_
  *
  *  Text RAM:
  *      Offset   Bits               Usage
- *      E8C      -aaa-bbb -ccc-ddd  Background tilemap page select (screen flipped)
  *      E8E      -aaa-bbb -ccc-ddd  Foreground tilemap page select (screen flipped)
- *      E9C      -aaa-bbb -ccc-ddd  Background tilemap page select
  *      E9E      -aaa-bbb -ccc-ddd  Foreground tilemap page select
+ *      E8C      -aaa-bbb -ccc-ddd  Background tilemap page select (screen flipped)
+ *      E9C      -aaa-bbb -ccc-ddd  Background tilemap page select
  *      F24      -------- vvvvvvvv  Foreground tilemap vertical scroll
  *      F26      -------- vvvvvvvv  Background tilemap vertical scroll
  *      F30-F7D  -------- vvvvvvvv  Foreground tilemap per-16-pixel-column vertical scroll (every 2 words)

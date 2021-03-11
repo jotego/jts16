@@ -110,6 +110,14 @@ wire         char_ok;
 wire [12:0]  char_addr;
 wire [31:0]  char_data;
 
+wire         map1_ok;
+wire [13:0]  map1_addr; // 3 pages + 11 addr = 14 (32 kB)
+wire [15:0]  map1_data;
+
+wire         scr1_ok;
+wire [15:0]  scr1_addr; // 1 bank + 12 addr + 3 vertical = 15 bits
+wire [31:0]  scr1_data;
+
 // CPU interface
 wire [12:1]  cpu_addr;
 wire [15:0]  cpu_dout, cpu_din;
@@ -146,6 +154,14 @@ jts16_video u_video(
     .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
     .char_data  ( char_data ),
 
+    .map1_ok    ( map1_ok   ),
+    .map1_addr  ( map1_addr ),
+    .map1_data  ( map1_data ),
+
+    .scr1_ok    ( scr1_ok   ),
+    .scr1_addr  ( scr1_addr ),
+    .scr1_data  ( scr1_data ),
+
     // Video signal
     .HS         ( HS        ),
     .VS         ( VS        ),
@@ -169,6 +185,23 @@ jts16_sdram u_sdram(
     .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
     .char_data  ( char_data ),
 
+    // Scroll 1
+    .map1_ok    ( map1_ok   ),
+    .map1_addr  ( map1_addr ),
+    .map1_data  ( map1_data ),
+
+    .scr1_ok    ( scr1_ok   ),
+    .scr1_addr  ( scr1_addr ),
+    .scr1_data  ( scr1_data ),
+
+    // Bank 0: allows R/W
+    .ba0_addr   ( ba0_addr  ),
+    .ba0_rd     ( ba0_rd    ),
+    .ba0_wr     ( ba0_wr    ),
+    .ba0_ack    ( ba0_ack   ),
+    .ba0_rdy    ( ba0_rdy   ),
+    .ba0_din    ( ba0_din   ),
+    .ba0_din_m  ( ba0_din_m ),
 
     // Bank 1: Read only
     .ba1_addr   ( ba1_addr  ),
