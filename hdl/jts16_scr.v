@@ -27,7 +27,7 @@ module jts16_scr(
     input      [ 4:1]  cpu_addr,
     input      [15:0]  cpu_dout,
     input      [ 1:0]  dsn,
-    output     [15:0]  cpu_din,
+    output reg [15:0]  cpu_din,
 
     // SDRAM interface
     input              map_ok,
@@ -55,7 +55,7 @@ localparam [2:0] PAGE     = 3'b000,
 
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
-reg  [ 8:0] code;
+reg  [11:0] code;
 
 // Memory mapped registers
 reg  [15:0] pages, hscr, vscr;
@@ -68,20 +68,21 @@ always @(posedge clk, posedge rst) begin
     end else if(scr_cs && cpu_addr[1]==ABIT) begin
         case( cpu_addr[4:2] )
             PAGE: begin
-                if( !dsn[1] ) pages[15:8] <= cpu_din[15:8];
-                if( !dsn[0] ) pages[ 7:0] <= cpu_din[ 7:0];
-                cpu_dout <= pages;
+                if( !dsn[1] ) pages[15:8] <= cpu_dout[15:8];
+                if( !dsn[0] ) pages[ 7:0] <= cpu_dout[ 7:0];
+                cpu_din <= pages;
             end
             VSCR: begin
-                if( !dsn[1] ) vscr[15:8] <= cpu_din[15:8];
-                if( !dsn[0] ) vscr[ 7:0] <= cpu_din[ 7:0];
-                cpu_dout <= vscr;
+                if( !dsn[1] ) vscr[15:8] <= cpu_dout[15:8];
+                if( !dsn[0] ) vscr[ 7:0] <= cpu_dout[ 7:0];
+                cpu_din <= vscr;
             end
             HSCR: begin
-                if( !dsn[1] ) hscr[15:8] <= cpu_din[15:8];
-                if( !dsn[0] ) hscr[ 7:0] <= cpu_din[ 7:0];
-                cpu_dout <= hscr;
+                if( !dsn[1] ) hscr[15:8] <= cpu_dout[15:8];
+                if( !dsn[0] ) hscr[ 7:0] <= cpu_dout[ 7:0];
+                cpu_din <= hscr;
             end
+            default:;
         endcase
     end
 end
@@ -96,7 +97,7 @@ always @(*) begin
     hpos = hdump + hscr[8:0];
     vpos = vdump + vscr[8:0];
     scan_addr = { vpos[7:3], hpos[8:3] };
-    page = 3'd5;
+    page = 3'd4;
 end
 
 always @(posedge clk, posedge rst) begin
@@ -118,14 +119,14 @@ assign pxl = { attr, pxl_data[23], pxl_data[15], pxl_data[7] };
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        code     <= 9'd0;
-        attr     <= 4'd0;
-        attr0    <= 4'd0;
-        pxl_data <= 24'd0;
+        code     <= 0;
+        attr     <= 0;
+        attr0    <= 0;
+        pxl_data <= 0;
     end else begin
         if( pxl_cen ) begin
             if( hdump[2:0]==3'd4 ) begin
-                code     <= { map_data[13], map_data[11:0] };
+                code     <= map_data[11:0];
                 pxl_data <= scr_data[23:0];
                 attr0    <= map_data[12:5];
                 attr     <= attr0;

@@ -36,7 +36,7 @@ module jts16_sdram(
     output     [31:0]  scr1_data,
 
     // Bank 0: allows R/W
-    output   [22:0] ba0_addr,
+    output   [21:0] ba0_addr,
     output          ba0_rd,
     output          ba0_wr,
     output   [15:0] ba0_din,
@@ -59,6 +59,7 @@ localparam [21:0] ZERO_OFFSET=0,
 
 assign refresh_en = LVBL;
 
+/* verilator lint_off PINMISSING */
 jtframe_ram_4slots #(
     // VRAM
     .SLOT0_DW(16),
@@ -123,6 +124,7 @@ jtframe_ram_4slots #(
     .sdram_wrmask( ba0_din_m ),
     .data_read   ( data_read )
 );
+/* verilator lint_on PINMISSING */
 
 jtframe_rom_2slots #(
     .SLOT0_DW(32),

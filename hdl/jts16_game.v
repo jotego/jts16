@@ -120,9 +120,9 @@ wire [31:0]  scr1_data;
 
 // CPU interface
 wire [12:1]  cpu_addr;
-wire [15:0]  cpu_dout, cpu_din;
+wire [15:0]  cpu_dout, char_dout, mmr_dout, pal_dout;
 wire [ 1:0]  dsn;
-wire         char_cs, pal_cs;
+wire         char_cs, scr1_cs, pal_cs;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -144,10 +144,13 @@ jts16_video u_video(
     // CPU interface
     .cpu_addr   ( cpu_addr  ),
     .char_cs    ( char_cs   ),
+    .scr1_cs    ( scr1_cs   ),
     .pal_cs     ( pal_cs    ),
     .cpu_dout   ( cpu_dout  ),
     .dsn        ( dsn       ),
-    .cpu_din    ( cpu_din   ),
+    .char_dout  ( char_dout ),
+    .mmr_dout   ( mmr_dout  ),
+    .pal_dout   ( pal_dout  ),
 
     // SDRAM interface
     .char_ok    ( char_ok   ),

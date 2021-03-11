@@ -10,9 +10,9 @@ typedef Vjts16_game DUT;
 
 class SDRAM {
     DUT& dut;
-    char *banks[5];     // index 0 is unused
-    int dly[5];
-    int last_rd[5];
+    char *banks[4];
+    int dly[4];
+    //int last_rd[5];
     char header[32];
     int read_offset( int region );
     int read_bank( char *bank, int addr );
@@ -66,37 +66,51 @@ int main(int argc, char *argv[]) {
 }
 
 int SDRAM::read_bank( char *bank, int addr ) {
+    const int mask = 0x7f'ffff; // 8MB
     addr <<= 1;
     int v=0;
     for( int k=3; k>=0; k-- ) {
         v <<= 8;
-        v |= bank[addr+k]&0xff;
+        v |= bank[(addr+k)&mask]&0xff;
     }
     return v;
 }
 
 void SDRAM::update() {
+    CData *ba_ack[4] = { &dut.ba0_ack, &dut.ba1_ack, &dut.ba2_ack, &dut.ba3_ack };
+    CData *ba_rdy[4] = { &dut.ba0_rdy, &dut.ba1_rdy, &dut.ba2_rdy, &dut.ba3_rdy };
+    unsigned ba_rd [4] = { dut.ba0_rd ,  dut.ba1_rd ,  dut.ba2_rdy,  dut.ba3_rd  };
+    unsigned ba_add[4] = { dut.ba0_addr, dut.ba1_addr, dut.ba2_addr, dut.ba3_addr };
+
     if( dut.rst ) {
-        last_rd[1]  = 0;
-        dut.ba1_rdy = 0;
-        dut.ba1_ack = 0;
+        for( int k=0; k<4; k++ ) {
+            //last_rd[k] = 0;
+            *ba_ack[k] = 0;
+            *ba_rdy[k] = 0;
+            dly[k] = -1;
+        }
         return;
     }
 
-    if( dut.ba1_rd && !last_rd[1] || (dut.ba1_rd && dly[1]<0)) {
-        dly[1] = 8;
-        dut.ba1_rdy = 0;
-        dut.ba1_ack = 1;
-    }
-    if( dly[1] == 0 ) {
-        dut.data_read = read_bank( banks[1], dut.ba1_addr );;
-        dut.ba1_rdy = 1;
-    } else {
-        if( dly[1]==7 ) dut.ba1_ack=0;
-    }
-    if( dly[1]>-1 ) --dly[1];
+    bool dout=false;
+    for( int k=0; k<4; k++) {
+        if( dly[k] == 0 && !dout) {
+            dut.data_read = read_bank( banks[k], ba_add[k] );
+            *ba_rdy[k] = 1;
+            dly[k] = -1;
+            dout=true;
+            continue;
+        }
 
-    last_rd[1] = dut.ba1_rd;
+        if( ba_rd[k] && dly[k]<0) {
+            dly[k]    = 8;
+            *ba_rdy[k] = 0;
+            *ba_ack[k] = 1;
+        } else {
+            if( dly[k]==7) *ba_ack[k] = 0;
+            if( dly[k]>0 ) --dly[k];
+        }
+    }
 }
 
 int SDRAM::read_offset( int region ) {
@@ -111,7 +125,7 @@ int SDRAM::read_offset( int region ) {
 
 SDRAM::SDRAM(DUT& _dut) : dut(_dut) {
     banks[0] = nullptr;
-    for( int k=1; k<5; k++ ) {
+    for( int k=0; k<4; k++ ) {
         banks[k] = new char[0x80'0000];
         dly[k]=-1;
     }
@@ -125,10 +139,20 @@ SDRAM::SDRAM(DUT& _dut) : dut(_dut) {
     fin.read( banks[1], len );
     printf("GFX1 start = %x\nOBJ start  = %x\n", char_start, obj_start );
     printf("Read %d kBytes in bank1 for Char/Tiles\n", len>>10 );
+    fin.close();
+    // Read the VRAM file
+    const int VRAM_OFFSET = 0x10'0000<<1;
+    fin.open("scr.bin", ios_base::binary);
+    if( !fin ) {
+        printf("Cannot open scr.bin\n");
+    } else {
+        fin.read( banks[0] + VRAM_OFFSET, 0x8000 );
+        fin.close();
+    }
 }
 
 SDRAM::~SDRAM() {
-    for( int k=1; k<5; k++ ) {
+    for( int k=0; k<4; k++ ) {
         delete [] banks[k];
         banks[k] = nullptr;
     }

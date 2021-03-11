@@ -25,10 +25,14 @@ module jts16_video(
     // CPU interface
     input              char_cs,
     input              pal_cs,
+    input              scr1_cs,
     input      [12:1]  cpu_addr,
     input      [15:0]  cpu_dout,
     input      [ 1:0]  dsn,
-    output     [15:0]  cpu_din,
+
+    output     [15:0]  char_dout,
+    output     [15:0]  mmr_dout,
+    output     [15:0]  pal_dout,
 
     // SDRAM interface
     input              char_ok,
@@ -103,7 +107,7 @@ jts16_char u_char(
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
     .dsn       ( dsn            ),
-    .cpu_din   ( cpu_din        ),
+    .cpu_din   ( char_dout      ),
 
     // SDRAM interface
     .char_ok   ( char_ok    ),
@@ -127,7 +131,7 @@ jts16_scr u_scr1(
     .cpu_addr  ( cpu_addr[4:1]  ),
     .cpu_dout  ( cpu_dout       ),
     .dsn       ( dsn            ),
-    .cpu_din   ( cpu_din        ),
+    .cpu_din   ( mmr_dout       ),
 
     // SDRAM interface
     .map_ok    ( map1_ok        ),
@@ -155,7 +159,7 @@ jts16_colmix u_colmix(
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
     .dsn       ( dsn            ),
-    .cpu_din   ( cpu_din        ),
+    .cpu_din   ( pal_dout       ),
 
 
     .LHBL      ( LHBL       ),

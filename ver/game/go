@@ -28,6 +28,8 @@ drop1 -l < $GAME/char${SCENE}.bin > char_lo.bin
 drop1    < $GAME/pal${SCENE}.bin > pal_hi.bin
 drop1 -l < $GAME/pal${SCENE}.bin > pal_lo.bin
 
+cp $GAME/scr${SCENE}.bin scr.bin
+
 jtsim -mist -sysname s16 -verilator \
 	-videow 320 -videoh 224 \
     -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER
