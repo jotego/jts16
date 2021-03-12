@@ -75,7 +75,7 @@ always @(posedge clk, posedge rst) begin
                         if( &pxl_data[15:12] )
                             busy <= 0;  // done
                     end else begin
-                        bf_we    <= 1;
+                        bf_we    <= ~&pxl_data[11:8];
                     end
                     pxl_data <= pxl_data<<4;
                     bf_addr  <= bf_addr+1;
@@ -83,7 +83,7 @@ always @(posedge clk, posedge rst) begin
                     if( obj_cs && obj_ok ) begin
                         // Draw pixels
                         pxl_data <= obj_data;
-                        bf_we    <= 1;
+                        bf_we    <= ~&obj_data[15:12]; // $F must not be drawn
                         cnt      <= 1;
                         draw     <= 1;
                         obj_cs   <= 0;
