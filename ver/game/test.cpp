@@ -77,10 +77,10 @@ int SDRAM::read_bank( char *bank, int addr ) {
 }
 
 void SDRAM::update() {
-    CData *ba_ack[4] = { &dut.ba0_ack, &dut.ba1_ack, &dut.ba2_ack, &dut.ba3_ack };
-    CData *ba_rdy[4] = { &dut.ba0_rdy, &dut.ba1_rdy, &dut.ba2_rdy, &dut.ba3_rdy };
-    unsigned ba_rd [4] = { dut.ba0_rd ,  dut.ba1_rd ,  dut.ba2_rdy,  dut.ba3_rd  };
-    unsigned ba_add[4] = { dut.ba0_addr, dut.ba1_addr, dut.ba2_addr, dut.ba3_addr };
+    CData *ba_ack[4]   = { &dut.ba0_ack, &dut.ba1_ack, &dut.ba2_ack, &dut.ba3_ack  };
+    CData *ba_rdy[4]   = { &dut.ba0_rdy, &dut.ba1_rdy, &dut.ba2_rdy, &dut.ba3_rdy  };
+    unsigned ba_rd [4] = {  dut.ba0_rd,   dut.ba1_rd,   dut.ba2_rd,   dut.ba3_rd   };
+    unsigned ba_add[4] = {  dut.ba0_addr, dut.ba1_addr, dut.ba2_addr, dut.ba3_addr };
 
     if( dut.rst ) {
         for( int k=0; k<4; k++ ) {

@@ -77,8 +77,8 @@ always @(posedge clk, posedge rst) begin
                     pxl_data <= pxl_data<<4;
                     bf_addr  <= bf_addr+1;
                     bf_we    <= 1;
-                end else begin
-                    if( obj_cs && obj_ok && !stop ) begin
+                end else if(!stop) begin
+                    if( obj_cs && obj_ok ) begin
                         // Draw pixels
                         pxl_data <= obj_data;
                         cnt[0]   <= 1;
