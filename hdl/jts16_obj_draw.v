@@ -65,7 +65,7 @@ always @(posedge clk, posedge rst) begin
             bf_addr  <= xpos;
         end else begin
             bf_we <= 0;
-            stop  <= 0;
+            if(obj_ok) stop <= 0;
             if( busy ) begin
                 if( draw ) begin
                     cnt <= cnt<<1;
