@@ -24,14 +24,14 @@ module jts16_obj_scan(
     output     [10:0]  tbl_addr,
     input      [15:0]  tbl_dout,
     output     [15:0]  tbl_din,
-    output             tbl_we,
+    output reg         tbl_we,
 
     // Draw commands
     output reg         dr_start,
     input              dr_busy,
     output reg [ 8:0]  dr_xpos,
     output reg [15:0]  dr_offset,  // MSB is also used as the flip bit
-    output reg [ 1:0]  dr_bank,
+    output reg [ 2:0]  dr_bank,
     output reg [ 1:0]  dr_prio,
     output reg [ 5:0]  dr_pal,
 
@@ -50,7 +50,7 @@ reg        first, stop;
 reg        [ 8:0] xpos;
 reg signed [15:0] pitch;
 reg        [15:0] offset; // MSB is also used as the flip bit
-reg        [ 1:0] bank;
+reg        [ 2:0] bank;
 reg        [ 1:0] prio;
 reg        [ 5:0] pal;
 wire       [15:0] next_offset;
@@ -68,15 +68,15 @@ always @(posedge clk, posedge rst) begin
         dr_start <= 0;
         stop     <= 0;
     end else begin
+        if( idx<6 ) idx <= idx + 1;
+        if( !stop ) st <= st+1;
         case( st )
-            if( idx<6 ) idx <= idx + 1;
-            if( !stop ) st <= st+1;
             0: begin
                 cur_obj  <= 0;
                 idx      <= 0;
                 stop     <= 0;
-                dt_start <= 0;
-                if( !hstart || vrender>8'd223 ) begin // holds it still
+                dr_start <= 0;
+                if( !hstart || vrender>223 ) begin // holds it still
                     st  <= 0;
                     idx <= 0;
                 end
@@ -94,9 +94,9 @@ always @(posedge clk, posedge rst) begin
                     st   <= 1;
                     stop <= 1;
                 end
-                first <= tbl_dout[15:8] == vrender; // first line
+                first <= tbl_dout[15:8] == vrender[7:0]; // first line
             end
-            2: xpos <= tbl_dout;
+            2: xpos <= tbl_dout[8:0];
             3: begin
                 /*if( tbl_dout[15] )
                     st <= 0; // Done
@@ -120,7 +120,7 @@ always @(posedge clk, posedge rst) begin
             end
             6: begin
                 offset  <= next_offset;
-                tlb_we  <= 1;
+                tbl_we  <= 1;
             end
             7: begin
                 tbl_we  <= 0;
@@ -130,7 +130,7 @@ always @(posedge clk, posedge rst) begin
                     dr_pal    <= pal;
                     dr_prio   <= prio;
                     dr_bank   <= bank;
-                    dt_start  <= 1;
+                    dr_start  <= 1;
                 end else begin
                     st <= 7;
                 end

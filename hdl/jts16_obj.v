@@ -31,7 +31,7 @@ module jts16_obj(
     // SDRAM interface
     input              obj_ok,
     output             obj_cs,
-    output     [16:0]  obj_addr, // 2 bank + 15 offset = 17
+    output     [17:0]  obj_addr, // 3 bank + 15 offset = 18
     input      [15:0]  obj_data,
 
     // Video signal
@@ -52,10 +52,14 @@ wire        dr_start;
 wire        dr_busy;
 wire [ 8:0] dr_xpos;
 wire [15:0] dr_offset;  // MSB is also used as the flip bit
-wire [ 1:0] dr_bank;
+wire [ 2:0] dr_bank;
 wire [ 1:0] dr_prio;
 wire [ 5:0] dr_pal;
 
+// Line buffer
+reg  [11:0] buf_data;
+reg  [ 8:0] buf_addr;
+reg         buf_we;
 
 jts16_obj_ram u_ram(
     .rst       ( rst            ),
@@ -70,7 +74,7 @@ jts16_obj_ram u_ram(
     .tbl_addr  ( tbl_addr       ),
     .tbl_dout  ( tbl_dout       ),
     .tbl_we    ( tbl_we         ),
-    .tbl_din   ( tbl_din        ),
+    .tbl_din   ( tbl_din        )
 );
 
 jts16_obj_scan u_scan(
@@ -102,13 +106,13 @@ jts16_obj_draw u_draw(
     .clk       ( clk            ),
 
     // From scan
-    start      ( dr_start       ),
-    busy       ( dr_busy        ),
-    xpos       ( dr_xpos        ),
-    offset     ( dr_offset      ),
-    bank       ( dr_bank        ),
-    prio       ( dr_prio        ),
-    pal        ( dr_pal         ),
+    .start     ( dr_start       ),
+    .busy      ( dr_busy        ),
+    .xpos      ( dr_xpos        ),
+    .offset    ( dr_offset      ),
+    .bank      ( dr_bank        ),
+    .prio      ( dr_prio        ),
+    .pal       ( dr_pal         ),
 
     // SDRAM interface
     .obj_ok    ( obj_ok         ),
@@ -117,15 +121,15 @@ jts16_obj_draw u_draw(
     .obj_data  ( obj_data       ),
 
     // Buffer
-    .bf_data   ( bf_data        ),
-    .bf_we     ( bf_we          ),
-    .bf_addr   ( bf_addr        )
+    .bf_data   ( buf_data       ),
+    .bf_we     ( buf_we         ),
+    .bf_addr   ( buf_addr       )
 );
 
 jtframe_obj_buffer #(
-    .DW   (  11),
+    .DW   (  12),
     .AW   (   9),
-    .ALPHA(4'HF)
+    .ALPHA(4'h0)
 ) u_line(
     .clk        ( clk       ),
     .LHBL       ( LHBL      ),

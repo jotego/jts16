@@ -28,6 +28,9 @@ drop1 -l < $GAME/char${SCENE}.bin > char_lo.bin
 drop1    < $GAME/pal${SCENE}.bin > pal_hi.bin
 drop1 -l < $GAME/pal${SCENE}.bin > pal_lo.bin
 
+drop1    < $GAME/obj${SCENE}.bin > obj_hi.bin
+drop1 -l < $GAME/obj${SCENE}.bin > obj_lo.bin
+
 cp $GAME/scr${SCENE}.bin scr.bin
 
 jtsim -mist -sysname s16 -verilator \

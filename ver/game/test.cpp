@@ -134,11 +134,18 @@ SDRAM::SDRAM(DUT& _dut) : dut(_dut) {
     fin.read( header, 32 );
     int char_start = read_offset(2<<1);
     int obj_start  = read_offset(3<<1);
+    int firm_start = read_offset(4<<1);
+    // Read GFX
     int len = obj_start-char_start;
     fin.seekg( char_start, ios_base::cur );
     fin.read( banks[1], len );
     printf("GFX1 start = %x\nOBJ start  = %x\n", char_start, obj_start );
     printf("Read %d kBytes in bank1 for Char/Tiles\n", len>>10 );
+    // Read OBJ
+    len = firm_start-obj_start;
+    fin.seekg( obj_start+32, ios_base::beg );
+    fin.read( banks[2], len );
+    printf("Read %d kBytes in bank2 for objects\n", len>>10 );
     fin.close();
     // Read the VRAM file
     const int VRAM_OFFSET = 0x10'0000<<1;

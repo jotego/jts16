@@ -118,11 +118,15 @@ wire         scr1_ok, scr2_ok;
 wire [16:0]  scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
 wire [31:0]  scr1_data, scr2_data;
 
+wire         obj_ok, obj_cs;
+wire [17:0]  obj_addr;
+wire [15:0]  obj_data;
+
 // CPU interface
 wire [12:1]  cpu_addr;
-wire [15:0]  cpu_dout, char_dout, mmr_dout, pal_dout;
+wire [15:0]  cpu_dout, char_dout, mmr_dout, pal_dout, obj_dout;
 wire [ 1:0]  dsn;
-wire         char_cs, scr1_cs, pal_cs;
+wire         char_cs, scr1_cs, pal_cs, objram_cs;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -144,13 +148,15 @@ jts16_video u_video(
     // CPU interface
     .cpu_addr   ( cpu_addr  ),
     .char_cs    ( char_cs   ),
-    .scr1_cs    ( scr1_cs   ),
     .pal_cs     ( pal_cs    ),
+    .objram_cs  ( objram_cs ),
+
     .cpu_dout   ( cpu_dout  ),
     .dsn        ( dsn       ),
     .char_dout  ( char_dout ),
     .mmr_dout   ( mmr_dout  ),
     .pal_dout   ( pal_dout  ),
+    .obj_dout   ( obj_dout  ),
 
     // SDRAM interface
     .char_ok    ( char_ok   ),
@@ -172,6 +178,11 @@ jts16_video u_video(
     .scr2_ok    ( scr2_ok   ),
     .scr2_addr  ( scr2_addr ),
     .scr2_data  ( scr2_data ),
+
+    .obj_ok     ( obj_ok    ),
+    .obj_cs     ( obj_cs    ),
+    .obj_addr   ( obj_addr  ),
+    .obj_data   ( obj_data  ),
 
     // Video signal
     .HS         ( HS        ),
@@ -214,6 +225,12 @@ jts16_sdram u_sdram(
     .scr2_addr  ( scr2_addr ),
     .scr2_data  ( scr2_data ),
 
+    // Sprite interface
+    .obj_ok     ( obj_ok    ),
+    .obj_cs     ( obj_cs    ),
+    .obj_addr   ( obj_addr  ),
+    .obj_data   ( obj_data  ),
+
     // Bank 0: allows R/W
     .ba0_addr   ( ba0_addr  ),
     .ba0_rd     ( ba0_rd    ),
@@ -228,6 +245,12 @@ jts16_sdram u_sdram(
     .ba1_rd     ( ba1_rd    ),
     .ba1_rdy    ( ba1_rdy   ),
     .ba1_ack    ( ba1_ack   ),
+
+    // Bank 2: Read only
+    .ba2_addr   ( ba2_addr  ),
+    .ba2_rd     ( ba2_rd    ),
+    .ba2_rdy    ( ba2_rdy   ),
+    .ba2_ack    ( ba2_ack   ),
 
     .data_read  ( data_read ),
     .refresh_en ( refresh_en)

@@ -33,6 +33,7 @@ module jts16_video(
     output     [15:0]  char_dout,
     output     [15:0]  mmr_dout,
     output     [15:0]  pal_dout,
+    output     [15:0]  obj_dout,
 
     // SDRAM interface
     input              char_ok,
@@ -57,7 +58,7 @@ module jts16_video(
 
     input              obj_ok,
     output             obj_cs,
-    output     [16:0]  obj_addr,
+    output     [17:0]  obj_addr,
     input      [15:0]  obj_data,
 
     // Video signal
@@ -73,7 +74,7 @@ module jts16_video(
     output     [ 4:0]  blue
 );
 
-wire [ 8:0] V, H, vrender, vrender1;
+wire [ 8:0] V, hdump, vrender, vrender1;
 wire        LHBL, hstart;
 
 // video layers
@@ -103,7 +104,7 @@ jtframe_vtimer #(
     .clk       ( clk      ),
     .pxl_cen   ( pxl_cen  ),
     .vdump     ( V        ),
-    .H         ( H        ),
+    .H         ( hdump    ),
     .Hinit     ( hstart   ),
     .LHBL      ( LHBL     ),
     .LVBL      ( LVBL     ),
@@ -155,7 +156,7 @@ jts16_char u_char(
 
     // Video signal
     .vdump     ( V          ),
-    .hdump     ( H          ),
+    .hdump     ( hdump          ),
     .pxl       ( char_pxl   )
 );
 
@@ -179,9 +180,9 @@ jts16_scr u_scr1(
     .scr_data  ( scr1_data      ),
 
     // Video signal
-    .vdump     ( V          ),
-    .hdump     ( H          ),
-    .pxl       ( scr1_pxl   )
+    .vdump     ( V              ),
+    .hdump     ( hdump          ),
+    .pxl       ( scr1_pxl       )
 );
 
 jts16_scr u_scr2(
@@ -204,9 +205,9 @@ jts16_scr u_scr2(
     .scr_data  ( scr2_data      ),
 
     // Video signal
-    .vdump     ( V          ),
-    .hdump     ( H          ),
-    .pxl       ( scr2_pxl   )
+    .vdump     ( V              ),
+    .hdump     ( hdump          ),
+    .pxl       ( scr2_pxl       )
 );
 
 jts16_obj u_obj(
@@ -219,7 +220,7 @@ jts16_obj u_obj(
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
     .dsn       ( dsn            ),
-    .cpu_din   ( char_dout      ),
+    .cpu_din   ( obj_dout       ),
 
     // SDRAM interface
     .obj_ok    ( obj_ok         ),

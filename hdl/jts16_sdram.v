@@ -44,6 +44,12 @@ module jts16_sdram(
     input      [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
     output     [31:0]  scr2_data,
 
+    // Obj
+    output             obj_ok,
+    output             obj_cs,
+    input      [17:0]  obj_addr,
+    output     [15:0]  obj_data,
+
     // Bank 0: allows R/W
     output   [21:0] ba0_addr,
     output          ba0_rd,
@@ -58,6 +64,12 @@ module jts16_sdram(
     output          ba1_rd,
     input           ba1_rdy,
     input           ba1_ack,
+
+    // Bank 2: Read only
+    output   [21:0] ba2_addr,
+    output          ba2_rd,
+    input           ba2_rdy,
+    input           ba2_ack,
 
     input    [31:0] data_read,
     output          refresh_en
@@ -170,6 +182,26 @@ jtframe_rom_3slots #(
     .sdram_req  ( ba1_rd    ),
     .sdram_addr ( ba1_addr  ),
     .data_rdy   ( ba1_rdy   ),
+    .data_read  ( data_read )
+);
+
+jtframe_rom_1slot #(
+    .SLOT0_DW(16),
+    .SLOT0_AW(18)
+) u_bank2(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+
+    .slot0_addr ( obj_addr  ),
+    .slot0_dout ( obj_data  ),
+    .slot0_cs   ( obj_cs    ),
+    .slot0_ok   ( obj_ok    ),
+
+    // SDRAM controller interface
+    .sdram_ack  ( ba2_ack   ),
+    .sdram_req  ( ba2_rd    ),
+    .sdram_addr ( ba2_addr  ),
+    .data_rdy   ( ba2_rdy   ),
     .data_read  ( data_read )
 );
 

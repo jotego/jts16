@@ -25,14 +25,14 @@ module jts16_obj_draw(
     output reg         busy,
     input      [ 8:0]  xpos,
     input      [15:0]  offset,  // MSB is also used as the flip bit
-    input      [ 1:0]  bank,
+    input      [ 2:0]  bank,
     input      [ 1:0]  prio,
     input      [ 5:0]  pal,
 
     // SDRAM interface
     input              obj_ok,
     output reg         obj_cs,
-    output reg [16:0]  obj_addr, // 2 bank + 15 offset = 17
+    output reg [17:0]  obj_addr, // 3 bank + 15 offset = 18
     input      [15:0]  obj_data,
 
     // Buffer
@@ -43,7 +43,7 @@ module jts16_obj_draw(
 
 reg [15:0] pxl_data;
 reg [ 3:0] cnt;
-reg        stop;
+reg        draw, stop;
 
 assign bf_data = { prio, pal, pxl_data[15:12] };
 
@@ -51,13 +51,15 @@ assign bf_data = { prio, pal, pxl_data[15:12] };
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         busy   <= 0;
+        draw   <= 0;
         obj_cs <= 0;
         bf_we  <= 0;
     end else begin
         if( start ) begin
-            obj_addr <= { bank, offset };
+            obj_addr <= { bank[1:0], bank[2], offset[14:0] };
             obj_cs   <= 1;
             busy     <= 1;
+            draw     <= 0;
             bf_we    <= 0;
             stop     <= 1;
             bf_addr  <= xpos;

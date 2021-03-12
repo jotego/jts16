@@ -29,7 +29,7 @@ module jts16_obj_ram(
 
     // Object scan
     input      [11:1]  tbl_addr,
-    input      [15:0]  tbl_dout,
+    output     [15:0]  tbl_dout,
     input              tbl_we,
     output     [15:0]  tbl_din
 );
