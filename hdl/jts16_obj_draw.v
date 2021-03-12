@@ -68,20 +68,23 @@ always @(posedge clk, posedge rst) begin
             if(obj_ok) stop <= 0;
             if( busy ) begin
                 if( draw ) begin
-                    cnt <= cnt<<1;
+                    cnt <= { cnt[2:0], 1'b1 };
                     if(cnt[3]) begin
-                        draw<= 0;
+                        draw  <= 0;
+                        bf_we <= 0;
                         if( &pxl_data[15:12] )
                             busy <= 0;  // done
+                    end else begin
+                        bf_we    <= 1;
                     end
                     pxl_data <= pxl_data<<4;
                     bf_addr  <= bf_addr+1;
-                    bf_we    <= 1;
                 end else if(!stop) begin
                     if( obj_cs && obj_ok ) begin
                         // Draw pixels
                         pxl_data <= obj_data;
-                        cnt[0]   <= 1;
+                        bf_we    <= 1;
+                        cnt      <= 1;
                         draw     <= 1;
                         obj_cs   <= 0;
                     end else begin

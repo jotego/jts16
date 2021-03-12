@@ -76,7 +76,8 @@ always @(posedge clk, posedge rst) begin
         if( !stop ) begin
             st <= st+1;
         end
-        stop <= 0;
+        stop      <= 0;
+        dr_start  <= 0;
         case( st )
             0: begin
                 cur_obj  <= 0;
@@ -95,9 +96,9 @@ always @(posedge clk, posedge rst) begin
                     end else if( !inzone || badobj ) begin
                         // Next object
                         cur_obj <= cur_obj + 1;
-                        idx  <= 0;
-                        st   <= 1;
-                        stop <= 1;
+                        idx     <= 0;
+                        st      <= 1;
+                        stop    <= 1;
                     end else begin // draw this one
                         //stop <= 1;
                         //cur_obj <= cur_obj - 1;
@@ -140,6 +141,11 @@ always @(posedge clk, posedge rst) begin
                     dr_prio   <= prio;
                     dr_bank   <= bank;
                     dr_start  <= 1;
+                    // next
+                    cur_obj <= cur_obj + 1;
+                    idx     <= 0;
+                    st      <= 1;
+                    stop    <= 1;
                 end else begin
                     st <= 7;
                 end
