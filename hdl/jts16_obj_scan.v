@@ -1,0 +1,142 @@
+/*  This file is part of JTS16.
+    JTS16 program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    JTS16 program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with JTS16.  If not, see <http://www.gnu.org/licenses/>.
+
+    Author: Jose Tejada Gomez. Twitter: @topapate
+    Version: 1.0
+    Date: 12-3-2021 */
+
+module jts16_obj_scan(
+    input              rst,
+    input              clk,
+
+    // Obj table
+    output     [10:0]  tbl_addr,
+    input      [15:0]  tbl_dout,
+    output     [15:0]  tbl_din,
+    output             tbl_we,
+
+    // Draw commands
+    output reg         dr_start,
+    input              dr_busy,
+    output reg [ 8:0]  dr_xpos,
+    output reg [15:0]  dr_offset,  // MSB is also used as the flip bit
+    output reg [ 1:0]  dr_bank,
+    output reg [ 1:0]  dr_prio,
+    output reg [ 5:0]  dr_pal,
+
+    // Video signal
+    input              hstart,
+    input      [ 8:0]  vrender
+);
+
+reg  [7:0] cur_obj;  // current object
+reg  [2:0] idx;
+reg  [2:0] st;
+reg        first, stop;
+
+// Object data
+//reg        [7:0] bottom, top;
+reg        [ 8:0] xpos;
+reg signed [15:0] pitch;
+reg        [15:0] offset; // MSB is also used as the flip bit
+reg        [ 1:0] bank;
+reg        [ 1:0] prio;
+reg        [ 5:0] pal;
+wire       [15:0] next_offset;
+
+assign tbl_addr    = { cur_obj, idx };
+assign next_offset = (first ? offset : tbl_dout) + pitch;
+assign tbl_din     = offset;
+
+
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        cur_obj  <= 0;
+        st       <= 0;
+        tbl_we   <= 0;
+        dr_start <= 0;
+        stop     <= 0;
+    end else begin
+        case( st )
+            if( idx<6 ) idx <= idx + 1;
+            if( !stop ) st <= st+1;
+            0: begin
+                cur_obj  <= 0;
+                idx      <= 0;
+                stop     <= 0;
+                dt_start <= 0;
+                if( !hstart || vrender>8'd223 ) begin // holds it still
+                    st  <= 0;
+                    idx <= 0;
+                end
+            end
+            1: begin
+                stop <= 0;
+                //{ bottom, top } <= tbl_dout;
+                if( tbl_dout[7:0]>8'hf0 ) begin
+                    st <= 0; // Done
+                end else if( tbl_dout[15:8] < vrender[7:0] ||     // top line
+                             tbl_dout[ 7:0] > vrender[7:0] ) begin // bottom line
+                    // Next object
+                    cur_obj <= cur_obj + 1;
+                    idx  <= 0;
+                    st   <= 1;
+                    stop <= 1;
+                end
+                first <= tbl_dout[15:8] == vrender; // first line
+            end
+            2: xpos <= tbl_dout;
+            3: begin
+                /*if( tbl_dout[15] )
+                    st <= 0; // Done
+                else if( tbl_dout[14] ) begin
+                    // Next object
+                    cur_obj <= cur_obj + 1;
+                    idx  <= 0;
+                    st   <= 1;
+                    stop <= 1;
+                end else */begin
+                    pitch <= tbl_dout;
+                end
+            end
+            4: begin
+                offset  <= tbl_dout; // flip/offset
+            end
+            5: begin
+                pal  <= tbl_dout[13:8];
+                bank <= tbl_dout[6:4];
+                prio <= tbl_dout[1:0];
+            end
+            6: begin
+                offset  <= next_offset;
+                tlb_we  <= 1;
+            end
+            7: begin
+                tbl_we  <= 0;
+                if( !dr_busy ) begin
+                    dr_xpos   <= xpos;
+                    dr_offset <= offset;
+                    dr_pal    <= pal;
+                    dr_prio   <= prio;
+                    dr_bank   <= bank;
+                    dt_start  <= 1;
+                end else begin
+                    st <= 7;
+                end
+            end
+        endcase
+    end
+end
+
+endmodule

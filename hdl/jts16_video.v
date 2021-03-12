@@ -25,7 +25,7 @@ module jts16_video(
     // CPU interface
     input              char_cs,
     input              pal_cs,
-    input              scr1_cs,
+    input              objram_cs,
     input      [12:1]  cpu_addr,
     input      [15:0]  cpu_dout,
     input      [ 1:0]  dsn,
@@ -44,7 +44,7 @@ module jts16_video(
     input      [15:0]  map1_data,
 
     input              scr1_ok,
-    output reg [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output     [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
     input      [31:0]  scr1_data,
 
     input              map2_ok,
@@ -52,8 +52,13 @@ module jts16_video(
     input      [15:0]  map2_data,
 
     input              scr2_ok,
-    output reg [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output     [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
     input      [31:0]  scr2_data,
+
+    input              obj_ok,
+    output             obj_cs,
+    output     [16:0]  obj_addr,
+    input      [15:0]  obj_data,
 
     // Video signal
     output             HS,
@@ -68,12 +73,13 @@ module jts16_video(
     output     [ 4:0]  blue
 );
 
-wire [8:0] V, H, vrender;
-wire LHBL;
+wire [ 8:0] V, H, vrender, vrender1;
+wire        LHBL, hstart;
 
 // video layers
 wire [ 6:0] char_pxl;
 wire [10:0] scr1_pxl, scr2_pxl;
+wire [11:0] obj_pxl;
 
 // MMR
 wire [15:0] scr1_pages, scr2_pages,
@@ -98,14 +104,14 @@ jtframe_vtimer #(
     .pxl_cen   ( pxl_cen  ),
     .vdump     ( V        ),
     .H         ( H        ),
-    .Hinit     (          ),
+    .Hinit     ( hstart   ),
     .LHBL      ( LHBL     ),
     .LVBL      ( LVBL     ),
     .HS        ( HS       ),
     .VS        ( VS       ),
     .Vinit     (          ),
     .vrender   ( vrender  ),
-    .vrender1  (          )
+    .vrender1  ( vrender1 )
 );
 
 jts16_mmr u_mmr(
@@ -203,6 +209,32 @@ jts16_scr u_scr2(
     .pxl       ( scr2_pxl   )
 );
 
+jts16_obj u_obj(
+    .rst       ( rst            ),
+    .clk       ( clk            ),
+    .pxl_cen   ( pxl_cen        ),
+
+    // CPU interface
+    .cpu_obj_cs( objram_cs      ),
+    .cpu_addr  ( cpu_addr[11:1] ),
+    .cpu_dout  ( cpu_dout       ),
+    .dsn       ( dsn            ),
+    .cpu_din   ( char_dout      ),
+
+    // SDRAM interface
+    .obj_ok    ( obj_ok         ),
+    .obj_cs    ( obj_cs         ),
+    .obj_addr  ( obj_addr       ), // 9 addr + 3 vertical = 12 bits
+    .obj_data  ( obj_data       ),
+
+    // Video signal
+    .hstart    ( hstart         ),
+    .LHBL      ( LHBL           ),
+    .vrender   ( vrender        ),
+    .hdump     ( hdump          ),
+    .pxl       ( obj_pxl        )
+);
+
 jts16_colmix u_colmix(
     .rst       ( rst        ),
     .clk       ( clk        ),
@@ -223,6 +255,7 @@ jts16_colmix u_colmix(
     .char_pxl  ( char_pxl   ),
     .scr1_pxl  ( scr1_pxl   ),
     .scr2_pxl  ( scr2_pxl   ),
+    .obj_pxl   ( obj_pxl    ),
 
     .red       ( red        ),
     .green     ( green      ),

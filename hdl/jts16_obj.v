@@ -1,0 +1,142 @@
+/*  This file is part of JTS16.
+    JTS16 program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    JTS16 program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with JTS16.  If not, see <http://www.gnu.org/licenses/>.
+
+    Author: Jose Tejada Gomez. Twitter: @topapate
+    Version: 1.0
+    Date: 12-3-2021 */
+
+module jts16_obj(
+    input              rst,
+    input              clk,
+    input              pxl_cen,   // pixel clock enable
+
+    // CPU interface
+    input              cpu_obj_cs,
+    input      [11:1]  cpu_addr,
+    input      [15:0]  cpu_dout,
+    input      [ 1:0]  dsn,
+    output     [15:0]  cpu_din,
+
+    // SDRAM interface
+    input              obj_ok,
+    output             obj_cs,
+    output     [16:0]  obj_addr, // 2 bank + 15 offset = 17
+    input      [15:0]  obj_data,
+
+    // Video signal
+    input              hstart,
+    input              LHBL,
+    input      [ 8:0]  vrender,
+    input      [ 8:0]  hdump,
+    output     [11:0]  pxl
+);
+
+// Object scan
+wire [11:1] tbl_addr;
+wire [15:0] tbl_din, tbl_dout;
+wire        tbl_we;
+
+// Draw commands
+wire        dr_start;
+wire        dr_busy;
+wire [ 8:0] dr_xpos;
+wire [15:0] dr_offset;  // MSB is also used as the flip bit
+wire [ 1:0] dr_bank;
+wire [ 1:0] dr_prio;
+wire [ 5:0] dr_pal;
+
+
+jts16_obj_ram u_ram(
+    .rst       ( rst            ),
+    .clk       ( clk            ),
+    // CPU interface
+    .obj_cs    ( cpu_obj_cs     ),
+    .cpu_addr  ( cpu_addr       ),
+    .cpu_dout  ( cpu_dout       ),
+    .dsn       ( dsn            ),
+    .cpu_din   ( cpu_din        ),
+    // Scan
+    .tbl_addr  ( tbl_addr       ),
+    .tbl_dout  ( tbl_dout       ),
+    .tbl_we    ( tbl_we         ),
+    .tbl_din   ( tbl_din        ),
+);
+
+jts16_obj_scan u_scan(
+    .rst       ( rst            ),
+    .clk       ( clk            ),
+
+    // Obj table
+    .tbl_addr  ( tbl_addr       ),
+    .tbl_dout  ( tbl_dout       ),
+    .tbl_we    ( tbl_we         ),
+    .tbl_din   ( tbl_din        ),
+
+    // Draw commands
+    .dr_start  ( dr_start       ),
+    .dr_busy   ( dr_busy        ),
+    .dr_xpos   ( dr_xpos        ),
+    .dr_offset ( dr_offset      ),
+    .dr_bank   ( dr_bank        ),
+    .dr_prio   ( dr_prio        ),
+    .dr_pal    ( dr_pal         ),
+
+    // Video signal
+    .hstart    ( hstart         ),
+    .vrender   ( vrender        )
+);
+
+jts16_obj_draw u_draw(
+    .rst       ( rst            ),
+    .clk       ( clk            ),
+
+    // From scan
+    start      ( dr_start       ),
+    busy       ( dr_busy        ),
+    xpos       ( dr_xpos        ),
+    offset     ( dr_offset      ),
+    bank       ( dr_bank        ),
+    prio       ( dr_prio        ),
+    pal        ( dr_pal         ),
+
+    // SDRAM interface
+    .obj_ok    ( obj_ok         ),
+    .obj_cs    ( obj_cs         ),
+    .obj_addr  ( obj_addr       ),
+    .obj_data  ( obj_data       ),
+
+    // Buffer
+    .bf_data   ( bf_data        ),
+    .bf_we     ( bf_we          ),
+    .bf_addr   ( bf_addr        )
+);
+
+jtframe_obj_buffer #(
+    .DW   (  11),
+    .AW   (   9),
+    .ALPHA(4'HF)
+) u_line(
+    .clk        ( clk       ),
+    .LHBL       ( LHBL      ),
+    // New data writes
+    .wr_data    ( buf_data  ),
+    .wr_addr    ( buf_addr  ),
+    .we         ( buf_we    ),
+    // Old data reads (and erases)
+    .rd_addr    ( hdump     ),
+    .rd         ( pxl_cen   ),
+    .rd_data    ( pxl       )
+);
+
+endmodule

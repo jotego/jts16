@@ -47,34 +47,25 @@ reg  [ 8:0] code;
 
 assign we = ~dsn & {2{char_cs}};
 
-jtframe_dual_ram #(.aw(11),.simfile("char_lo.bin")) u_low(
-    // CPU writes
-    .clk0   ( clk           ),
-    .addr0  ( cpu_addr      ),
-    .data0  ( cpu_dout[7:0] ),
-    .we0    ( we[0]         ),
-    .q0     ( cpu_din[7:0]  ),
-    // Video reads
-    .clk1   ( clk           ),
-    .addr1  ( scan_addr     ),
-    .data1  (               ),
-    .we1    ( 1'b0          ),
-    .q1     ( scan[7:0]     )
-);
+jtframe_dual_ram16 #(
+    .aw(11),
+    .simfile_lo("char_lo.bin"),
+    .simfile_hi("char_hi.bin")
+) u_ram(
+    .clk0   ( clk       ),
+    .clk1   ( clk       ),
 
-jtframe_dual_ram #(.aw(11),.simfile("char_hi.bin")) u_high(
     // CPU writes
-    .clk0   ( clk           ),
-    .addr0  ( cpu_addr      ),
-    .data0  ( cpu_dout[15:8]),
-    .we0    ( we[1]         ),
-    .q0     ( cpu_din[15:8] ),
+    .addr0  ( cpu_addr  ),
+    .data0  ( cpu_dout  ),
+    .we0    ( we        ),
+    .q0     ( cpu_din   ),
+
     // Video reads
-    .clk1   ( clk           ),
-    .addr1  ( scan_addr     ),
-    .data1  (               ),
-    .we1    ( 1'b0          ),
-    .q1     ( scan[15:8]    )
+    .addr1  ( scan_addr ),
+    .data1  (           ),
+    .we1    ( 2'b0      ),
+    .q1     ( scan      )
 );
 
 assign scan_addr = { vdump[7:3], hdump[8:3] };
