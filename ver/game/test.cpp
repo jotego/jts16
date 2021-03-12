@@ -143,7 +143,7 @@ SDRAM::SDRAM(DUT& _dut) : dut(_dut) {
     printf("Read %d kBytes in bank1 for Char/Tiles\n", len>>10 );
     // Read OBJ
     len = firm_start-obj_start;
-    fin.seekg( obj_start+32, ios_base::beg );
+    //fin.seekg( obj_start+32, ios_base::beg );
     fin.read( banks[2], len );
     printf("Read %d kBytes in bank2 for objects\n", len>>10 );
     fin.close();

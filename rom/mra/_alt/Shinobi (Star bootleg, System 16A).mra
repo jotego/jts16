@@ -60,20 +60,20 @@
         </interleave>
         <!-- sprites - starts at 0x90000 -->
         <interleave output="16">
-            <part name="b14" crc="5eb00fc1" map="01"/>
-            <part name="b10" crc="611f413a" map="10"/>
+            <part name="b10" crc="611f413a" map="01"/>
+            <part name="b14" crc="5eb00fc1" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="b15" crc="25307ef8" map="01"/>
-            <part name="b11" crc="3c0797c0" map="10"/>
+            <part name="b11" crc="3c0797c0" map="01"/>
+            <part name="b15" crc="25307ef8" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="b16" crc="04a437f8" map="01"/>
-            <part name="b12" crc="c29ac34e" map="10"/>
+            <part name="b12" crc="c29ac34e" map="01"/>
+            <part name="b16" crc="04a437f8" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="b17" crc="0315cf42" map="01"/>
-            <part name="b13" crc="7e98bd36" map="10"/>
+            <part name="b13" crc="7e98bd36" map="01"/>
+            <part name="b17" crc="0315cf42" map="10"/>
         </interleave>
         <!-- n7751 - starts at 0x110000 -->
         <part name="7751.bin" crc="6a9534fc"/>

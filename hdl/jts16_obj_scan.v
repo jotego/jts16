@@ -59,6 +59,10 @@ assign tbl_addr    = { cur_obj, idx };
 assign next_offset = (first ? offset : tbl_dout) + pitch;
 assign tbl_din     = offset;
 
+wire [7:0] top    = tbl_dout[ 7:0],
+           bottom = tbl_dout[15:8];
+wire       inzone = vrender[7:0]>=top && bottom>vrender[7:0];
+wire       badobj = top >= bottom;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -68,8 +72,11 @@ always @(posedge clk, posedge rst) begin
         dr_start <= 0;
         stop     <= 0;
     end else begin
-        if( idx<6 ) idx <= idx + 1;
-        if( !stop ) st <= st+1;
+        if( idx<5 ) idx <= idx + 1;
+        if( !stop ) begin
+            st <= st+1;
+        end
+        stop <= 0;
         case( st )
             0: begin
                 cur_obj  <= 0;
@@ -82,19 +89,21 @@ always @(posedge clk, posedge rst) begin
                 end
             end
             1: begin
-                stop <= 0;
-                //{ bottom, top } <= tbl_dout;
-                if( tbl_dout[7:0]>8'hf0 ) begin
-                    st <= 0; // Done
-                end else if( tbl_dout[15:8] < vrender[7:0] ||     // top line
-                             tbl_dout[ 7:0] > vrender[7:0] ) begin // bottom line
-                    // Next object
-                    cur_obj <= cur_obj + 1;
-                    idx  <= 0;
-                    st   <= 1;
-                    stop <= 1;
+                if( !stop ) begin
+                    if( bottom>=8'hf0 ) begin
+                        st <= 0; // Done
+                    end else if( !inzone || badobj ) begin
+                        // Next object
+                        cur_obj <= cur_obj + 1;
+                        idx  <= 0;
+                        st   <= 1;
+                        stop <= 1;
+                    end else begin // draw this one
+                        //stop <= 1;
+                        //cur_obj <= cur_obj - 1;
+                        first <= top == vrender[7:0]; // first line
+                    end
                 end
-                first <= tbl_dout[15:8] == vrender[7:0]; // first line
             end
             2: xpos <= tbl_dout[8:0];
             3: begin
@@ -119,7 +128,7 @@ always @(posedge clk, posedge rst) begin
                 prio <= tbl_dout[1:0];
             end
             6: begin
-                offset  <= next_offset;
+                if(!first) offset <= next_offset;
                 tbl_we  <= 1;
             end
             7: begin

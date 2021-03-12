@@ -55,12 +55,12 @@
         </interleave>
         <!-- sprites - starts at 0xE8000 -->
         <interleave output="16">
-            <part name="mpr-11368.b5" crc="0377d7ce" map="01"/>
-            <part name="mpr-11366.b1" crc="319ede73" map="10"/>
+            <part name="mpr-11366.b1" crc="319ede73" map="01"/>
+            <part name="mpr-11368.b5" crc="0377d7ce" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="mpr-11369.b6" crc="d751d2a2" map="01"/>
-            <part name="mpr-11367.b2" crc="1d06c5c7" map="10"/>
+            <part name="mpr-11367.b2" crc="1d06c5c7" map="01"/>
+            <part name="mpr-11369.b6" crc="d751d2a2" map="10"/>
         </interleave>
         <!-- soundcpu:key - starts at 0x168000 -->
         <part name="317-0054.key" crc="39fd4535"/>

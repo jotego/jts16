@@ -60,20 +60,20 @@
         </interleave>
         <!-- sprites - starts at 0x98000 -->
         <interleave output="16">
-            <part name="opr-11294.b5" crc="5eb00fc1" map="01"/>
-            <part name="opr-11290.b1" crc="611f413a" map="10"/>
+            <part name="opr-11290.b1" crc="611f413a" map="01"/>
+            <part name="opr-11294.b5" crc="5eb00fc1" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="opr-11295.b6" crc="25307ef8" map="01"/>
-            <part name="opr-11291.b2" crc="3c0797c0" map="10"/>
+            <part name="opr-11291.b2" crc="3c0797c0" map="01"/>
+            <part name="opr-11295.b6" crc="25307ef8" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="opr-11296.b7" crc="04a437f8" map="01"/>
-            <part name="opr-11292.b3" crc="c29ac34e" map="10"/>
+            <part name="opr-11292.b3" crc="c29ac34e" map="01"/>
+            <part name="opr-11296.b7" crc="04a437f8" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="opr-11297.b8" crc="b6e1fd72" map="01"/>
-            <part name="opr-11293.b4" crc="41f41063" map="10"/>
+            <part name="opr-11293.b4" crc="41f41063" map="01"/>
+            <part name="opr-11297.b8" crc="b6e1fd72" map="10"/>
         </interleave>
         <!-- soundcpu:key - starts at 0x118000 -->
         <part name="317-0054.key" crc="39fd4535"/>

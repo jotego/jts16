@@ -60,20 +60,20 @@
         </interleave>
         <!-- sprites - starts at 0x90000 -->
         <interleave output="16">
-            <part name="epr-11294.11" crc="5eb00fc1" map="01"/>
-            <part name="epr-11290.10" crc="611f413a" map="10"/>
+            <part name="epr-11290.10" crc="611f413a" map="01"/>
+            <part name="epr-11294.11" crc="5eb00fc1" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="epr-11295.18" crc="25307ef8" map="01"/>
-            <part name="epr-11291.17" crc="3c0797c0" map="10"/>
+            <part name="epr-11291.17" crc="3c0797c0" map="01"/>
+            <part name="epr-11295.18" crc="25307ef8" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="epr-11296.24" crc="04a437f8" map="01"/>
-            <part name="epr-11292.23" crc="c29ac34e" map="10"/>
+            <part name="epr-11292.23" crc="c29ac34e" map="01"/>
+            <part name="epr-11296.24" crc="04a437f8" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="epr-11297.30" crc="b6e1fd72" map="01"/>
-            <part name="epr-11293.29" crc="41f41063" map="10"/>
+            <part name="epr-11293.29" crc="41f41063" map="01"/>
+            <part name="epr-11297.30" crc="b6e1fd72" map="10"/>
         </interleave>
         <!-- n7751 - starts at 0x110000 -->
         <part name="7751.bin" crc="6a9534fc"/>

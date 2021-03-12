@@ -58,20 +58,20 @@
         </interleave>
         <!-- sprites - starts at 0x90000 -->
         <interleave output="16">
-            <part name="3.bin" crc="5eb00fc1" map="01"/>
-            <part name="5.bin" crc="611f413a" map="10"/>
+            <part name="5.bin" crc="611f413a" map="01"/>
+            <part name="3.bin" crc="5eb00fc1" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="2.bin" crc="25307ef8" map="01"/>
-            <part name="8.bin" crc="3c0797c0" map="10"/>
+            <part name="8.bin" crc="3c0797c0" map="01"/>
+            <part name="2.bin" crc="25307ef8" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="4.bin" crc="04a437f8" map="01"/>
-            <part name="6.bin" crc="c29ac34e" map="10"/>
+            <part name="6.bin" crc="c29ac34e" map="01"/>
+            <part name="4.bin" crc="04a437f8" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="1.bin" crc="b6e1fd72" map="01"/>
-            <part name="7.bin" crc="41f41063" map="10"/>
+            <part name="7.bin" crc="41f41063" map="01"/>
+            <part name="1.bin" crc="b6e1fd72" map="10"/>
         </interleave>
         <!-- Total 0x110000 bytes - 1088 kBytes -->
     </rom>
