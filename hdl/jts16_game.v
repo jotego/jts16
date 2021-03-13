@@ -31,8 +31,8 @@ module jts16_game(
     // cabinet I/O
     input   [ 1:0]  start_button,
     input   [ 1:0]  coin_input,
-    input   [ 9:0]  joystick1,
-    input   [ 9:0]  joystick2,
+    input   [ 6:0]  joystick1,
+    input   [ 6:0]  joystick2,
 
     // SDRAM interface
     input           downloading,
@@ -172,6 +172,8 @@ jts16_main u_main(
     .ram_cs     ( ram_cs    ),
     .ram_data   ( ram_data  ),
     .ram_ok     ( ram_ok    ),
+    // CPU bus
+    .cpu_dout   ( main_dout ),
     .UDSWn      ( UDSWn     ),
     .LDSWn      ( LDSWn     ),
     .RnW        ( main_rnw  ),

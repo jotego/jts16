@@ -21,6 +21,7 @@ module jts16_main(
     input              clk,
     input              cpu_cen,
     input              cpu_cenb,
+
     // Video
     input  [8:0]       vdump,
     input              hstart,
@@ -36,12 +37,14 @@ module jts16_main(
     output reg         ram_cs,
     input       [15:0] ram_data,   // coming from VRAM or RAM
     input              ram_ok,
+    // CPU bus
+    output      [15:0] cpu_dout,
     output             UDSWn,
     output             LDSWn,
     output             RnW,
     // cabinet I/O
-    input       [ 9:0] joystick1,
-    input       [ 9:0] joystick2,
+    input       [ 6:0] joystick1,
+    input       [ 6:0] joystick2,
     input       [ 1:0] start_button,
     input       [ 1:0] coin_input,
     input              service,
@@ -144,7 +147,26 @@ always @(posedge clk, posedge rst) begin
         end
     end
 end
-/*
+
+wire DTACKn;
+wire bus_cs   = pal_cs | char_cs | vram_cs | ram_cs | rom_cs;
+wire bus_busy = |{ rom_cs & ~rom_ok, (ram_cs | vram_cs) & ~ram_ok };
+
+jts16_dtack u_dtack(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .cpu_cen    ( cpu_cen   ),
+    .cpu_cenb   ( cpu_cenb  ),
+
+    .ASn        ( ASn       ),
+    .bus_cs     ( bus_cs    ),
+    .bus_busy   ( bus_busy  ),
+    .rom_ok     ( rom_ok    ),
+    .ram_ok     ( ram_ok    ),
+
+    .DTACKn     ( DTACKn    )
+);
+
 fx68k u_cpu(
     .clk        ( clk         ),
     .extReset   ( rst         ),
@@ -185,5 +207,5 @@ fx68k u_cpu(
     .VMAn       (             ),
     .E          (             )
 );
-*/
+
 endmodule

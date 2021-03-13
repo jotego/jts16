@@ -1,7 +1,7 @@
 #!/bin/bash
 
 GAME=shinobi
-SCENE=1
+SCENE=
 OTHER=
 
 while [ $# -gt 0 ]; do
@@ -15,25 +15,35 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-echo "Simulating scene $SCENE"
+if [ ! -z "$SCENE" ]; then
+	echo "Simulating scene $SCENE"
 
-if [ ! -e $GAME/char$SCENE.bin ]; then
-    echo Cannot open scene files
-    exit 1
+	if [ ! -e $GAME/char$SCENE.bin ]; then
+	    echo Cannot open scene files
+	    exit 1
+	fi
+
+	drop1    < $GAME/char${SCENE}.bin > char_hi.bin
+	drop1 -l < $GAME/char${SCENE}.bin > char_lo.bin
+
+	drop1    < $GAME/pal${SCENE}.bin > pal_hi.bin
+	drop1 -l < $GAME/pal${SCENE}.bin > pal_lo.bin
+
+	drop1    < $GAME/obj${SCENE}.bin > obj_hi.bin
+	drop1 -l < $GAME/obj${SCENE}.bin > obj_lo.bin
+
+	cp $GAME/scr${SCENE}.bin scr.bin
+else
+    jtsim_sdram rom.bin -header 32 sndcpu pcmdata gfx1 obj pcmfirm \
+        -region maincpu 0 0 \
+        -region gfx1 1 0 \
+        -region obj 2 0
 fi
 
-drop1    < $GAME/char${SCENE}.bin > char_hi.bin
-drop1 -l < $GAME/char${SCENE}.bin > char_lo.bin
-
-drop1    < $GAME/pal${SCENE}.bin > pal_hi.bin
-drop1 -l < $GAME/pal${SCENE}.bin > pal_lo.bin
-
-drop1    < $GAME/obj${SCENE}.bin > obj_hi.bin
-drop1 -l < $GAME/obj${SCENE}.bin > obj_lo.bin
-
-cp $GAME/scr${SCENE}.bin scr.bin
-
-jtsim -mist -sysname s16 -verilator \
+jtsim -mist -sysname s16 \
 	-videow 320 -videoh 224 \
     -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER && \
-eom frame_1.jpg
+
+if [ ! -z "$SCENE" ]; then
+	eom frame_1.jpg 2> /dev/null
+fi
