@@ -152,6 +152,7 @@ jts16_cen u_cen(
     .fm_cen     ( fm_cen    )
 );
 
+`ifndef NOMAIN
 jts16_main u_main(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -194,6 +195,7 @@ jts16_main u_main(
     .dipsw_a     ( dipsw_a    ),
     .dipsw_b     ( dipsw_b    )
 );
+`endif
 
 jts16_video u_video(
     .rst        ( rst       ),

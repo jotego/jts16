@@ -3,6 +3,8 @@
 GAME=shinobi
 SCENE=
 OTHER=
+HEXDUMP=-nohex
+SIMULATOR=-verilator
 
 while [ $# -gt 0 ]; do
     case $1 in
@@ -33,14 +35,20 @@ if [ ! -z "$SCENE" ]; then
 	drop1 -l < $GAME/obj${SCENE}.bin > obj_lo.bin
 
 	cp $GAME/scr${SCENE}.bin scr.bin
-else
-    jtsim_sdram rom.bin -header 32 sndcpu pcmdata gfx1 obj pcmfirm \
-        -region maincpu 0 0 \
-        -region gfx1 1 0 \
-        -region obj 2 0
+    OTHER="$OTHER -d NOMAIN"
 fi
 
-jtsim -mist -sysname s16 \
+if which ncverilog >/dev/null; then
+    SIMULATOR=
+    HEXDUMP=
+fi
+
+jtsim_sdram $HEXDUMP -header 32 sndcpu pcmdata gfx1 obj pcmfirm \
+    -region maincpu 0 0 \
+    -region gfx1 1 0 \
+    -region obj 2 0
+
+jtsim -mist -sysname s16 $SIMULATOR \
 	-videow 320 -videoh 224 \
     -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER && \
 
