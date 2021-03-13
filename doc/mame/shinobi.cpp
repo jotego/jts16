@@ -455,14 +455,14 @@ void segas16a_state::machine_reset()
 void segas16a_state::system16a_map(address_map &map)
 {
     map.unmap_value_high();
-    map(0x000000, 0x03ffff).mirror(0x380000).rom();
-    map(0x400000, 0x407fff).mirror(0xb88000).rw(m_segaic16vid, FUNC(segaic16_video_device::tileram_r), FUNC(segaic16_video_device::tileram_w)).share("tileram");
-    map(0x410000, 0x410fff).mirror(0xb8f000).rw(m_segaic16vid, FUNC(segaic16_video_device::textram_r), FUNC(segaic16_video_device::textram_w)).share("textram");
-    map(0x440000, 0x4407ff).mirror(0x3bf800).ram().share("sprites");
-    map(0x840000, 0x840fff).mirror(0x3bf000).ram().w(FUNC(segas16a_state::paletteram_w)).share("paletteram");
-    map(0xc40000, 0xc43fff).mirror(0x39c000).rw(FUNC(segas16a_state::misc_io_r), FUNC(segas16a_state::misc_io_w));
-    map(0xc60000, 0xc6ffff).r(m_watchdog, FUNC(watchdog_timer_device::reset16_r));
-    map(0xc70000, 0xc73fff).mirror(0x38c000).ram().share("nvram");
+    map(0x00'0000, 0x03'ffff).mirror(0x380000).rom();
+    map(0x40'0000, 0x40'7fff).mirror(0xb88000).rw(m_segaic16vid, FUNC(segaic16_video_device::tileram_r), FUNC(segaic16_video_device::tileram_w)).share("tileram");
+    map(0x41'0000, 0x41'0fff).mirror(0xb8f000).rw(m_segaic16vid, FUNC(segaic16_video_device::textram_r), FUNC(segaic16_video_device::textram_w)).share("textram");
+    map(0x44'0000, 0x44'07ff).mirror(0x3bf800).ram().share("sprites");
+    map(0x84'0000, 0x84'0fff).mirror(0x3bf000).ram().w(FUNC(segas16a_state::paletteram_w)).share("paletteram");
+    map(0xc4'0000, 0xc4'3fff).mirror(0x39c000).rw(FUNC(segas16a_state::misc_io_r), FUNC(segas16a_state::misc_io_w));
+    map(0xc6'0000, 0xc6'ffff).r(m_watchdog, FUNC(watchdog_timer_device::reset16_r));
+    map(0xc7'0000, 0xc7'3fff).mirror(0x38c000).ram().share("nvram");
 }
 
 //**************************************************************************

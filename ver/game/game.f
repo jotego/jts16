@@ -9,6 +9,7 @@
 ../../hdl/jts16_obj_ram.v
 ../../hdl/jts16_obj_draw.v
 ../../hdl/jts16_obj_scan.v
+../../hdl/jts16_main.v
 
 ../../modules/jtframe/hdl/jtframe_sh.v
 ../../modules/jtframe/hdl/clocking/jtframe_frac_cen.v

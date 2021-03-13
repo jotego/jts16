@@ -31,8 +31,8 @@ module jts16_game(
     // cabinet I/O
     input   [ 1:0]  start_button,
     input   [ 1:0]  coin_input,
-    input   [ 6:0]  joystick1,
-    input   [ 6:0]  joystick2,
+    input   [ 9:0]  joystick1,
+    input   [ 9:0]  joystick2,
 
     // SDRAM interface
     input           downloading,
@@ -103,30 +103,43 @@ wire    cpu_cen, cpu_cenb,
         snd_cen, fm_cen;
 
 // video signals
-wire    HB, VB, LVBL;
+wire        HB, VB, LVBL;
+wire [ 8:0] vdump;
+wire        hstart;
 
 // SDRAM interface
-wire         char_ok;
-wire [12:0]  char_addr;
-wire [31:0]  char_data;
+wire        main_cs, vram_cs, ram_cs;
+wire [17:1] main_addr;
+wire [15:0] main_data, ram_data;
+wire        main_ok, ram_ok;
 
-wire         map1_ok, map2_ok;
-wire [13:0]  map1_addr, map2_addr; // 3 pages + 11 addr = 14 (32 kB)
-wire [15:0]  map1_data, map2_data;
+wire        char_ok;
+wire [12:0] char_addr;
+wire [31:0] char_data;
 
-wire         scr1_ok, scr2_ok;
-wire [16:0]  scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
-wire [31:0]  scr1_data, scr2_data;
+wire        map1_ok, map2_ok;
+wire [13:0] map1_addr, map2_addr; // 3 pages + 11 addr = 14 (32 kB)
+wire [15:0] map1_data, map2_data;
 
-wire         obj_ok, obj_cs;
-wire [17:0]  obj_addr;
-wire [15:0]  obj_data;
+wire        scr1_ok, scr2_ok;
+wire [16:0] scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
+wire [31:0] scr1_data, scr2_data;
+
+wire        obj_ok, obj_cs;
+wire [17:0] obj_addr;
+wire [15:0] obj_data;
 
 // CPU interface
-wire [12:1]  cpu_addr;
-wire [15:0]  cpu_dout, char_dout, mmr_dout, pal_dout, obj_dout;
-wire [ 1:0]  dsn;
-wire         char_cs, scr1_cs, pal_cs, objram_cs;
+wire [12:1] cpu_addr;
+wire [15:0] main_dout, char_dout, mmr_dout, pal_dout, obj_dout;
+wire [ 1:0] dsn;
+wire        UDSWn, LDSWn, main_rnw;
+wire        char_cs, scr1_cs, pal_cs, objram_cs;
+
+// Cabinet inputs
+wire [ 7:0] dipsw_a, dipsw_b;
+
+assign { dipsw_b, dipsw_a } = dipsw[15:0];
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -137,6 +150,47 @@ jts16_cen u_cen(
     .cpu_cenb   ( cpu_cenb  ),
     .snd_cen    ( snd_cen   ),
     .fm_cen     ( fm_cen    )
+);
+
+jts16_main u_main(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .cpu_cen    ( cpu_cen   ),
+    .cpu_cenb   ( cpu_cenb  ),
+    // Video
+    .vdump      ( vdump     ),
+    .hstart     ( hstart    ),
+    // Video circuitry
+    .vram_cs    ( vram_cs   ),
+    .char_cs    ( char_cs   ),
+    .pal_cs     ( pal_cs    ),
+    .objram_cs  ( objram_cs ),
+    .char_dout  ( char_dout ),
+    .pal_dout   ( pal_dout  ),
+    .obj_dout   ( obj_dout  ),
+    // RAM access
+    .ram_cs     ( ram_cs    ),
+    .ram_data   ( ram_data  ),
+    .ram_ok     ( ram_ok    ),
+    .UDSWn      ( UDSWn     ),
+    .LDSWn      ( LDSWn     ),
+    .RnW        ( main_rnw  ),
+    // cabinet I/O
+    .joystick1   ( joystick1  ),
+    .joystick2   ( joystick2  ),
+    .start_button(start_button),
+    .coin_input  ( coin_input ),
+    .service     ( service    ),
+    // ROM access
+    .rom_cs      ( main_cs    ),
+    .rom_addr    ( main_addr  ),
+    .rom_data    ( main_data  ),
+    .rom_ok      ( main_ok    ),
+    // DIP switches
+    .dip_pause   ( dip_pause  ),
+    .dip_test    ( dip_test   ),
+    .dipsw_a     ( dipsw_a    ),
+    .dipsw_b     ( dipsw_b    )
 );
 
 jts16_video u_video(
@@ -151,7 +205,7 @@ jts16_video u_video(
     .pal_cs     ( pal_cs    ),
     .objram_cs  ( objram_cs ),
 
-    .cpu_dout   ( cpu_dout  ),
+    .cpu_dout   ( main_dout ),
     .dsn        ( dsn       ),
     .char_dout  ( char_dout ),
     .mmr_dout   ( mmr_dout  ),
@@ -192,6 +246,8 @@ jts16_video u_video(
     .LVBL       ( LVBL      ),
     .LHBL_dly   ( LHBL_dly  ),
     .LVBL_dly   ( LVBL_dly  ),
+    .vdump      ( vdump     ),
+    .hstart     ( hstart    ),
     .red        ( red       ),
     .green      ( green     ),
     .blue       ( blue      )
@@ -201,6 +257,22 @@ jts16_sdram u_sdram(
     .rst        ( rst       ),
     .clk        ( clk       ),
     .LVBL       ( LVBL      ),
+
+    // Main CPU
+    .main_cs    ( main_cs   ),
+    .vram_cs    ( vram_cs   ),
+    .ram_cs     ( ram_cs    ),
+
+    .main_addr  ( main_addr ),
+    .main_data  ( main_data ),
+    .ram_data   ( ram_data  ),
+
+    .main_ok    ( main_ok   ),
+    .ram_ok     ( ram_ok    ),
+
+    .dsn        ( dsn       ),
+    .main_dout  ( main_dout ),
+    .main_rnw   ( main_rnw  ),
 
     // Char interface
     .char_ok    ( char_ok   ),

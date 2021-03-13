@@ -21,34 +21,47 @@ module jts16_sdram(
     input           clk,
     input           LVBL,
 
+    // Main CPU
+    input           main_cs,
+    input           vram_cs,
+    input           ram_cs,
+    input    [17:1] main_addr,
+    output   [15:0] main_data,
+    output   [15:0] ram_data,
+    output          main_ok,
+    output          ram_ok,
+    input    [ 1:0] dsn,
+    input    [15:0] main_dout,
+    input           main_rnw,
+
     // Char
     output          char_ok,
     input   [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
     output  [31:0]  char_data,
 
     // Scroll 1
-    output             map1_ok,
-    input      [13:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
-    output     [15:0]  map1_data,
+    output          map1_ok,
+    input   [13:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output  [15:0]  map1_data,
 
-    output             scr1_ok,
-    input      [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
-    output     [31:0]  scr1_data,
+    output          scr1_ok,
+    input   [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output  [31:0]  scr1_data,
 
     // Scroll 1
-    output             map2_ok,
-    input      [13:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
-    output     [15:0]  map2_data,
+    output          map2_ok,
+    input   [13:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output  [15:0]  map2_data,
 
-    output             scr2_ok,
-    input      [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
-    output     [31:0]  scr2_data,
+    output          scr2_ok,
+    input   [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output  [31:0]  scr2_data,
 
     // Obj
-    output             obj_ok,
-    output             obj_cs,
-    input      [17:0]  obj_addr,
-    output     [15:0]  obj_data,
+    output          obj_ok,
+    output          obj_cs,
+    input   [17:0]  obj_addr,
+    output  [15:0]  obj_data,
 
     // Bank 0: allows R/W
     output   [21:0] ba0_addr,
@@ -78,17 +91,21 @@ module jts16_sdram(
 localparam [21:0] ZERO_OFFSET=0,
                   VRAM_OFFSET=22'h10_0000;
 
-assign refresh_en = LVBL;
+wire [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
+wire        xram_cs;
 
-/* verilator lint_off PINMISSING */
+assign refresh_en = LVBL;
+assign xram_addr  = { ram_cs, main_addr[14:1] }; // RAM is mapped up
+assign xram_cs    = ram_cs | vram_cs;
+
 jtframe_ram_4slots #(
-    // VRAM
+    // VRAM/RAM
     .SLOT0_DW(16),
-    .SLOT0_AW(14),  // 32 kB
+    .SLOT0_AW(15),  // 32 kB + 16kB
 
     // Game ROM
     .SLOT1_DW(16),
-    .SLOT1_AW(19),  // 1MB temptative value
+    .SLOT1_AW(17),  // 256kB temptative value
 
     // VRAM access by SCR1
     .SLOT2_DW(16),
@@ -101,37 +118,37 @@ jtframe_ram_4slots #(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
-    .offset0    ( ZERO_OFFSET ),
-    .offset1    ( VRAM_OFFSET ),
-    .offset2    ( VRAM_OFFSET ),
-    .offset3    ( VRAM_OFFSET ),
+    .offset0    (VRAM_OFFSET),
+    .offset1    (ZERO_OFFSET),
+    .offset2    (VRAM_OFFSET),
+    .offset3    (VRAM_OFFSET),
 
-    //.slot0_addr ( vram_addr ),
-    //.slot1_addr ( main_addr  ),
+    .slot0_addr ( xram_addr ),
+    .slot1_addr ( main_addr ),
     .slot2_addr ( map1_addr ),
     .slot3_addr ( map2_addr ),
 
     //  output data
-    //.slot0_dout ( main_dout ),
-    //.slot1_dout ( vram_dout ),
+    .slot0_dout ( ram_data  ),
+    .slot1_dout ( main_data ),
     .slot2_dout ( map1_data ),
     .slot3_dout ( map2_data ),
 
-    .slot0_cs   ( 1'b0      ),
-    .slot1_cs   ( 1'b0      ),
+    .slot0_cs   ( xram_cs   ),
+    .slot1_cs   ( main_cs   ),
     .slot2_cs   ( LVBL      ),
     .slot3_cs   ( LVBL      ),
 
-    .slot0_wen  ( 1'b0      ),
-    .slot0_din  ( 16'd0     ),
-    .slot0_wrmask( 2'b11    ),
+    .slot0_wen  ( ~main_rnw ),
+    .slot0_din  ( main_dout ),
+    .slot0_wrmask( dsn      ),
 
     .slot1_clr  ( 1'b0      ),
     .slot2_clr  ( 1'b0      ),
     .slot3_clr  ( 1'b0      ),
 
-    //.slot0_ok   ( main_ok   ),
-    //.slot1_ok   ( vram_ok   ),
+    .slot0_ok   ( ram_ok    ),
+    .slot1_ok   ( main_ok   ),
     .slot2_ok   ( map1_ok   ),
     .slot3_ok   ( map2_ok   ),
 
@@ -145,7 +162,6 @@ jtframe_ram_4slots #(
     .sdram_wrmask( ba0_din_m ),
     .data_read   ( data_read )
 );
-/* verilator lint_on PINMISSING */
 
 jtframe_rom_3slots #(
     .SLOT0_DW(32),
