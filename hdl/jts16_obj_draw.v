@@ -32,7 +32,7 @@ module jts16_obj_draw(
     // SDRAM interface
     input              obj_ok,
     output reg         obj_cs,
-    output reg [17:0]  obj_addr, // 3 bank + 15 offset = 18
+    output     [17:0]  obj_addr, // 3 bank + 15 offset = 18
     input      [15:0]  obj_data,
 
     // Buffer
@@ -41,11 +41,17 @@ module jts16_obj_draw(
     output reg [ 8:0]  bf_addr
 );
 
-reg [15:0] pxl_data;
-reg [ 3:0] cnt;
-reg        draw, stop;
+reg  [15:0] pxl_data, cur;
+reg  [ 3:0] cnt;
+reg         draw, stop;
+wire [ 3:0] cur_pxl, nxt_pxl;
+wire        hflip;
 
-assign bf_data = { prio, pal, pxl_data[15:12] };
+assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[15:12];
+assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[11: 8];
+assign obj_addr = { bank[1:0], bank[2], cur[14:0] };
+assign bf_data  = { prio, pal, cur_pxl };
+assign hflip    = cur[15];
 
 // ignoring h-flip for now
 always @(posedge clk, posedge rst) begin
@@ -56,7 +62,7 @@ always @(posedge clk, posedge rst) begin
         bf_we  <= 0;
     end else begin
         if( start ) begin
-            obj_addr <= { bank[1:0], bank[2], offset[14:0] };
+            cur      <= offset;
             obj_cs   <= 1;
             busy     <= 1;
             draw     <= 0;
@@ -72,25 +78,25 @@ always @(posedge clk, posedge rst) begin
                     if(cnt[3]) begin
                         draw  <= 0;
                         bf_we <= 0;
-                        if( &pxl_data[15:12] )
+                        if( &cur_pxl )
                             busy <= 0;  // done
                     end else begin
-                        bf_we    <= ~&pxl_data[11:8];
+                        bf_we    <= ~&nxt_pxl;
                     end
-                    pxl_data <= pxl_data<<4;
+                    pxl_data <= hflip ? pxl_data>>4 : pxl_data<<4;
                     bf_addr  <= bf_addr+1;
                 end else if(!stop) begin
                     if( obj_cs && obj_ok ) begin
                         // Draw pixels
                         pxl_data <= obj_data;
-                        bf_we    <= ~&obj_data[15:12]; // $F must not be drawn
+                        bf_we    <= ~&(hflip ? obj_data[3:0] : obj_data[15:12]); // $F must not be drawn
                         cnt      <= 1;
                         draw     <= 1;
                         obj_cs   <= 0;
                     end else begin
-                        obj_addr[14:0] <= obj_addr[14:0] + 1;   // obey the bank limit
-                        obj_cs   <= 1;
-                        stop     <= 1;
+                        cur    <= cur + (hflip ? -1 : 1);   // hflip may be affected
+                        obj_cs <= 1;
+                        stop   <= 1;
                     end
                 end
             end

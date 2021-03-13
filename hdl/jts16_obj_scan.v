@@ -100,8 +100,6 @@ always @(posedge clk, posedge rst) begin
                         st      <= 1;
                         stop    <= 1;
                     end else begin // draw this one
-                        //stop <= 1;
-                        //cur_obj <= cur_obj - 1;
                         first <= top == vrender[7:0]; // first line
                     end
                 end
@@ -129,7 +127,7 @@ always @(posedge clk, posedge rst) begin
                 prio <= tbl_dout[1:0];
             end
             6: begin
-                if(!first) offset <= next_offset;
+                offset <= next_offset;
                 tbl_we  <= 1;
             end
             7: begin
