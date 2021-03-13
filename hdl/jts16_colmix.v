@@ -71,16 +71,16 @@ always @(posedge clk) if( pxl_cen ) begin
     lyr2 <= tile_or_obj( obj_pxl[9:0],        scr2_pxl[9:0]  , scr2_pxl[10], obj_prio==2'd1 );
 end
 
-reg [3:0] lyr_sel;
+//reg [3:0] lyr_sel;
 
 always @(*) begin
-    pal_addr = lyr0[3:0]!=0 ? lyr0 : (
-               lyr1[3:0]!=0 ? lyr1 : (
-               lyr2[3:0]!=0 ? lyr2 : 11'd0 ));
-    lyr_sel[3] = pal_addr[10]; // OBJ
-    lyr_sel[0] = lyr0[3:0]!=0;
-    lyr_sel[1] = lyr1[3:0]!=0 && !lyr_sel[0];
-    lyr_sel[2] = lyr2[3:0]!=0 &&  lyr_sel[1:0]==0;
+    pal_addr = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0 : (
+               (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1 : (
+               (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? lyr2 : 11'd0 ));
+    //lyr_sel[3] = pal_addr[10]; // OBJ
+    //lyr_sel[0] = lyr0[2:0]!=0;
+    //lyr_sel[1] = lyr1[2:0]!=0 && !lyr_sel[0];
+    //lyr_sel[2] = lyr2[2:0]!=0 &&  lyr_sel[1:0]==0;
 end
 
 jtframe_dual_ram #(.aw(11),.simfile("pal_lo.bin")) u_low(
