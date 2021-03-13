@@ -45,7 +45,8 @@ module jts16_colmix(
 );
 
 wire [ 1:0] we;
-reg  [10:0] pal_addr;
+reg  [10:0] pal_addr,
+            lyr0, lyr1, lyr2;
 wire [15:0] pal;
 wire [14:0] rgb;
 wire [ 1:0] obj_prio;
@@ -58,11 +59,28 @@ assign blue  = { rgb[11:8], rgb[14] };
 
 assign obj_prio = obj_pxl[11:10];
 
+function [10:0] tile_or_obj( input [9:0] obj, input [9:0] tile, input tile_prio, input obj_prio );
+    tile_or_obj = obj[3:0]==0 || !obj_prio || tile_prio ?
+                        { 1'b0, tile } :
+                        { 1'b1, obj  };
+endfunction
+
+always @(posedge clk) if( pxl_cen ) begin
+    lyr0 <= tile_or_obj( obj_pxl[9:0], {4'd0, char_pxl[5:0] }, char_pxl[ 6], obj_prio==2'd3 );
+    lyr1 <= tile_or_obj( obj_pxl[9:0],        scr1_pxl[9:0]  , scr1_pxl[10], obj_prio==2'd2 );
+    lyr2 <= tile_or_obj( obj_pxl[9:0],        scr2_pxl[9:0]  , scr2_pxl[10], obj_prio==2'd1 );
+end
+
+reg [3:0] lyr_sel;
+
 always @(*) begin
-    pal_addr = char_pxl[3:0]!=0 ? { 5'd0, char_pxl[5:0] } : (
-                obj_pxl[3:0]!=0 ? { 1'b1,  obj_pxl[9:0] } : (
-               scr1_pxl[3:0]!=0 ? { 1'b0, scr1_pxl[9:0] } : (
-               scr2_pxl[3:0]!=0 ? { 1'b0, scr2_pxl[9:0] } : 11'd0 )));
+    pal_addr = lyr0[3:0]!=0 ? lyr0 : (
+               lyr1[3:0]!=0 ? lyr1 : (
+               lyr2[3:0]!=0 ? lyr2 : 11'd0 ));
+    lyr_sel[3] = pal_addr[10]; // OBJ
+    lyr_sel[0] = lyr0[3:0]!=0;
+    lyr_sel[1] = lyr1[3:0]!=0 && !lyr_sel[0];
+    lyr_sel[2] = lyr2[3:0]!=0 &&  lyr_sel[1:0]==0;
 end
 
 jtframe_dual_ram #(.aw(11),.simfile("pal_lo.bin")) u_low(
@@ -95,7 +113,7 @@ jtframe_dual_ram #(.aw(11),.simfile("pal_hi.bin")) u_hi(
     .q1     ( pal[15:8]     )
 );
 
-jtframe_blank #(.DLY(12),.DW(15)) u_blank(
+jtframe_blank #(.DLY(13),.DW(15)) u_blank(
     .clk        ( clk       ),
     .pxl_cen    ( pxl_cen   ),
     .LHBL       ( LHBL      ),

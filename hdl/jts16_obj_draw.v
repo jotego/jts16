@@ -53,7 +53,6 @@ assign obj_addr = { bank[1:0], bank[2], cur[14:0] };
 assign bf_data  = { prio, pal, cur_pxl };
 assign hflip    = cur[15];
 
-// ignoring h-flip for now
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         busy   <= 0;
