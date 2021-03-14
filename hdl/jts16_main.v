@@ -26,7 +26,6 @@ module jts16_main(
     input  [8:0]       vdump,
     input              hstart,
     // Video circuitry
-    output reg         vram_cs,
     output reg         char_cs,
     output reg         pal_cs,
     output reg         objram_cs,
@@ -34,7 +33,8 @@ module jts16_main(
     input       [15:0] pal_dout,
     input       [15:0] obj_dout,
     // RAM access
-    output reg         ram_cs,
+    output             ram_cs,
+    output             vram_cs,
     input       [15:0] ram_data,   // coming from VRAM or RAM
     input              ram_ok,
     // CPU bus
@@ -72,7 +72,8 @@ wire        BRn, BGACKn, BGn;
 wire        ASn;
 wire        UDSn, LDSn;
 
-reg         io_cs, wdog_cs;
+reg         io_cs, wdog_cs,
+            pre_ram_cs, pre_vram_cs;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -87,37 +88,51 @@ assign rom_addr = A[17:1];
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
             rom_cs    <= 0;
-            vram_cs   <= 0;
             char_cs   <= 0;
             objram_cs <= 0;
             pal_cs    <= 0;
             io_cs     <= 0;
             wdog_cs   <= 0;
-            ram_cs    <= 0;
+
+            pre_vram_cs <= 0;
+            pre_ram_cs  <= 0;
             //rom_addr  <= 0;
     end else begin
         if( !ASn && BGACKn ) begin
             rom_cs    <= A[23:22]==0;                   // 00-03
-            vram_cs   <= A[23:22]==1 && A[18:16]==0;    // 40
             char_cs   <= A[23:22]==1 && A[18:16]==1;    // 41
             //if( !A[23] ) rom_addr <= A[17:1];
             objram_cs <= A[23:22]==1 && A[18:16]==4;    // 44
             pal_cs    <= A[23:22]==2 && A[18:16]==4;    // 84
             io_cs     <= A[23:22]==3 && A[18:16]==4;    // c4
             wdog_cs   <= A[23:22]==3 && A[18:16]==6;    // c6
-            ram_cs    <= A[23:22]==3 && A[18:16]==7;    // c7
+
+            pre_vram_cs <= A[23:22]==1 && A[18:16]==0;    // 40
+            pre_ram_cs  <= A[23:22]==3 && A[18:16]==7;    // c7
         end else begin
             rom_cs    <= 0;
-            vram_cs   <= 0;
             char_cs   <= 0;
             objram_cs <= 0;
             pal_cs    <= 0;
             io_cs     <= 0;
             wdog_cs   <= 0;
-            ram_cs    <= 0;
+            pre_vram_cs <= 0;
+            pre_ram_cs  <= 0;
         end
     end
 end
+
+jtframe_68kramcs u_ramcs(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .cpu_cen    ( cpu_cen   ),
+
+    .UDSWn      ( UDSWn     ),
+    .LDSWn      ( LDSWn     ),
+
+    .pre_cs     ( { pre_ram_cs, pre_vram_cs } ),
+    .cs         ( {     ram_cs,     vram_cs } )
+);
 
 // Data bus input
 reg  [15:0] cpu_din;
@@ -156,8 +171,8 @@ always @(posedge clk, posedge rst) begin
 end
 
 wire DTACKn;
-wire bus_cs   = pal_cs | char_cs | vram_cs | ram_cs | rom_cs;
-wire bus_busy = |{ rom_cs & ~rom_ok, (ram_cs | vram_cs) & ~ram_ok };
+wire bus_cs   = pal_cs | char_cs | pre_vram_cs | pre_ram_cs | rom_cs;
+wire bus_busy = |{ rom_cs & ~rom_ok, (pre_ram_cs | pre_vram_cs) & ~ram_ok };
 
 jts16_dtack u_dtack(
     .rst        ( rst       ),

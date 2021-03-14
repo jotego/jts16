@@ -25,6 +25,7 @@
 
 # 68000
 # ../../modules/jtframe/hdl/cpu/jtframe_68kdma.v
+../../modules/jtframe/hdl/cpu/jtframe_68kramcs.v
 ../../modules/fx68k/fx68kAlu.sv
 ../../modules/fx68k/fx68k.sv
 ../../modules/fx68k/uaddrPla.sv

@@ -119,7 +119,8 @@ assign dwnld_busy = downloading;
 jtframe_dwnld #(
     .HEADER    ( 32         ),
     .BA1_START ( 25'h5_0000 ),
-    .BA2_START ( 25'h9_0000 )
+    .BA2_START ( 25'h9_0000 ),
+    .SWAB      ( 1          )
 ) u_dwnld(
     .clk          ( clk            ),
     .downloading  ( downloading    ),
