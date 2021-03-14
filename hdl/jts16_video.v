@@ -95,7 +95,7 @@ jtframe_vtimer #(
     .HB_END    ( 9'h0BC ),
     .HCNT_START( 9'h70  ),
     .HCNT_END  ( 9'h1FF ),
-    .VB_START  ( 9'h0E0 ),
+    .VB_START  ( 9'h0DF ),
     .VB_END    ( 9'h104 ),
     .VCNT_END  ( 9'h104 ),
     //.VS_START ( 9'h0   ),
