@@ -31,7 +31,7 @@ module jts16_char(
 
     // SDRAM interface
     input              char_ok,
-    output reg [12:0]  char_addr, // 9 addr + 3 vertical = 12 bits
+    output     [12:0]  char_addr, // 9 addr + 3 vertical = 12 bits
     input      [31:0]  char_data,
 
     // Video signal

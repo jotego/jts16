@@ -57,9 +57,9 @@ wire [ 1:0] dr_prio;
 wire [ 5:0] dr_pal;
 
 // Line buffer
-reg  [11:0] buf_data;
-reg  [ 8:0] buf_addr;
-reg         buf_we;
+wire [11:0] buf_data;
+wire [ 8:0] buf_addr;
+wire        buf_we;
 
 jts16_obj_ram u_ram(
     .rst       ( rst            ),

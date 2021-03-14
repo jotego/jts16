@@ -83,34 +83,25 @@ always @(*) begin
     //lyr_sel[2] = lyr2[2:0]!=0 &&  lyr_sel[1:0]==0;
 end
 
-jtframe_dual_ram #(.aw(11),.simfile("pal_lo.bin")) u_low(
-    // CPU writes
-    .clk0   ( clk           ),
-    .addr0  ( cpu_addr      ),
-    .data0  ( cpu_dout[7:0] ),
-    .we0    ( we[0]         ),
-    .q0     ( cpu_din[7:0]  ),
-    // Video reads
-    .clk1   ( clk           ),
-    .addr1  ( pal_addr      ),
-    .data1  (               ),
-    .we1    ( 1'b0          ),
-    .q1     ( pal[7:0]      )
-);
+jtframe_dual_ram16 #(
+    .aw        (11          ),
+    .simfile_lo("pal_lo.bin"),
+    .simfile_hi("pal_hi.bin")
+) u_ram(
+    .clk0   ( clk       ),
+    .clk1   ( clk       ),
 
-jtframe_dual_ram #(.aw(11),.simfile("pal_hi.bin")) u_hi(
     // CPU writes
-    .clk0   ( clk           ),
-    .addr0  ( cpu_addr      ),
-    .data0  ( cpu_dout[7:0] ),
-    .we0    ( we[0]         ),
-    .q0     ( cpu_din[7:0]  ),
+    .addr0  ( cpu_addr  ),
+    .data0  ( cpu_dout  ),
+    .we0    ( we        ),
+    .q0     ( cpu_din   ),
+
     // Video reads
-    .clk1   ( clk           ),
-    .addr1  ( pal_addr      ),
-    .data1  (               ),
-    .we1    ( 1'b0          ),
-    .q1     ( pal[15:8]     )
+    .addr1  ( pal_addr  ),
+    .data1  (           ),
+    .we1    ( 2'b0      ),
+    .q1     ( pal       )
 );
 
 jtframe_blank #(.DLY(13),.DW(15)) u_blank(
