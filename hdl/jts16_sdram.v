@@ -114,11 +114,27 @@ assign refresh_en = LVBL;
 assign xram_addr  = { ram_cs, main_addr[14:1] }; // RAM is mapped up
 assign xram_cs    = ram_cs | vram_cs;
 
-assign prog_ba = 0;
-assign prog_we = 0;
-assign prog_rd = 0;
-
 assign dwnld_busy = downloading;
+
+jtframe_dwnld #(
+    .HEADER    ( 32         ),
+    .BA1_START ( 25'h5_0000 ),
+    .BA2_START ( 25'h9_0000 )
+) u_dwnld(
+    .clk          ( clk            ),
+    .downloading  ( downloading    ),
+    .ioctl_addr   ( ioctl_addr     ),
+    .ioctl_data   ( ioctl_data     ),
+    .ioctl_wr     ( ioctl_wr       ),
+    .prog_addr    ( prog_addr      ),
+    .prog_data    ( prog_data      ),
+    .prog_mask    ( prog_mask      ), // active low
+    .prog_we      ( prog_we        ),
+    .prog_rd      ( prog_rd        ),
+    .prog_ba      ( prog_ba        ),
+    .prom_we      (                ),
+    .sdram_ack    ( prog_ack       )
+);
 
 jtframe_ram_4slots #(
     // VRAM/RAM

@@ -20,6 +20,7 @@
 ../../modules/jtframe/hdl/ram/jtframe_dual_ram.v
 ../../modules/jtframe/hdl/ram/jtframe_dual_ram16.v
 ../../modules/jtframe/hdl/ram/jtframe_obj_buffer.v
+../../modules/jtframe/hdl/sdram/jtframe_dwnld.v
 -F ../../modules/jtframe/hdl/sdram/jtframe_sdram_bank.f
 
 # 68000
