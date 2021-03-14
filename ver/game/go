@@ -38,6 +38,8 @@ if [ ! -z "$SCENE" ]; then
 	cp $GAME/scr${SCENE}.bin scr.bin
     OTHER="$OTHER -d NOMAIN -video -time 16"
     SDRAM_SNAP="-snap scr.bin 0 0x200000"
+else
+    rm -f char_*.bin pal_*.bin obj_*.bin scr.bin
 fi
 
 if which ncverilog >/dev/null; then

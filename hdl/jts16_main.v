@@ -42,6 +42,7 @@ module jts16_main(
     output             UDSWn,
     output             LDSWn,
     output             RnW,
+    output      [12:1] cpu_addr,
     // cabinet I/O
     input       [ 6:0] joystick1,
     input       [ 6:0] joystick2,
@@ -50,7 +51,7 @@ module jts16_main(
     input              service,
     // ROM access
     output reg         rom_cs,
-    output reg  [17:1] rom_addr,
+    output      [17:1] rom_addr,
     input       [15:0] rom_data,
     input              rom_ok,
     // DIP switches
@@ -79,6 +80,8 @@ assign LDSWn = RnW | LDSn;
 // No peripheral bus access for now
 assign BRn   = 1;
 assign BGACKn= 1;
+assign cpu_addr = A[12:1];
+assign rom_addr = A[17:1];
 
 // System 16A memory map
 always @(posedge clk, posedge rst) begin
@@ -91,13 +94,13 @@ always @(posedge clk, posedge rst) begin
             io_cs     <= 0;
             wdog_cs   <= 0;
             ram_cs    <= 0;
-            rom_addr  <= 0;
+            //rom_addr  <= 0;
     end else begin
         if( !ASn && BGACKn ) begin
-            if( A[23:22]==0 ) rom_addr <= A[17:1];
             rom_cs    <= A[23:22]==0;                   // 00-03
             vram_cs   <= A[23:22]==1 && A[18:16]==0;    // 40
             char_cs   <= A[23:22]==1 && A[18:16]==1;    // 41
+            //if( !A[23] ) rom_addr <= A[17:1];
             objram_cs <= A[23:22]==1 && A[18:16]==4;    // 44
             pal_cs    <= A[23:22]==2 && A[18:16]==4;    // 84
             io_cs     <= A[23:22]==3 && A[18:16]==4;    // c4

@@ -140,6 +140,7 @@ wire        char_cs, scr1_cs, pal_cs, objram_cs;
 wire [ 7:0] dipsw_a, dipsw_b;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
+assign dsn = { UDSWn, LDSWn };
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -178,6 +179,7 @@ jts16_main u_main(
     .UDSWn      ( UDSWn     ),
     .LDSWn      ( LDSWn     ),
     .RnW        ( main_rnw  ),
+    .cpu_addr   ( cpu_addr  ),
     // cabinet I/O
     .joystick1   ( joystick1  ),
     .joystick2   ( joystick2  ),
