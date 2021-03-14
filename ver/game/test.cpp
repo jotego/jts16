@@ -128,33 +128,13 @@ SDRAM::SDRAM(DUT& _dut) : dut(_dut) {
     for( int k=0; k<4; k++ ) {
         banks[k] = new char[0x80'0000];
         dly[k]=-1;
-    }
-    // Read the ROM file
-    ifstream fin("rom.bin",ios_base::binary);
-    fin.read( header, 32 );
-    int char_start = read_offset(2<<1);
-    int obj_start  = read_offset(3<<1);
-    int firm_start = read_offset(4<<1);
-    // Read GFX
-    int len = obj_start-char_start;
-    fin.seekg( char_start, ios_base::cur );
-    fin.read( banks[1], len );
-    printf("GFX1 start = %x\nOBJ start  = %x\n", char_start, obj_start );
-    printf("Read %d kBytes in bank1 for Char/Tiles\n", len>>10 );
-    // Read OBJ
-    len = firm_start-obj_start;
-    //fin.seekg( obj_start+32, ios_base::beg );
-    fin.read( banks[2], len );
-    printf("Read %d kBytes in bank2 for objects\n", len>>10 );
-    fin.close();
-    // Read the VRAM file
-    const int VRAM_OFFSET = 0x10'0000<<1;
-    fin.open("scr.bin", ios_base::binary);
-    if( !fin ) {
-        printf("Cannot open scr.bin\n");
-    } else {
-        fin.read( banks[0] + VRAM_OFFSET, 0x8000 );
-        fin.close();
+        // Try to load a file for it
+        char fname[32];
+        sprintf(fname,"sdram_bank%d.bin",k);
+        ifstream fin( fname, ios_base::binary );
+        if( fin ) {
+            fin.read( banks[k], 0x80'0000 );
+        }
     }
 }
 

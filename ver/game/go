@@ -5,6 +5,7 @@ SCENE=
 OTHER=
 HEXDUMP=-nohex
 SIMULATOR=-verilator
+SDRAM_SNAP=
 
 while [ $# -gt 0 ]; do
     case $1 in
@@ -35,7 +36,8 @@ if [ ! -z "$SCENE" ]; then
 	drop1 -l < $GAME/obj${SCENE}.bin > obj_lo.bin
 
 	cp $GAME/scr${SCENE}.bin scr.bin
-    OTHER="$OTHER -d NOMAIN"
+    OTHER="$OTHER -d NOMAIN -video -time 16"
+    SDRAM_SNAP="-snap scr.bin 0 0x200000"
 fi
 
 if which ncverilog >/dev/null; then
@@ -46,12 +48,13 @@ fi
 jtsim_sdram $HEXDUMP -header 32 sndcpu pcmdata gfx1 obj pcmfirm \
     -region maincpu 0 0 \
     -region gfx1 1 0 \
-    -region obj 2 0
+    -region obj 2 0 \
+    $SDRAM_SNAP || exit $?
 
 jtsim -mist -sysname s16 $SIMULATOR \
 	-videow 320 -videoh 224 \
-    -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER && \
+    -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER || exit $?
 
-if [ ! -z "$SCENE" ]; then
+if [[ ! -z "$SCENE" && -e frame_1.jpg ]]; then
 	eom frame_1.jpg 2> /dev/null
 fi
