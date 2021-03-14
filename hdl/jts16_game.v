@@ -329,7 +329,23 @@ jts16_sdram u_sdram(
     .ba2_ack    ( ba2_ack   ),
 
     .data_read  ( data_read ),
-    .refresh_en ( refresh_en)
+    .refresh_en ( refresh_en),
+
+    // ROM load
+    .downloading(downloading ),
+    .dwnld_busy (dwnld_busy  ),
+
+    .ioctl_addr ( ioctl_addr ),
+    .ioctl_data ( ioctl_data ),
+    .ioctl_wr   ( ioctl_wr   ),
+    .prog_addr  ( prog_addr  ),
+    .prog_data  ( prog_data  ),
+    .prog_mask  ( prog_mask  ),
+    .prog_ba    ( prog_ba    ),
+    .prog_we    ( prog_we    ),
+    .prog_rd    ( prog_rd    ),
+    .prog_ack   ( prog_ack   ),
+    .prog_rdy   ( prog_rdy   )
 );
 
 endmodule

@@ -40,9 +40,9 @@ jtframe_frac_cen #(2) u_pxlcen(
 jtframe_frac_cen u_cpucen(
     .clk    ( clk       ),
     .n      ( 10'd29    ),
-    .m      ( 10'd73    ),
-    .cen    ( { cpu_cen, nc   } ),
-    .cenb   ( { cpu_cenb, ncb } )
+    .m      ( 10'd146   ),
+    .cen    ( { nc,  cpu_cen  } ),
+    .cenb   ( { ncb, cpu_cenb } )
 );
 
 jtframe_frac_cen u_sndcen(

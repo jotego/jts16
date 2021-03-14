@@ -85,7 +85,23 @@ module jts16_sdram(
     input           ba2_ack,
 
     input    [31:0] data_read,
-    output          refresh_en
+    output          refresh_en,
+
+    // ROM LOAD
+    input           downloading,
+    output          dwnld_busy,
+
+    input   [24:0]  ioctl_addr,
+    input   [ 7:0]  ioctl_data,
+    input           ioctl_wr,
+    output  [21:0]  prog_addr,
+    output  [15:0]  prog_data,
+    output  [ 1:0]  prog_mask,
+    output  [ 1:0]  prog_ba,
+    output          prog_we,
+    output          prog_rd,
+    input           prog_ack,
+    input           prog_rdy
 );
 
 localparam [21:0] ZERO_OFFSET=0,
@@ -97,6 +113,12 @@ wire        xram_cs;
 assign refresh_en = LVBL;
 assign xram_addr  = { ram_cs, main_addr[14:1] }; // RAM is mapped up
 assign xram_cs    = ram_cs | vram_cs;
+
+assign prog_ba = 0;
+assign prog_we = 0;
+assign prog_rd = 0;
+
+assign dwnld_busy = downloading;
 
 jtframe_ram_4slots #(
     // VRAM/RAM

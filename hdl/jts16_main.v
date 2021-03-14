@@ -76,6 +76,10 @@ reg         io_cs, wdog_cs;
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
 
+// No peripheral bus access for now
+assign BRn   = 1;
+assign BGACKn= 1;
+
 // System 16A memory map
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
