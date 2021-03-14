@@ -66,11 +66,17 @@ wire       badobj = top >= bottom;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        cur_obj  <= 0;
-        st       <= 0;
-        tbl_we   <= 0;
-        dr_start <= 0;
-        stop     <= 0;
+        cur_obj   <= 0;
+        st        <= 0;
+        tbl_we    <= 0;
+        stop      <= 0;
+
+        dr_start  <= 0;
+        dr_xpos   <= 0;
+        dr_offset <= 0;
+        dr_bank   <= 0;
+        dr_prio   <= 0;
+        dr_pal    <= 0;
     end else begin
         if( idx<5 ) idx <= idx + 1;
         if( !stop ) begin
@@ -145,7 +151,7 @@ always @(posedge clk, posedge rst) begin
                     st      <= 1;
                     stop    <= 1;
                 end else begin
-                    st <= 7;
+                    if(!hstart) st <= 7;
                 end
             end
         endcase

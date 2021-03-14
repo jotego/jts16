@@ -19,7 +19,7 @@
 module jts16_obj_draw(
     input              rst,
     input              clk,
-
+    input              hstart,
     // From scan
     input              start,
     output reg         busy,
@@ -59,7 +59,12 @@ always @(posedge clk, posedge rst) begin
         draw   <= 0;
         obj_cs <= 0;
         bf_we  <= 0;
+        cur    <= 0;
     end else begin
+        if( hstart ) begin
+            busy <= 0;
+            draw <= 0;
+        end else
         if( start ) begin
             cur      <= offset;
             obj_cs   <= 1;

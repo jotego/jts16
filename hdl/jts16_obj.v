@@ -104,6 +104,7 @@ jts16_obj_scan u_scan(
 jts16_obj_draw u_draw(
     .rst       ( rst            ),
     .clk       ( clk            ),
+    .hstart    ( hstart         ),
 
     // From scan
     .start     ( dr_start       ),
