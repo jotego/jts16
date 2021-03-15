@@ -60,10 +60,10 @@ always @(*) begin
     {vov, vpos } = {1'b0, vdump } + {2'd0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( {vov, hov} )
-        2'b00: page = pages[14:12];
-        2'b01: page = pages[11: 8];
-        2'b10: page = pages[ 7: 4];
-        2'b11: page = pages[ 3: 0];
+        2'b10: page = pages[14:12];
+        2'b11: page = pages[11: 8];
+        2'b00: page = pages[ 7: 4];
+        2'b01: page = pages[ 3: 0];
     endcase
 end
 
