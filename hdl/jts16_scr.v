@@ -56,14 +56,14 @@ reg        hov, vov; // overflow bits
 assign scr_addr = { code, vdump[2:0], 1'b0 };
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hdump } + {2'd0, hscr[7:0]};//-10'h80;
+    {hov, hpos } = {1'b0, hdump } + 10'h100 - {1'd0, hscr[8:0]};
     {vov, vpos } = {1'b0, vdump } + {2'd0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( {vov, ~hov} )
-        2'b10: page = pages[14:12];
-        2'b11: page = pages[11: 8];
-        2'b00: page = pages[ 7: 4];
-        2'b01: page = pages[ 3: 0];
+        2'b11: page = pages[14:12];
+        2'b10: page = pages[10: 8];
+        2'b01: page = pages[ 5: 4];
+        2'b00: page = pages[ 2: 0];
     endcase
 end
 

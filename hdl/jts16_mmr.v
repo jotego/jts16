@@ -66,7 +66,6 @@ always @(posedge clk, posedge rst) begin
             9'h09e: scr1_pages_nofl <= bytemux( scr1_pages_nofl );
             9'h08c: scr2_pages_flip <= bytemux( scr2_pages_flip );
             9'h09c: scr2_pages_nofl <= bytemux( scr2_pages_nofl );
-            9'h09c: scr2_pages      <= bytemux( scr2_pages      );
             9'h124: scr1_vpos       <= bytemux( scr1_vpos       );
             9'h126: scr2_vpos       <= bytemux( scr2_vpos       );
             9'h1f8: scr1_hpos       <= bytemux( scr1_hpos       );
