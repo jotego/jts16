@@ -59,7 +59,7 @@ module jts16_sdram(
 
     // Obj
     output          obj_ok,
-    output          obj_cs,
+    input           obj_cs,
     input   [17:0]  obj_addr,
     output  [15:0]  obj_data,
 
@@ -83,6 +83,12 @@ module jts16_sdram(
     output          ba2_rd,
     input           ba2_rdy,
     input           ba2_ack,
+
+    // Bank 3: Read only
+    output   [21:0] ba3_addr,
+    output          ba3_rd,
+    input           ba3_rdy,
+    input           ba3_ack,
 
     input    [31:0] data_read,
     output          refresh_en,
@@ -115,6 +121,10 @@ assign xram_addr  = { ram_cs, main_addr[14:1] }; // RAM is mapped up
 assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading;
+
+// unused bank 3
+assign ba3_rd   = 0;
+assign ba3_addr = 0;
 
 jtframe_dwnld #(
     .HEADER    ( 32         ),

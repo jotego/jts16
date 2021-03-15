@@ -31,7 +31,7 @@ module jts16_obj_ram(
     input      [11:1]  tbl_addr,
     output     [15:0]  tbl_dout,
     input              tbl_we,
-    output     [15:0]  tbl_din
+    input      [15:0]  tbl_din
 );
 
 wire [ 1:0] cpu_we = ~dsn & {2{obj_cs}};

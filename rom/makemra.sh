@@ -5,7 +5,7 @@ OUTDIR=mra
 mkdir -p $OUTDIR
 mkdir -p $OUTDIR/_alt
 
-mame2dip shinobi.xml -outdir $OUTDIR -altfolder _alt \
+mame2dip shinobi.xml -rbf jts16 -outdir $OUTDIR -altfolder _alt \
     -header 32 0xFF \
     -setword maincpu 16 reverse \
     -setword sprites 16 reverse \

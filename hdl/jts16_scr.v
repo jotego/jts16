@@ -51,14 +51,20 @@ reg  [12:0] code;
 // Map reader
 reg  [8:0] hpos, vpos;
 reg  [2:0] page;
+reg        hov, vov; // overflow bits
 
 assign scr_addr = { code, vdump[2:0], 1'b0 };
 
 always @(*) begin
-    hpos = hdump + hscr[8:0];
-    vpos = vdump + vscr[8:0];
+    {hov, hpos } = {1'b0, hdump } + hscr[9:0];
+    {vov, vpos } = {1'b0, vdump } + vscr[9:0];
     scan_addr = { vpos[7:3], hpos[8:3] };
-    page = pages[14:12];
+    case( {vov, hov} )
+        2'b00: page = pages[14:12];
+        2'b01: page = pages[11: 8];
+        2'b10: page = pages[ 7: 4];
+        2'b11: page = pages[ 3: 0];
+    endcase
 end
 
 always @(posedge clk, posedge rst) begin

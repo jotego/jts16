@@ -20,12 +20,12 @@ module jts16_mmr(
     input              rst,
     input              clk,
 
+    input              flip,
     // CPU interface
     input              char_cs,
     input      [11:1]  cpu_addr,
     input      [15:0]  cpu_dout,
     input      [ 1:0]  dsn,
-    output     [15:0]  cpu_din,
 
     // Video registers
     output reg [15:0]  scr1_pages,
@@ -38,21 +38,40 @@ module jts16_mmr(
     output reg [15:0]  scr2_vpos
 );
 
-                                      // SCR1  SCR2
-//localparam [2:0] PAGE     = 4'b0_011, // E9E - E9C 1110'1001'1110
-//                 PAGE_ALT = 4'b0_001, // E8E - E8C
-//                 VSCR     = 4'b0_100, // F24 - F26
-//                 HSCR     = 4'b0_110; // FF8 - FFA
+reg [15:0]  scr1_pages_flip, scr2_pages_flip,
+            scr1_pages_nofl, scr2_pages_nofl;
+
+function [15:0] bytemux( input [15:0] old );
+    bytemux = { dsn[1] ? old[15:8] : cpu_dout[15:8], dsn[0] ? old[7:0] : cpu_dout[7:0] };
+endfunction
+
+always @(posedge clk) begin
+    scr1_pages <= flip ? scr1_pages_flip : scr1_pages_nofl;
+    scr2_pages <= flip ? scr2_pages_flip : scr2_pages_nofl;
+end
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        scr1_pages <= 16'h3300;
-        scr2_pages <= 16'h7744;
         scr1_hpos  <= 0;
         scr2_hpos  <= 0;
         scr1_vpos  <= 0;
         scr2_vpos  <= 0;
-    end else begin
+        scr1_pages_flip <= 0;
+        scr2_pages_flip <= 0;
+        scr1_pages_nofl <= 0;
+        scr2_pages_nofl <= 0;
+    end else if(cpu_addr[11:9]==3'b111 && dsn!=2'b11) begin
+        case( {cpu_addr[8:1], 1'b0} )
+            9'h08e: scr1_pages_flip <= bytemux( scr1_pages_flip );
+            9'h09e: scr1_pages_nofl <= bytemux( scr1_pages_nofl );
+            9'h08c: scr2_pages_flip <= bytemux( scr2_pages_flip );
+            9'h09c: scr2_pages_nofl <= bytemux( scr2_pages_nofl );
+            9'h09c: scr2_pages      <= bytemux( scr2_pages      );
+            9'h124: scr1_vpos       <= bytemux( scr1_vpos       );
+            9'h126: scr2_vpos       <= bytemux( scr2_vpos       );
+            9'h1f8: scr1_hpos       <= bytemux( scr1_hpos       );
+            9'h1fa: scr2_hpos       <= bytemux( scr2_hpos       );
+        endcase
     end
 end
 

@@ -88,7 +88,7 @@ always @(posedge clk, posedge rst) begin
                         bf_we    <= ~&nxt_pxl;
                     end
                     pxl_data <= hflip ? pxl_data>>4 : pxl_data<<4;
-                    bf_addr  <= bf_addr+1;
+                    bf_addr  <= bf_addr+1'd1;
                 end else if(!stop) begin
                     if( obj_cs && obj_ok ) begin
                         // Draw pixels
@@ -98,7 +98,7 @@ always @(posedge clk, posedge rst) begin
                         draw     <= 1;
                         obj_cs   <= 0;
                     end else begin
-                        cur    <= cur + (hflip ? -1 : 1);   // hflip may be affected
+                        cur    <= cur + (hflip ? -16'd1 : 16'd1);   // hflip may be affected
                         obj_cs <= 1;
                         stop   <= 1;
                     end

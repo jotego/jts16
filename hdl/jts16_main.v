@@ -32,6 +32,7 @@ module jts16_main(
     input       [15:0] char_dout,
     input       [15:0] pal_dout,
     input       [15:0] obj_dout,
+    output             flip,
     // RAM access
     output             ram_cs,
     output             vram_cs,
@@ -83,6 +84,8 @@ assign BRn   = 1;
 assign BGACKn= 1;
 assign cpu_addr = A[12:1];
 assign rom_addr = A[17:1];
+
+assign flip = 0;
 
 // System 16A memory map
 always @(posedge clk, posedge rst) begin

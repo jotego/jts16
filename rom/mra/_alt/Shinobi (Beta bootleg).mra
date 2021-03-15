@@ -23,6 +23,7 @@
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
     <name>Shinobi (Beta bootleg)</name>
     <setname>shinoblb</setname>
+    <rbf>jts16</rbf>
     <mraversion>1.0</mraversion>
     <mameversion>0228</mameversion>
     <year>1987</year>

@@ -31,9 +31,11 @@ module jts16_video(
     input      [ 1:0]  dsn,
 
     output     [15:0]  char_dout,
-    output     [15:0]  mmr_dout,
     output     [15:0]  pal_dout,
     output     [15:0]  obj_dout,
+
+    // Other configuration
+    input              flip,
 
     // SDRAM interface
     input              char_ok,
@@ -85,9 +87,9 @@ wire [10:0] scr1_pxl, scr2_pxl;
 wire [11:0] obj_pxl;
 
 // MMR
-wire [15:0] scr1_pages, scr2_pages,
-            scr1_hpos,  scr1_vpos,
-            scr2_hpos,  scr2_vpos;
+wire [15:0] scr1_pages,      scr2_pages,
+            scr1_hpos,       scr1_vpos,
+            scr2_hpos,       scr2_vpos;
 
 // Frame rate and horizontal frequency as the original
 jtframe_vtimer #(
@@ -121,13 +123,12 @@ jts16_mmr u_mmr(
     .rst       ( rst            ),
     .clk       ( clk            ),
 
+    .flip      ( flip           ),
     // CPU interface
     .char_cs   ( char_cs        ),
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
     .dsn       ( dsn            ),
-    .cpu_din   ( mmr_dout       ),
-
 
     // Video registers
     .scr1_pages ( scr1_pages    ),

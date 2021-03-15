@@ -23,6 +23,7 @@
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
     <name>Shinobi (set 3, System 16B) (MC-8123B 317-0054)</name>
     <setname>shinobi3</setname>
+    <rbf>jts16</rbf>
     <mraversion>1.0</mraversion>
     <mameversion>0228</mameversion>
     <year>1987</year>

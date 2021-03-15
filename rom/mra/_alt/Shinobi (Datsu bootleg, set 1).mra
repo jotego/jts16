@@ -23,6 +23,7 @@
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
     <name>Shinobi (Datsu bootleg, set 1)</name>
     <setname>shinobld</setname>
+    <rbf>jts16</rbf>
     <mraversion>1.0</mraversion>
     <mameversion>0228</mameversion>
     <year>1988</year>

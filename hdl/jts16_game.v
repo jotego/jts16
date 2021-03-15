@@ -131,10 +131,12 @@ wire [15:0] obj_data;
 
 // CPU interface
 wire [12:1] cpu_addr;
-wire [15:0] main_dout, char_dout, mmr_dout, pal_dout, obj_dout;
+wire [15:0] main_dout, char_dout, pal_dout, obj_dout;
 wire [ 1:0] dsn;
 wire        UDSWn, LDSWn, main_rnw;
 wire        char_cs, scr1_cs, pal_cs, objram_cs;
+
+wire        flip;
 
 // Cabinet inputs
 wire [ 7:0] dipsw_a, dipsw_b;
@@ -170,6 +172,8 @@ jts16_main u_main(
     .char_dout  ( char_dout ),
     .pal_dout   ( pal_dout  ),
     .obj_dout   ( obj_dout  ),
+
+    .flip       ( flip      ),
     // RAM access
     .ram_cs     ( ram_cs    ),
     .ram_data   ( ram_data  ),
@@ -214,10 +218,10 @@ jts16_video u_video(
     .cpu_dout   ( main_dout ),
     .dsn        ( dsn       ),
     .char_dout  ( char_dout ),
-    .mmr_dout   ( mmr_dout  ),
     .pal_dout   ( pal_dout  ),
     .obj_dout   ( obj_dout  ),
 
+    .flip       ( flip      ),
     // SDRAM interface
     .char_ok    ( char_ok   ),
     .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits

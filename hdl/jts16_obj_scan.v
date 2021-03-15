@@ -40,6 +40,8 @@ module jts16_obj_scan(
     input      [ 8:0]  vrender
 );
 
+parameter [8:0] PXL_DLY=8;
+
 reg  [7:0] cur_obj;  // current object
 reg  [2:0] idx;
 reg  [2:0] st;
@@ -78,9 +80,9 @@ always @(posedge clk, posedge rst) begin
         dr_prio   <= 0;
         dr_pal    <= 0;
     end else begin
-        if( idx<5 ) idx <= idx + 1;
+        if( idx<5 ) idx <= idx + 3'd1;
         if( !stop ) begin
-            st <= st+1;
+            st <= st+3'd1;
         end
         stop      <= 0;
         dr_start  <= 0;
@@ -101,7 +103,7 @@ always @(posedge clk, posedge rst) begin
                         st <= 0; // Done
                     end else if( !inzone || badobj ) begin
                         // Next object
-                        cur_obj <= cur_obj + 1;
+                        cur_obj <= cur_obj + 1'd1;
                         idx     <= 0;
                         st      <= 1;
                         stop    <= 1;
@@ -139,14 +141,14 @@ always @(posedge clk, posedge rst) begin
             7: begin
                 tbl_we  <= 0;
                 if( !dr_busy ) begin
-                    dr_xpos   <= xpos;
+                    dr_xpos   <= xpos+PXL_DLY;
                     dr_offset <= offset;
                     dr_pal    <= pal;
                     dr_prio   <= prio;
                     dr_bank   <= bank;
                     dr_start  <= 1;
                     // next
-                    cur_obj <= cur_obj + 1;
+                    cur_obj <= cur_obj + 1'd1;
                     idx     <= 0;
                     st      <= 1;
                     stop    <= 1;
