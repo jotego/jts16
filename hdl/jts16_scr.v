@@ -62,7 +62,7 @@ always @(*) begin
     case( {vov, ~hov} )
         2'b11: page = pages[14:12];
         2'b10: page = pages[10: 8];
-        2'b01: page = pages[ 5: 4];
+        2'b01: page = pages[ 6: 4];
         2'b00: page = pages[ 2: 0];
     endcase
 end
