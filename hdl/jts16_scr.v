@@ -57,7 +57,7 @@ reg        hov, vov; // overflow bits
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hdump } + 10'h100 - {1'd0, hscr[8:0]} + PXL_DLY;
+    {hov, hpos } = {1'b0, hdump } + {1'd0, ~hscr[8:0]} + PXL_DLY;
     {vov, vpos } = vdump + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( {vov, ~hov} )
@@ -73,7 +73,7 @@ always @(posedge clk, posedge rst) begin
         map_addr <= 14'd0;
     end else if( pxl_cen ) begin
         if( hpos[2:0]==3'd0 )
-            map_addr <= { page, scan_addr^11'h020 };
+            map_addr <= { page, scan_addr };
     end
 end
 

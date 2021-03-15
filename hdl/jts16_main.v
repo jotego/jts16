@@ -149,10 +149,10 @@ always @(posedge clk) begin
         default: cab_dout <= 16'hffff;
         2'd1:
             case( { A[1], LDSWn } )
-                2'd0: cab_dout <= {2{ 2'b11, start_button, service, 1'b1, coin_input }};
-                2'd1: cab_dout <= {2{sort_joy(joystick1)}};
-                2'd2: cab_dout <= 16'hffff;
-                2'd3: cab_dout <= {2{sort_joy(joystick1)}};
+                2'd0: cab_dout <= {2{sort_joy(joystick1)}};
+                2'd1: cab_dout <= {8'hff, { 2'b11, start_button, service, 1'b1, coin_input }};
+                2'd2: cab_dout <= {2{sort_joy(joystick2)}};
+                2'd3: cab_dout <= 16'hffff;
             endcase
         2'd2:
             cab_dout <= {2{ LDSWn ? dipsw_b : dipsw_a }};
