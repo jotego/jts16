@@ -208,6 +208,7 @@ jts16_video u_video(
     .clk        ( clk       ),
     .pxl2_cen   ( pxl2_cen  ),
     .pxl_cen    ( pxl_cen   ),
+    .gfx_en     ( gfx_en    ),
 
     // CPU interface
     .cpu_addr   ( cpu_addr  ),

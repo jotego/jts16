@@ -75,7 +75,10 @@ module jts16_video(
     output     [ 8:0]  vdump,
     output     [ 4:0]  red,
     output     [ 4:0]  green,
-    output     [ 4:0]  blue
+    output     [ 4:0]  blue,
+
+    // Debug
+    input      [ 3:0]  gfx_en
 );
 
 wire [ 8:0] hdump, vrender, vrender1;
@@ -244,6 +247,7 @@ jts16_colmix u_colmix(
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
+    .gfx_en    ( gfx_en         ),
 
     // CPU interface
     .pal_cs    ( pal_cs         ),

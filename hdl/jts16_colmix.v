@@ -22,6 +22,8 @@ module jts16_colmix(
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
 
+    input      [ 3:0]  gfx_en,
+
     input              LHBL,
     input              LVBL,
 
@@ -65,22 +67,32 @@ function [10:0] tile_or_obj( input [9:0] obj, input [9:0] tile, input tile_prio,
                         { 1'b1, obj  };
 endfunction
 
-always @(posedge clk) if( pxl_cen ) begin
-    lyr0 <= tile_or_obj( obj_pxl[9:0], {4'd0, char_pxl[5:0] }, char_pxl[ 6], obj_prio==2'd3 );
-    lyr1 <= tile_or_obj( obj_pxl[9:0],        scr1_pxl[9:0]  , scr1_pxl[10], obj_prio==2'd2 );
-    lyr2 <= tile_or_obj( obj_pxl[9:0],        scr2_pxl[9:0]  , scr2_pxl[10], obj_prio==2'd1 );
+// Layer gating
+reg  [ 6:0] char_g;
+reg  [10:0] scr1_g, scr2_g;
+reg  [11:0] obj_g;
+
+always @(*) begin
+    char_g = char_pxl;
+    scr1_g = scr1_pxl;
+    scr2_g = scr2_pxl;
+    obj_g  = obj_pxl;
+    if( !gfx_en[0] ) char_g[3:0]=0;
+    if( !gfx_en[1] ) scr1_g[3:0]=0;
+    if( !gfx_en[2] ) scr2_g[3:0]=0;
+    if( !gfx_en[3] )  obj_g[3:0]=0;
 end
 
-//reg [3:0] lyr_sel;
+always @(posedge clk) if( pxl_cen ) begin
+    lyr0 <= tile_or_obj( obj_g[9:0], {4'd0, char_g[5:0] }, char_g[ 6], obj_prio==2'd3 );
+    lyr1 <= tile_or_obj( obj_g[9:0],        scr1_g[9:0]  , scr1_g[10], obj_prio==2'd2 );
+    lyr2 <= tile_or_obj( obj_g[9:0],        scr2_g[9:0]  , scr2_g[10], obj_prio==2'd1 );
+end
 
 always @(*) begin
     pal_addr = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0 : (
                (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1 : (
                (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? lyr2 : 11'd0 ));
-    //lyr_sel[3] = pal_addr[10]; // OBJ
-    //lyr_sel[0] = lyr0[2:0]!=0;
-    //lyr_sel[1] = lyr1[2:0]!=0 && !lyr_sel[0];
-    //lyr_sel[2] = lyr2[2:0]!=0 &&  lyr_sel[1:0]==0;
 end
 
 jtframe_dual_ram16 #(
