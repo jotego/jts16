@@ -60,7 +60,7 @@ always @(posedge clk, posedge rst) begin
         scr2_pages_flip <= 0;
         scr1_pages_nofl <= 0;
         scr2_pages_nofl <= 0;
-    end else if(cpu_addr[11:9]==3'b111 && dsn!=2'b11) begin
+    end else if( char_cs && cpu_addr[11:9]==3'b111 && dsn!=2'b11) begin
         case( {cpu_addr[8:1], 1'b0} )
             9'h08e: scr1_pages_flip <= bytemux( scr1_pages_flip );
             9'h09e: scr1_pages_nofl <= bytemux( scr1_pages_nofl );
