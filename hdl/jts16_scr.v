@@ -42,22 +42,23 @@ module jts16_scr(
     output     [10:0]  pxl        // 1 priority + 7 palette + 3 colour = 11
 );
 
-parameter ABIT=0, TEST_PAGE=3;
+parameter PXL_DLY=0;
 
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
 reg  [12:0] code;
 
 // Map reader
-reg  [8:0] hpos, vpos;
+reg  [8:0] hpos;
+reg  [7:0] vpos;
 reg  [2:0] page;
 reg        hov, vov; // overflow bits
 
-assign scr_addr = { code, vdump[2:0], 1'b0 };
+assign scr_addr = { code, vpos[2:0], 1'b0 };
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hdump } + 10'h100 - {1'd0, hscr[8:0]};
-    {vov, vpos } = {1'b0, vdump } + {2'd0, vscr[7:0]};
+    {hov, hpos } = {1'b0, hdump } + 10'h100 - {1'd0, hscr[8:0]} + PXL_DLY;
+    {vov, vpos } = vdump + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( {vov, ~hov} )
         2'b11: page = pages[14:12];
@@ -95,7 +96,7 @@ always @(posedge clk, posedge rst) begin
         pxl_data <= 0;
     end else begin
         if( pxl_cen ) begin
-            if( hpos[2:0]==3'd4 ) begin
+            if( hpos[2:0]==3'd0 ) begin
                 code     <= { bank, map_data[11:0] };
                 pxl_data <= scr_data[23:0];
                 attr0    <= map_data[12:5];

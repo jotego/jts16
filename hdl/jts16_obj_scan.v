@@ -141,7 +141,7 @@ always @(posedge clk, posedge rst) begin
             7: begin
                 tbl_we  <= 0;
                 if( !dr_busy ) begin
-                    dr_xpos   <= xpos+PXL_DLY;
+                    dr_xpos   <= xpos; //+PXL_DLY;
                     dr_offset <= offset;
                     dr_pal    <= pal;
                     dr_prio   <= prio;

@@ -81,6 +81,10 @@ module jts16_video(
     input      [ 3:0]  gfx_en
 );
 
+localparam [8:0] OBJ_DLY=46;
+localparam [8:0] SCR_DLY=0;
+
+
 wire [ 8:0] hdump, vrender, vrender1;
 wire        LHBL;
 
@@ -166,7 +170,7 @@ jts16_char u_char(
     .pxl       ( char_pxl       )
 );
 
-jts16_scr u_scr1(
+jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr1(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
@@ -191,7 +195,7 @@ jts16_scr u_scr1(
     .pxl       ( scr1_pxl       )
 );
 
-jts16_scr u_scr2(
+jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
@@ -216,7 +220,7 @@ jts16_scr u_scr2(
     .pxl       ( scr2_pxl       )
 );
 
-jts16_obj u_obj(
+jts16_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl_cen   ( pxl_cen        ),
@@ -236,8 +240,8 @@ jts16_obj u_obj(
 
     // Video signal
     .hstart    ( hstart         ),
-    .LHBL      ( LHBL           ),
-    .vrender   ( vrender        ),
+    .LHBL      ( ~HS            ),
+    .vrender   ( vdump          ),
     .hdump     ( hdump          ),
     .pxl       ( obj_pxl        )
 );

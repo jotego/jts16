@@ -70,6 +70,7 @@ always @(posedge clk, posedge rst) begin
             9'h126: scr2_vpos       <= bytemux( scr2_vpos       );
             9'h1f8: scr1_hpos       <= bytemux( scr1_hpos       );
             9'h1fa: scr2_hpos       <= bytemux( scr2_hpos       );
+            default:;
         endcase
     end
 end

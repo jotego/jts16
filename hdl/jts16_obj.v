@@ -42,6 +42,8 @@ module jts16_obj(
     output     [11:0]  pxl
 );
 
+parameter [8:0] PXL_DLY=8;
+
 // Object scan
 wire [11:1] tbl_addr;
 wire [15:0] tbl_din, tbl_dout;
@@ -77,7 +79,7 @@ jts16_obj_ram u_ram(
     .tbl_din   ( tbl_din        )
 );
 
-jts16_obj_scan u_scan(
+jts16_obj_scan #(.PXL_DLY(0)) u_scan(
     .rst       ( rst            ),
     .clk       ( clk            ),
 
@@ -127,10 +129,18 @@ jts16_obj_draw u_draw(
     .bf_addr   ( buf_addr       )
 );
 
+reg [8:0] hobj;
+localparam [8:0] HOBJ_START = 9'hbc-PXL_DLY;
+
+always @(posedge clk) begin
+    if( !LHBL ) hobj <= HOBJ_START;
+    else if(pxl_cen) hobj<= hobj+1'd1;
+end
+
 jtframe_obj_buffer #(
-    .DW   (  12),
-    .AW   (   9),
-    .ALPHA(4'h0)
+    .DW     (   12    ),
+    .AW     (    9    ),
+    .ALPHA  ( 4'h0    )
 ) u_line(
     .clk        ( clk       ),
     .LHBL       ( LHBL      ),
@@ -139,7 +149,7 @@ jtframe_obj_buffer #(
     .wr_addr    ( buf_addr  ),
     .we         ( buf_we    ),
     // Old data reads (and erases)
-    .rd_addr    ( hdump     ),
+    .rd_addr    ( hobj      ),
     .rd         ( pxl_cen   ),
     .rd_data    ( pxl       )
 );

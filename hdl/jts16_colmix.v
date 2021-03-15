@@ -92,7 +92,8 @@ end
 always @(*) begin
     pal_addr = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0 : (
                (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1 : (
-               (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? lyr2 : 11'd0 ));
+                lyr2 ));
+               //(lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? lyr2 : 11'd0 ));
 end
 
 jtframe_dual_ram16 #(
@@ -116,7 +117,7 @@ jtframe_dual_ram16 #(
     .q1     ( pal       )
 );
 
-jtframe_blank #(.DLY(13),.DW(15)) u_blank(
+jtframe_blank #(.DLY(16),.DW(15)) u_blank(
     .clk        ( clk       ),
     .pxl_cen    ( pxl_cen   ),
     .LHBL       ( LHBL      ),

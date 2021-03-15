@@ -68,7 +68,7 @@ jtframe_dual_ram16 #(
     .q1     ( scan      )
 );
 
-assign scan_addr = { vdump[7:3], hdump[8:3] };
+assign scan_addr = { vdump[7:3], hdump[8:3]-5'h2 };
 assign char_addr = { code, vdump[2:0], 1'b0 };
 
 // SDRAM runs at pxl_cen x 8, so new data from SDRAM takes about a
@@ -87,7 +87,7 @@ always @(posedge clk, posedge rst) begin
         pxl_data <= 24'd0;
     end else begin
         if( pxl_cen ) begin
-            if( hdump[2:0]==3'd4 ) begin
+            if( hdump[2:0]==3'd0 ) begin
                 code     <= {1'b0,scan[7:0]};
                 pxl_data <= char_data[23:0];
                 attr0    <= scan[11:8];

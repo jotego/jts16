@@ -335,6 +335,12 @@ jts16_sdram u_sdram(
     .ba2_rdy    ( ba2_rdy   ),
     .ba2_ack    ( ba2_ack   ),
 
+    // Bank 2: Read only
+    .ba3_addr   ( ba3_addr  ),
+    .ba3_rd     ( ba3_rd    ),
+    .ba3_rdy    ( ba3_rdy   ),
+    .ba3_ack    ( ba3_ack   ),
+
     .data_read  ( data_read ),
     .refresh_en ( refresh_en),
 

@@ -165,6 +165,7 @@ JTSim::JTSim( Vjts16_game& g, int argc, char *argv[]) : game(g), sdram(g) {
         tracer = nullptr;
     }
 #endif
+    game.gfx_en=0xf;    // enable all layers
     game.rst = 1;
     clock(10);
     game.rst = 0;
