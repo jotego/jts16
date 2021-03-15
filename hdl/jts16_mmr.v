@@ -50,17 +50,25 @@ always @(posedge clk) begin
     scr2_pages <= flip ? scr2_pages_flip : scr2_pages_nofl;
 end
 
-always @(posedge clk, posedge rst) begin
-    if( rst ) begin
-        scr1_hpos  <= 0;
-        scr2_hpos  <= 0;
-        scr1_vpos  <= 0;
-        scr2_vpos  <= 0;
-        scr1_pages_flip <= 0;
-        scr2_pages_flip <= 0;
-        scr1_pages_nofl <= 0;
-        scr2_pages_nofl <= 0;
-    end else if( char_cs && cpu_addr[11:9]==3'b111 && dsn!=2'b11) begin
+`ifdef SIMULATION
+    reg [15:0] sim_cfg[0:511];
+
+    initial begin
+        $readmemh( "mmr.hex", sim_cfg );
+
+        scr1_pages_flip = sim_cfg[9'h08e];
+        scr1_pages_nofl = sim_cfg[9'h09e];
+        scr2_pages_flip = sim_cfg[9'h08c];
+        scr2_pages_nofl = sim_cfg[9'h09c];
+        scr1_vpos       = sim_cfg[9'h124];
+        scr2_vpos       = sim_cfg[9'h126];
+        scr1_hpos       = sim_cfg[9'h1f8];
+        scr2_hpos       = sim_cfg[9'h1fa];
+    end
+`endif
+
+always @(posedge clk) begin
+    if( char_cs && cpu_addr[11:9]==3'b111 && dsn!=2'b11) begin
         case( {cpu_addr[8:1], 1'b0} )
             9'h08e: scr1_pages_flip <= bytemux( scr1_pages_flip );
             9'h09e: scr1_pages_nofl <= bytemux( scr1_pages_nofl );
