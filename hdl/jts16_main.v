@@ -141,7 +141,7 @@ jtframe_68kramcs u_ramcs(
 reg [15:0] cab_dout;
 
 function [7:0] sort_joy( input [7:0] joy_in );
-    sort_joy = { joy_in[3:0], joy_in[7:4] };
+    sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
 endfunction
 
 always @(posedge clk) begin
@@ -149,13 +149,13 @@ always @(posedge clk) begin
         default: cab_dout <= 16'hffff;
         2'd1:
             case( { A[1], LDSWn } )
-                2'd0: cab_dout <= {2{sort_joy(joystick1)}};
+                2'd3: cab_dout <= {8'hff, {sort_joy(joystick1)}};
                 2'd1: cab_dout <= {8'hff, { 2'b11, start_button, service, 1'b1, coin_input }};
-                2'd2: cab_dout <= {2{sort_joy(joystick2)}};
-                2'd3: cab_dout <= 16'hffff;
+                2'd2: cab_dout <= {8'hff, {sort_joy(joystick2)}};
+                2'd0: cab_dout <= 16'hffff;
             endcase
         2'd2:
-            cab_dout <= {2{ LDSWn ? dipsw_b : dipsw_a }};
+            cab_dout <= {8'hff, { LDSWn ? dipsw_b : dipsw_a }};
     endcase
 end
 
