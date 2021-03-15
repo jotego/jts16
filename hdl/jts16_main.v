@@ -45,8 +45,8 @@ module jts16_main(
     output             RnW,
     output      [12:1] cpu_addr,
     // cabinet I/O
-    input       [ 6:0] joystick1,
-    input       [ 6:0] joystick2,
+    input       [ 7:0] joystick1,
+    input       [ 7:0] joystick2,
     input       [ 1:0] start_button,
     input       [ 1:0] coin_input,
     input              service,
@@ -137,6 +137,28 @@ jtframe_68kramcs u_ramcs(
     .cs         ( {     ram_cs,     vram_cs } )
 );
 
+// cabinet input
+reg [15:0] cab_dout;
+
+function [7:0] sort_joy( input [7:0] joy_in );
+    sort_joy = { joy_in[3:0], joy_in[7:4] };
+endfunction
+
+always @(posedge clk) begin
+    case( A[13:12] )
+        default: cab_dout <= 16'hffff;
+        2'd1:
+            case( { A[1], LDSWn } )
+                2'd0: cab_dout <= {2{ 2'b11, start_button, service, 1'b1, coin_input }};
+                2'd1: cab_dout <= {2{sort_joy(joystick1)}};
+                2'd2: cab_dout <= 16'hffff;
+                2'd3: cab_dout <= {2{sort_joy(joystick1)}};
+            endcase
+        2'd2:
+            cab_dout <= {2{ LDSWn ? dipsw_b : dipsw_a }};
+    endcase
+end
+
 // Data bus input
 reg  [15:0] cpu_din;
 
@@ -149,6 +171,7 @@ always @(posedge clk) begin
                     char_cs            ? char_dout : (
                     pal_cs             ? pal_dout  : (
                     objram_cs          ? obj_dout  : (
+                    io_cs              ? cab_dout  :
                                        16'hFFFF )))));
     end
 end
