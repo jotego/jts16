@@ -56,10 +56,10 @@ reg        hov, vov; // overflow bits
 assign scr_addr = { code, vdump[2:0], 1'b0 };
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hdump } + {2'd0, hscr[7:0]};
+    {hov, hpos } = {1'b0, hdump } + {2'd0, hscr[7:0]};//-10'h80;
     {vov, vpos } = {1'b0, vdump } + {2'd0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
-    case( {vov, hov} )
+    case( {vov, ~hov} )
         2'b10: page = pages[14:12];
         2'b11: page = pages[11: 8];
         2'b00: page = pages[ 7: 4];
@@ -71,7 +71,7 @@ always @(posedge clk, posedge rst) begin
     if( rst ) begin
         map_addr <= 14'd0;
     end else if( pxl_cen ) begin
-        if( hdump[2:0]==3'd0 )
+        if( hpos[2:0]==3'd0 )
             map_addr <= { page, scan_addr^11'h020 };
     end
 end
@@ -95,7 +95,7 @@ always @(posedge clk, posedge rst) begin
         pxl_data <= 0;
     end else begin
         if( pxl_cen ) begin
-            if( hdump[2:0]==3'd4 ) begin
+            if( hpos[2:0]==3'd4 ) begin
                 code     <= { bank, map_data[11:0] };
                 pxl_data <= scr_data[23:0];
                 attr0    <= map_data[12:5];
