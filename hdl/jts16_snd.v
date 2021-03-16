@@ -24,7 +24,8 @@ module jts16_snd(
     input                cen_fm2,   // 2MHz
 
     input         [ 7:0] latch,
-    input                irq,
+    input                irqn,
+    output               ack,
     // ROM
     output    reg [14:0] rom_addr,
     output    reg        rom_cs,
@@ -54,7 +55,6 @@ wire        rom_good;
 wire [ 7:0] dout, fm_dout, ram_dout;
 
 assign peak  = 0;
-assign nmi_n = 1;
 assign rom_good = rom_ok2 & rom_ok;
 assign rom_addr = A[14:0];
 
@@ -74,6 +74,18 @@ always @(posedge clk ) begin
                 latch_cs ? latch    : (
                     8'hff ))));
 end
+
+jtframe_ff u_ff(
+    .rst    ( rst       ),
+    .clk    ( clk       ),
+    .cen    ( 1'b1      ),
+    .din    ( 1'b1      ),
+    .q      (           ),
+    .qn     ( nmi_n     ),
+    .set    ( 1'b0      ),    // active high
+    .clr    ( latch_cs  ),    // active high
+    .sigedge( irqn      ) // signal whose edge will trigger the FF
+);
 
 jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
     .rst_n      ( ~rst        ),
@@ -100,6 +112,13 @@ jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
     .rom_cs     ( rom_cs      ),
     .rom_ok     ( rom_good    )
 );
+
+//
+//  YM2151 output port
+//
+//  D1 = /RESET line on 7751
+//  D0 = /IRQ line on 7751
+//
 
 jt51 u_jt51(
     .rst        ( rst       ), // reset

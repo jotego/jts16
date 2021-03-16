@@ -30,6 +30,22 @@ Clock   |  m   |  n
 20      |  29  |  73
 8       | 109  | 686
 
+# 8255 Connections
+
+Line   |  Destination
+-------|--------------
+PA     |  Sound latch
+PB3-0  |  Coin lock ?
+PB4    |  Display enable
+PB6-5  |  ?
+PB7    |  Flip (pull down)
+PC7    |  Port A handshaking signal /OBF -> Sound /NMI
+PC6    |  Port A handshaking signal ACK
+PC5-3  |  Unconnected
+PC2    |  To PAL 315-5107 pin 9 (SCONT1)
+PC1    |  To PAL 315-5108 pin 19 (SCONT0)
+PC0    |  To MUTE input on MB3733 amplifier (0=sound disabled)
+
 # Memory Size
 
 Item      |  Size (kB)

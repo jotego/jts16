@@ -32,7 +32,7 @@ module jts16_main(
     input       [15:0] char_dout,
     input       [15:0] pal_dout,
     input       [15:0] obj_dout,
-    output             flip,
+    output reg         flip,
     // RAM access
     output             ram_cs,
     output             vram_cs,
@@ -44,6 +44,10 @@ module jts16_main(
     output             LDSWn,
     output             RnW,
     output      [12:1] cpu_addr,
+    // Sound control
+    output reg  [ 7:0] snd_latch,
+    output reg         snd_irqn,
+    input              snd_ack,
     // cabinet I/O
     input       [ 7:0] joystick1,
     input       [ 7:0] joystick2,
@@ -76,6 +80,8 @@ wire        UDSn, LDSn;
 reg         io_cs, wdog_cs,
             pre_ram_cs, pre_vram_cs;
 
+reg  [ 7:0] sw_8255;    // status word of i8255
+
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
 
@@ -84,8 +90,6 @@ assign BRn   = 1;
 assign BGACKn= 1;
 assign cpu_addr = A[12:1];
 assign rom_addr = A[17:1];
-
-assign flip = 0;
 
 // System 16A memory map
 always @(posedge clk, posedge rst) begin
@@ -144,19 +148,45 @@ function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
 endfunction
 
-always @(posedge clk) begin
-    case( A[13:12] )
-        default: cab_dout <= 16'hffff;
-        2'd1:
-            case( A[2:1] )
-                2'd0: cab_dout <= {8'hff, { 2'b11, start_button, service, 1'b1, coin_input }};
-                2'd1: cab_dout <= {8'hff, {sort_joy(joystick1)}};
-                2'd3: cab_dout <= {8'hff, {sort_joy(joystick2)}};
-                default: cab_dout <= ~0;
-            endcase
-        2'd2:
-            cab_dout <= { 8'hff, { A[1] ? dipsw_b : dipsw_a }};
-    endcase
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        snd_latch <= 8'd0;
+        snd_irqn  <= 1;
+        flip      <= 0;
+        sw_8255   <= 8'h9b;
+    end else begin
+        case( A[13:12] )
+            default: cab_dout <= 16'hffff;
+            2'd0: // 8255 (fake implementation)
+                case( A[2:1] )
+                    2'd0: begin
+                        if( !LDSWn ) snd_latch <= cpu_dout[7:0];
+                        cab_dout <= snd_latch;
+                    end
+                    2'd1: begin
+                        if( !LDSWn ) flip <= cpu_dout[7];
+                        cab_dout <= { flip, 7'h7f };
+                    end
+                    2'd2: begin
+                        snd_irqn <= cpu_dout[7];
+                        cab_dout <= { snd_irqn, snd_ack, 6'h3f };
+                    end
+                    2'd3: begin
+                        if( !LDSWn ) sw_8255  <= cpu_dout[7:0];
+                        cab_dout <= sw_8255;
+                    end
+                endcase
+            2'd1:
+                case( A[2:1] )
+                    2'd0: cab_dout <= {8'hff, { 2'b11, start_button, service, 1'b1, coin_input }};
+                    2'd1: cab_dout <= {8'hff, {sort_joy(joystick1)}};
+                    2'd3: cab_dout <= {8'hff, {sort_joy(joystick2)}};
+                    default: cab_dout <= ~0;
+                endcase
+            2'd2:
+                cab_dout <= { 8'hff, { A[1] ? dipsw_b : dipsw_a }};
+        endcase
+    end
 end
 
 // Data bus input

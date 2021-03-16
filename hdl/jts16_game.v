@@ -141,6 +141,9 @@ wire [14:0] snd_addr;
 wire [ 7:0] snd_data;
 wire        snd_cs, snd_ok;
 
+wire [ 7:0] snd_latch;
+wire        snd_irqn, snd_ack;
+
 wire        flip;
 
 // Cabinet inputs
@@ -179,6 +182,10 @@ jts16_main u_main(
     .obj_dout   ( obj_dout  ),
 
     .flip       ( flip      ),
+    // Sound communication
+    .snd_latch  ( snd_latch ),
+    .snd_irqn   ( snd_irqn  ),
+    .snd_ack    ( snd_ack   ),
     // RAM access
     .ram_cs     ( ram_cs    ),
     .ram_data   ( ram_data  ),
@@ -216,8 +223,9 @@ jts16_snd u_sound(
     .cen_fm     ( cen_fm    ),   // 4MHz
     .cen_fm2    ( cen_fm2   ),   // 2MHz
 
-    .latch      ( 8'd0      ),
-    .irq        ( 1'b0      ),
+    .latch      ( snd_latch ),
+    .irqn       ( snd_irqn  ),
+    .ack        ( snd_ack   ),
     // ROM
     .rom_addr   ( snd_addr  ),
     .rom_cs     ( snd_cs    ),
