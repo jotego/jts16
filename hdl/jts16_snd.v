@@ -57,6 +57,7 @@ wire [ 7:0] dout, fm_dout, ram_dout;
 assign peak  = 0;
 assign rom_good = rom_ok2 & rom_ok;
 assign rom_addr = A[14:0];
+assign ack      = latch_cs;
 
 always @(posedge clk ) begin
     rom_ok2  <= rom_ok;
@@ -84,7 +85,7 @@ jtframe_ff u_ff(
     .qn     ( nmi_n     ),
     .set    ( 1'b0      ),    // active high
     .clr    ( latch_cs  ),    // active high
-    .sigedge( irqn      ) // signal whose edge will trigger the FF
+    .sigedge( ~irqn     ) // signal whose edge will trigger the FF
 );
 
 jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
