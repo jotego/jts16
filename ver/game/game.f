@@ -12,12 +12,14 @@
 ../../hdl/jts16_main.v
 ../../hdl/jts16_mmr.v
 ../../hdl/jts16_dtack.v
+../../hdl/jts16_snd.v
 
 ../../modules/jtframe/hdl/jtframe_sh.v
 ../../modules/jtframe/hdl/clocking/jtframe_frac_cen.v
 ../../modules/jtframe/hdl/video/jtframe_vtimer.v
 ../../modules/jtframe/hdl/video/jtframe_blank.v
 ../../modules/jtframe/hdl/video/jtframe_linebuf.v
+../../modules/jtframe/hdl/ram/jtframe_ram.v
 ../../modules/jtframe/hdl/ram/jtframe_dual_ram.v
 ../../modules/jtframe/hdl/ram/jtframe_dual_ram16.v
 ../../modules/jtframe/hdl/ram/jtframe_obj_buffer.v
@@ -27,6 +29,6 @@
 # 68000
 # ../../modules/jtframe/hdl/cpu/jtframe_68kdma.v
 ../../modules/jtframe/hdl/cpu/jtframe_68kramcs.v
-#../../modules/fx68k/fx68kAlu.sv
-#../../modules/fx68k/fx68k.sv
-#../../modules/fx68k/uaddrPla.sv
+../../modules/fx68k/fx68kAlu.sv
+../../modules/fx68k/fx68k.sv
+../../modules/fx68k/uaddrPla.sv

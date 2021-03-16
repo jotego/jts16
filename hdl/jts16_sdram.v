@@ -36,6 +36,12 @@ module jts16_sdram(
     input    [15:0] main_dout,
     input           main_rnw,
 
+    // Sound CPU
+    input           snd_cs,
+    output          snd_ok,
+    input   [14:0]  snd_addr,
+    output  [ 7:0]  snd_data,
+
     // Char
     output          char_ok,
     input   [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
@@ -125,10 +131,6 @@ assign xram_addr  = { ram_cs, main_addr[14:1] }; // RAM is mapped up
 assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading;
-
-// unused bank 3
-assign ba3_rd   = 0;
-assign ba3_addr = 0;
 
 jtframe_dwnld #(
     .HEADER    ( 32         ),
@@ -254,6 +256,7 @@ jtframe_rom_3slots #(
     .data_read  ( data_read )
 );
 
+// OBJ
 jtframe_rom_1slot #(
     .SLOT0_DW(16),
     .SLOT0_AW(18)
@@ -271,6 +274,27 @@ jtframe_rom_1slot #(
     .sdram_req  ( ba2_rd    ),
     .sdram_addr ( ba2_addr  ),
     .data_rdy   ( ba2_rdy   ),
+    .data_read  ( data_read )
+);
+
+// Sound
+jtframe_rom_1slot #(
+    .SLOT0_DW( 8),
+    .SLOT0_AW(15)
+) u_bank3(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+
+    .slot0_addr ( snd_addr  ),
+    .slot0_dout ( snd_data  ),
+    .slot0_cs   ( snd_cs    ),
+    .slot0_ok   ( snd_ok    ),
+
+    // SDRAM controller interface
+    .sdram_ack  ( ba3_ack   ),
+    .sdram_req  ( ba3_rd    ),
+    .sdram_addr ( ba3_addr  ),
+    .data_rdy   ( ba3_rdy   ),
     .data_read  ( data_read )
 );
 

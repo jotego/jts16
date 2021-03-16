@@ -100,7 +100,7 @@ module jts16_game(
 
 // clock enable signals
 wire    cpu_cen, cpu_cenb,
-        snd_cen, fm_cen;
+        cen_fm,  cen_fm2;
 
 // video signals
 wire        HB, VB, LVBL;
@@ -136,6 +136,11 @@ wire [ 1:0] dsn;
 wire        UDSWn, LDSWn, main_rnw;
 wire        char_cs, scr1_cs, pal_cs, objram_cs;
 
+// Sound CPU
+wire [14:0] snd_addr;
+wire [ 7:0] snd_data;
+wire        snd_cs, snd_ok;
+
 wire        flip;
 
 // Cabinet inputs
@@ -151,8 +156,8 @@ jts16_cen u_cen(
     .pxl_cen    ( pxl_cen   ),
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
-    .snd_cen    ( snd_cen   ),
-    .fm_cen     ( fm_cen    )
+    .fm2_cen    ( cen_fm2   ),
+    .fm_cen     ( cen_fm    )
 );
 
 `ifndef NOMAIN
@@ -200,6 +205,36 @@ jts16_main u_main(
     .dip_test    ( dip_test   ),
     .dipsw_a     ( dipsw_a    ),
     .dipsw_b     ( dipsw_b    )
+);
+`endif
+
+`ifndef NOSOUND
+jts16_snd u_sound(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+
+    .cen_fm     ( cen_fm    ),   // 4MHz
+    .cen_fm2    ( cen_fm2   ),   // 2MHz
+
+    .latch      ( 8'd0      ),
+    .irq        ( 1'b0      ),
+    // ROM
+    .rom_addr   ( snd_addr  ),
+    .rom_cs     ( snd_cs    ),
+    .rom_data   ( snd_data  ),
+    .rom_ok     ( snd_ok    ),
+
+    // ADPCM ROM
+    // output        [17:0] adpcm_addr,
+    // output               adpcm_cs,
+    // input         [ 7:0] adpcm_data,
+    // input                adpcm_ok,
+
+    // Sound output
+    .left       ( snd_left  ),
+    .right      ( snd_right ),
+    .sample     ( sample    ),
+    .peak       ( game_led  )
 );
 `endif
 
@@ -287,6 +322,12 @@ jts16_sdram u_sdram(
     .dsn        ( dsn       ),
     .main_dout  ( main_dout ),
     .main_rnw   ( main_rnw  ),
+
+    // Sound CPU
+    .snd_addr   ( snd_addr  ),
+    .snd_cs     ( snd_cs    ),
+    .snd_data   ( snd_data  ),
+    .snd_ok     ( snd_ok    ),
 
     // Char interface
     .char_ok    ( char_ok   ),

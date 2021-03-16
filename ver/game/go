@@ -53,6 +53,7 @@ jtsim_sdram $HEXDUMP -header 32 sndcpu pcmdata gfx1 obj pcmfirm \
     -region maincpu 0 0 \
     -region gfx1 1 0 \
     -region obj 2 0 \
+    -region sndcpu 3 0 \
     $SDRAM_SNAP || exit $?
 
 jtsim -mist -sysname s16 $SIMULATOR \

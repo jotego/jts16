@@ -23,8 +23,8 @@ module jts16_cen(
     output             pxl_cen,   // pixel clock enable
     output             cpu_cen,
     output             cpu_cenb,
-    output             snd_cen,
-    output             fm_cen
+    output             fm_cen,
+    output             fm2_cen
 );
 
 wire nc, ncb;
@@ -47,9 +47,9 @@ jtframe_frac_cen u_cpucen(
 
 jtframe_frac_cen u_sndcen(
     .clk    ( clk       ),
-    .n      ( 10'd109   ),
-    .m      ( 10'd686   ),
-    .cen    ( { fm_cen, snd_cen } ),
+    .n      ( 10'd63    ),
+    .m      ( 10'd793   ),
+    .cen    ( { fm2_cen, fm_cen } ),
     .cenb   (           )
 );
 

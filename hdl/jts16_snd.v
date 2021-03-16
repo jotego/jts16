@@ -1,0 +1,129 @@
+/*  This file is part of JTS16.
+    JTS16 program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    JTS16 program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with JTS16.  If not, see <http://www.gnu.org/licenses/>.
+
+    Author: Jose Tejada Gomez. Twitter: @topapate
+    Version: 1.0
+    Date: 16-3-2021 */
+
+module jts16_snd(
+    input                rst,
+    input                clk,
+
+    input                cen_fm,   // 4MHz
+    input                cen_fm2,   // 2MHz
+
+    input         [ 7:0] latch,
+    input                irq,
+    // ROM
+    output    reg [14:0] rom_addr,
+    output    reg        rom_cs,
+    input         [ 7:0] rom_data,
+    input                rom_ok,
+
+    // ADPCM ROM
+    // output        [17:0] adpcm_addr,
+    // output               adpcm_cs,
+    // input         [ 7:0] adpcm_data,
+    // input                adpcm_ok,
+
+    // Sound output
+    output signed [15:0] left,
+    output signed [15:0] right,
+    output               sample,
+    output reg           peak
+);
+
+wire [15:0] A;
+reg         fm_cs, latch_cs, ram_cs, pcm_cs;
+wire        mreq_n, iorq_n, int_n, nmi_n;
+wire        WRn;
+reg  [ 7:0] din;
+reg         rom_ok2;
+wire        rom_good;
+wire [ 7:0] dout, fm_dout, ram_dout;
+
+assign peak  = 0;
+assign nmi_n = 1;
+assign rom_good = rom_ok2 & rom_ok;
+assign rom_addr = A[14:0];
+
+always @(posedge clk ) begin
+    rom_ok2  <= rom_ok;
+    rom_cs   <=  !mreq_n && !A[15];
+    ram_cs   <=  !mreq_n && &A[15:11];
+    latch_cs <= (!mreq_n &&  A[15:12]==4'he && A[11]) // e800
+             || (!iorq_n &&  A[7:6]==3);
+
+    fm_cs    <= !iorq_n && A[7:6]==0;
+    pcm_cs   <= !iorq_n && A[7:6]==2; // 80
+
+    din      <= rom_cs   ? rom_data : (
+                ram_cs   ? ram_dout : (
+                fm_cs    ? fm_dout  : (
+                latch_cs ? latch    : (
+                    8'hff ))));
+end
+
+jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
+    .rst_n      ( ~rst        ),
+    .clk        ( clk         ),
+    .cen        ( cen_fm      ),
+    .cpu_cen    ( cpu_cen     ),
+    .int_n      ( int_n       ),
+    .nmi_n      ( nmi_n       ),
+    .busrq_n    ( 1'b1        ),
+    .m1_n       ( m1_n        ),
+    .mreq_n     ( mreq_n      ),
+    .iorq_n     ( iorq_n      ),
+    .rd_n       ( rd_n        ),
+    .wr_n       ( wr_n        ),
+    .rfsh_n     (             ),
+    .halt_n     (             ),
+    .busak_n    (             ),
+    .A          ( A           ),
+    .cpu_din    ( din         ),
+    .cpu_dout   ( dout        ),
+    .ram_dout   ( ram_dout    ),
+    // manage access to ROM data from SDRAM
+    .ram_cs     ( ram_cs      ),
+    .rom_cs     ( rom_cs      ),
+    .rom_ok     ( rom_good    )
+);
+
+jt51 u_jt51(
+    .rst        ( rst       ), // reset
+    .clk        ( clk       ), // main clock
+    .cen        ( cen_fm    ),
+    .cen_p1     ( cen_fm2   ),
+    .cs_n       ( !fm_cs    ), // chip select
+    .wr_n       ( WRn       ), // write
+    .a0         ( A[0]      ),
+    .din        ( dout      ), // data in
+    .dout       ( fm_dout   ), // data out
+    .ct1        (           ),
+    .ct2        (           ),
+    .irq_n      ( int_n     ),  // I do not synchronize this signal
+    // Low resolution output (same as real chip)
+    .sample     ( sample    ), // marks new output sample
+    .left       (           ),
+    .right      (           ),
+    // Full resolution output
+    .xleft      ( left      ),
+    .xright     ( right     ),
+    // unsigned outputs for sigma delta converters, full resolution
+    .dacleft    (           ),
+    .dacright   (           )
+);
+
+endmodule
