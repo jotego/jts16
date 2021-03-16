@@ -17,6 +17,7 @@
 ../../modules/jtframe/hdl/clocking/jtframe_frac_cen.v
 ../../modules/jtframe/hdl/video/jtframe_vtimer.v
 ../../modules/jtframe/hdl/video/jtframe_blank.v
+../../modules/jtframe/hdl/video/jtframe_linebuf.v
 ../../modules/jtframe/hdl/ram/jtframe_dual_ram.v
 ../../modules/jtframe/hdl/ram/jtframe_dual_ram16.v
 ../../modules/jtframe/hdl/ram/jtframe_obj_buffer.v

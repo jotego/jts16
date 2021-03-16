@@ -22,6 +22,8 @@ module jts16_scr(
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
 
+    input              LHBL,
+
     // MMR
     input      [15:0]  pages,
     input      [15:0]  hscr,
@@ -42,11 +44,14 @@ module jts16_scr(
     output     [10:0]  pxl        // 1 priority + 7 palette + 3 colour = 11
 );
 
-parameter PXL_DLY=0;
+parameter       PXL_DLY=0;
+parameter [8:0] HB_END=9'h70;
 
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
 reg  [12:0] code;
+
+reg  [8:0] hscan, vscan;
 
 // Map reader
 reg  [8:0] hpos;
@@ -54,11 +59,14 @@ reg  [7:0] vpos;
 reg  [2:0] page;
 reg        hov, vov; // overflow bits
 
+reg       done, draw;
+reg [7:0] busy;
+
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hdump } + {1'd0, ~hscr[8:0]} + PXL_DLY;
-    {vov, vpos } = vdump + {1'b0, vscr[7:0]};
+    {hov, hpos } = {1'b0, hscan } + {1'd0, ~hscr[8:0] };
+    {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( {vov, ~hov} )
         2'b11: page = pages[14:12];
@@ -68,12 +76,28 @@ always @(*) begin
     endcase
 end
 
+reg [2:0] map_st;
+reg       last_LHBL;
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         map_addr <= 14'd0;
-    end else if( pxl_cen ) begin
-        if( hpos[2:0]==3'd0 )
-            map_addr <= { page, scan_addr };
+        draw     <= 0;
+    end else if(!done) begin
+        map_st <= map_st+1'd1;
+        draw   <= 0;
+        case( map_st )
+            0: map_addr <= { page, scan_addr };
+            3:
+                if( !map_ok || busy!=0 )
+                    map_st <= 3;
+                else
+                    draw   <= 1;
+            default:;
+        endcase
+    end else begin
+        map_st <= 0;
+        draw   <= 0;
     end
 end
 
@@ -82,32 +106,64 @@ end
 // pxl_cen time to arrive. Data has information for four pixels
 
 reg [23:0] pxl_data;
-reg [ 7:0] attr, attr0;
+reg [ 7:0] attr;
+reg [ 1:0] scr_good;
 
 wire bank = map_data[13];
+wire [10:0] buf_data;
 
-assign pxl = { attr, pxl_data[23], pxl_data[15], pxl_data[7] };
+assign buf_data = { attr, pxl_data[23], pxl_data[15], pxl_data[7] };
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         code     <= 0;
         attr     <= 0;
-        attr0    <= 0;
         pxl_data <= 0;
+
+        last_LHBL <= 0;
+        done      <= 0;
+        busy      <= 0;
     end else begin
-        if( pxl_cen ) begin
-            if( hpos[2:0]==3'd0 ) begin
-                code     <= { bank, map_data[11:0] };
-                pxl_data <= scr_data[23:0];
-                attr0    <= map_data[12:5];
-                attr     <= attr0;
-            end else begin
-                pxl_data[23:16] <= pxl_data[23:16]<<1;
-                pxl_data[15: 8] <= pxl_data[15: 8]<<1;
-                pxl_data[ 7: 0] <= pxl_data[ 7: 0]<<1;
-            end
+        last_LHBL <= LHBL;
+        scr_good  <= { scr_good[0], scr_ok };
+        if( scr_good==2'b01 ) pxl_data <= scr_data[23:0];
+
+        if( !LHBL && last_LHBL ) begin
+            hscan <= HB_END-9'h8;
+            vscan <= vdump;
+            done  <= 0;
+        end
+
+        if( draw && !done ) begin
+            code     <= { bank, map_data[11:0] };
+            attr     <= map_data[12:5];
+            busy     <= ~0;
+            scr_good <= 2'd0;
+        end else if( busy!=0 && &scr_good ) begin
+            pxl_data[23:16] <= pxl_data[23:16]<<1;
+            pxl_data[15: 8] <= pxl_data[15: 8]<<1;
+            pxl_data[ 7: 0] <= pxl_data[ 7: 0]<<1;
+            if( hpos[2:0]==3'd6 )
+                busy <= 8'h80;
+            else
+                busy <= busy<<1;
+            hscan <= hscan + 1'd1;
+            if( &hscan ) done <= 1;
         end
     end
 end
+
+jtframe_linebuf #(.DW(11),.AW(9)) u_linebuf(
+    .clk    ( clk      ),
+    .LHBL   ( LHBL     ),
+    // New data writes
+    .wr_addr( hscan    ),
+    .wr_data( buf_data ),
+    .we     ( busy[7]   ),
+    // Old data reads (and erases)
+    .rd_addr( hdump    ),
+    .rd_data(          ),
+    .rd_gated( pxl     )
+);
 
 endmodule

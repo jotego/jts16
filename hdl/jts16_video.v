@@ -81,7 +81,7 @@ module jts16_video(
     input      [ 3:0]  gfx_en
 );
 
-localparam [8:0] OBJ_DLY=46;
+localparam [8:0] OBJ_DLY=36;
 localparam [8:0] SCR_DLY=0;
 
 
@@ -99,9 +99,14 @@ wire [15:0] scr1_pages,      scr2_pages,
             scr2_hpos,       scr2_vpos;
 
 // Frame rate and horizontal frequency as the original
+// "The sprite X position defines the starting location of the sprite. The
+//  leftmost pixel of the screen is $00B6, and the rightmost is $1F5."
+
+parameter [8:0] HB_END = 9'h0bc;
+
 jtframe_vtimer #(
     .HB_START  ( 9'h1FC ),
-    .HB_END    ( 9'h0BC ),
+    .HB_END    ( HB_END ),
     .HCNT_START( 9'h70  ),
     .HCNT_END  ( 9'h1FF ),
     .VB_START  ( 9'h0DF ),
@@ -170,11 +175,12 @@ jts16_char u_char(
     .pxl       ( char_pxl       )
 );
 
-jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr1(
+jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
+    .LHBL      ( LHBL           ),
 
     .pages     ( scr1_pages     ),
     .hscr      ( scr1_hpos      ),
@@ -190,7 +196,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr1(
     .scr_data  ( scr1_data      ),
 
     // Video signal
-    .vdump     ( vdump          ),
+    .vdump     ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( scr1_pxl       )
 );
@@ -200,6 +206,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
+    .LHBL      ( LHBL           ),
 
     .pages     ( scr2_pages     ),
     .hscr      ( scr2_hpos      ),
@@ -215,7 +222,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
     .scr_data  ( scr2_data      ),
 
     // Video signal
-    .vdump     ( vdump          ),
+    .vdump     ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( scr2_pxl       )
 );
