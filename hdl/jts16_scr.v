@@ -139,7 +139,9 @@ always @(posedge clk, posedge rst) begin
             attr     <= map_data[12:5];
             busy     <= ~0;
             scr_good <= 2'd0;
-        end else if( busy!=0 && &scr_good ) begin
+        end else if( busy!=0 && &scr_good && pxl2_cen) begin // This could work
+            // without pxl2_cen, but it stresses the SDRAM too much, causing
+            // glitches in the char layer.
             pxl_data[23:16] <= pxl_data[23:16]<<1;
             pxl_data[15: 8] <= pxl_data[15: 8]<<1;
             pxl_data[ 7: 0] <= pxl_data[ 7: 0]<<1;
