@@ -104,7 +104,7 @@ wire    cpu_cen, cpu_cenb,
 
 // video signals
 wire        HB, VB, LVBL;
-wire [ 8:0] vdump;
+wire [ 8:0] vdump, vrender;
 wire        hstart;
 
 // SDRAM interface
@@ -258,6 +258,7 @@ jts16_video u_video(
     .LHBL_dly   ( LHBL_dly  ),
     .LVBL_dly   ( LVBL_dly  ),
     .vdump      ( vdump     ),
+    .vrender    ( vrender   ),
     .hstart     ( hstart    ),
     .red        ( red       ),
     .green      ( green     ),
@@ -267,6 +268,8 @@ jts16_video u_video(
 jts16_sdram u_sdram(
     .rst        ( rst       ),
     .clk        ( clk       ),
+
+    .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),
 
     // Main CPU

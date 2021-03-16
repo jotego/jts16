@@ -19,7 +19,9 @@
 module jts16_sdram(
     input           rst,
     input           clk,
+
     input           LVBL,
+    input    [ 8:0] vrender,
 
     // Main CPU
     input           main_cs,
@@ -116,6 +118,8 @@ localparam [21:0] ZERO_OFFSET=0,
 wire [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire        xram_cs;
 
+wire        gfx_cs = LVBL || vrender==0 || vrender[8];
+
 assign refresh_en = LVBL;
 assign xram_addr  = { ram_cs, main_addr[14:1] }; // RAM is mapped up
 assign xram_cs    = ram_cs | vram_cs;
@@ -185,8 +189,8 @@ jtframe_ram_4slots #(
 
     .slot0_cs   ( xram_cs   ),
     .slot1_cs   ( main_cs   ),
-    .slot2_cs   ( LVBL      ),
-    .slot3_cs   ( LVBL      ),
+    .slot2_cs   ( gfx_cs    ),
+    .slot3_cs   ( gfx_cs    ),
 
     .slot0_wen  ( ~main_rnw ),
     .slot0_din  ( main_dout ),
@@ -234,9 +238,9 @@ jtframe_rom_3slots #(
     .slot1_dout ( scr1_data ),
     .slot2_dout ( scr2_data ),
 
-    .slot0_cs   ( LVBL      ),
-    .slot1_cs   ( LVBL      ),
-    .slot2_cs   ( LVBL      ),
+    .slot0_cs   ( gfx_cs    ),
+    .slot1_cs   ( gfx_cs    ),
+    .slot2_cs   ( gfx_cs    ),
 
     .slot0_ok   ( char_ok   ),
     .slot1_ok   ( scr1_ok   ),

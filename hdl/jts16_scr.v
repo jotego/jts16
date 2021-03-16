@@ -39,7 +39,7 @@ module jts16_scr(
     input      [31:0]  scr_data,
 
     // Video signal
-    input      [ 8:0]  vdump,
+    input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
     output     [10:0]  pxl        // 1 priority + 7 palette + 3 colour = 11
 );
@@ -65,7 +65,7 @@ reg [7:0] busy;
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hscan } + {1'd0, ~hscr[8:0] };
+    {hov, hpos } = {1'b0, hscan } + {1'd0, ~hscr[8:0] }+PXL_DLY;
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( {vov, ~hov} )
@@ -130,7 +130,7 @@ always @(posedge clk, posedge rst) begin
 
         if( !LHBL && last_LHBL ) begin
             hscan <= HB_END-9'h8;
-            vscan <= vdump;
+            vscan <= vrender;
             done  <= 0;
         end
 

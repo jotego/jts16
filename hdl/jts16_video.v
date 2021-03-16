@@ -73,6 +73,7 @@ module jts16_video(
     output             LVBL_dly,
     output             hstart,
     output     [ 8:0]  vdump,
+    output     [ 8:0]  vrender,
     output     [ 4:0]  red,
     output     [ 4:0]  green,
     output     [ 4:0]  blue,
@@ -81,11 +82,11 @@ module jts16_video(
     input      [ 3:0]  gfx_en
 );
 
-localparam [8:0] OBJ_DLY=36;
-localparam [8:0] SCR_DLY=0;
+localparam [8:0] SCR_DLY=1;
+localparam [8:0] OBJ_DLY=36+SCR_DLY;
 
 
-wire [ 8:0] hdump, vrender, vrender1;
+wire [ 8:0] hdump, vrender1;
 wire        LHBL;
 
 // video layers
@@ -196,7 +197,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
     .scr_data  ( scr1_data      ),
 
     // Video signal
-    .vdump     ( vrender        ),
+    .vrender   ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( scr1_pxl       )
 );
@@ -222,7 +223,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
     .scr_data  ( scr2_data      ),
 
     // Video signal
-    .vdump     ( vrender        ),
+    .vrender   ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( scr2_pxl       )
 );
