@@ -27,7 +27,7 @@ module jts16_snd(
     input                irqn,
     output               ack,
     // ROM
-    output    reg [14:0] rom_addr,
+    output        [14:0] rom_addr,
     output    reg        rom_cs,
     input         [ 7:0] rom_data,
     input                rom_ok,
@@ -42,7 +42,7 @@ module jts16_snd(
     output signed [15:0] left,
     output signed [15:0] right,
     output               sample,
-    output reg           peak
+    output               peak
 );
 
 wire [15:0] A;
