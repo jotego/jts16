@@ -141,7 +141,8 @@ jtframe_68kramcs u_ramcs(
     .cs         ( {     ram_cs,     vram_cs } )
 );
 
-wire [1:0] ram_we = ~{ UDSWn, LDSWn } & {2{ram_cs}};
+wire [ 1:0] ram_we = ~{ UDSWn, LDSWn } & {2{pre_ram_cs}};
+wire [15:0] ram_dout;
 
 jtframe_ram16 #(.aw(13)) u_ram(
     .clk    ( clk               ),
