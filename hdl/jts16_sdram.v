@@ -134,8 +134,9 @@ assign dwnld_busy = downloading;
 
 jtframe_dwnld #(
     .HEADER    ( 32         ),
-    .BA1_START ( 25'h5_0000 ),
-    .BA2_START ( 25'h9_0000 ),
+    .BA1_START ( 25'h4_0000 ), // sound
+    .BA2_START ( 25'h5_0000 ), // tiles
+    .BA3_START ( 25'h9_0000 ), // obj
     .SWAB      ( 1          )
 ) u_dwnld(
     .clk          ( clk            ),
@@ -227,7 +228,7 @@ jtframe_rom_3slots #(
 
     .SLOT2_DW(32),
     .SLOT2_AW(17)
-) u_bank1(
+) u_bank2(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
@@ -249,10 +250,10 @@ jtframe_rom_3slots #(
     .slot2_ok   ( scr2_ok   ),
 
     // SDRAM controller interface
-    .sdram_ack  ( ba1_ack   ),
-    .sdram_req  ( ba1_rd    ),
-    .sdram_addr ( ba1_addr  ),
-    .data_rdy   ( ba1_rdy   ),
+    .sdram_ack  ( ba2_ack   ),
+    .sdram_req  ( ba2_rd    ),
+    .sdram_addr ( ba2_addr  ),
+    .data_rdy   ( ba2_rdy   ),
     .data_read  ( data_read )
 );
 
@@ -260,7 +261,7 @@ jtframe_rom_3slots #(
 jtframe_rom_1slot #(
     .SLOT0_DW(16),
     .SLOT0_AW(18)
-) u_bank2(
+) u_bank3(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
@@ -270,10 +271,10 @@ jtframe_rom_1slot #(
     .slot0_ok   ( obj_ok    ),
 
     // SDRAM controller interface
-    .sdram_ack  ( ba2_ack   ),
-    .sdram_req  ( ba2_rd    ),
-    .sdram_addr ( ba2_addr  ),
-    .data_rdy   ( ba2_rdy   ),
+    .sdram_ack  ( ba3_ack   ),
+    .sdram_req  ( ba3_rd    ),
+    .sdram_addr ( ba3_addr  ),
+    .data_rdy   ( ba3_rdy   ),
     .data_read  ( data_read )
 );
 
@@ -281,7 +282,7 @@ jtframe_rom_1slot #(
 jtframe_rom_1slot #(
     .SLOT0_DW( 8),
     .SLOT0_AW(15)
-) u_bank3(
+) u_bank1(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
@@ -291,10 +292,10 @@ jtframe_rom_1slot #(
     .slot0_ok   ( snd_ok    ),
 
     // SDRAM controller interface
-    .sdram_ack  ( ba3_ack   ),
-    .sdram_req  ( ba3_rd    ),
-    .sdram_addr ( ba3_addr  ),
-    .data_rdy   ( ba3_rdy   ),
+    .sdram_ack  ( ba1_ack   ),
+    .sdram_req  ( ba1_rd    ),
+    .sdram_addr ( ba1_addr  ),
+    .data_rdy   ( ba1_rdy   ),
     .data_read  ( data_read )
 );
 
