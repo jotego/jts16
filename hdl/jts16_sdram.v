@@ -42,6 +42,16 @@ module jts16_sdram(
     input   [14:0]  snd_addr,
     output  [ 7:0]  snd_data,
 
+    // PROM
+    output          prom_we,
+
+    // ADPCM ROM
+    input    [16:0] pcm_addr,
+    input           pcm_cs,
+    output   [ 7:0] pcm_data,
+    output          pcm_ok,
+
+
     // Char
     output          char_ok,
     input   [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
@@ -133,11 +143,12 @@ assign xram_cs    = ram_cs | vram_cs;
 assign dwnld_busy = downloading;
 
 jtframe_dwnld #(
-    .HEADER    ( 32         ),
-    .BA1_START ( 25'h4_0000 ), // sound
-    .BA2_START ( 25'h5_0000 ), // tiles
-    .BA3_START ( 25'h9_0000 ), // obj
-    .SWAB      ( 1          )
+    .HEADER    ( 32          ),
+    .BA1_START ( 25'h04_0000 ), // sound
+    .BA2_START ( 25'h05_0000 ), // tiles
+    .BA3_START ( 25'h09_0000 ), // obj
+    .PROM_START( 25'h11_0000 ), // PCM MCU
+    .SWAB      ( 1           )
 ) u_dwnld(
     .clk          ( clk            ),
     .downloading  ( downloading    ),
@@ -150,7 +161,7 @@ jtframe_dwnld #(
     .prog_we      ( prog_we        ),
     .prog_rd      ( prog_rd        ),
     .prog_ba      ( prog_ba        ),
-    .prom_we      (                ),
+    .prom_we      ( prom_we        ),
     .sdram_ack    ( prog_ack       )
 );
 
@@ -279,9 +290,12 @@ jtframe_rom_1slot #(
 );
 
 // Sound
-jtframe_rom_1slot #(
+jtframe_rom_2slots #(
     .SLOT0_DW( 8),
-    .SLOT0_AW(15)
+    .SLOT0_AW(15),
+
+    .SLOT1_DW( 8),
+    .SLOT1_AW(17)
 ) u_bank1(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -290,6 +304,11 @@ jtframe_rom_1slot #(
     .slot0_dout ( snd_data  ),
     .slot0_cs   ( snd_cs    ),
     .slot0_ok   ( snd_ok    ),
+
+    .slot1_addr ( pcm_addr  ),
+    .slot1_dout ( pcm_data  ),
+    .slot1_cs   ( pcm_cs    ),
+    .slot1_ok   ( pcm_ok    ),
 
     // SDRAM controller interface
     .sdram_ack  ( ba1_ack   ),

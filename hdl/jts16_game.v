@@ -88,8 +88,7 @@ module jts16_game(
     input           dip_test,
     input   [ 1:0]  dip_fxlevel, // Not a DIP on the original PCB
     // Sound output
-    output  signed [15:0] snd_left,
-    output  signed [15:0] snd_right,
+    output  signed [15:0] snd,
     output          sample,
     output          game_led,
     input           enable_psg,
@@ -100,7 +99,8 @@ module jts16_game(
 
 // clock enable signals
 wire    cpu_cen, cpu_cenb,
-        cen_fm,  cen_fm2;
+        cen_fm,  cen_fm2,
+        cen_pcm, cen_pcmb;
 
 // video signals
 wire        HB, VB, LVBL;
@@ -141,6 +141,13 @@ wire [14:0] snd_addr;
 wire [ 7:0] snd_data;
 wire        snd_cs, snd_ok;
 
+// PCM
+wire [16:0] pcm_addr;
+wire        pcm_cs;
+wire [ 7:0] pcm_data;
+wire        pcm_ok;
+wire        prom_we;
+
 wire [ 7:0] snd_latch;
 wire        snd_irqn, snd_ack;
 
@@ -160,7 +167,9 @@ jts16_cen u_cen(
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
     .fm2_cen    ( cen_fm2   ),
-    .fm_cen     ( cen_fm    )
+    .fm_cen     ( cen_fm    ),
+    .pcm_cen    ( cen_pcm   ),
+    .pcm_cenb   ( cen_pcmb  )
 );
 
 `ifndef NOMAIN
@@ -231,25 +240,32 @@ jts16_snd u_sound(
 
     .cen_fm     ( cen_fm    ),   // 4MHz
     .cen_fm2    ( cen_fm2   ),   // 2MHz
+    .cen_pcm    ( cen_pcm   ),   // 6MHz
+    .cen_pcmb   ( cen_pcmb  ),   // 6MHz
 
     .latch      ( snd_latch ),
     .irqn       ( snd_irqn  ),
     .ack        ( snd_ack   ),
+
     // ROM
     .rom_addr   ( snd_addr  ),
     .rom_cs     ( snd_cs    ),
     .rom_data   ( snd_data  ),
     .rom_ok     ( snd_ok    ),
 
+    // MCU PROM
+    .prog_addr  ( prog_addr ),
+    .prom_we    ( prom_we   ),
+    .prog_data  ( prog_data ),
+
     // ADPCM ROM
-    // output        [17:0] adpcm_addr,
-    // output               adpcm_cs,
-    // input         [ 7:0] adpcm_data,
-    // input                adpcm_ok,
+    .pcm_addr   ( pcm_addr  ),
+    .pcm_cs     ( pcm_cs    ),
+    .pcm_data   ( pcm_data  ),
+    .pcm_ok     ( pcm_ok    ),
 
     // Sound output
-    .left       ( snd_left  ),
-    .right      ( snd_right ),
+    .snd        ( snd       ),
     .sample     ( sample    ),
     .peak       ( game_led  )
 );
@@ -346,6 +362,12 @@ jts16_sdram u_sdram(
     .snd_data   ( snd_data  ),
     .snd_ok     ( snd_ok    ),
 
+    // ADPCM ROM
+    .pcm_addr   ( pcm_addr  ),
+    .pcm_cs     ( pcm_cs    ),
+    .pcm_data   ( pcm_data  ),
+    .pcm_ok     ( pcm_ok    ),
+
     // Char interface
     .char_ok    ( char_ok   ),
     .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
@@ -417,6 +439,7 @@ jts16_sdram u_sdram(
     .prog_mask  ( prog_mask  ),
     .prog_ba    ( prog_ba    ),
     .prog_we    ( prog_we    ),
+    .prom_we    ( prom_we    ),
     .prog_rd    ( prog_rd    ),
     .prog_ack   ( prog_ack   ),
     .prog_rdy   ( prog_rdy   )

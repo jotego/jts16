@@ -20,8 +20,10 @@ module jts16_snd(
     input                rst,
     input                clk,
 
-    input                cen_fm,   // 4MHz
+    input                cen_fm,    // 4MHz
     input                cen_fm2,   // 2MHz
+    input                cen_pcm,   // 6MHz
+    input                cen_pcmb,
 
     input         [ 7:0] latch,
     input                irqn,
@@ -32,32 +34,40 @@ module jts16_snd(
     input         [ 7:0] rom_data,
     input                rom_ok,
 
+    // PROM
+    input         [ 9:0] prog_addr,
+    input                prom_we,
+    input         [ 7:0] prog_data,
+
     // ADPCM ROM
-    // output        [17:0] adpcm_addr,
-    // output               adpcm_cs,
-    // input         [ 7:0] adpcm_data,
-    // input                adpcm_ok,
+    output        [16:0] pcm_addr,
+    output               pcm_cs,
+    input         [ 7:0] pcm_data,
+    input                pcm_ok,
 
     // Sound output
-    output signed [15:0] left,
-    output signed [15:0] right,
+    output signed [15:0] snd,
     output               sample,
     output               peak
 );
 
+localparam [7:0] FMGAIN=8'h08, PCMGAIN=8'h08;
+
 wire [15:0] A;
-reg         fm_cs, latch_cs, ram_cs, pcm_cs;
+reg         fm_cs, latch_cs, ram_cs;
 wire        mreq_n, iorq_n, int_n, nmi_n;
 wire        WRn;
-reg  [ 7:0] din;
+reg  [ 7:0] din, pcm_cmd;
 reg         rom_ok2;
-wire        rom_good;
-wire [ 7:0] dout, fm_dout, ram_dout;
+wire        rom_good, cmd_cs;
+wire [ 7:0] dout, fm_dout, ram_dout, pcm_snd;
+wire        pcm_irqn, pcm_rstn,
+            wr_n, rd_n;
 
-assign peak  = 0;
 assign rom_good = rom_ok2 & rom_ok;
 assign rom_addr = A[14:0];
 assign ack      = latch_cs;
+assign cmd_cs   = !iorq_n && A[7:6]==2 && !wr_n; // 80
 
 always @(posedge clk ) begin
     rom_ok2  <= rom_ok;
@@ -67,7 +77,7 @@ always @(posedge clk ) begin
              || (!iorq_n &&  A[7:6]==3);
 
     fm_cs    <= !iorq_n && A[7:6]==0;
-    pcm_cs   <= !iorq_n && A[7:6]==2; // 80
+    if( cmd_cs ) pcm_cmd <= dout;
 
     din      <= rom_cs   ? rom_data : (
                 ram_cs   ? ram_dout : (
@@ -75,6 +85,24 @@ always @(posedge clk ) begin
                 latch_cs ? latch    : (
                     8'hff ))));
 end
+
+jtframe_mixer #(.W2(8)) u_mixer(
+    .rst    ( rst       ),
+    .clk    ( clk       ),
+    .cen    ( 1'b1      ),
+    // input signals
+    .ch0    ( fm_left   ),
+    .ch1    ( fm_right  ),
+    .ch2    ( pcm_snd   ),
+    .ch3    ( 16'd0     ),
+    // gain for each channel in 4.4 fixed point format
+    .gain0  ( FMGAIN    ),
+    .gain1  ( FMGAIN    ),
+    .gain2  ( PCMGAIN   ),
+    .gain3  ( 8'h00     ),
+    .mixed  ( snd       ),
+    .peak   ( peak      )
+);
 
 jtframe_ff u_ff(
     .rst    ( rst       ),
@@ -131,19 +159,44 @@ jt51 u_jt51(
     .a0         ( A[0]      ),
     .din        ( dout      ), // data in
     .dout       ( fm_dout   ), // data out
-    .ct1        (           ),
-    .ct2        (           ),
+    .ct1        ( pcm_irqn  ),
+    .ct2        ( pcm_rstn  ),
     .irq_n      ( int_n     ),  // I do not synchronize this signal
     // Low resolution output (same as real chip)
     .sample     ( sample    ), // marks new output sample
     .left       (           ),
     .right      (           ),
     // Full resolution output
-    .xleft      ( left      ),
-    .xright     ( right     ),
+    .xleft      ( fm_left   ),
+    .xright     ( fm_right  ),
     // unsigned outputs for sigma delta converters, full resolution
     .dacleft    (           ),
     .dacright   (           )
+);
+
+jts16_pcm u_pcm(
+    .rst        ( rst       ), // reset
+    .clk        ( clk       ), // main clock
+    .soft_rstn  ( pcm_rstn  ),
+
+    .cen_pcm    ( cen_pcm   ),   // 6 MHz
+    .cen_pcmb   ( cen_pcmb  ),
+
+    .ctrl       ( pcm_cmd   ),
+    .irqn       ( pcm_irqn  ),
+    // PROM
+    .prog_addr  ( prog_addr ),
+    .prom_we    ( prom_we   ),
+    .prog_data  ( prog_data ),
+
+    // PCM ROM
+    .pcm_addr   ( pcm_addr  ),
+    .pcm_cs     ( pcm_cs    ),
+    .pcm_data   ( pcm_data  ),
+    .pcm_ok     ( pcm_ok    ),
+
+    // Sound output
+    .snd        ( pcm_snd   )
 );
 
 endmodule

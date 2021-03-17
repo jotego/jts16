@@ -21,13 +21,15 @@ module jts16_cen(
     input              clk,       //
     output             pxl2_cen,  // pixel clock enable (2x)
     output             pxl_cen,   // pixel clock enable
-    output             cpu_cen,
+    output             cpu_cen,     // 10
     output             cpu_cenb,
-    output             fm_cen,
-    output             fm2_cen
+    output             fm_cen,      // 4
+    output             fm2_cen,     // 2
+    output             pcm_cen,
+    output             pcm_cenb
 );
 
-wire nc, ncb;
+wire nc, ncb, nc2, ncb2;
 
 jtframe_frac_cen #(2) u_pxlcen(
     .clk    ( clk       ),
@@ -51,6 +53,14 @@ jtframe_frac_cen u_sndcen(
     .m      ( 10'd793   ),
     .cen    ( { fm2_cen, fm_cen } ),
     .cenb   (           )
+);
+
+jtframe_frac_cen u_pcmcen(
+    .clk    ( clk       ),
+    .n      ( 10'd120   ),
+    .m      ( 10'd1007  ),
+    .cen    ( { nc2, pcm_cen  } ),
+    .cenb   ( { ncb2, pcm_cenb} )
 );
 
 endmodule
