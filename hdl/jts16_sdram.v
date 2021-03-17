@@ -127,8 +127,8 @@ wire        xram_cs;
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 
 assign refresh_en = LVBL;
-assign xram_addr  = { 1'b0 , main_addr[14:1] }; // RAM is mapped up
-assign xram_cs    = vram_cs;
+assign xram_addr  = { ram_cs, main_addr[14:1] }; // RAM is mapped up
+assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading;
 

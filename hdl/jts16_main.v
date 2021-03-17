@@ -141,17 +141,6 @@ jtframe_68kramcs u_ramcs(
     .cs         ( {     ram_cs,     vram_cs } )
 );
 
-wire [ 1:0] ram_we = ~{ UDSWn, LDSWn } & {2{pre_ram_cs}};
-wire [15:0] ram_dout;
-
-jtframe_ram16 #(.aw(13)) u_ram(
-    .clk    ( clk               ),
-    .data   ( cpu_dout          ),
-    .addr   ( A[13:1]           ),
-    .we     ( ram_we            ),
-    .q      ( ram_dout          )
-);
-
 // cabinet input
 reg [15:0] cab_dout;
 
@@ -212,14 +201,13 @@ always @(posedge clk) begin
     if(rst) begin
         cpu_din <= 16'hffff;
     end else begin
-        cpu_din <=  vram_cs            ? ram_data  : (
-                    ram_cs             ? ram_dout  : (
+        cpu_din <= (ram_cs | vram_cs ) ? ram_data  : (
                     rom_cs             ? rom_data  : (
                     char_cs            ? char_dout : (
                     pal_cs             ? pal_dout  : (
                     objram_cs          ? obj_dout  : (
                     io_cs              ? { 8'hff, cab_dout } :
-                                       16'hFFFF ))))));
+                                       16'hFFFF )))));
     end
 end
 
@@ -245,7 +233,7 @@ end
 
 wire DTACKn;
 wire bus_cs   = pal_cs | char_cs | pre_vram_cs | pre_ram_cs | rom_cs;
-wire bus_busy = |{ rom_cs & ~rom_ok,  pre_vram_cs & ~ram_ok };
+wire bus_busy = |{ rom_cs & ~rom_ok, (pre_ram_cs | pre_vram_cs) & ~ram_ok };
 
 jts16_dtack u_dtack(
     .rst        ( rst       ),
