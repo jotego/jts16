@@ -76,7 +76,7 @@ always @(*) begin
     endcase
 end
 
-reg [2:0] map_st;
+reg [1:0] map_st;
 reg       last_LHBL;
 
 always @(posedge clk, posedge rst) begin
