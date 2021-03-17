@@ -82,8 +82,8 @@ module jts16_video(
     input      [ 3:0]  gfx_en
 );
 
-localparam [8:0] SCR_DLY=17;
-localparam [8:0] OBJ_DLY=SCR_DLY-6;
+localparam [8:0] SCR_DLY=18;
+localparam [8:0] OBJ_DLY=SCR_DLY+19;
 
 
 wire [ 8:0] hdump, vrender1;
@@ -116,7 +116,7 @@ jtframe_vtimer #(
     //.VS_START ( 9'h0   ),
     .VS_START ( 9'hF0   ),
     //.VS_END   ( 9'h8   ),
-    .HS_START ( 9'h098 )
+    .HS_START ( 9'h080 )
 ) u_timer(
     .clk       ( clk      ),
     .pxl_cen   ( pxl_cen  ),
@@ -197,7 +197,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
     .scr_data  ( scr1_data      ),
 
     // Video signal
-    .vrender   ( vrender        ),
+    .vrender   ( vrender1       ),
     .hdump     ( hdump          ),
     .pxl       ( scr1_pxl       )
 );
@@ -223,7 +223,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
     .scr_data  ( scr2_data      ),
 
     // Video signal
-    .vrender   ( vrender        ),
+    .vrender   ( vrender1       ),
     .hdump     ( hdump          ),
     .pxl       ( scr2_pxl       )
 );
