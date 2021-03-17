@@ -48,6 +48,7 @@ else
 fi
 
 if which ncverilog >/dev/null; then
+    # Options for non-verilator simulation
     SIMULATOR=
     HEXDUMP=
 fi

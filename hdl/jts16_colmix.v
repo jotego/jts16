@@ -117,7 +117,7 @@ jtframe_dual_ram16 #(
     .q1     ( pal       )
 );
 
-jtframe_blank #(.DLY(4),.DW(15)) u_blank(
+jtframe_blank #(.DLY(1),.DW(15)) u_blank(
     .clk        ( clk       ),
     .pxl_cen    ( pxl_cen   ),
     .LHBL       ( LHBL      ),

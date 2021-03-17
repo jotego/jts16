@@ -82,8 +82,8 @@ module jts16_video(
     input      [ 3:0]  gfx_en
 );
 
-localparam [8:0] SCR_DLY=1;
-localparam [8:0] OBJ_DLY=36+SCR_DLY;
+localparam [8:0] SCR_DLY=17;
+localparam [8:0] OBJ_DLY=SCR_DLY-6;
 
 
 wire [ 8:0] hdump, vrender1;
@@ -103,10 +103,10 @@ wire [15:0] scr1_pages,      scr2_pages,
 // "The sprite X position defines the starting location of the sprite. The
 //  leftmost pixel of the screen is $00B6, and the rightmost is $1F5."
 
-parameter [8:0] HB_END = 9'h0bc;
+parameter [8:0] HB_END = 9'h0bf;
 
 jtframe_vtimer #(
-    .HB_START  ( 9'h1FC ),
+    .HB_START  ( 9'h1ff ),
     .HB_END    ( HB_END ),
     .HCNT_START( 9'h70  ),
     .HCNT_END  ( 9'h1FF ),
@@ -116,7 +116,7 @@ jtframe_vtimer #(
     //.VS_START ( 9'h0   ),
     .VS_START ( 9'hF0   ),
     //.VS_END   ( 9'h8   ),
-    .HS_START ( 9'h090 )
+    .HS_START ( 9'h098 )
 ) u_timer(
     .clk       ( clk      ),
     .pxl_cen   ( pxl_cen  ),

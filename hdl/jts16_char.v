@@ -68,7 +68,7 @@ jtframe_dual_ram16 #(
     .q1     ( scan      )
 );
 
-assign scan_addr = { vdump[7:3], hdump[8:3] };
+assign scan_addr = { vdump[7:3], hdump[8:3]+6'd2 };
 assign char_addr = { code, vdump[2:0], 1'b0 };
 
 // SDRAM runs at pxl_cen x 8, so new data from SDRAM takes about a

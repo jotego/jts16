@@ -213,6 +213,15 @@ jts16_main u_main(
     .dipsw_a     ( dipsw_a    ),
     .dipsw_b     ( dipsw_b    )
 );
+`else
+    assign flip      = 0;
+    assign main_cs   = 0;
+    assign ram_cs    = 0;
+    assign vram_cs   = 0;
+    assign UDSWn     = 1;
+    assign LDSWn     = 1;
+    assign main_rnw  = 1;
+    assign main_dout = 0;
 `endif
 
 `ifndef NOSOUND

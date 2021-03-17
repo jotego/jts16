@@ -123,16 +123,20 @@ always @(posedge clk, posedge rst) begin
         last_LHBL <= 0;
         done      <= 0;
         busy      <= 0;
+        hscan     <= 0;
     end else begin
         last_LHBL <= LHBL;
         scr_good  <= { scr_good[0], scr_ok };
         if( scr_good==2'b01 ) pxl_data <= scr_data[23:0];
 
         if( !LHBL && last_LHBL ) begin
-            hscan <= HB_END-9'h8;
             vscan <= vrender;
             done  <= 0;
             busy  <= 0;
+        end
+
+        if( done ) begin
+            hscan <= HB_END-9'h8;
         end
 
         if( draw && !done ) begin
@@ -146,7 +150,7 @@ always @(posedge clk, posedge rst) begin
             pxl_data[23:16] <= pxl_data[23:16]<<1;
             pxl_data[15: 8] <= pxl_data[15: 8]<<1;
             pxl_data[ 7: 0] <= pxl_data[ 7: 0]<<1;
-            if( hpos[2:0]==3'd6 )
+            if( hpos[2:0]==3'd7 )
                 busy <= 8'h80;
             else
                 busy <= busy<<1;
@@ -165,8 +169,8 @@ jtframe_linebuf #(.DW(11),.AW(9)) u_linebuf(
     .we     ( busy[7]   ),
     // Old data reads (and erases)
     .rd_addr( hdump    ),
-    .rd_data(          ),
-    .rd_gated( pxl     )
+    .rd_data( pxl      ),
+    .rd_gated(         )
 );
 
 endmodule
