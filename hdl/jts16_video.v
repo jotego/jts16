@@ -83,7 +83,7 @@ module jts16_video(
 );
 
 localparam [8:0] SCR_DLY=18;
-localparam [8:0] OBJ_DLY=SCR_DLY+19;
+localparam [8:0] OBJ_DLY=SCR_DLY+9'd19;
 
 
 wire [ 8:0] hdump, vrender1;

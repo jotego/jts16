@@ -142,7 +142,7 @@ always @(posedge clk, posedge rst) begin
         if( draw && !done ) begin
             code     <= { bank, map_data[11:0] };
             attr     <= map_data[12:5];
-            busy     <= ~0;
+            busy     <= ~8'd0;
             scr_good <= 2'd0;
         end else if( busy!=0 && &scr_good && pxl2_cen) begin // This could work
             // without pxl2_cen, but it stresses the SDRAM too much, causing

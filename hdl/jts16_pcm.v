@@ -43,7 +43,7 @@ module jts16_pcm(
 
 reg  [ 1:0] bank;
 wire [ 7:0] rom_data, ram_dout, ram_din, ram_addr,
-            p1_dout, p2_dout;
+            p2_dout;
 wire [ 3:0] pext2, pext4, pext5, pext6, pext7;
 wire [11:0] rom_addr;
 wire        ram_we, rd_n, wr_n, prog_n;
@@ -51,13 +51,14 @@ wire [ 7:0] p2_din;
 
 assign pcm_addr = { bank, ctrl[0], pext7[1:0], pext6, pext5, pext4 };
 assign p2_din   = { 1'b1, ctrl[7:5], pext2[3:0] };
+assign pcm_cs   = 1;
 
 always @(*) begin
     casez( ctrl[4:1] )
         4'b1???: bank = 2'd3;
         4'b01??: bank = 2'd2;
         4'b001?: bank = 2'd1;
-        4'b0001: bank = 2'd0;
+        default: bank = 2'd0;
     endcase
 end
 
@@ -65,13 +66,15 @@ end
 reg rst_t48;
 always @(posedge clk) rst_t48 <= rst | ~soft_rstn;
 
+wire xtal3_o;
+
 t48_core u_mcu(
     .reset_i        ( rst_t48   ),
     .xtal_i         ( clk       ),
     .xtal_en_i      ( cen_pcm   ),
     .clk_i          ( clk       ),
-    .en_clk_i       ( cen_pcm   ),
-    .xtal3_o        (           ),
+    .en_clk_i       ( xtal3_o   ),
+    .xtal3_o        ( xtal3_o   ),
     // Unused test signals
     .t0_i           ( 1'b0      ),
     .t1_i           ( 1'b0      ),
@@ -85,7 +88,7 @@ t48_core u_mcu(
     .wr_n_o         ( wr_n      ),
     .psen_n_o       (           ),
     .ale_o          (           ),
-    .db_i           (           ), // input data
+    .db_i           ( pcm_data  ), // input data
     .db_o           (           ), // output data
     .db_dir_o       (           ), // direction of DB pads, 0=input
     // Port 2 (interfaces with 8243)
@@ -94,7 +97,7 @@ t48_core u_mcu(
     .p2_low_imp_o   (           ),
     // Port 1
     .p1_i           ( 8'd0      ),
-    .p1_o           ( p1_dout   ),
+    .p1_o           ( snd       ),
     .p1_low_imp_o   (           ),
     // output strobe for 8243
     .prog_n_o       ( prog_n    ),
