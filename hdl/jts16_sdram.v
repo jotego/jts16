@@ -129,7 +129,8 @@ module jts16_sdram(
 );
 
 localparam [21:0] ZERO_OFFSET=0,
-                  VRAM_OFFSET=22'h10_0000;
+                  VRAM_OFFSET=22'h10_0000,
+                  PCM_OFFSET =22'h48000>>1;
 
 wire [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire        xram_cs;
@@ -295,7 +296,9 @@ jtframe_rom_2slots #(
     .SLOT0_AW(15),
 
     .SLOT1_DW( 8),
-    .SLOT1_AW(17)
+    .SLOT1_AW(17),
+
+    .SLOT1_OFFSET( PCM_OFFSET )
 ) u_bank1(
     .rst        ( rst       ),
     .clk        ( clk       ),
