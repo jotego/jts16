@@ -76,7 +76,7 @@ always @(*) begin
     endcase
 end
 
-reg [2:0] map_st;
+reg [1:0] map_st;
 reg       last_LHBL;
 
 always @(posedge clk, posedge rst) begin
@@ -89,7 +89,7 @@ always @(posedge clk, posedge rst) begin
         case( map_st )
             0: map_addr <= { page, scan_addr };
             3:
-                if( !map_ok || busy!=0 )
+                if( !map_ok || busy!=0 || !scr_ok)
                     map_st <= 3;
                 else
                     draw   <= 1;
