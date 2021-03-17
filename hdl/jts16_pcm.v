@@ -44,11 +44,13 @@ module jts16_pcm(
 reg  [ 1:0] bank;
 wire [ 7:0] rom_data, ram_dout, ram_din, ram_addr,
             p1_dout, p2_dout;
-wire [ 3:0] pext4, pext5, pext6, pext7;
+wire [ 3:0] pext2, pext4, pext5, pext6, pext7;
 wire [11:0] rom_addr;
 wire        ram_we, rd_n, wr_n, prog_n;
+wire [ 7:0] p2_din;
 
 assign pcm_addr = { bank, ctrl[0], pext7[1:0], pext6, pext5, pext4 };
+assign p2_din   = { 1'b1, ctrl[7:5], pext2[3:0] };
 
 always @(*) begin
     casez( ctrl[4:1] )
@@ -87,7 +89,7 @@ t48_core u_mcu(
     .db_o           (           ), // output data
     .db_dir_o       (           ), // direction of DB pads, 0=input
     // Port 2 (interfaces with 8243)
-    .p2_i           ( 8'd0      ),
+    .p2_i           ( p2_din    ),
     .p2_o           ( p2_dout   ),
     .p2_low_imp_o   (           ),
     // Port 1
@@ -116,7 +118,7 @@ t8243_core u_8243(
     .prog_n_i       ( prog_n    ),
 
     .p2_i           ( p2_dout[3:0] ),
-    .p2_o           (           ),
+    .p2_o           ( pext2     ),
     .p2_en_o        (           ),
 
     .p4_i           ( 4'd0      ),

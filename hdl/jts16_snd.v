@@ -64,6 +64,8 @@ wire [ 7:0] dout, fm_dout, ram_dout, pcm_snd;
 wire        pcm_irqn, pcm_rstn,
             wr_n, rd_n;
 
+wire signed [15:0] fm_left, fm_right;
+
 assign rom_good = rom_ok2 & rom_ok;
 assign rom_addr = A[14:0];
 assign ack      = latch_cs;

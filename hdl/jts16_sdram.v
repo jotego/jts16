@@ -130,7 +130,7 @@ module jts16_sdram(
 
 localparam [21:0] ZERO_OFFSET=0,
                   VRAM_OFFSET=22'h10_0000,
-                  PCM_OFFSET =22'h48000>>1;
+                  PCM_OFFSET =22'h8000>>1;
 
 wire [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire        xram_cs;
