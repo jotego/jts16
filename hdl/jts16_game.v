@@ -254,9 +254,9 @@ jts16_snd u_sound(
     .rom_ok     ( snd_ok    ),
 
     // MCU PROM
-    .prog_addr  ( prog_addr ),
-    .prom_we    ( prom_we   ),
-    .prog_data  ( prog_data ),
+    .prom_we    ( prom_we        ),
+    .prog_addr  ( prog_addr[9:0] ),
+    .prog_data  ( prog_data[7:0] ),
 
     // ADPCM ROM
     .pcm_addr   ( pcm_addr  ),

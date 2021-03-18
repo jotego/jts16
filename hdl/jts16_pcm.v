@@ -63,13 +63,14 @@ always @(*) begin
 end
 
 // local reset
-reg rst_t48;
-always @(posedge clk) rst_t48 <= rst | ~soft_rstn;
+reg rstn_t48;
+always @(posedge clk) rstn_t48 <= ~rst | soft_rstn;
 
 wire xtal3_o;
 
+`ifndef NOMCU
 t48_core u_mcu(
-    .reset_i        ( rst_t48   ),
+    .reset_i        ( rstn_t48  ),
     .xtal_i         ( clk       ),
     .xtal_en_i      ( cen_pcm   ),
     .clk_i          ( clk       ),
@@ -94,7 +95,8 @@ t48_core u_mcu(
     // Port 2 (interfaces with 8243)
     .p2_i           ( p2_din    ),
     .p2_o           ( p2_dout   ),
-    .p2_low_imp_o   (           ),
+    .p2l_low_imp_o  (           ),
+    .p2h_low_imp_o  (           ),
     // Port 1
     .p1_i           ( 8'd0      ),
     .p1_o           ( snd       ),
@@ -140,8 +142,9 @@ t8243_core u_8243(
     .p7_o           ( pext7     ),
     .p7_en_o        (           )
 );
+`endif
 
-jtframe_prom u_prom(
+jtframe_prom #(.simfile("7751.bin")) u_prom(
     .clk    ( clk           ),
     .cen    ( 1'b1          ),
     .data   ( prog_data     ),
