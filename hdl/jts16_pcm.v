@@ -38,12 +38,12 @@ module jts16_pcm(
     input                pcm_ok,
 
     // Sound output
-    output signed [ 7:0] snd
+    output reg signed [ 7:0] snd
 );
 
 reg  [ 1:0] bank;
 wire [ 7:0] rom_data, ram_dout, ram_din, ram_addr,
-            p2_dout;
+            p2_dout, raw;
 wire [ 3:0] pext2, pext4, pext5, pext6, pext7;
 wire [11:0] rom_addr;
 wire        ram_we, rd_n, wr_n, prog_n;
@@ -55,7 +55,7 @@ assign p2_din   = { 1'b1, ctrl[7:5], pext2_en ? pext2[3:0] : 4'hf };
 assign pcm_cs   = 1;
 
 always @(*) begin
-    casez( ctrl[4:1] )
+    casez( ~ctrl[4:1] )
         4'b1???: bank = 2'd3;
         4'b01??: bank = 2'd2;
         4'b001?: bank = 2'd1;
@@ -72,6 +72,13 @@ wire [7:0] mcu_dout;
 //reg        we_dly;
 
 //always @(posedge clk) we_dly <= ram_we;
+
+always @(posedge clk, negedge rstn_t48 ) begin
+    if( !rstn_t48 )
+        snd <= 0;
+    else
+        snd <= raw - 8'h80;
+end
 
 `ifndef NOMCU
 t48_core u_mcu(
@@ -104,7 +111,7 @@ t48_core u_mcu(
     .p2h_low_imp_o  (           ),
     // Port 1
     .p1_i           ( 8'd0      ),
-    .p1_o           ( snd       ),
+    .p1_o           ( raw       ),
     .p1_low_imp_o   (           ),
     // output strobe for 8243
     .prog_n_o       ( prog_n    ),

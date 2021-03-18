@@ -51,7 +51,7 @@ module jts16_snd(
     output               peak
 );
 
-localparam [7:0] FMGAIN=8'h08, PCMGAIN=8'h08;
+localparam [7:0] FMGAIN=8'h10, PCMGAIN=8'h08;
 
 wire [15:0] A;
 reg         fm_cs, latch_cs, ram_cs;
