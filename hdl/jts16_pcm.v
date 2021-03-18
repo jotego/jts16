@@ -64,7 +64,7 @@ end
 
 // local reset
 reg rstn_t48;
-always @(posedge clk) rstn_t48 <= ~rst | soft_rstn;
+always @(posedge clk) rstn_t48 <= ~rst & soft_rstn;
 
 wire xtal3_o;
 
@@ -115,7 +115,7 @@ t48_core u_mcu(
 
 t8243_core u_8243(
     .clk_i          ( clk       ),
-    .reset_n_i      ( ~rst_t48  ),
+    .reset_n_i      ( rstn_t48  ),
     .clk_rise_en_i  ( cen_pcm   ),
     .clk_fall_en_i  ( cen_pcmb  ),
 
