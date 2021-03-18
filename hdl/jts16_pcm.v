@@ -66,7 +66,11 @@ end
 reg rstn_t48;
 always @(posedge clk) rstn_t48 <= ~rst & soft_rstn;
 
-wire xtal3_o;
+wire       xtal3, ale, psen_n, db_dir;
+wire [7:0] mcu_dout;
+reg        we_dly;
+
+always @(posedge clk) we_dly <= ram_we;
 
 `ifndef NOMCU
 t48_core u_mcu(
@@ -74,8 +78,8 @@ t48_core u_mcu(
     .xtal_i         ( clk       ),
     .xtal_en_i      ( cen_pcm   ),
     .clk_i          ( clk       ),
-    .en_clk_i       ( xtal3_o   ),
-    .xtal3_o        ( xtal3_o   ),
+    .en_clk_i       ( xtal3     ),
+    .xtal3_o        ( xtal3     ),
     // Unused test signals
     .t0_i           ( 1'b0      ),
     .t1_i           ( 1'b0      ),
@@ -87,11 +91,11 @@ t48_core u_mcu(
     .ea_i           ( 1'b0      ),  // external access
     .rd_n_o         ( rd_n      ),
     .wr_n_o         ( wr_n      ),
-    .psen_n_o       (           ),
-    .ale_o          (           ),
+    .psen_n_o       ( psen_n    ),
+    .ale_o          ( ale       ),
     .db_i           ( pcm_data  ), // input data
-    .db_o           (           ), // output data
-    .db_dir_o       (           ), // direction of DB pads, 0=input
+    .db_o           ( mcu_dout  ), // output data
+    .db_dir_o       ( db_dir    ), // direction of DB pads, 0=input
     // Port 2 (interfaces with 8243)
     .p2_i           ( p2_din    ),
     .p2_o           ( p2_dout   ),
@@ -159,7 +163,7 @@ jtframe_ram #(.aw(8)) u_ram(
     .cen    ( 1'b1          ),
     .data   ( ram_din       ),
     .addr   ( ram_addr      ),
-    .we     ( ram_we        ),
+    .we     ( we_dly        ),
     .q      ( ram_dout      )
 );
 

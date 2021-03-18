@@ -360,7 +360,7 @@ void segas16a_state::n7751_control_w(uint8_t data)
     //  YM2151 output port
     //
     //  D1 = /RESET line on 7751
-    //  D0 = /IRQ line on 7751
+    //  D2 = /IRQ line on 7751
     //
     m_n7751->set_input_line(INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
     m_n7751->set_input_line(0, (data & 0x02) ? CLEAR_LINE : ASSERT_LINE);

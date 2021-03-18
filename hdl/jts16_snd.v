@@ -161,8 +161,8 @@ jt51 u_jt51(
     .a0         ( A[0]      ),
     .din        ( dout      ), // data in
     .dout       ( fm_dout   ), // data out
-    .ct1        ( pcm_irqn  ),
-    .ct2        ( pcm_rstn  ),
+    .ct1        ( pcm_rstn  ),
+    .ct2        ( pcm_irqn  ),
     .irq_n      ( int_n     ),  // I do not synchronize this signal
     // Low resolution output (same as real chip)
     .sample     ( sample    ), // marks new output sample
