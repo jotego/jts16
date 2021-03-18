@@ -12,6 +12,7 @@ COLORW=5
 # OSD options
 JTFRAME_MRA_DIP
 JTFRAME_OSD_VOL
+CORE_OSD="O1,Original-Filter,On,Off;",
 
 [mist|sidi]
 VIDEO_WIDTH=512

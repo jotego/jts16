@@ -25,6 +25,10 @@ module jts16_snd(
     input                cen_pcm,   // 6MHz
     input                cen_pcmb,
 
+    // options
+    input                filtern,
+    input         [ 1:0] fxlevel,
+
     input         [ 7:0] latch,
     input                irqn,
     output               ack,
@@ -51,13 +55,13 @@ module jts16_snd(
     output               peak
 );
 
-localparam [7:0] FMGAIN=8'h10, PCMGAIN=8'h08;
+localparam [7:0] FMGAIN=8'h10;
 
 wire [15:0] A;
 reg         fm_cs, latch_cs, ram_cs;
 wire        mreq_n, iorq_n, int_n, nmi_n;
 wire        WRn;
-reg  [ 7:0] din, pcm_cmd;
+reg  [ 7:0] din, pcm_cmd, pcmgain;
 reg         rom_ok2;
 wire        rom_good, cmd_cs;
 wire [ 7:0] dout, fm_dout, ram_dout, pcm_snd;
@@ -65,11 +69,23 @@ wire        pcm_irqn, pcm_rstn,
             wr_n, rd_n;
 
 wire signed [15:0] fm_left, fm_right;
+wire signed [ 7:0] pcm_raw;
+wire signed [ 7:0] pcm_mux;
 
 assign rom_good = rom_ok2 & rom_ok;
 assign rom_addr = A[14:0];
 assign ack      = latch_cs;
 assign cmd_cs   = !iorq_n && A[7:6]==2 && !wr_n; // 80
+assign pcm_mux  = filtern ? pcm_raw : pcm_snd;
+
+always @(posedge clk ) begin
+    case( fxlevel )
+        2'd0: pcmgain = 8'h04;
+        2'd1: pcmgain = 8'h08;
+        2'd2: pcmgain = 8'h10;
+        2'd3: pcmgain = 8'h18;
+    endcase
+end
 
 always @(posedge clk ) begin
     rom_ok2  <= rom_ok;
@@ -95,12 +111,12 @@ jtframe_mixer #(.W2(8)) u_mixer(
     // input signals
     .ch0    ( fm_left   ),
     .ch1    ( fm_right  ),
-    .ch2    ( pcm_snd   ),
+    .ch2    ( pcm_mux   ),
     .ch3    ( 16'd0     ),
     // gain for each channel in 4.4 fixed point format
     .gain0  ( FMGAIN    ),
     .gain1  ( FMGAIN    ),
-    .gain2  ( PCMGAIN   ),
+    .gain2  ( pcmgain   ),
     .gain3  ( 8'h00     ),
     .mixed  ( snd       ),
     .peak   ( peak      )
@@ -198,7 +214,22 @@ jts16_pcm u_pcm(
     .pcm_ok     ( pcm_ok    ),
 
     // Sound output
-    .snd        ( pcm_snd   )
+    .snd        ( pcm_raw   )
 );
+
+// where a = exp(-wc/T ), a<1
+// wc = radian frequency
+
+wire [6:0] pole_a = 7'd84; // pole at 4kHz
+
+jtframe_pole #(.WS(8)) u_pole(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .sample     ( sample    ),      // uses the YM2151 as sampling signal
+    .a          ( pole_a    ),
+    .sin        ( pcm_raw   ),
+    .sout       ( pcm_snd   )
+);
+
 
 endmodule
