@@ -48,9 +48,10 @@ wire [ 3:0] pext2, pext4, pext5, pext6, pext7;
 wire [11:0] rom_addr;
 wire        ram_we, rd_n, wr_n, prog_n;
 wire [ 7:0] p2_din;
+wire        pext2_en;
 
 assign pcm_addr = { bank, ctrl[0], pext7[1:0], pext6, pext5, pext4 };
-assign p2_din   = { 1'b1, ctrl[7:5], pext2[3:0] };
+assign p2_din   = { 1'b1, ctrl[7:5], pext2_en ? pext2[3:0] : 4'hf };
 assign pcm_cs   = 1;
 
 always @(*) begin
@@ -68,9 +69,9 @@ always @(posedge clk) rstn_t48 <= ~rst & soft_rstn;
 
 wire       xtal3, ale, psen_n, db_dir;
 wire [7:0] mcu_dout;
-reg        we_dly;
+//reg        we_dly;
 
-always @(posedge clk) we_dly <= ram_we;
+//always @(posedge clk) we_dly <= ram_we;
 
 `ifndef NOMCU
 t48_core u_mcu(
@@ -117,18 +118,17 @@ t48_core u_mcu(
     .dmem_data_o    ( ram_din   )
 );
 
-t8243_core u_8243(
+t8243_sync_notri u_8243(
     .clk_i          ( clk       ),
     .reset_n_i      ( rstn_t48  ),
-    .clk_rise_en_i  ( cen_pcm   ),
-    .clk_fall_en_i  ( cen_pcmb  ),
+    .clk_en_i       ( cen_pcm   ),
 
     .cs_n_i         ( 1'b0      ),
     .prog_n_i       ( prog_n    ),
 
     .p2_i           ( p2_dout[3:0] ),
     .p2_o           ( pext2     ),
-    .p2_en_o        (           ),
+    .p2_en_o        ( pext2_en  ),
 
     .p4_i           ( 4'd0      ),
     .p4_o           ( pext4     ),
@@ -163,7 +163,7 @@ jtframe_ram #(.aw(8)) u_ram(
     .cen    ( 1'b1          ),
     .data   ( ram_din       ),
     .addr   ( ram_addr      ),
-    .we     ( we_dly        ),
+    .we     ( ram_we        ),
     .q      ( ram_dout      )
 );
 
