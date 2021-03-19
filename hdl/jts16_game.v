@@ -151,14 +151,13 @@ wire        prom_we;
 wire [ 7:0] snd_latch;
 wire        snd_irqn, snd_ack;
 
-wire        flip, filtern;
+wire        flip;
 
 // Cabinet inputs
 wire [ 7:0] dipsw_a, dipsw_b;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn = { UDSWn, LDSWn };
-assign filtern = status[1];
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -244,7 +243,6 @@ jts16_snd u_sound(
     .cen_pcm    ( cen_pcm   ),   // 6MHz
     .cen_pcmb   ( cen_pcmb  ),   // 6MHz
 
-    .filtern    ( filtern     ),
     .fxlevel    ( dip_fxlevel ),
 
     .latch      ( snd_latch ),

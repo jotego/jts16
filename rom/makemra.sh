@@ -12,7 +12,7 @@ mame2dip shinobi.xml -rbf jts16 -outdir $OUTDIR -altfolder _alt \
     -frac 1 gfx1 4 \
     -order maincpu soundcpu n7751data gfx1 sprites n7751 \
     -header-offset-bits 8 -header-offset 0 soundcpu n7751data gfx1 sprites n7751 \
-    -corebuttons 3 -buttons "Shuriken,Jump,Magic"
+    -corebuttons 4 -buttons "Shuriken,Jump,Magic"
 
 exit 0
 

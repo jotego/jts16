@@ -69,15 +69,15 @@ always @(posedge clk) rstn_t48 <= ~rst & soft_rstn;
 
 wire       xtal3, ale, psen_n, db_dir;
 wire [7:0] mcu_dout;
-//reg        we_dly;
-
-//always @(posedge clk) we_dly <= ram_we;
+reg        first;
 
 always @(posedge clk, negedge rstn_t48 ) begin
     if( !rstn_t48 )
-        snd <= 0;
+        snd   <= 0;
+        first <= 1; // prevents the sound glitch at reset exit
     else
-        snd <= raw - 8'h80;
+        if(!first) snd <= raw - 8'h80;
+        if(!rd_n) first <= 0;
 end
 
 `ifndef NOMCU

@@ -26,7 +26,6 @@ module jts16_snd(
     input                cen_pcmb,
 
     // options
-    input                filtern,
     input         [ 1:0] fxlevel,
 
     input         [ 7:0] latch,
@@ -70,20 +69,18 @@ wire        pcm_irqn, pcm_rstn,
 
 wire signed [15:0] fm_left, fm_right;
 wire signed [ 7:0] pcm_raw;
-wire signed [ 7:0] pcm_mux;
 
 assign rom_good = rom_ok2 & rom_ok;
 assign rom_addr = A[14:0];
 assign ack      = latch_cs;
 assign cmd_cs   = !iorq_n && A[7:6]==2 && !wr_n; // 80
-assign pcm_mux  = filtern ? pcm_raw : pcm_snd;
 
 always @(posedge clk ) begin
     case( fxlevel )
         2'd0: pcmgain = 8'h04;
-        2'd1: pcmgain = 8'h08;
-        2'd2: pcmgain = 8'h10;
-        2'd3: pcmgain = 8'h18;
+        2'd1: pcmgain = 8'h06;
+        2'd2: pcmgain = 8'h08;
+        2'd3: pcmgain = 8'h0C;
     endcase
 end
 
@@ -111,7 +108,7 @@ jtframe_mixer #(.W2(8)) u_mixer(
     // input signals
     .ch0    ( fm_left   ),
     .ch1    ( fm_right  ),
-    .ch2    ( pcm_mux   ),
+    .ch2    ( pcm_snd   ),
     .ch3    ( 16'd0     ),
     // gain for each channel in 4.4 fixed point format
     .gain0  ( FMGAIN    ),
@@ -220,7 +217,7 @@ jts16_pcm u_pcm(
 // where a = exp(-wc/T ), a<1
 // wc = radian frequency
 
-wire [6:0] pole_a = 7'd84; // pole at 4kHz
+wire [3:0] pole_a = 4'd10; // pole at 4kHz
 
 jtframe_pole #(.WS(8)) u_pole(
     .rst        ( rst       ),
