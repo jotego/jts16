@@ -72,12 +72,13 @@ wire [7:0] mcu_dout;
 reg        first;
 
 always @(posedge clk, negedge rstn_t48 ) begin
-    if( !rstn_t48 )
+    if( !rstn_t48 ) begin
         snd   <= 0;
         first <= 1; // prevents the sound glitch at reset exit
-    else
+    end else begin
         if(!first) snd <= raw - 8'h80;
         if(!rd_n) first <= 0;
+    end
 end
 
 `ifndef NOMCU
