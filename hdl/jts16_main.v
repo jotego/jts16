@@ -32,7 +32,8 @@ module jts16_main(
     input       [15:0] char_dout,
     input       [15:0] pal_dout,
     input       [15:0] obj_dout,
-    output reg         flip,
+    output             flip,
+    output             video_en,
     // RAM access
     output             ram_cs,
     output             vram_cs,
@@ -47,6 +48,7 @@ module jts16_main(
     // Sound control
     output reg  [ 7:0] snd_latch,
     output reg         snd_irqn,
+    output             sound_en,
     input              snd_ack,
     // cabinet I/O
     input       [ 7:0] joystick1,
@@ -143,16 +145,19 @@ jtframe_68kramcs u_ramcs(
 
 // cabinet input
 reg [15:0] cab_dout;
+reg [ 7:0] ppi_b;
 
 function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
 endfunction
 
+assign { flip, sound_en, video_en } = { ppi_b[7], ~ppi_b[5], ppi_b[4] };
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        snd_latch <= 8'd0;
+        snd_latch <= 8'hff;
         snd_irqn  <= 1;
-        flip      <= 0;
+        ppi_b     <= 8'hff;
         sw_8255   <= 8'h9b;
         cab_dout  <= 8'hff;
     end else  begin
@@ -170,8 +175,8 @@ always @(posedge clk, posedge rst) begin
                         cab_dout <= snd_latch;
                     end
                     2'd1: begin // port B
-                        if( !LDSWn ) flip <= cpu_dout[7];
-                        cab_dout <= { flip, 7'h7f };
+                        if( !LDSWn ) ppi_b <= cpu_dout;
+                        cab_dout <= ppi_b;
                     end
                     2'd2: begin // port C
                         cab_dout <= 8'hff;

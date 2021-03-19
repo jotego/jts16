@@ -35,7 +35,7 @@
     <rom index="0" zip="shinobi5.zip|shinobi.zip" type="merged" md5="None">
         <part>
         04 00 04 80 05 80 09 80 
-        11 00 11 80 ff ff ff ff 
+        12 80 11 80 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>

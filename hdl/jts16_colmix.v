@@ -22,6 +22,7 @@ module jts16_colmix(
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
 
+    input              video_en,
     input      [ 3:0]  gfx_en,
 
     input              LHBL,
@@ -117,6 +118,8 @@ jtframe_dual_ram16 #(
     .q1     ( pal       )
 );
 
+wire [14:0] gated = video_en ? pal : 15'd0;
+
 jtframe_blank #(.DLY(1),.DW(15)) u_blank(
     .clk        ( clk       ),
     .pxl_cen    ( pxl_cen   ),
@@ -125,7 +128,7 @@ jtframe_blank #(.DLY(1),.DW(15)) u_blank(
     .LHBL_dly   ( LHBL_dly  ),
     .LVBL_dly   ( LVBL_dly  ),
     .preLBL     (           ),
-    .rgb_in     ( pal[14:0] ),
+    .rgb_in     ( gated     ),
     .rgb_out    ( rgb[14:0] )
 );
 

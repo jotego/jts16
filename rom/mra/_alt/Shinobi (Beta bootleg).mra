@@ -34,8 +34,8 @@
     <region>Beta</region>
     <rom index="0" zip="shinoblb.zip|shinobi.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 05 00 09 00 
-        11 00 11 84 ff ff ff ff 
+        04 00 04 80 06 80 0a 80 
+        12 80 13 04 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -52,14 +52,15 @@
         <part name="1.5s" crc="dd50b745"/>
         <!-- n7751data - starts at 0x48000 -->
         <part name="b9" crc="6d7966da"/>
-        <!-- gfx1 - starts at 0x50000 -->
+        <part repeat="0x18000">FF</part>
+        <!-- gfx1 - starts at 0x68000 -->
         <interleave output="32">
             <part name="8.3b" crc="46627e7d" map="0001"/>
             <part name="7.4b" crc="87d0f321" map="0010"/>
             <part name="6.5b" crc="efb4af87" map="0100"/>
             <part name="6.5b" crc="efb4af87" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x90000 -->
+        <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
             <part name="9.6r" crc="611f413a" map="01"/>
             <part name="13.8r" crc="5eb00fc1" map="10"/>
@@ -76,11 +77,11 @@
             <part name="12.6n" crc="41f41063" map="01"/>
             <part name="16.8n" crc="b6e1fd72" map="10"/>
         </interleave>
-        <!-- n7751 - starts at 0x110000 -->
+        <!-- n7751 - starts at 0x128000 -->
         <part name="7751.bin" crc="6a9534fc"/>
-        <!-- samples - starts at 0x110400 -->
+        <!-- samples - starts at 0x128400 -->
         <part name="17.6u" crc="b7a6890c"/>
-        <!-- Total 0x118400 bytes - 1121 kBytes -->
+        <!-- Total 0x130400 bytes - 1217 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

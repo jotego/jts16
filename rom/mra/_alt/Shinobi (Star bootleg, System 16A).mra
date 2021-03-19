@@ -34,8 +34,8 @@
     <region>Star</region>
     <rom index="0" zip="shinobls.zip|shinobi.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 05 00 09 00 
-        11 00 11 04 ff ff ff ff 
+        04 00 04 80 06 80 0a 80 
+        12 80 12 84 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -52,14 +52,15 @@
         <part name="b8" crc="dd50b745"/>
         <!-- n7751data - starts at 0x48000 -->
         <part name="b9" crc="6d7966da"/>
-        <!-- gfx1 - starts at 0x50000 -->
+        <part repeat="0x18000">FF</part>
+        <!-- gfx1 - starts at 0x68000 -->
         <interleave output="32">
             <part name="b5" crc="46627e7d" map="0001"/>
             <part name="b6" crc="87d0f321" map="0010"/>
             <part name="b7" crc="efb4af87" map="0100"/>
             <part name="b7" crc="efb4af87" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x90000 -->
+        <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
             <part name="b10" crc="611f413a" map="01"/>
             <part name="b14" crc="5eb00fc1" map="10"/>
@@ -76,9 +77,9 @@
             <part name="b13" crc="7e98bd36" map="01"/>
             <part name="b17" crc="0315cf42" map="10"/>
         </interleave>
-        <!-- n7751 - starts at 0x110000 -->
+        <!-- n7751 - starts at 0x128000 -->
         <part name="7751.bin" crc="6a9534fc"/>
-        <!-- Total 0x110400 bytes - 1089 kBytes -->
+        <!-- Total 0x128400 bytes - 1185 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

@@ -151,7 +151,7 @@ wire        prom_we;
 wire [ 7:0] snd_latch;
 wire        snd_irqn, snd_ack;
 
-wire        flip;
+wire        flip, video_en, sound_en;
 
 // Cabinet inputs
 wire [ 7:0] dipsw_a, dipsw_b;
@@ -181,6 +181,7 @@ jts16_main u_main(
     // Video
     .vdump      ( vdump     ),
     .hstart     ( hstart    ),
+    .video_en   ( video_en  ),
     // Video circuitry
     .vram_cs    ( vram_cs   ),
     .char_cs    ( char_cs   ),
@@ -195,6 +196,7 @@ jts16_main u_main(
     .snd_latch  ( snd_latch ),
     .snd_irqn   ( snd_irqn  ),
     .snd_ack    ( snd_ack   ),
+    .sound_en   ( sound_en  ),
     // RAM access
     .ram_cs     ( ram_cs    ),
     .ram_data   ( ram_data  ),
@@ -244,6 +246,7 @@ jts16_snd u_sound(
     .cen_pcmb   ( cen_pcmb  ),   // 6MHz
 
     .fxlevel    ( dip_fxlevel ),
+    .sound_en   ( sound_en  ),
 
     .latch      ( snd_latch ),
     .irqn       ( snd_irqn  ),
@@ -280,6 +283,7 @@ jts16_video u_video(
     .pxl_cen    ( pxl_cen   ),
     .gfx_en     ( gfx_en    ),
 
+    .video_en   ( video_en  ),
     // CPU interface
     .cpu_addr   ( cpu_addr  ),
     .char_cs    ( char_cs   ),

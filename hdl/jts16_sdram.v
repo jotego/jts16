@@ -146,9 +146,9 @@ assign dwnld_busy = downloading;
 jtframe_dwnld #(
     .HEADER    ( 32          ),
     .BA1_START ( 25'h04_0000 ), // sound
-    .BA2_START ( 25'h05_0000 ), // tiles
-    .BA3_START ( 25'h09_0000 ), // obj
-    .PROM_START( 25'h11_0000 ), // PCM MCU
+    .BA2_START ( 25'h06_8000 ), // tiles
+    .BA3_START ( 25'h0a_8000 ), // obj
+    .PROM_START( 25'h12_8000 ), // PCM MCU
     .SWAB      ( 1           )
 ) u_dwnld(
     .clk          ( clk            ),

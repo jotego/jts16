@@ -34,8 +34,8 @@
     <region>set</region>
     <rom index="0" zip="shinobi4.zip|shinobi.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 06 80 0e 80 
-        11 00 16 a0 ff ff ff ff 
+        04 00 04 80 06 80 0a 80 
+        12 80 12 a0 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -54,7 +54,7 @@
             <part name="mpr-11365.a16" crc="1ef55d20" map="0100"/>
             <part name="mpr-11365.a16" crc="1ef55d20" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0xE8000 -->
+        <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
             <part name="mpr-11366.b1" crc="319ede73" map="01"/>
             <part name="mpr-11368.b5" crc="0377d7ce" map="10"/>
@@ -63,9 +63,9 @@
             <part name="mpr-11367.b2" crc="1d06c5c7" map="01"/>
             <part name="mpr-11369.b6" crc="d751d2a2" map="10"/>
         </interleave>
-        <!-- soundcpu:key - starts at 0x168000 -->
+        <!-- soundcpu:key - starts at 0x128000 -->
         <part name="317-0054.key" crc="39fd4535"/>
-        <!-- Total 0x16A000 bytes - 1448 kBytes -->
+        <!-- Total 0x12A000 bytes - 1192 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

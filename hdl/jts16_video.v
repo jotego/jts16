@@ -22,6 +22,7 @@ module jts16_video(
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
 
+    input              video_en,
     // CPU interface
     input              char_cs,
     input              pal_cs,
@@ -261,6 +262,7 @@ jts16_colmix u_colmix(
     .pxl_cen   ( pxl_cen        ),
     .gfx_en    ( gfx_en         ),
 
+    .video_en  ( video_en       ),
     // CPU interface
     .pal_cs    ( pal_cs         ),
     .cpu_addr  ( cpu_addr[11:1] ),

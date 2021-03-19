@@ -25,6 +25,7 @@ module jts16_snd(
     input                cen_pcm,   // 6MHz
     input                cen_pcmb,
 
+    input                sound_en,
     // options
     input         [ 1:0] fxlevel,
 
@@ -67,8 +68,10 @@ wire [ 7:0] dout, fm_dout, ram_dout, pcm_snd;
 wire        pcm_irqn, pcm_rstn,
             wr_n, rd_n;
 
-wire signed [15:0] fm_left, fm_right;
+wire signed [15:0] fm_left, fm_right, mixed;
 wire signed [ 7:0] pcm_raw;
+
+assign snd = sound_en ? mixed : 16'd0;
 
 assign rom_good = rom_ok2 & rom_ok;
 assign rom_addr = A[14:0];
@@ -115,7 +118,7 @@ jtframe_mixer #(.W2(8)) u_mixer(
     .gain1  ( FMGAIN    ),
     .gain2  ( pcmgain   ),
     .gain3  ( 8'h00     ),
-    .mixed  ( snd       ),
+    .mixed  ( mixed     ),
     .peak   ( peak      )
 );
 
