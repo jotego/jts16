@@ -73,19 +73,22 @@
             <part name="epr-7465.5c" crc="8a1ab7d7" map="01"/>
             <part name="epr-7469.2b" crc="cb65ae4f" map="10"/>
         </interleave>
+        <part repeat="0x10000"> FF </part>
         <interleave output="16">
             <part name="epr-7466.6c" crc="b2d3f4f3" map="01"/>
             <part name="epr-7470.3b" crc="16fc67b1" map="10"/>
         </interleave>
+        <part repeat="0x10000"> FF </part>
         <interleave output="16">
             <part name="epr-7467.7c" crc="0af68de2" map="01"/>
             <part name="epr-7471.4b" crc="13fad5ac" map="10"/>
         </interleave>
+        <part repeat="0x10000"> FF </part>
         <interleave output="16">
             <part name="epr-7468.8c" crc="ddfd40c0" map="01"/>
             <part name="epr-7472.5b" crc="8e2762ec" map="10"/>
         </interleave>
-        <part repeat="0x40000">FF</part>
+        <part repeat="0x10000">FF</part>
         <!-- n7751 - starts at 0x128000 -->
         <part name="7751.bin" crc="6a9534fc"/>
         <!-- Total 0x128400 bytes - 1185 kBytes -->

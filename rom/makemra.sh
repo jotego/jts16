@@ -18,6 +18,7 @@ function s16a_mra {
         -len n7751data 0x20000 \
         -len gfx1      0x40000 \
         -len sprites   0x80000 \
+        -fill sprites \
         -frac 1 gfx1 4 \
         -order maincpu soundcpu n7751data gfx1 sprites n7751 \
         -header-offset-bits 8 -header-offset 0 soundcpu n7751data gfx1 sprites n7751 \
