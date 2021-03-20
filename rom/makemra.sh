@@ -7,8 +7,10 @@ mkdir -p $OUTDIR/_alt
 
 function s16a_mra {
     NAME=$1
-    BUTTONS="$2"
-    mame2dip $NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder _alt \
+    FOLDER=$2
+    BUTTONS="$3"
+    mkdir -p "$OUTDIR/_alt/$FOLDER"
+    mame2dip $NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder "_alt/$FOLDER" \
         -header 32 0xFF \
         -setword maincpu 16 reverse \
         -setword sprites 16 reverse \
@@ -23,11 +25,11 @@ function s16a_mra {
 
 }
 
-s16a_mra shinobi   "Shuriken,Jump,Magic"
-s16a_mra alexkidd  "Jump,Shot,Other"
-s16a_mra sdi       "Fire"
-s16a_mra sjryuko   "None"
-s16a_mra mjleague  "None"
-s16a_mra quartet2a "Jump,Shot,Other"
+s16a_mra shinobi   "Shinobi" "Shuriken,Jump,Magic"
+s16a_mra alexkidd  "Alex Kid" "Jump,Shot,Other"
+s16a_mra sdi       "SDI" "Fire"
+s16a_mra sjryuko   "Sukeban" "None"
+s16a_mra mjleague  "Major League" "None"
+s16a_mra quartet2a "Quartet" "Jump,Shot,Other"
 
 exit 0
