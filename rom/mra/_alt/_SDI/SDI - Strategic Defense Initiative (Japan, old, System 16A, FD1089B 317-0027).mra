@@ -34,8 +34,8 @@
     <region>Japan,</region>
     <rom index="0" zip="sdia.zip|sdi.zip" type="merged" md5="None">
         <part>
-        04 00 ff ff 04 80 08 80 
-        ff ff 10 a0 ff ff ff ff 
+        04 00 ff ff 06 80 0a 80 
+        ff ff 12 a0 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -55,14 +55,15 @@
         <part repeat="0x10000">FF</part>
         <!-- soundcpu - starts at 0x40000 -->
         <part name="epr-10759.12" crc="d7f9649f"/>
-        <!-- gfx1 - starts at 0x48000 -->
+        <part repeat="0x20000">FF</part>
+        <!-- gfx1 - starts at 0x68000 -->
         <interleave output="32">
             <part name="epr-10756.95" crc="44d8a506" map="0001"/>
             <part name="epr-10757.94" crc="497e1740" map="0010"/>
             <part name="epr-10758.93" crc="61d61486" map="0100"/>
             <part name="epr-10758.93" crc="61d61486" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x88000 -->
+        <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
             <part name="epr-10760.10" crc="30e2c50a" map="01"/>
             <part name="epr-10763.11" crc="794e3e8b" map="10"/>
@@ -76,9 +77,9 @@
             <part name="epr-10765.24" crc="0a73a057" map="10"/>
         </interleave>
         <part repeat="0x20000">FF</part>
-        <!-- maincpu:key - starts at 0x108000 -->
+        <!-- maincpu:key - starts at 0x128000 -->
         <part name="317-0027.key" crc="7bdeed05"/>
-        <!-- Total 0x10A000 bytes - 1064 kBytes -->
+        <!-- Total 0x12A000 bytes - 1192 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

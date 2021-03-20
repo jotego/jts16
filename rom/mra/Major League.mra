@@ -35,7 +35,7 @@
     <rom index="0" zip="mjleague.zip" type="merged" md5="None">
         <part>
         04 00 04 80 06 80 0a 80 
-        12 80 12 84 ff ff ff ff 
+        10 80 10 84 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -88,10 +88,9 @@
             <part name="epr-7058.8a" crc="b543675f" map="01"/>
             <part name="epr-7062.5b" crc="9168eb47" map="10"/>
         </interleave>
-        <part repeat="0x10000">FF</part>
-        <!-- n7751 - starts at 0x128000 -->
+        <!-- n7751 - starts at 0x108000 -->
         <part name="7751.bin" crc="6a9534fc"/>
-        <!-- Total 0x128400 bytes - 1185 kBytes -->
+        <!-- Total 0x108400 bytes - 1057 kBytes -->
     </rom>
     <!-- Vertical game -->
     <rom index="1">

@@ -35,7 +35,7 @@
     <rom index="0" zip="sjryuko1.zip|sjryuko.zip" type="merged" md5="None">
         <part>
         04 00 04 80 06 80 0a 80 
-        12 80 12 a4 ff ff ff ff 
+        10 80 10 a4 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -81,11 +81,11 @@
             <part name="12235-29.b4" crc="fa45d511" map="01"/>
             <part name="12239-30.b8" crc="91f70c8b" map="10"/>
         </interleave>
-        <!-- n7751 - starts at 0x128000 -->
+        <!-- n7751 - starts at 0x108000 -->
         <part name="7751.bin" crc="6a9534fc"/>
-        <!-- maincpu:key - starts at 0x128400 -->
+        <!-- maincpu:key - starts at 0x108400 -->
         <part name="317-5021.key" crc="8e40b2ab"/>
-        <!-- Total 0x12A400 bytes - 1193 kBytes -->
+        <!-- Total 0x10A400 bytes - 1065 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

@@ -21,48 +21,49 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>SDI - Strategic Defense Initiative (bootleg, set 3)</name>
-    <setname>sdibl4</setname>
+    <name>SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)</name>
+    <setname>sdib</setname>
     <rbf>jts16</rbf>
     <mraversion>1.0</mraversion>
     <mameversion>0228</mameversion>
     <year>1987</year>
-    <manufacturer>bootleg</manufacturer>
+    <manufacturer>Sega</manufacturer>
     <players>2</players>
     <joystick>8-way</joystick>
     <rotation>horizontal</rotation>
-    <region>bootleg,</region>
-    <rom index="0" zip="sdibl4.zip|sdi.zip" type="merged" md5="None">
+    <region>System</region>
+    <rom index="0" zip="sdib.zip|sdi.zip" type="merged" md5="None">
         <part>
-        04 00 ff ff 04 80 08 80 
-        ff ff 13 80 ff ff ff ff 
+        04 00 ff ff 06 80 0a 80 
+        ff ff 12 a0 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
-            <part name="do1b" crc="8f86f2ad" map="01"/>
-            <part name="de1b" crc="8045bfd1" map="10"/>
+            <part name="epr-10984a.a1" crc="44bf3cf5" map="01"/>
+            <part name="epr-10986a.a4" crc="3e136215" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="do2b" crc="8c979a2b" map="01"/>
-            <part name="de2b" crc="1b284afd" map="10"/>
+            <part name="epr-10985a.a2" crc="1c21a03f" map="01"/>
+            <part name="epr-10987a.a5" crc="cfd79404" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="do3" crc="193e4231" map="01"/>
-            <part name="de3" crc="8ee2c287" map="10"/>
+            <part name="epr-10826.a3" crc="2ed8e4b7" map="01"/>
+            <part name="epr-10829.a6" crc="a431ab08" map="10"/>
         </interleave>
         <part repeat="0x10000">FF</part>
         <!-- soundcpu - starts at 0x40000 -->
-        <part name="a7.rom" crc="793f9f7f"/>
-        <!-- gfx1 - starts at 0x48000 -->
+        <part name="10775.a7" crc="4cbd55a8"/>
+        <part repeat="0x20000">FF</part>
+        <!-- gfx1 - starts at 0x68000 -->
         <interleave output="32">
             <part name="epr-10772.b9" crc="182b6301" map="0001"/>
             <part name="epr-10773.b10" crc="8f7129a2" map="0010"/>
             <part name="epr-10774.b11" crc="4409411f" map="0100"/>
             <part name="epr-10774.b11" crc="4409411f" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x88000 -->
+        <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
             <part name="10760.b1" crc="70de327b" map="01"/>
             <part name="10763.b5" crc="99ec5cb5" map="10"/>
@@ -76,14 +77,9 @@
             <part name="10765.b7" crc="0a73a057" map="10"/>
         </interleave>
         <part repeat="0x20000">FF</part>
-        <!-- maincpux - starts at 0x108000 -->
-        <part name="pe1b" crc="aba84f5e"/>
-        <part name="po1b" crc="249278a3"/>
-        <part name="pe2b" crc="480d4379"/>
-        <part name="po2b" crc="f27eae0b"/>
-        <part name="pe3a" crc="19120b62"/>
-        <part name="po3a" crc="4dce4361"/>
-        <!-- Total 0x138000 bytes - 1248 kBytes -->
+        <!-- maincpu:key - starts at 0x128000 -->
+        <part name="317-0028.key" crc="1514662f"/>
+        <!-- Total 0x12A000 bytes - 1192 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

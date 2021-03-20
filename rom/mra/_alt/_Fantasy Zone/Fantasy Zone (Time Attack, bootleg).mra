@@ -21,47 +21,48 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>Shinobi (set 6, System 16B) (unprotected)</name>
-    <setname>shinobi6</setname>
+    <name>Fantasy Zone (Time Attack, bootleg)</name>
+    <setname>fantzoneta</setname>
     <rbf>jts16</rbf>
     <mraversion>1.0</mraversion>
     <mameversion>0228</mameversion>
-    <year>1987</year>
-    <manufacturer>Sega</manufacturer>
+    <year>2008</year>
+    <manufacturer>bootleg</manufacturer>
     <players>2</players>
     <joystick>8-way</joystick>
     <rotation>horizontal</rotation>
-    <region>set</region>
-    <rom index="0" zip="shinobi6.zip|shinobi.zip" type="merged" md5="None">
+    <region>Time</region>
+    <rom index="0" zip="fantzoneta.zip|fantzone.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 06 80 0a 80 
-        12 80 12 80 ff ff ff ff 
+        04 00 ff ff 06 80 0a 80 
+        ff ff 12 80 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
-            <part name="epr-11359.a5" crc="0f0306e1" map="01"/>
-            <part name="epr-11360.a7" crc="b1f67ab9" map="10"/>
+            <part name="fzta__a05.bin" crc="47dbe11b" map="01"/>
+            <part name="fzta__a07.bin" crc="ad07d1fd" map="10"/>
         </interleave>
         <!-- soundcpu - starts at 0x40000 -->
-        <part name="epr-11361.a10" crc="1f47ebcb"/>
-        <part name="mpr-11362.a11" crc="256af749"/>
+        <part name="fzta__a10.bin" crc="dab6fcd0"/>
+        <part repeat="0x20000">FF</part>
         <!-- gfx1 - starts at 0x68000 -->
         <interleave output="32">
-            <part name="mpr-11363.a14" crc="40914168" map="0001"/>
-            <part name="mpr-11364.a15" crc="e63649a4" map="0010"/>
-            <part name="mpr-11365.a16" crc="1ef55d20" map="0100"/>
-            <part name="mpr-11365.a16" crc="1ef55d20" map="1000"/>
+            <part name="fzta__a14.bin" crc="9468ab33" map="0001"/>
+            <part name="fzta__a15.bin" crc="22a3cf75" map="0010"/>
+            <part name="fzta__a16.bin" crc="25cba87f" map="0100"/>
+            <part name="fzta__a16.bin" crc="25cba87f" map="1000"/>
         </interleave>
         <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
-            <part name="mpr-11366.b1" crc="319ede73" map="01"/>
-            <part name="mpr-11368.b5" crc="0377d7ce" map="10"/>
+            <part name="fzta__b01.bin" crc="0beb4a22" map="01"/>
+            <part name="fzta__b05.bin" crc="7f676c69" map="10"/>
         </interleave>
+        <part repeat="0xC0000"> FF </part>
         <interleave output="16">
-            <part name="mpr-11367.b2" crc="1d06c5c7" map="01"/>
-            <part name="mpr-11369.b6" crc="d751d2a2" map="10"/>
+            <part name="fzta__a01.bin" crc="40e1db9a" map="01"/>
+            <part name="fzta__b10.bin" crc="acbb5cff" map="10"/>
         </interleave>
         <!-- Total 0x128000 bytes - 1184 kBytes -->
     </rom>
@@ -76,10 +77,9 @@
         <!-- DSW2 -->
         <dip name="Cabinet" bits="8" ids="Upright,Cocktail"/>
         <dip name="Demo Sounds" bits="9" ids="On,Off"/>
-        <dip name="Lives" bits="10,11" ids="Free Play,5,2,3"/>
-        <dip name="Difficulty" bits="12,13" ids="Hardest,Hard,Easy,Normal"/>
-        <dip name="Enemy's Bullet Speed" bits="14" ids="Fast,Slow"/>
-        <dip name="Language" bits="15" ids="English,Japanese"/>
+        <dip name="Lives" bits="10,11" ids="240,4,2,3"/>
+        <dip name="Extra Ship Cost" bits="12,13" ids="20k,15000,10k,5000"/>
+        <dip name="Difficulty" bits="14,15" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Shuriken,Jump,Magic,-,Start,Coin,Core credits" default="Y,X,BA,R,L,Start" count="3"/>
+    <buttons names="Shot,Bomb,Button 3,-,Start,Coin,Core credits" default="Y,X,BA,R,L,Start" count="3"/>
 </misterromdescription>

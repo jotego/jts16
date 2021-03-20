@@ -35,7 +35,7 @@
     <rom index="0" zip="sjryuko.zip" type="merged" md5="None">
         <part>
         04 00 ff ff 06 80 0a 80 
-        ff ff 12 a0 ff ff ff ff 
+        ff ff 10 a0 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -80,9 +80,9 @@
             <part name="epr-12235-29.b4" crc="fa45d511" map="01"/>
             <part name="epr-12239-30.b8" crc="91f70c8b" map="10"/>
         </interleave>
-        <!-- maincpu:key - starts at 0x128000 -->
+        <!-- maincpu:key - starts at 0x108000 -->
         <part name="317-5021.key" crc="8e40b2ab"/>
-        <!-- Total 0x12A000 bytes - 1192 kBytes -->
+        <!-- Total 0x10A000 bytes - 1064 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

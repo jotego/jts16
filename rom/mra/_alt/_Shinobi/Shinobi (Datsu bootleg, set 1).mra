@@ -21,8 +21,8 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>Shinobi (Datsu bootleg, set 2)</name>
-    <setname>shinoblda</setname>
+    <name>Shinobi (Datsu bootleg, set 1)</name>
+    <setname>shinobld</setname>
     <rbf>jts16</rbf>
     <mraversion>1.0</mraversion>
     <mameversion>0228</mameversion>
@@ -32,17 +32,17 @@
     <joystick>8-way</joystick>
     <rotation>horizontal</rotation>
     <region>Datsu</region>
-    <rom index="0" zip="shinoblda.zip|shinobi.zip" type="merged" md5="None">
+    <rom index="0" zip="shinobld.zip|shinobi.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 05 00 09 00 
-        12 80 11 00 ff ff ff ff 
+        04 00 04 80 06 80 0a 80 
+        12 80 12 80 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
-            <part name="12.bin" crc="68c91fd5" map="01"/>
-            <part name="14.bin" crc="9e887c80" map="10"/>
+            <part name="12.bin" crc="757a0c71" map="01"/>
+            <part name="14.bin" crc="a65870b2" map="10"/>
         </interleave>
         <interleave output="16">
             <part name="13.bin" crc="c4334bcd" map="01"/>
@@ -50,14 +50,15 @@
         </interleave>
         <!-- soundcpu - starts at 0x40000 -->
         <part name="16.bin" crc="52c8364e"/>
-        <!-- gfx1 - starts at 0x50000 -->
+        <part repeat="0x18000">FF</part>
+        <!-- gfx1 - starts at 0x68000 -->
         <interleave output="32">
             <part name="9.bin" crc="565e11c6" map="0001"/>
             <part name="10.bin" crc="7cc40b6c" map="0010"/>
             <part name="11.bin" crc="0f6c7b1c" map="0100"/>
             <part name="11.bin" crc="0f6c7b1c" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x90000 -->
+        <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
             <part name="5.bin" crc="611f413a" map="01"/>
             <part name="3.bin" crc="5eb00fc1" map="10"/>
@@ -74,7 +75,7 @@
             <part name="7.bin" crc="41f41063" map="01"/>
             <part name="1.bin" crc="b6e1fd72" map="10"/>
         </interleave>
-        <!-- Total 0x110000 bytes - 1088 kBytes -->
+        <!-- Total 0x128000 bytes - 1184 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

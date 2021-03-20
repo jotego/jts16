@@ -21,8 +21,8 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>Defense (System 16B, FD1089A 317-0028)</name>
-    <setname>defense</setname>
+    <name>Shinobi (set 3, System 16B) (MC-8123B 317-0054)</name>
+    <setname>shinobi3</setname>
     <rbf>jts16</rbf>
     <mraversion>1.0</mraversion>
     <mameversion>0228</mameversion>
@@ -31,54 +31,55 @@
     <players>2</players>
     <joystick>8-way</joystick>
     <rotation>horizontal</rotation>
-    <region>System</region>
-    <rom index="0" zip="defense.zip|sdi.zip" type="merged" md5="None">
+    <region>set</region>
+    <rom index="0" zip="shinobi3.zip|shinobi.zip" type="merged" md5="None">
         <part>
-        04 00 ff ff 04 80 08 80 
-        ff ff 10 a0 ff ff ff ff 
+        04 00 04 80 06 80 0a 80 
+        12 80 12 a0 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
-            <part name="epr-10915.a1" crc="7344c510" map="01"/>
-            <part name="epr-10917a.a4" crc="d91ac47c" map="10"/>
+            <part name="epr-11298.a1" crc="343f4c46" map="01"/>
+            <part name="epr-11299.a4" crc="b930399d" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="epr-10916a.a2" crc="7f58ba12" map="01"/>
-            <part name="epr-10918a.a5" crc="e41befcd" map="10"/>
+            <part name="epr-11281.a2" crc="7961d07e" map="01"/>
+            <part name="epr-11283.a5" crc="9d46e707" map="10"/>
         </interleave>
-        <interleave output="16">
-            <part name="epr-10826.a3" crc="2ed8e4b7" map="01"/>
-            <part name="epr-10829.a6" crc="a431ab08" map="10"/>
-        </interleave>
-        <part repeat="0x10000">FF</part>
         <!-- soundcpu - starts at 0x40000 -->
-        <part name="10775.a7" crc="4cbd55a8"/>
-        <!-- gfx1 - starts at 0x48000 -->
+        <part name="epr-11372.a7" crc="0824269a"/>
+        <part name="epr-11288.a8" crc="c8df8460"/>
+        <part name="epr-11289.a9" crc="e5a4cf30"/>
+        <part repeat="0x10000">FF</part>
+        <!-- gfx1 - starts at 0x68000 -->
         <interleave output="32">
-            <part name="10919.b9" crc="23b88f82" map="0001"/>
-            <part name="10920.b10" crc="22b1fb4c" map="0010"/>
-            <part name="10921.b11" crc="7788f55d" map="0100"/>
-            <part name="10921.b11" crc="7788f55d" map="1000"/>
+            <part name="opr-11284.b9" crc="5f62e163" map="0001"/>
+            <part name="opr-11285.b10" crc="75f8fbc9" map="0010"/>
+            <part name="opr-11286.b11" crc="06508bb9" map="0100"/>
+            <part name="opr-11286.b11" crc="06508bb9" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x88000 -->
+        <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
-            <part name="10760.b1" crc="70de327b" map="01"/>
-            <part name="10763.b5" crc="99ec5cb5" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="10761.b2" crc="4e80f80d" map="01"/>
-            <part name="10764.b6" crc="602da5d5" map="10"/>
+            <part name="opr-11290.b1" crc="611f413a" map="01"/>
+            <part name="opr-11294.b5" crc="5eb00fc1" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="10762.b3" crc="464b5f78" map="01"/>
-            <part name="10765.b7" crc="0a73a057" map="10"/>
+            <part name="opr-11291.b2" crc="3c0797c0" map="01"/>
+            <part name="opr-11295.b6" crc="25307ef8" map="10"/>
         </interleave>
-        <part repeat="0x20000">FF</part>
-        <!-- maincpu:key - starts at 0x108000 -->
-        <part name="317-0028.key" crc="1514662f"/>
-        <!-- Total 0x10A000 bytes - 1064 kBytes -->
+        <interleave output="16">
+            <part name="opr-11292.b3" crc="c29ac34e" map="01"/>
+            <part name="opr-11296.b7" crc="04a437f8" map="10"/>
+        </interleave>
+        <interleave output="16">
+            <part name="opr-11293.b4" crc="41f41063" map="01"/>
+            <part name="opr-11297.b8" crc="b6e1fd72" map="10"/>
+        </interleave>
+        <!-- soundcpu:key - starts at 0x128000 -->
+        <part name="317-0054.key" crc="39fd4535"/>
+        <!-- Total 0x12A000 bytes - 1192 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>
@@ -89,11 +90,12 @@
         <dip name="Coin A" bits="0,3" ids="Free Play  or 1/1,1/1, 2/3,1/1, 4/5,1/1, 5/6,2/1, 4/3,2/1, 5/3, 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <dip name="Coin B" bits="4,7" ids="Free Play  or 1/1,1/1, 2/3,1/1, 4/5,1/1, 5/6,2/1, 4/3,2/1, 5/3, 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <!-- DSW2 -->
-        <dip name="Allow Continue" bits="8" ids="On,Off"/>
+        <dip name="Cabinet" bits="8" ids="Upright,Cocktail"/>
         <dip name="Demo Sounds" bits="9" ids="On,Off"/>
-        <dip name="Lives" bits="10,11" ids="Free,4,2,3"/>
+        <dip name="Lives" bits="10,11" ids="Free Play,5,2,3"/>
         <dip name="Difficulty" bits="12,13" ids="Hardest,Hard,Easy,Normal"/>
-        <dip name="Bonus Life" bits="14,15" ids="None,10k0,Every 50k,50k"/>
+        <dip name="Enemy's Bullet Speed" bits="14" ids="Fast,Slow"/>
+        <dip name="Language" bits="15" ids="English,Japanese"/>
     </switches>
-    <buttons names="Fire,-,-,-,Start,Coin,Core credits" default="YXBA,R,L,Start" count="1"/>
+    <buttons names="Shuriken,Jump,Magic,-,Start,Coin,Core credits" default="Y,X,BA,R,L,Start" count="3"/>
 </misterromdescription>
