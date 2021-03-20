@@ -35,5 +35,7 @@ s16a_mra mjleague  "Major League" "None"
 s16a_mra quartet2a "Quartet" "Jump,Shot,Other"
 s16a_mra afighter  "Action Fighter" "Shot,Button 2,Button 3"
 s16a_mra fantzone  "Fantasy Zone" "Shot,Bomb,Button 3"
+s16a_mra wb3       "Wonder Boy 3" "Shot,Jump,Button 3"
+s16a_mra tetris    "Tetris" "Turn,Turn,Turn"
 
 exit 0
