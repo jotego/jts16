@@ -233,6 +233,8 @@ jts16_main u_main(
     assign LDSWn     = 1;
     assign main_rnw  = 1;
     assign main_dout = 0;
+    assign video_en  = 1;
+    assign sound_en  = 0; // active low (?)
 `endif
 
 `ifndef NOSOUND

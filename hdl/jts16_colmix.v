@@ -118,7 +118,7 @@ jtframe_dual_ram16 #(
     .q1     ( pal       )
 );
 
-wire [14:0] gated = video_en ? pal : 15'd0;
+wire [14:0] gated = video_en ? pal[14:0] : 15'd0;
 
 jtframe_blank #(.DLY(1),.DW(15)) u_blank(
     .clk        ( clk       ),
