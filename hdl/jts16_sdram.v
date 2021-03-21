@@ -43,7 +43,7 @@ module jts16_sdram(
     output  [ 7:0]  snd_data,
 
     // PROM
-    output          prom_we,
+    output          n7751_prom,
 
     // ADPCM ROM
     input    [16:0] pcm_addr,
@@ -134,10 +134,11 @@ localparam [21:0] ZERO_OFFSET=0,
 
 localparam [21:0] MCU_PROM   = 22'h18_0000,
                   N7751_PROM = 22'h18_4000,
-                  KEY_PROM   = 22'h18_8000
+                  KEY_PROM   = 22'h18_8000;
 
 wire [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire        xram_cs;
+wire        prom_we;
 
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 
@@ -146,12 +147,13 @@ assign xram_addr  = { ram_cs, main_addr[14:1] }; // RAM is mapped up
 assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading;
+assign n7751_prom = prom_we && ioctl_addr[15:10]==N7751_PROM[15:10];
 
 jtframe_dwnld #(
     .HEADER    ( 32          ),
     .BA1_START ( 25'h04_0000 ), // sound
-    .BA2_START ( 25'h06_8000 ), // tiles
-    .BA3_START ( 25'h0a_8000 ), // obj
+    .BA2_START ( 25'h08_8000 ), // tiles
+    .BA3_START ( 25'h10_0000 ), // obj
     .PROM_START(    MCU_PROM ), // PCM MCU
     .SWAB      ( 1           )
 ) u_dwnld(

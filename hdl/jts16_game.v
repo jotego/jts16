@@ -146,7 +146,7 @@ wire [16:0] pcm_addr;
 wire        pcm_cs;
 wire [ 7:0] pcm_data;
 wire        pcm_ok;
-wire        prom_we;
+wire        n7751_prom;
 
 wire [ 7:0] snd_latch;
 wire        snd_irqn, snd_ack;
@@ -261,7 +261,7 @@ jts16_snd u_sound(
     .rom_ok     ( snd_ok    ),
 
     // MCU PROM
-    .prom_we    ( prom_we        ),
+    .prom_we    ( n7751_prom     ),
     .prog_addr  ( prog_addr[9:0] ),
     .prog_data  ( prog_data[7:0] ),
 
@@ -447,7 +447,7 @@ jts16_sdram u_sdram(
     .prog_mask  ( prog_mask  ),
     .prog_ba    ( prog_ba    ),
     .prog_we    ( prog_we    ),
-    .prom_we    ( prom_we    ),
+    .n7751_prom ( n7751_prom ),
     .prog_rd    ( prog_rd    ),
     .prog_ack   ( prog_ack   ),
     .prog_rdy   ( prog_rdy   )

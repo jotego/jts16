@@ -25,11 +25,12 @@ function s16a_mra {
         -start mcu         0x180000 \
         -start maincpu:key 0x181000 \
         -start n7751       0x184000 \
-        -start fd1089      0x188000 \
+        -start fd1089      0x186000 \
         -fill sprites \
         -frac 1 gfx1 4 \
         -order maincpu soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
-        -header-offset-bits 8 -header-offset 0 soundcpu n7751data gfx1 sprites n7751 \
+        -header-offset-bits 8 \
+        -header-offset 0 soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
         -corebuttons 4 -buttons "$BUTTONS"
 
 }
