@@ -35,7 +35,7 @@
     <rom index="0" zip="shinobi2.zip|shinobi.zip" type="merged" md5="None">
         <part>
         04 00 04 80 06 80 0a 80 
-        12 80 12 a0 ff ff ff ff 
+        12 80 12 a4 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -77,9 +77,11 @@
             <part name="epr-11293.b4" crc="41f41063" map="01"/>
             <part name="epr-11297.b8" crc="b6e1fd72" map="10"/>
         </interleave>
-        <!-- maincpu:key - starts at 0x128000 -->
+        <!-- n7751 - starts at 0x128000 -->
+        <part repeat="0x400">FF</part>
+        <!-- maincpu:key - starts at 0x128400 -->
         <part name="317-0049.key" crc="8fac824f"/>
-        <!-- Total 0x12A000 bytes - 1192 kBytes -->
+        <!-- Total 0x12A400 bytes - 1193 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

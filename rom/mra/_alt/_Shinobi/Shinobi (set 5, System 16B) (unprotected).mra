@@ -35,7 +35,7 @@
     <rom index="0" zip="shinobi5.zip|shinobi.zip" type="merged" md5="None">
         <part>
         04 00 04 80 06 80 0a 80 
-        12 80 12 80 ff ff ff ff 
+        12 80 12 84 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -77,7 +77,9 @@
             <part name="opr-11293.b4" crc="41f41063" map="01"/>
             <part name="opr-11297.b8" crc="b6e1fd72" map="10"/>
         </interleave>
-        <!-- Total 0x128000 bytes - 1184 kBytes -->
+        <!-- n7751 - starts at 0x128000 -->
+        <part repeat="0x400">FF</part>
+        <!-- Total 0x128400 bytes - 1185 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

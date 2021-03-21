@@ -35,7 +35,7 @@
     <rom index="0" zip="sdib.zip|sdi.zip" type="merged" md5="None">
         <part>
         04 00 ff ff 06 80 0a 80 
-        ff ff 12 a0 ff ff ff ff 
+        12 80 12 a4 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -77,9 +77,12 @@
             <part name="10765.b7" crc="0a73a057" map="10"/>
         </interleave>
         <part repeat="0x20000">FF</part>
-        <!-- maincpu:key - starts at 0x128000 -->
+        <!-- n7751 - starts at 0x128000 -->
+        <part repeat="0x400">FF</part>
+        <!-- maincpu:key - starts at 0x128400 -->
         <part name="317-0028.key" crc="1514662f"/>
-        <!-- FD1089 base table starts at 0x12A000 -->
+        <part repeat="0x7FC00">FF</part>
+        <!-- FD1089 base table starts at 0x1AA000 -->
         <part>
             00 1C 76 6A 5E 42 24 38 4B 67 AD 81 E9 C5 03 2F 
             45 69 AF 83 E7 CB 01 2D 02 1E 78 64 5C 40 2A 36 
@@ -98,7 +101,7 @@
             12 0E 68 74 E2 FE 94 88 65 49 8F A3 99 B5 7F 53 
             35 19 D3 FF C9 E5 23 0F BE A2 C8 D4 4E 52 34 28 
         </part>
-        <!-- Total 0x12A100 bytes - 1192 kBytes -->
+        <!-- Total 0x1AA100 bytes - 1704 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

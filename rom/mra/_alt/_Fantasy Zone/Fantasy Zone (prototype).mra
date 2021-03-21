@@ -35,7 +35,7 @@
     <rom index="0" zip="fantzonepr.zip|fantzone.zip" type="merged" md5="None">
         <part>
         04 00 ff ff 06 80 0a 80 
-        ff ff 10 90 ff ff ff ff 
+        10 80 10 94 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -79,9 +79,11 @@
             <part name="ic24" crc="68807b49" map="10"/>
         </interleave>
         <part repeat="0x28000">FF</part>
-        <!-- mcu - starts at 0x108000 -->
+        <!-- n7751 - starts at 0x108000 -->
+        <part repeat="0x400">FF</part>
+        <!-- mcu - starts at 0x108400 -->
         <part name="8751.bin" crc="c0d325e6"/>
-        <!-- Total 0x109000 bytes - 1060 kBytes -->
+        <!-- Total 0x109400 bytes - 1061 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>
