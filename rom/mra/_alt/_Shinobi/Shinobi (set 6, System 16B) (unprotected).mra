@@ -34,8 +34,8 @@
     <region>set</region>
     <rom index="0" zip="shinobi6.zip|shinobi.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 06 80 0e 80 
-        16 90 16 94 ff ff ff ff 
+        04 00 04 80 08 80 20 00 
+        30 20 30 24 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -47,14 +47,16 @@
         <!-- soundcpu - starts at 0x40000 -->
         <part name="epr-11361.a10" crc="1f47ebcb"/>
         <part name="mpr-11362.a11" crc="256af749"/>
-        <!-- gfx1 - starts at 0x68000 -->
+        <part repeat="0x20000"> FF </part>
+        <!-- gfx1 - starts at 0x88000 -->
         <interleave output="32">
             <part name="mpr-11363.a14" crc="40914168" map="0001"/>
             <part name="mpr-11364.a15" crc="e63649a4" map="0010"/>
             <part name="mpr-11365.a16" crc="1ef55d20" map="0100"/>
             <part name="mpr-11365.a16" crc="1ef55d20" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0xE8000 -->
+        <part repeat="0xF8000"> FF </part>
+        <!-- sprites - starts at 0x200000 -->
         <interleave output="16">
             <part name="mpr-11366.b1" crc="319ede73" map="01"/>
             <part name="mpr-11368.b5" crc="0377d7ce" map="10"/>
@@ -63,11 +65,13 @@
             <part name="mpr-11367.b2" crc="1d06c5c7" map="01"/>
             <part name="mpr-11369.b6" crc="d751d2a2" map="10"/>
         </interleave>
-        <!-- mcu - starts at 0x168000 -->
-        <part repeat="0x1000">FF</part>
-        <!-- n7751 - starts at 0x169000 -->
-        <part repeat="0x400">FF</part>
-        <!-- Total 0x169400 bytes - 1445 kBytes -->
+        <part repeat="0x80000"> FF </part>
+        <!-- mcu - starts at 0x300000 -->
+        <!-- maincpu:key - starts at 0x300000 -->
+        <part repeat="0x2000"> FF </part>
+        <!-- n7751 - starts at 0x302000 -->
+        <part repeat="0x400"> FF </part>
+        <!-- Total 0x302400 bytes - 3081 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

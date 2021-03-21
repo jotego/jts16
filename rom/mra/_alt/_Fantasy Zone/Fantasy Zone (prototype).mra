@@ -34,8 +34,8 @@
     <region/>
     <rom index="0" zip="fantzonepr.zip|fantzone.zip" type="merged" md5="None">
         <part>
-        04 00 ff ff 06 80 0a 80 
-        13 00 10 94 ff ff ff ff 
+        04 00 ff ff 08 80 10 00 
+        18 40 18 44 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -52,19 +52,19 @@
             <part name="ic24-prg20-2f57.bin" crc="fd909341" map="01"/>
             <part name="epr-7387.41" crc="0acd335d" map="10"/>
         </interleave>
-        <part repeat="0x10000">FF</part>
+        <part repeat="0x10000"> FF </part>
         <!-- soundcpu - starts at 0x40000 -->
         <part name="ic12-sound-56-5.bin" crc="e62ddff6"/>
-        <part repeat="0x20000">FF</part>
-        <!-- gfx1 - starts at 0x68000 -->
+        <part repeat="0x40000"> FF </part>
+        <!-- gfx1 - starts at 0x88000 -->
         <interleave output="32">
             <part name="ic95-1413.bin" crc="158af770" map="0001"/>
             <part name="ic94-3e96.bin" crc="2fea4fe7" map="0010"/>
             <part name="ic93-de1b.bin" crc="335fe57a" map="0100"/>
             <part name="epr-7390.93" crc="d90609c6" map="1000"/>
         </interleave>
-        <part repeat="0x20000">FF</part>
-        <!-- sprites - starts at 0xA8000 -->
+        <part repeat="0x58000"> FF </part>
+        <!-- sprites - starts at 0x100000 -->
         <interleave output="16">
             <part name="epr-7392.10" crc="5bb7c8b6" map="01"/>
             <part name="ic11-6235.bin" crc="74ae4b57" map="10"/>
@@ -78,12 +78,15 @@
             <part name="ic23" crc="531ca13f" map="01"/>
             <part name="ic24" crc="68807b49" map="10"/>
         </interleave>
-        <part repeat="0x28000">FF</part>
-        <!-- mcu - starts at 0x108000 -->
+        <part repeat="0x48000"> FF </part>
+        <!-- mcu - starts at 0x180000 -->
         <part name="8751.bin" crc="c0d325e6"/>
-        <part repeat="0x27000">FF</part>
-        <!-- n7751 - starts at 0x130000 -->
-        <!-- Total 0x109400 bytes - 1061 kBytes -->
+        <!-- maincpu:key - starts at 0x181000 -->
+        <part repeat="0x2000"> FF </part>
+        <part repeat="0x1000"> FF </part>
+        <!-- n7751 - starts at 0x184000 -->
+        <part repeat="0x400"> FF </part>
+        <!-- Total 0x184400 bytes - 1553 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

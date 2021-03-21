@@ -34,8 +34,8 @@
     <region>set</region>
     <rom index="0" zip="timescan1.zip|timescan.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 06 80 0a 80 
-        13 00 10 b4 ff ff ff ff 
+        04 00 04 80 08 80 10 00 
+        18 40 18 44 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -52,21 +52,21 @@
             <part name="epr-10539.24" crc="10943b2e" map="01"/>
             <part name="epr-10542.41" crc="10217dfa" map="10"/>
         </interleave>
-        <part repeat="0x10000">FF</part>
+        <part repeat="0x10000"> FF </part>
         <!-- soundcpu - starts at 0x40000 -->
         <part name="epr-10546.12" crc="1ebee5cc"/>
         <!-- n7751data - starts at 0x48000 -->
         <part name="epr-10547.1" crc="d24ffc4b"/>
-        <part repeat="0x18000">FF</part>
-        <!-- gfx1 - starts at 0x68000 -->
+        <part repeat="0x38000"> FF </part>
+        <!-- gfx1 - starts at 0x88000 -->
         <interleave output="32">
             <part name="epr-10543.95" crc="07dccc37" map="0001"/>
             <part name="epr-10544.94" crc="84fb9a3a" map="0010"/>
             <part name="epr-10545.93" crc="c8694bc0" map="0100"/>
             <part name="epr-10545.93" crc="c8694bc0" map="1000"/>
         </interleave>
-        <part repeat="0x20000">FF</part>
-        <!-- sprites - starts at 0xA8000 -->
+        <part repeat="0x58000"> FF </part>
+        <!-- sprites - starts at 0x100000 -->
         <interleave output="16">
             <part name="epr-10548.10" crc="aa150735" map="01"/>
             <part name="epr-10552.11" crc="6fcbb9f7" map="10"/>
@@ -83,16 +83,16 @@
             <part name="epr-10551.29" crc="435d811f" map="01"/>
             <part name="epr-10555.30" crc="2143c471" map="10"/>
         </interleave>
-        <part repeat="0x20000">FF</part>
-        <!-- mcu - starts at 0x108000 -->
-        <part repeat="0x1000">FF</part>
-        <part repeat="0x27000">FF</part>
-        <!-- n7751 - starts at 0x130000 -->
-        <part name="7751.bin" crc="6a9534fc"/>
-        <!-- maincpu:key - starts at 0x109400 -->
+        <part repeat="0x40000"> FF </part>
+        <!-- mcu - starts at 0x180000 -->
+        <part repeat="0x1000"> FF </part>
+        <!-- maincpu:key - starts at 0x181000 -->
         <part name="317-0024.key" crc="dcd41d24"/>
-        <part repeat="0x9EC00">FF</part>
-        <!-- FD1089 base table starts at 0x1AA000 -->
+        <part repeat="0x1000"> FF </part>
+        <!-- n7751 - starts at 0x184000 -->
+        <part name="7751.bin" crc="6a9534fc"/>
+        <part repeat="0x3C00"> FF </part>
+        <!-- FD1089 base table starts at 0x188000 -->
         <part>
             00 1C 76 6A 5E 42 24 38 4B 67 AD 81 E9 C5 03 2F 
             45 69 AF 83 E7 CB 01 2D 02 1E 78 64 5C 40 2A 36 
@@ -111,7 +111,7 @@
             12 0E 68 74 E2 FE 94 88 65 49 8F A3 99 B5 7F 53 
             35 19 D3 FF C9 E5 23 0F BE A2 C8 D4 4E 52 34 28 
         </part>
-        <!-- Total 0x1AA100 bytes - 1704 kBytes -->
+        <!-- Total 0x188100 bytes - 1568 kBytes -->
     </rom>
     <!-- Vertical game -->
     <rom index="1">

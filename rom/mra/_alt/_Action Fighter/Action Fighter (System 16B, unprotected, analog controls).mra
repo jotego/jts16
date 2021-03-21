@@ -34,8 +34,8 @@
     <region>System</region>
     <rom index="0" zip="afightere.zip|afighter.zip" type="merged" md5="None">
         <part>
-        04 00 ff ff 06 80 0a 80 
-        13 00 12 94 ff ff ff ff 
+        04 00 ff ff 08 80 20 00 
+        30 20 30 24 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -52,18 +52,19 @@
             <part name="epr10271.bin" crc="d0d73af5" map="01"/>
             <part name="epr10274.bin" crc="d2601561" map="10"/>
         </interleave>
-        <part repeat="0x10000">FF</part>
+        <part repeat="0x10000"> FF </part>
         <!-- soundcpu - starts at 0x40000 -->
         <part name="epr10039.bin" crc="b04757b0"/>
-        <part repeat="0x20000">FF</part>
-        <!-- gfx1 - starts at 0x68000 -->
+        <part repeat="0x40000"> FF </part>
+        <!-- gfx1 - starts at 0x88000 -->
         <interleave output="32">
             <part name="epr10048.bin" crc="643ca883" map="0001"/>
             <part name="epr10049.bin" crc="f8b5058b" map="0010"/>
             <part name="epr10050.bin" crc="0ffb48dd" map="0100"/>
             <part name="epr10050.bin" crc="0ffb48dd" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0xA8000 -->
+        <part repeat="0x138000"> FF </part>
+        <!-- sprites - starts at 0x200000 -->
         <interleave output="16">
             <part name="epr10040.bin" crc="5a9f81f9" map="01"/>
             <part name="epr10044.bin" crc="71d0db1f" map="10"/>
@@ -83,12 +84,13 @@
             <part name="epr10043.bin" crc="645ccfb9" map="01"/>
             <part name="epr10047.bin" crc="84a49518" map="10"/>
         </interleave>
-        <part repeat="0x10000">FF</part>
-        <!-- mcu - starts at 0x128000 -->
-        <part repeat="0x1000">FF</part>
-        <part repeat="0x7000">FF</part>
-        <!-- n7751 - starts at 0x130000 -->
-        <!-- Total 0x129400 bytes - 1189 kBytes -->
+        <part repeat="0x90000"> FF </part>
+        <!-- mcu - starts at 0x300000 -->
+        <!-- maincpu:key - starts at 0x300000 -->
+        <part repeat="0x2000"> FF </part>
+        <!-- n7751 - starts at 0x302000 -->
+        <part repeat="0x400"> FF </part>
+        <!-- Total 0x302400 bytes - 3081 kBytes -->
     </rom>
     <!-- Vertical game -->
     <rom index="1">

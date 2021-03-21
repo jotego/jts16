@@ -34,8 +34,8 @@
     <region>World,</region>
     <rom index="0" zip="cencourt.zip|passsht.zip" type="merged" md5="None">
         <part>
-        04 00 ff ff 06 80 0a 80 
-        13 00 12 b4 ff ff ff ff 
+        04 00 ff ff 08 80 10 00 
+        18 40 18 64 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -44,21 +44,23 @@
             <part name="a1_478b.a1" crc="37beb770" map="01"/>
             <part name="a4_56f6.a4" crc="7116dce6" map="10"/>
         </interleave>
-        <part repeat="0x20000">FF</part>
+        <part repeat="0x20000"> FF </part>
         <!-- soundcpu - starts at 0x40000 -->
         <part name="epr-a-7.a7" crc="9e1b81c6"/>
         <part name="epr-a-8.a8" crc="08ab0018"/>
         <part name="epr-a-9.a9" crc="8673e01b"/>
         <part name="epr-a-10.a10" crc="10263746"/>
         <part name="epr-a-11.a11" crc="38b54a71"/>
-        <!-- gfx1 - starts at 0x68000 -->
+        <part repeat="0x20000"> FF </part>
+        <!-- gfx1 - starts at 0x88000 -->
         <interleave output="32">
             <part name="epr-b-9.b9" crc="9a55cd88" map="0001"/>
             <part name="epr-b-10.b10" crc="fc13ca35" map="0010"/>
             <part name="epr-b-11.b11" crc="1503c203" map="0100"/>
             <part name="epr-b-11.b11" crc="1503c203" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0xA8000 -->
+        <part repeat="0x38000"> FF </part>
+        <!-- sprites - starts at 0x100000 -->
         <interleave output="16">
             <part name="epr-b-1.b1" crc="b18bfccf" map="01"/>
             <part name="epr-b-5.b5" crc="3481a8e8" map="10"/>
@@ -75,13 +77,16 @@
             <part name="epr-b-4.b4" crc="bdf63cd2" map="01"/>
             <part name="epr-b-8.b8" crc="88a90641" map="10"/>
         </interleave>
-        <!-- mcu - starts at 0x128000 -->
-        <part repeat="0x1000">FF</part>
-        <part repeat="0x7000">FF</part>
-        <!-- n7751 - starts at 0x130000 -->
-        <!-- soundcpu:key - starts at 0x129400 -->
+        <!-- mcu - starts at 0x180000 -->
+        <part repeat="0x1000"> FF </part>
+        <!-- maincpu:key - starts at 0x181000 -->
+        <part repeat="0x2000"> FF </part>
+        <part repeat="0x1000"> FF </part>
+        <!-- n7751 - starts at 0x184000 -->
+        <part repeat="0x400"> FF </part>
+        <!-- soundcpu:key - starts at 0x184400 -->
         <part name="mc-8123b_center_court.key" crc="2be5c90b"/>
-        <!-- Total 0x12B400 bytes - 1197 kBytes -->
+        <!-- Total 0x186400 bytes - 1561 kBytes -->
     </rom>
     <!-- Vertical game -->
     <rom index="1">

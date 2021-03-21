@@ -34,8 +34,8 @@
     <region>System</region>
     <rom index="0" zip="afighterg.zip|afighter.zip" type="merged" md5="None">
         <part>
-        04 00 ff ff 06 80 0a 80 
-        13 00 12 b4 ff ff ff ff 
+        04 00 ff ff 08 80 20 00 
+        30 20 30 24 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -52,18 +52,19 @@
             <part name="epr10162.bin" crc="a20acfd5" map="01"/>
             <part name="epr10165.bin" crc="cc68a82d" map="10"/>
         </interleave>
-        <part repeat="0x10000">FF</part>
+        <part repeat="0x10000"> FF </part>
         <!-- soundcpu - starts at 0x40000 -->
         <part name="epr10039.bin" crc="b04757b0"/>
-        <part repeat="0x20000">FF</part>
-        <!-- gfx1 - starts at 0x68000 -->
+        <part repeat="0x40000"> FF </part>
+        <!-- gfx1 - starts at 0x88000 -->
         <interleave output="32">
             <part name="epr10048.bin" crc="643ca883" map="0001"/>
             <part name="epr10049.bin" crc="f8b5058b" map="0010"/>
             <part name="epr10050.bin" crc="0ffb48dd" map="0100"/>
             <part name="epr10050.bin" crc="0ffb48dd" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0xA8000 -->
+        <part repeat="0x138000"> FF </part>
+        <!-- sprites - starts at 0x200000 -->
         <interleave output="16">
             <part name="epr10040.bin" crc="5a9f81f9" map="01"/>
             <part name="epr10044.bin" crc="71d0db1f" map="10"/>
@@ -83,15 +84,14 @@
             <part name="epr10043.bin" crc="645ccfb9" map="01"/>
             <part name="epr10047.bin" crc="84a49518" map="10"/>
         </interleave>
-        <part repeat="0x10000">FF</part>
-        <!-- mcu - starts at 0x128000 -->
-        <part repeat="0x1000">FF</part>
-        <part repeat="0x7000">FF</part>
-        <!-- n7751 - starts at 0x130000 -->
-        <!-- maincpu:key - starts at 0x129400 -->
+        <part repeat="0x90000"> FF </part>
+        <!-- mcu - starts at 0x300000 -->
+        <!-- maincpu:key - starts at 0x300000 -->
         <part name="317-0018.key" crc="65b5b1af"/>
-        <part repeat="0x7EC00">FF</part>
-        <!-- FD1089 base table starts at 0x1AA000 -->
+        <!-- n7751 - starts at 0x302000 -->
+        <part repeat="0x400"> FF </part>
+        <part repeat="0x1C00"> FF </part>
+        <!-- FD1089 base table starts at 0x304000 -->
         <part>
             00 1C 76 6A 5E 42 24 38 4B 67 AD 81 E9 C5 03 2F 
             45 69 AF 83 E7 CB 01 2D 02 1E 78 64 5C 40 2A 36 
@@ -110,7 +110,7 @@
             12 0E 68 74 E2 FE 94 88 65 49 8F A3 99 B5 7F 53 
             35 19 D3 FF C9 E5 23 0F BE A2 C8 D4 4E 52 34 28 
         </part>
-        <!-- Total 0x1AA100 bytes - 1704 kBytes -->
+        <!-- Total 0x304100 bytes - 3088 kBytes -->
     </rom>
     <!-- Vertical game -->
     <rom index="1">

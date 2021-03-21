@@ -132,6 +132,10 @@ localparam [21:0] ZERO_OFFSET=0,
                   VRAM_OFFSET=22'h10_0000,
                   PCM_OFFSET =22'h8000>>1;
 
+localparam [21:0] MCU_PROM   = 22'h18_0000,
+                  N7751_PROM = 22'h18_4000,
+                  KEY_PROM   = 22'h18_8000
+
 wire [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire        xram_cs;
 
@@ -148,7 +152,7 @@ jtframe_dwnld #(
     .BA1_START ( 25'h04_0000 ), // sound
     .BA2_START ( 25'h06_8000 ), // tiles
     .BA3_START ( 25'h0a_8000 ), // obj
-    .PROM_START( 25'h13_0000 ), // PCM MCU
+    .PROM_START(    MCU_PROM ), // PCM MCU
     .SWAB      ( 1           )
 ) u_dwnld(
     .clk          ( clk            ),

@@ -34,8 +34,8 @@
     <region>set</region>
     <rom index="0" zip="alexkidd.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 06 80 0a 80 
-        13 00 10 94 ff ff ff ff 
+        04 00 04 80 08 80 10 00 
+        18 40 18 44 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -53,16 +53,16 @@
         <!-- n7751data - starts at 0x48000 -->
         <part name="epr-10435.1" crc="ad89f6e3"/>
         <part name="epr-10436.2" crc="96c76613"/>
-        <part repeat="0x10000">FF</part>
-        <!-- gfx1 - starts at 0x68000 -->
+        <part repeat="0x30000"> FF </part>
+        <!-- gfx1 - starts at 0x88000 -->
         <interleave output="32">
             <part name="epr-10431.95" crc="a7962c39" map="0001"/>
             <part name="epr-10432.94" crc="db8cd24e" map="0010"/>
             <part name="epr-10433.93" crc="e163c8c2" map="0100"/>
             <part name="epr-10433.93" crc="e163c8c2" map="1000"/>
         </interleave>
-        <part repeat="0x20000">FF</part>
-        <!-- sprites - starts at 0xA8000 -->
+        <part repeat="0x58000"> FF </part>
+        <!-- sprites - starts at 0x100000 -->
         <interleave output="16">
             <part name="epr-10437.10" crc="522f7618" map="01"/>
             <part name="epr-10441.11" crc="74e3a35c" map="10"/>
@@ -82,12 +82,13 @@
             <part name="epr-10440.29" crc="23939508" map="01"/>
             <part name="epr-10444.30" crc="82115823" map="10"/>
         </interleave>
-        <!-- mcu - starts at 0x108000 -->
-        <part repeat="0x1000">FF</part>
-        <part repeat="0x27000">FF</part>
-        <!-- n7751 - starts at 0x130000 -->
+        <part repeat="0x10000"> FF </part>
+        <!-- mcu - starts at 0x180000 -->
+        <part repeat="0x1000"> FF </part>
+        <part repeat="0x3000"> FF </part>
+        <!-- n7751 - starts at 0x184000 -->
         <part name="7751.bin" crc="6a9534fc"/>
-        <!-- Total 0x109400 bytes - 1061 kBytes -->
+        <!-- Total 0x184400 bytes - 1553 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>
