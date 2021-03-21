@@ -31,13 +31,13 @@
     <players>4</players>
     <joystick>4-way</joystick>
     <rotation>vertical</rotation>
-    <region>Japan,</region>
+    <region>Japan</region>
     <rom index="0" zip="aceattaca.zip|aceattac.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 
         18 00 18 10 18 40 18 44 
-        ff ff ff ff ff ff ff ff 
-        ff ff ff ff ff ff ff ff 
+        00 00 00 00 00 00 00 00 
+        00 00 00 00 00 00 00 00 
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">

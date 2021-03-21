@@ -13,7 +13,8 @@ function s16a_mra {
     mkdir -p "$OUTDIR/$ALTFOLDER"
     mame2dip $NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder "$ALTFOLDER" \
         -skip_desc 16b -nobootlegs \
-        -header 32 0xFF \
+        -header 32 0x0 \
+        -header-dev 0x10 fd1089a=1 fd1089b=2 \
         -setword maincpu 16 reverse \
         -setword sprites 16 reverse \
         -len maincpu   0x40000 \
