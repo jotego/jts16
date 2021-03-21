@@ -18,6 +18,7 @@ function s16a_mra {
         -len maincpu   0x40000 \
         -start gfx1    0x68000 \
         -start sprites 0xa8000 \
+        -start fd1089  0x10A000 \
         -len sprites 0x80000 \
         -fill sprites \
         -frac 1 gfx1 4 \
