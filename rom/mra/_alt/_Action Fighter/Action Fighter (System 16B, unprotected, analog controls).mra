@@ -21,79 +21,74 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>Major League</name>
-    <setname>mjleague</setname>
+    <name>Action Fighter (System 16B, unprotected, analog controls)</name>
+    <setname>afightere</setname>
     <rbf>jts16</rbf>
     <mraversion>1.0</mraversion>
     <mameversion>0229</mameversion>
-    <year>1985</year>
+    <year>1986</year>
     <manufacturer>Sega</manufacturer>
-    <players>2</players>
+    <players>1</players>
     <joystick>4-way</joystick>
     <rotation>vertical</rotation>
-    <region/>
-    <rom index="0" zip="mjleague.zip" type="merged" md5="None">
+    <region>System</region>
+    <rom index="0" zip="afightere.zip|afighter.zip" type="merged" md5="None">
         <part>
-        04 00 04 80 06 80 0a 80 
-        13 00 10 94 ff ff ff ff 
+        04 00 ff ff 06 80 0a 80 
+        13 00 12 94 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
-            <part name="epr-7401.6b" crc="2befa5e0" map="01"/>
-            <part name="epr-7404.9b" crc="ec1655b5" map="10"/>
+            <part name="epr10269.bin" crc="688b4ff7" map="01"/>
+            <part name="epr10272.bin" crc="bc3b75b6" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="epr-7402.7b" crc="b7bef762" map="01"/>
-            <part name="epr-7405.10b" crc="7a4f4e38" map="10"/>
+            <part name="epr10270.bin" crc="53fab467" map="01"/>
+            <part name="epr10273.bin" crc="0ca74019" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="epr-7403a.8b" crc="0a39a4d0" map="01"/>
-            <part name="epr-7406a.11b" crc="bb743639" map="10"/>
+            <part name="epr10271.bin" crc="d0d73af5" map="01"/>
+            <part name="epr10274.bin" crc="d2601561" map="10"/>
         </interleave>
         <part repeat="0x10000">FF</part>
         <!-- soundcpu - starts at 0x40000 -->
-        <part name="epr-7054c.1b" crc="4443b744"/>
-        <!-- n7751data - starts at 0x48000 -->
-        <part name="epr-7063.1a" crc="45d8908a"/>
-        <part name="epr-7065.2a" crc="8c8f8cff"/>
-        <part name="epr-7064.3a" crc="159f6636"/>
-        <part name="epr-7066.4a" crc="f5cfa91f"/>
+        <part name="epr10039.bin" crc="b04757b0"/>
+        <part repeat="0x20000">FF</part>
         <!-- gfx1 - starts at 0x68000 -->
         <interleave output="32">
-            <part name="epr-7051.9a" crc="10ca255a" map="0001"/>
-            <part name="epr-7052.10a" crc="2550db0e" map="0010"/>
-            <part name="epr-7053.11a" crc="5bfea038" map="0100"/>
-            <part name="epr-7053.11a" crc="5bfea038" map="1000"/>
+            <part name="epr10048.bin" crc="643ca883" map="0001"/>
+            <part name="epr10049.bin" crc="f8b5058b" map="0010"/>
+            <part name="epr10050.bin" crc="0ffb48dd" map="0100"/>
+            <part name="epr10050.bin" crc="0ffb48dd" map="1000"/>
         </interleave>
-        <part repeat="0x20000">FF</part>
         <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
-            <part name="epr-7055.5a" crc="1fb860bd" map="01"/>
-            <part name="epr-7059.2b" crc="3d14091d" map="10"/>
+            <part name="epr10040.bin" crc="5a9f81f9" map="01"/>
+            <part name="epr10044.bin" crc="71d0db1f" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF </part>
         <interleave output="16">
-            <part name="epr-7056.6a" crc="b35dd968" map="01"/>
-            <part name="epr-7060.3b" crc="61bb3757" map="10"/>
+            <part name="epr10041.bin" crc="8da050cf" map="01"/>
+            <part name="epr10045.bin" crc="39354223" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF </part>
         <interleave output="16">
-            <part name="epr-7057.7a" crc="3e5a2b6f" map="01"/>
-            <part name="epr-7061.4b" crc="c808dad5" map="10"/>
+            <part name="epr10042.bin" crc="dd706d18" map="01"/>
+            <part name="epr10046.bin" crc="b49b3136" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF </part>
         <interleave output="16">
-            <part name="epr-7058.8a" crc="b543675f" map="01"/>
-            <part name="epr-7062.5b" crc="9168eb47" map="10"/>
+            <part name="epr10043.bin" crc="645ccfb9" map="01"/>
+            <part name="epr10047.bin" crc="84a49518" map="10"/>
         </interleave>
-        <!-- mcu - starts at 0x108000 -->
+        <part repeat="0x10000">FF</part>
+        <!-- mcu - starts at 0x128000 -->
         <part repeat="0x1000">FF</part>
-        <part repeat="0x27000">FF</part>
+        <part repeat="0x7000">FF</part>
         <!-- n7751 - starts at 0x130000 -->
-        <part name="7751.bin" crc="6a9534fc"/>
-        <!-- Total 0x109400 bytes - 1061 kBytes -->
+        <!-- Total 0x129400 bytes - 1189 kBytes -->
     </rom>
     <!-- Vertical game -->
     <rom index="1">
@@ -107,10 +102,9 @@
         <!-- DSW2 -->
         <dip name="Cabinet" bits="8" ids="Upright,Cocktail"/>
         <dip name="Demo Sounds" bits="9" ids="On,Off"/>
-        <dip name="Starting Points" bits="10,11" ids="10k,5000,3000,2000"/>
-        <dip name="Team Select" bits="12" ids="Off,On"/>
-        <dip name="Unused" bits="13" ids="On,Off"/>
-        <dip name="Unused" bits="14" ids="On,Off"/>
-        <dip name="Unused" bits="15" ids="On,Off"/>
+        <dip name="Lives" bits="10,11" ids="Infinite,4,2,3"/>
+        <dip name="Bonus Life" bits="12,13" ids="40k - 80k,30k - 60k,20k - 40k,10k - 20k"/>
+        <dip name="Difficulty" bits="14" ids="Hard,Normal"/>
+        <dip name="Allow Continue" bits="15" ids="No,Yes"/>
     </switches>
 </misterromdescription>

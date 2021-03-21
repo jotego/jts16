@@ -35,7 +35,7 @@
     <rom index="0" zip="quartet2a.zip|quartet.zip" type="merged" md5="None">
         <part>
         04 00 04 80 06 80 0a 80 
-        10 80 10 84 ff ff ff ff 
+        13 00 10 94 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -88,9 +88,12 @@
             <part name="epr-7468.8c" crc="ddfd40c0" map="01"/>
             <part name="epr-7472.5b" crc="8e2762ec" map="10"/>
         </interleave>
-        <!-- n7751 - starts at 0x108000 -->
+        <!-- mcu - starts at 0x108000 -->
+        <part repeat="0x1000">FF</part>
+        <part repeat="0x27000">FF</part>
+        <!-- n7751 - starts at 0x130000 -->
         <part name="7751.bin" crc="6a9534fc"/>
-        <!-- Total 0x108400 bytes - 1057 kBytes -->
+        <!-- Total 0x109400 bytes - 1061 kBytes -->
     </rom>
     <rom index="1">
         <part>00</part>

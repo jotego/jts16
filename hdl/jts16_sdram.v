@@ -148,7 +148,7 @@ jtframe_dwnld #(
     .BA1_START ( 25'h04_0000 ), // sound
     .BA2_START ( 25'h06_8000 ), // tiles
     .BA3_START ( 25'h0a_8000 ), // obj
-    .PROM_START( 25'h12_8000 ), // PCM MCU
+    .PROM_START( 25'h13_0000 ), // PCM MCU
     .SWAB      ( 1           )
 ) u_dwnld(
     .clk          ( clk            ),

@@ -21,18 +21,18 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>Alex Kidd: The Lost Stars (set 1, FD1089A 317-0021)</name>
-    <setname>alexkidd1</setname>
+    <name>Time Scanner (set 1, System 16A, FD1089B 317-0024)</name>
+    <setname>timescan1</setname>
     <rbf>jts16</rbf>
     <mraversion>1.0</mraversion>
     <mameversion>0229</mameversion>
-    <year>1986</year>
+    <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
-    <joystick>8-way</joystick>
-    <rotation>horizontal</rotation>
+    <joystick>4-way</joystick>
+    <rotation>vertical</rotation>
     <region>set</region>
-    <rom index="0" zip="alexkidd1.zip|alexkidd.zip" type="merged" md5="None">
+    <rom index="0" zip="timescan1.zip|timescan.zip" type="merged" md5="None">
         <part>
         04 00 04 80 06 80 0a 80 
         13 00 10 b4 ff ff ff ff 
@@ -41,54 +41,56 @@
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
-            <part name="epr-10427.26" crc="f6e3dd29" map="01"/>
-            <part name="epr-10429.43" crc="bdf49eca" map="10"/>
+            <part name="epr-10537a.26" crc="4ddc434a" map="01"/>
+            <part name="epr-10540a.43" crc="76848b0b" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="epr-10428.25" crc="dbed3210" map="01"/>
-            <part name="epr-10430.42" crc="89e3439f" map="10"/>
+            <part name="epr-10538.25" crc="68379473" map="01"/>
+            <part name="epr-10541.42" crc="cc6d945e" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x40000 -->
-        <part name="epr-10434.12" crc="77141cce"/>
-        <!-- n7751data - starts at 0x48000 -->
-        <part name="epr-10435.1" crc="ad89f6e3"/>
-        <part name="epr-10436.2" crc="96c76613"/>
+        <interleave output="16">
+            <part name="epr-10539.24" crc="10943b2e" map="01"/>
+            <part name="epr-10542.41" crc="10217dfa" map="10"/>
+        </interleave>
         <part repeat="0x10000">FF</part>
+        <!-- soundcpu - starts at 0x40000 -->
+        <part name="epr-10546.12" crc="1ebee5cc"/>
+        <!-- n7751data - starts at 0x48000 -->
+        <part name="epr-10547.1" crc="d24ffc4b"/>
+        <part repeat="0x18000">FF</part>
         <!-- gfx1 - starts at 0x68000 -->
         <interleave output="32">
-            <part name="epr-10431.95" crc="a7962c39" map="0001"/>
-            <part name="epr-10432.94" crc="db8cd24e" map="0010"/>
-            <part name="epr-10433.93" crc="e163c8c2" map="0100"/>
-            <part name="epr-10433.93" crc="e163c8c2" map="1000"/>
+            <part name="epr-10543.95" crc="07dccc37" map="0001"/>
+            <part name="epr-10544.94" crc="84fb9a3a" map="0010"/>
+            <part name="epr-10545.93" crc="c8694bc0" map="0100"/>
+            <part name="epr-10545.93" crc="c8694bc0" map="1000"/>
         </interleave>
         <part repeat="0x20000">FF</part>
         <!-- sprites - starts at 0xA8000 -->
         <interleave output="16">
-            <part name="epr-10437.10" crc="522f7618" map="01"/>
-            <part name="epr-10441.11" crc="74e3a35c" map="10"/>
+            <part name="epr-10548.10" crc="aa150735" map="01"/>
+            <part name="epr-10552.11" crc="6fcbb9f7" map="10"/>
         </interleave>
-        <part repeat="0x10000"> FF </part>
         <interleave output="16">
-            <part name="epr-10438.17" crc="738a6362" map="01"/>
-            <part name="epr-10442.18" crc="86cb9c14" map="10"/>
+            <part name="epr-10549.17" crc="2f59f067" map="01"/>
+            <part name="epr-10553.18" crc="8a220a9f" map="10"/>
         </interleave>
-        <part repeat="0x10000"> FF </part>
         <interleave output="16">
-            <part name="epr-10439.23" crc="b391aca7" map="01"/>
-            <part name="epr-10443.24" crc="95d32635" map="10"/>
+            <part name="epr-10550.23" crc="f05069ff" map="01"/>
+            <part name="epr-10554.24" crc="dc64f809" map="10"/>
         </interleave>
-        <part repeat="0x10000"> FF </part>
         <interleave output="16">
-            <part name="epr-10440.29" crc="23939508" map="01"/>
-            <part name="epr-10444.30" crc="82115823" map="10"/>
+            <part name="epr-10551.29" crc="435d811f" map="01"/>
+            <part name="epr-10555.30" crc="2143c471" map="10"/>
         </interleave>
+        <part repeat="0x20000">FF</part>
         <!-- mcu - starts at 0x108000 -->
         <part repeat="0x1000">FF</part>
         <part repeat="0x27000">FF</part>
         <!-- n7751 - starts at 0x130000 -->
         <part name="7751.bin" crc="6a9534fc"/>
         <!-- maincpu:key - starts at 0x109400 -->
-        <part name="317-0021.key" crc="504388a3"/>
+        <part name="317-0024.key" crc="dcd41d24"/>
         <part repeat="0x9EC00">FF</part>
         <!-- FD1089 base table starts at 0x1AA000 -->
         <part>
@@ -111,8 +113,9 @@
         </part>
         <!-- Total 0x1AA100 bytes - 1704 kBytes -->
     </rom>
+    <!-- Vertical game -->
     <rom index="1">
-        <part>00</part>
+        <part>01</part>
     </rom>
     <nvram index="2" size="0"/>
     <switches base="16" default="FF,FF">
@@ -120,11 +123,19 @@
         <dip name="Coin A" bits="0,3" ids="Free Play  or 1/1,1/1, 2/3,1/1, 4/5,1/1, 5/6,2/1, 4/3,2/1, 5/3, 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <dip name="Coin B" bits="4,7" ids="Free Play  or 1/1,1/1, 2/3,1/1, 4/5,1/1, 5/6,2/1, 4/3,2/1, 5/3, 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <!-- DSW2 -->
-        <dip name="Continues" bits="8" ids="Unlimited,Only before level 5"/>
-        <dip name="Demo Sounds" bits="9" ids="On,Off"/>
-        <dip name="Lives" bits="10,11" ids="240,5,4,3"/>
-        <dip name="Bonus Life" bits="12,13" ids="None,40k,10k,20k"/>
-        <dip name="Time Adjust" bits="14,15" ids="40,50,70,60"/>
+        <dip name="Cabinet" bits="8" ids="Cocktail,Upright"/>
+        <dip name="Extended Score" bits="9,12" ids="None,Ball 70k0,Ball 60k0,Ball 50k0,Ball 40k0,Ball 30k0,Ball 20k0,Ball 10k0,Credit 20k00/40k00,Credit 150k0/30k00,Credit 120k0/250k0,Credit 10k00/20k00,Credit 180k0,Credit 150k0,Credit 10k00,Credit 120k0"/>
+        <dip name="Number Match" bits="13" ids="No,Yes"/>
+        <dip name="Pin Rebound" bits="14" ids="A Little,Well"/>
+        <dip name="Lives" bits="15" ids="5,3"/>
+        <!-- UNUSED -->
+        <dip name="Flip Screen" bits="16" ids="On,Off"/>
+        <dip name="Out Lane Pin" bits="17" ids="Far,Near"/>
+        <dip name="Special" bits="18,19" ids="20k00 Points,1,3,2"/>
+        <dip name="Allow Continue" bits="20" ids="No,Yes"/>
+        <dip name="Unused" bits="21" ids="On,Off"/>
+        <dip name="Unused" bits="22" ids="On,Off"/>
+        <dip name="Unused" bits="23" ids="On,Off"/>
     </switches>
-    <buttons names="Jump,Shot,Other,-,Start,Coin,Core credits" default="Y,X,BA,R,L,Start" count="3"/>
+    <buttons names="Button 1,Button 2,Button 3,-,Start,Coin,Core credits" default="Y,X,BA,R,L,Start" count="3"/>
 </misterromdescription>

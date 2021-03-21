@@ -18,13 +18,15 @@ function s16a_mra {
         -setword sprites 16 reverse \
         -len maincpu   0x40000 \
         -ghost n7751 0x400 \
+        -ghost mcu   0x1000 \
         -start gfx1    0x68000 \
         -start sprites 0xa8000 \
+        -start n7751   0x130000 \
         -start fd1089  0x1AA000 \
         -len sprites 0x80000 \
         -fill sprites \
         -frac 1 gfx1 4 \
-        -order maincpu soundcpu n7751data gfx1 sprites n7751 \
+        -order maincpu soundcpu n7751data gfx1 sprites mcu n7751 \
         -header-offset-bits 8 -header-offset 0 soundcpu n7751data gfx1 sprites n7751 \
         -corebuttons 4 -buttons "$BUTTONS"
 
@@ -45,5 +47,7 @@ s16a_mra bodyslam  "Body Slam" "Button 1,Button 2,Button 3"
 s16a_mra aceattac  "Ace Attack" "None"
 s16a_mra passsht   "Passing Shot" "Button 1,Button 2,Button 3, Button 4"
 s16a_mra timescan  "Time Scanner" "Button 1,Button 2,Button 3"
+
+scp -r mra/* root@MiSTer.home:/media/fat/_S16
 
 exit 0

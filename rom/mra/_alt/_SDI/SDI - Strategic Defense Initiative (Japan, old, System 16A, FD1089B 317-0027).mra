@@ -35,7 +35,7 @@
     <rom index="0" zip="sdia.zip|sdi.zip" type="merged" md5="None">
         <part>
         04 00 ff ff 06 80 0a 80 
-        12 80 12 a4 ff ff ff ff 
+        13 00 12 b4 ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         ff ff ff ff ff ff ff ff 
         </part>
@@ -77,11 +77,13 @@
             <part name="epr-10765.24" crc="0a73a057" map="10"/>
         </interleave>
         <part repeat="0x20000">FF</part>
-        <!-- n7751 - starts at 0x128000 -->
-        <part repeat="0x400">FF</part>
-        <!-- maincpu:key - starts at 0x128400 -->
+        <!-- mcu - starts at 0x128000 -->
+        <part repeat="0x1000">FF</part>
+        <part repeat="0x7000">FF</part>
+        <!-- n7751 - starts at 0x130000 -->
+        <!-- maincpu:key - starts at 0x129400 -->
         <part name="317-0027.key" crc="7bdeed05"/>
-        <part repeat="0x7FC00">FF</part>
+        <part repeat="0x7EC00">FF</part>
         <!-- FD1089 base table starts at 0x1AA000 -->
         <part>
             00 1C 76 6A 5E 42 24 38 4B 67 AD 81 E9 C5 03 2F 
