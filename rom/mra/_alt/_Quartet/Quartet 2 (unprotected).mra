@@ -31,7 +31,7 @@
     <players>2</players>
     <joystick>8-way</joystick>
     <rotation>horizontal</rotation>
-    <region>N/A</region>
+    <region>World</region>
     <rom index="0" zip="quartet2a.zip|quartet.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 

@@ -58,11 +58,9 @@ if which ncverilog >/dev/null; then
     HEXDUMP=
 fi
 
-jtsim_sdram $HEXDUMP -header 32 sndcpu pcmdata gfx1 obj pcmfirm \
-    -region maincpu 0 0 \
-    -region sndcpu  1 0 \
-    -region gfx1    2 0 \
-    -region obj     3 0 \
+jtsim_sdram $HEXDUMP -header 32 \
+    -banks $BA1_START $BA2_START $BA3_START \
+    -stop $MCU_START \
     $SDRAM_SNAP || exit $?
 
 jtsim -mist -sysname $SYSNAME $SIMULATOR \

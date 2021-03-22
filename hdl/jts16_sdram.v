@@ -132,12 +132,14 @@ localparam [21:0] ZERO_OFFSET=0,
                   VRAM_OFFSET=22'h10_0000,
                   PCM_OFFSET =22'h8000>>1;
 
+/* verilator lint_off WIDTH */
 localparam [24:0] BA1_START  = `BA1_START,
                   BA2_START  = `BA2_START,
                   BA3_START  = `BA3_START,
                   MCU_PROM   = `MCU_START,
-                  N7751_PROM = MCU_PROM+22'h4000,
-                  KEY_PROM   = MCU_PROM+22'h8000;
+                  N7751_PROM = `N7751_START,
+                  KEY_PROM   = `MAINKEY_START;
+/* verilator lint_on WIDTH */
 
 wire [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire        xram_cs;
@@ -172,6 +174,7 @@ jtframe_dwnld #(
     .prog_rd      ( prog_rd        ),
     .prog_ba      ( prog_ba        ),
     .prom_we      ( prom_we        ),
+    .header       (                ),
     .sdram_ack    ( prog_ack       )
 );
 

@@ -28,9 +28,9 @@ function s16a_mra {
         -start gfx1        $BA2_START \
         -start sprites     $BA3_START \
         -start mcu         $MCU_START \
-        -start maincpu:key 0x181000 \
-        -start n7751       0x184000 \
-        -start fd1089      0x186000 \
+        -start maincpu:key $MAINKEY_START \
+        -start n7751       $N7751_START \
+        -start fd1089      $FD1089_START \
         -fill sprites \
         -frac 1 gfx1 4 \
         -order maincpu soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
