@@ -132,9 +132,12 @@ localparam [21:0] ZERO_OFFSET=0,
                   VRAM_OFFSET=22'h10_0000,
                   PCM_OFFSET =22'h8000>>1;
 
-localparam [21:0] MCU_PROM   = 22'h18_0000,
-                  N7751_PROM = 22'h18_4000,
-                  KEY_PROM   = 22'h18_8000;
+localparam [24:0] BA1_START  = `BA1_START,
+                  BA2_START  = `BA2_START,
+                  BA3_START  = `BA3_START,
+                  MCU_PROM   = `MCU_START,
+                  N7751_PROM = MCU_PROM+22'h4000,
+                  KEY_PROM   = MCU_PROM+22'h8000;
 
 wire [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire        xram_cs;
@@ -150,12 +153,12 @@ assign dwnld_busy = downloading;
 assign n7751_prom = prom_we && ioctl_addr[15:10]==N7751_PROM[15:10];
 
 jtframe_dwnld #(
-    .HEADER    ( 32          ),
-    .BA1_START ( 25'h04_0000 ), // sound
-    .BA2_START ( 25'h08_8000 ), // tiles
-    .BA3_START ( 25'h10_0000 ), // obj
-    .PROM_START(    MCU_PROM ), // PCM MCU
-    .SWAB      ( 1           )
+    .HEADER    ( 32        ),
+    .BA1_START ( BA1_START ), // sound
+    .BA2_START ( BA2_START ), // tiles
+    .BA3_START ( BA3_START ), // obj
+    .PROM_START( MCU_PROM  ), // PCM MCU
+    .SWAB      ( 1         )
 ) u_dwnld(
     .clk          ( clk            ),
     .downloading  ( downloading    ),

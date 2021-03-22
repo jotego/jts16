@@ -5,6 +5,10 @@ OUTDIR=mra
 mkdir -p $OUTDIR
 mkdir -p $OUTDIR/_alt
 
+AUXTMP=/tmp/$RANDOM$RANDOM
+jtmacros.awk target=mist mode=bash ../hdl/jts16.def|grep _START > $AUXTMP
+source $AUXTMP
+
 function s16a_mra {
     NAME=$1
     FOLDER=$2
@@ -17,13 +21,13 @@ function s16a_mra {
         -header-dev 0x10 fd1089a=1 fd1089b=2 \
         -setword maincpu 16 reverse \
         -setword sprites 16 reverse \
-        -len maincpu   0x40000 \
         -ghost n7751 0x400 \
         -ghost mcu   0x1000 \
         -ghost maincpu:key 0x2000 \
-        -start gfx1        0x088000 \
-        -start sprites     0x100000 \
-        -start mcu         0x180000 \
+        -start soundcpu    $BA1_START \
+        -start gfx1        $BA2_START \
+        -start sprites     $BA3_START \
+        -start mcu         $MCU_START \
         -start maincpu:key 0x181000 \
         -start n7751       0x184000 \
         -start fd1089      0x186000 \
