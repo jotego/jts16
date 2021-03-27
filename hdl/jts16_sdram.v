@@ -141,18 +141,22 @@ localparam [24:0] BA1_START  = `BA1_START,
                   KEY_PROM   = `MAINKEY_START;
 /* verilator lint_on WIDTH */
 
-wire [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
+reg  [14:0] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire        xram_cs;
 wire        prom_we;
 
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 
 assign refresh_en = LVBL;
-assign xram_addr  = { ram_cs, main_addr[14:1] }; // RAM is mapped up
 assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading;
 assign n7751_prom = prom_we && ioctl_addr[15:10]==N7751_PROM[15:10];
+
+always @(*) begin
+    xram_addr = { ram_cs, main_addr[14:1] }; // RAM is mapped up
+    if( ram_cs ) xram_addr[13]=0; // only 16kB for RAM
+end
 
 jtframe_dwnld #(
     .HEADER    ( 32        ),
