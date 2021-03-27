@@ -80,7 +80,7 @@ always @(posedge clk, posedge rst) begin
         dr_prio   <= 0;
         dr_pal    <= 0;
     end else begin
-        if( idx<5 ) idx <= idx + 3'd1;
+        if( idx<7 ) idx <= idx==4 ? 7 : (idx + 3'd1); // 7 is the scratch location
         if( !stop ) begin
             st <= st+3'd1;
         end
