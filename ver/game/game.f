@@ -33,3 +33,6 @@
 # 68000
 # ../../modules/jtframe/hdl/cpu/jtframe_68kdma.v
 ../../modules/jtframe/hdl/cpu/jtframe_68kramcs.v
+
+# 8255
+../../modules/jt8255/hdl/jt8255.v

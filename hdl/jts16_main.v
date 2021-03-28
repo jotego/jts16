@@ -46,8 +46,8 @@ module jts16_main(
     output             RnW,
     output      [12:1] cpu_addr,
     // Sound control
-    output reg  [ 7:0] snd_latch,
-    output reg         snd_irqn,
+    output      [ 7:0] snd_latch,
+    output             snd_irqn,
     output             sound_en,
     input              snd_ack,
     // cabinet I/O
@@ -81,8 +81,6 @@ wire        UDSn, LDSn;
 
 reg         io_cs, wdog_cs,
             pre_ram_cs, pre_vram_cs;
-
-reg  [ 7:0] sw_8255;    // status word of i8255
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -146,46 +144,35 @@ jtframe_68kramcs u_ramcs(
 // cabinet input
 reg [15:0] cab_dout;
 reg [ 7:0] ppi_b;
+reg        ppi_cs;
+
+wire [7:0] ppi_dout, ppic_din, ppic_dout, ppib_dout;
+
+assign snd_irqn    = ppic_dout[7];
+assign ppic_din[6] = snd_ack;
 
 function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
 endfunction
 
-assign { flip, sound_en, video_en } = { ppi_b[7], ~ppi_b[5], ppi_b[4] };
+//assign { flip, sound_en, video_en } = { ppib_dout[7], ~ppib_dout[5], ppib_dout[4] };
+assign flip = ppib_dout[7];
+assign sound_en = 1;
+assign video_en = 1;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        snd_latch <= 8'hff;
-        snd_irqn  <= 1;
         ppi_b     <= 8'hff;
-        sw_8255   <= 8'h9b;
         cab_dout  <= 8'hff;
+        ppi_cs    <= 0;
     end else  begin
-        if( snd_ack )
-            snd_irqn <= 1;
+        ppi_cs <= 0;
         if(io_cs) case( A[13:12] )
             default: cab_dout <= 8'hff;
-            2'd0: // 8255 (fake implementation)
-                case( A[2:1] )
-                    2'd0: begin // port A
-                        if( !LDSWn ) begin
-                            snd_latch <= cpu_dout[7:0];
-                            snd_irqn  <= 0;
-                        end
-                        cab_dout <= snd_latch;
-                    end
-                    2'd1: begin // port B
-                        if( !LDSWn ) ppi_b <= cpu_dout;
-                        cab_dout <= ppi_b;
-                    end
-                    2'd2: begin // port C
-                        cab_dout <= 8'hff;
-                    end
-                    2'd3: begin
-                        if( !LDSWn ) sw_8255  <= cpu_dout[7:0];
-                        cab_dout <= sw_8255;
-                    end
-                endcase
+            2'd0: begin // 8255 (fake implementation)
+                ppi_cs   <= 1;
+                cab_dout <= ppi_dout;
+            end
             2'd1:
                 case( A[2:1] )
                     2'd0: cab_dout <= { 2'b11, start_button, service, 1'b1, coin_input };
@@ -198,6 +185,28 @@ always @(posedge clk, posedge rst) begin
         endcase
     end
 end
+
+jt8255 u_8255(
+    .rst       ( rst        ),
+    .clk       ( clk        ),
+
+    // CPU interface
+    .addr      ( A[2:1]     ),
+    .din       ( cpu_dout   ),
+    .dout      ( ppi_dout   ),
+    .rdn       ( ~RnW       ),
+    .wrn       ( LDSWn      ),
+    .csn       ( ~ppi_cs    ),
+
+    // External pins to peripherals
+    .porta_din ( 8'hFF      ),
+    .portb_din ( 8'hFF      ),
+    .portc_din ( ppic_din   ),
+
+    .porta_dout( snd_latch  ),
+    .portb_dout( ppib_dout  ),
+    .portc_dout( ppic_dout  )
+);
 
 // Data bus input
 reg  [15:0] cpu_din;

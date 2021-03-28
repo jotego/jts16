@@ -54,6 +54,9 @@ set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) ../modu
 ######################
 ### Sound
 
+# JT8255
+set_global_assignment -name QIP_FILE [file join $::quartus(qip_path) ../modules/jt8255/hdl/jt8255.qip     ]
+
 # JT51 (YM2151)
 set_global_assignment -name QIP_FILE [file join $::quartus(qip_path) ../modules/jt51/hdl/jt51.qip     ]
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) ../modules/jtframe/hdl/sound/jtframe_mixer.v ]
