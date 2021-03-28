@@ -193,7 +193,7 @@ jt8255 u_8255(
 
     // CPU interface
     .addr      ( A[2:1]     ),
-    .din       ( cpu_dout   ),
+    .din       ( cpu_dout[7:0] ),
     .dout      ( ppi_dout   ),
     .rdn       ( ~RnW       ),
     .wrn       ( LDSWn      ),
