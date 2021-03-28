@@ -142,7 +142,7 @@ jtframe_68kramcs u_ramcs(
 );
 
 // cabinet input
-reg [15:0] cab_dout;
+reg [ 7:0] cab_dout;
 reg [ 7:0] ppi_b;
 reg        ppi_cs;
 
@@ -166,7 +166,8 @@ always @(posedge clk, posedge rst) begin
         cab_dout  <= 8'hff;
         ppi_cs    <= 0;
     end else  begin
-        ppi_cs <= 0;
+        ppi_cs   <= 0;
+        cab_dout <= 8'hff;
         if(io_cs) case( A[13:12] )
             default: cab_dout <= 8'hff;
             2'd0: begin // 8255 (fake implementation)
@@ -178,7 +179,7 @@ always @(posedge clk, posedge rst) begin
                     2'd0: cab_dout <= { 2'b11, start_button, service, 1'b1, coin_input };
                     2'd1: cab_dout <= {sort_joy(joystick1)};
                     2'd3: cab_dout <= {sort_joy(joystick2)};
-                    default: cab_dout <= ~0;
+                    default: cab_dout <= 8'hff;
                 endcase
             2'd2:
                 cab_dout <= { A[1] ? dipsw_b : dipsw_a };
