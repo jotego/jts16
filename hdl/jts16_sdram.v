@@ -29,7 +29,7 @@ module jts16_sdram(
     input           ram_cs,
     input    [17:1] main_addr,
     output   [15:0] main_data,
-    output   [15:0] ram_data,
+    output reg  [15:0] ram_data,
     output          main_ok,
     output          ram_ok,
     input    [ 1:0] dsn,
@@ -142,6 +142,7 @@ localparam [24:0] BA1_START  = `BA1_START,
 /* verilator lint_on WIDTH */
 
 reg  [15:1] xram_addr;  // 32 kB VRAM + 16kB RAM
+wire [15:0] xram_data;
 wire        xram_cs;
 wire        prom_we;
 
@@ -156,6 +157,12 @@ assign n7751_prom = prom_we && ioctl_addr[15:10]==N7751_PROM[15:10];
 always @(*) begin
     xram_addr = { ram_cs, main_addr[14:1] }; // RAM is mapped up
     if( ram_cs ) xram_addr[14]=0; // only 16kB for RAM
+    `ifdef SHINOBI_BONUS
+    if( ram_cs && xram_addr[13:1]==13'hbc0 )
+        ram_data=16'h5;
+    else
+    `endif
+        ram_data=xram_data;
 end
 
 jtframe_dwnld #(
@@ -213,7 +220,7 @@ jtframe_ram_4slots #(
     .slot3_addr ( map2_addr ),
 
     //  output data
-    .slot0_dout ( ram_data  ),
+    .slot0_dout ( xram_data ),
     .slot1_dout ( main_data ),
     .slot2_dout ( map1_data ),
     .slot3_dout ( map2_data ),
