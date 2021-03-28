@@ -21,7 +21,7 @@ module jts16_obj_scan(
     input              clk,
 
     // Obj table
-    output     [10:0]  tbl_addr,
+    output     [10:1]  tbl_addr,
     input      [15:0]  tbl_dout,
     output     [15:0]  tbl_din,
     output reg         tbl_we,
@@ -42,7 +42,7 @@ module jts16_obj_scan(
 
 parameter [8:0] PXL_DLY=8;
 
-reg  [7:0] cur_obj;  // current object
+reg  [6:0] cur_obj;  // current object
 reg  [2:0] idx;
 reg  [2:0] st;
 reg        first, stop;
@@ -148,10 +148,14 @@ always @(posedge clk, posedge rst) begin
                     dr_bank   <= bank;
                     dr_start  <= 1;
                     // next
-                    cur_obj <= cur_obj + 1'd1;
-                    idx     <= 0;
-                    st      <= 1;
-                    stop    <= 1;
+                    if( &cur_obj )
+                        st <= 0; // Done
+                    else begin
+                        cur_obj <= cur_obj + 1'd1;
+                        idx     <= 0;
+                        st      <= 1;
+                        stop    <= 1;
+                    end
                 end else begin
                     if(!hstart) st <= 7;
                 end

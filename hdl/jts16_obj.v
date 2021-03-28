@@ -23,7 +23,7 @@ module jts16_obj(
 
     // CPU interface
     input              cpu_obj_cs,
-    input      [11:1]  cpu_addr,
+    input      [10:1]  cpu_addr,
     input      [15:0]  cpu_dout,
     input      [ 1:0]  dsn,
     output     [15:0]  cpu_din,
@@ -45,7 +45,7 @@ module jts16_obj(
 parameter [8:0] PXL_DLY=8;
 
 // Object scan
-wire [11:1] tbl_addr;
+wire [10:1] tbl_addr;
 wire [15:0] tbl_din, tbl_dout;
 wire        tbl_we;
 

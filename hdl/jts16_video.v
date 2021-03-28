@@ -236,7 +236,7 @@ jts16_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
 
     // CPU interface
     .cpu_obj_cs( objram_cs      ),
-    .cpu_addr  ( cpu_addr[11:1] ),
+    .cpu_addr  ( cpu_addr[10:1] ),
     .cpu_dout  ( cpu_dout       ),
     .dsn       ( dsn            ),
     .cpu_din   ( obj_dout       ),

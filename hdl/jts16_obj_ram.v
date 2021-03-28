@@ -22,13 +22,13 @@ module jts16_obj_ram(
 
     // CPU interface
     input              obj_cs,
-    input      [11:1]  cpu_addr,
+    input      [10:1]  cpu_addr,
     input      [15:0]  cpu_dout,
     input      [ 1:0]  dsn,
     output     [15:0]  cpu_din,
 
     // Object scan
-    input      [11:1]  tbl_addr,
+    input      [10:1]  tbl_addr,
     output     [15:0]  tbl_dout,
     input              tbl_we,
     input      [15:0]  tbl_din
@@ -37,7 +37,7 @@ module jts16_obj_ram(
 wire [ 1:0] cpu_we = ~dsn & {2{obj_cs}};
 
 jtframe_dual_ram16 #(
-    .aw(11),
+    .aw(10),
     .simfile_lo("obj_lo.bin"),
     .simfile_hi("obj_hi.bin")
 ) u_ram(
