@@ -106,16 +106,16 @@ always @(posedge clk, posedge rst) begin
             //rom_addr  <= 0;
     end else begin
         if( !ASn && BGACKn ) begin
-            rom_cs    <= A[23:22]==0;                   // 00-03
-            char_cs   <= A[23:22]==1 && A[18:16]==1;    // 41
+            rom_cs    <= A[23:22]==0 && !A[18];         // 00-03
+            char_cs   <= A[22] && A[18:16]==1;    // 41
             //if( !A[23] ) rom_addr <= A[17:1];
-            objram_cs <= A[23:22]==1 && A[18:16]==4;    // 44
-            pal_cs    <= A[23:22]==2 && A[18:16]==4;    // 84
-            io_cs     <= A[23:22]==3 && A[18:16]==4;    // c4
+            objram_cs <= A[23:22]==1 && A[18];    // 44
+            pal_cs    <= A[23:22]==2 && A[18];    // 84
+            io_cs     <= A[23:22]==3 && A[18:17]==2;    // c4
             wdog_cs   <= A[23:22]==3 && A[18:16]==6;    // c6
 
-            pre_vram_cs <= A[23:22]==1 && A[18:16]==0;    // 40
-            pre_ram_cs  <= A[23:22]==3 && A[18:16]==7;    // c7
+            pre_vram_cs <= A[22] && A[18:16]==0;        // 40
+            pre_ram_cs  <= A[23:22]==3 && A[18:16]==7;  // c7
         end else begin
             rom_cs    <= 0;
             char_cs   <= 0;
