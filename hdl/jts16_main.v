@@ -247,7 +247,7 @@ always @(posedge clk, posedge rst) begin
 end
 
 wire DTACKn;
-wire bus_cs   = pal_cs | char_cs | pre_vram_cs | pre_ram_cs | rom_cs;
+wire bus_cs   = pal_cs | char_cs | pre_vram_cs | pre_ram_cs | rom_cs | objram_cs | io_cs;
 wire bus_busy = |{ rom_cs & ~rom_ok, (pre_ram_cs | pre_vram_cs) & ~ram_ok };
 
 jts16_dtack u_dtack(
