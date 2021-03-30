@@ -69,7 +69,7 @@ module jts16_main(
 );
 
 wire [23:1] A;
-wire        BERRn = 1'b1;
+wire        BERRn;
 
 `ifdef SIMULATION
 wire [23:0] A_full = {A,1'b0};
@@ -90,6 +90,8 @@ assign BRn   = 1;
 assign BGACKn= 1;
 assign cpu_addr = A[12:1];
 assign rom_addr = A[17:1];
+assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
+                              && !io_cs  && !wdog_cs && pre_vram_cs && pre_ram_cs);
 
 // System 16A memory map
 always @(posedge clk, posedge rst) begin
