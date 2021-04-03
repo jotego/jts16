@@ -148,6 +148,10 @@ wire [ 7:0] pcm_data;
 wire        pcm_ok;
 wire        n7751_prom;
 
+// Protection
+wire        key_we, fd1089_we;
+wire        dec_en, dec_type;
+
 wire [ 7:0] snd_latch;
 wire        snd_irqn, snd_ack;
 
@@ -218,6 +222,13 @@ jts16_main u_main(
     .rom_addr    ( main_addr  ),
     .rom_data    ( main_data  ),
     .rom_ok      ( main_ok    ),
+    // Decoder configuration
+    .dec_en      ( dec_en     ),
+    .dec_type    ( dec_type   ),
+    .prog_addr   ( prog_addr  ),
+    .key_we      ( key_we     ),
+    .fd1089_we   ( fd1089_we  ),
+    .prog_data   ( prog_data  ),
     // DIP switches
     .dip_pause   ( dip_pause  ),
     .dip_test    ( dip_test   ),
@@ -348,6 +359,10 @@ jts16_sdram u_sdram(
     .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),
 
+    .dec_en      ( dec_en   ),
+    .dec_type    ( dec_type ),
+    .key_we      ( key_we   ),
+    .fd1089_we   ( fd1089_we),
     // Main CPU
     .main_cs    ( main_cs   ),
     .vram_cs    ( vram_cs   ),

@@ -23,6 +23,10 @@ module jts16_sdram(
     input           LVBL,
     input    [ 8:0] vrender,
 
+    // Encryption
+    output          key_we,
+    output          fd1089_we,
+
     // Main CPU
     input           main_cs,
     input           vram_cs,
@@ -46,6 +50,8 @@ module jts16_sdram(
     output          n7751_prom,
 
     // ADPCM ROM
+    output reg      dec_en,
+    output reg      dec_type,
     input    [16:0] pcm_addr,
     input           pcm_cs,
     output   [ 7:0] pcm_data,
@@ -138,13 +144,14 @@ localparam [24:0] BA1_START  = `BA1_START,
                   BA3_START  = `BA3_START,
                   MCU_PROM   = `MCU_START,
                   N7751_PROM = `N7751_START,
-                  KEY_PROM   = `MAINKEY_START;
+                  KEY_PROM   = `MAINKEY_START,
+                  FD_PROM    = `FD1089_START;
 /* verilator lint_on WIDTH */
 
 reg  [15:1] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire [15:0] xram_data;
 wire        xram_cs;
-wire        prom_we;
+wire        prom_we, header;
 
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 
@@ -153,6 +160,8 @@ assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading;
 assign n7751_prom = prom_we && ioctl_addr[15:10]==N7751_PROM[15:10];
+assign key_we     = prom_we && ioctl_addr[15:10]==KEY_PROM[15:10];
+assign fd1089_we  = prom_we && ioctl_addr[15:10]==FD_PROM[15:10];
 
 always @(*) begin
     xram_addr = { ram_cs, main_addr[14:1] }; // RAM is mapped up
@@ -163,6 +172,13 @@ always @(*) begin
     else
     `endif
         ram_data=xram_data;
+end
+
+always @(posedge clk) begin
+    if( header && ioctl_wr && ioctl_addr[4:0]==5'h10 ) begin
+        dec_en   <= |ioctl_data[1:0];
+        dec_type <= ioctl_data[1];
+    end
 end
 
 jtframe_dwnld #(
@@ -185,7 +201,7 @@ jtframe_dwnld #(
     .prog_rd      ( prog_rd        ),
     .prog_ba      ( prog_ba        ),
     .prom_we      ( prom_we        ),
-    .header       (                ),
+    .header       ( header         ),
     .sdram_ack    ( prog_ack       )
 );
 
