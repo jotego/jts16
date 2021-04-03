@@ -4,7 +4,7 @@ SEGA System 16 compatible verilog core for FPGA by Jose Tejada (jotego).
 
 # Supported Games
 
-As of 2nd of April 2021, only unprotected, System 16A games that don't use the i8751 microcontroller will work. The only game that has been throughfully tested is Shinobi.
+As of 2nd of April 2021, only unprotected, System 16A games that don't use the i8751 microcontroller will work. The only game that has been thoroughly tested is Shinobi.
 
 Some of the features needed for the rest of the games are already implemented but I still haven't hooked up all the elements together.
 

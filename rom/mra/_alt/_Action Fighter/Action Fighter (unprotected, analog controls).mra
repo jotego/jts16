@@ -1,17 +1,17 @@
-<!--          FPGA compatible core of arcade hardware by Jotego
+<!--          FPGA compatible core for Sega arcade hardware by Jotego
 
               This core is available for hardware compatible with MiST and MiSTer
               Other FPGA systems may be supported by the time you read this.
               This work is not mantained by the MiSTer project. Please contact the
               core author for issues and updates.
 
-              (c) Jose Tejada, 2020. Please support the author
+              (c) Jose Tejada, 2021. Please support the author
               Patreon: https://patreon.com/topapate
               Paypal:  https://paypal.me/topapate
 
               The author does not endorse or participate in illegal distribution
               of copyrighted material. This work can be used with legally
-              obtained ROM dumps or with compatible homebrew software
+              obtained ROM dumps or with compatible homebrew software.
 
               This file license is GNU GPLv2.
               You can read the whole license file in
@@ -24,7 +24,6 @@
     <name>Action Fighter (unprotected, analog controls)</name>
     <setname>afighterb</setname>
     <rbf>jts16</rbf>
-    <mraversion>1.0</mraversion>
     <mameversion>0229</mameversion>
     <year>1986</year>
     <manufacturer>Sega</manufacturer>
@@ -35,7 +34,7 @@
     <rom index="0" zip="afighterb.zip|afighter.zip" type="merged" md5="None">
         <part>
         04 00 00 00 08 80 10 00 
-        18 00 18 10 18 40 18 44 
+        18 00 18 20 18 40 18 44 
         00 00 00 00 00 00 00 00 
         00 00 00 00 00 00 00 00 
         </part>
@@ -87,9 +86,9 @@
         <part repeat="0x10000"> FF </part>
         <!-- mcu - starts at 0x180000 -->
         <part repeat="0x1000"> FF </part>
-        <!-- maincpu:key - starts at 0x181000 -->
-        <part repeat="0x2000"> FF </part>
         <part repeat="0x1000"> FF </part>
+        <!-- maincpu:key - starts at 0x182000 -->
+        <part repeat="0x2000"> FF </part>
         <!-- n7751 - starts at 0x184000 -->
         <part repeat="0x400"> FF </part>
         <!-- Total 0x184400 bytes - 1553 kBytes -->
