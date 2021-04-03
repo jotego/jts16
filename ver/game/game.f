@@ -14,6 +14,7 @@
 ../../hdl/jts16_dtack.v
 ../../hdl/jts16_snd.v
 ../../hdl/jts16_pcm.v
+../../hdl/jts16_fd1089.v
 
 ../../modules/jtframe/hdl/jtframe_sh.v
 ../../modules/jtframe/hdl/jtframe_ff.v
