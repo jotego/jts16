@@ -159,9 +159,9 @@ assign refresh_en = LVBL;
 assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading;
-assign n7751_prom = prom_we && ioctl_addr[15:10]==N7751_PROM[15:10];
-assign key_we     = prom_we && ioctl_addr[15:10]==KEY_PROM[15:10];
-assign fd1089_we  = prom_we && ioctl_addr[15:10]==FD_PROM[15:10];
+assign n7751_prom = prom_we && prog_addr[21:10]==N7751_PROM[21:10];
+assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM  [21:13];
+assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM   [21: 8];
 
 always @(*) begin
     xram_addr = { ram_cs, main_addr[14:1] }; // RAM is mapped up
