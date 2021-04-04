@@ -153,7 +153,7 @@ always @(*) begin
 end
 
 
-always @(shkey, op_n) begin
+always @(*) begin
     bypass = shkey==0;
     key = shkey;
     // unshuffle the key
@@ -187,7 +187,7 @@ always @(shkey, op_n) begin
     end
 end
 
-always @(key, op_n) begin
+always @(*) begin
     // Second LUT address
     lut2_addr = second[ key[7:4] ];
     if( key[3] ) lut2_addr[0] = ~lut2_addr[0];
