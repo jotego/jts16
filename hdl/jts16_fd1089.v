@@ -126,7 +126,7 @@ assign ok_dly = dec_en ? ok_latch : rom_ok;
 
 always @(posedge clk) ok_latch <= rom_ok;
 
-always @(*) begin
+always @(addr,op_n,enc,dec_type,dec_en,bypass,val_a,val_b) begin
     // LUT Address
     lut_a = {
         op_n,
@@ -153,7 +153,7 @@ always @(*) begin
 end
 
 
-always @(*) begin
+always @(shkey,op_n) begin
     bypass = shkey==0;
     key = shkey;
     // unshuffle the key
@@ -187,7 +187,7 @@ always @(*) begin
     end
 end
 
-always @(*) begin
+always @(key,encbyte,op_n,second) begin
     // Second LUT address
     lut2_addr = second[ key[7:4] ];
     if( key[3] ) lut2_addr[0] = ~lut2_addr[0];
@@ -199,7 +199,7 @@ always @(*) begin
 end
 
 // FD1089A variant
-always @(*) begin
+always @(preval,key,op_n) begin
     family = {1'b0,key[2:0]};
     if( op_n ) begin
         family[3] = family[3] ^(~key[6] & key[2]);
@@ -224,7 +224,7 @@ always @(*) begin
 end
 
 // FD1089B variant
-always @(*) begin
+always @(preval,key,op_n) begin
     lsbxor= 0;
     lastb = preval;
     if( op_n ) begin
