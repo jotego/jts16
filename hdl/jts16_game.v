@@ -225,10 +225,10 @@ jts16_main u_main(
     // Decoder configuration
     .dec_en      ( dec_en     ),
     .dec_type    ( dec_type   ),
-    .prog_addr   ( prog_addr  ),
     .key_we      ( key_we     ),
     .fd1089_we   ( fd1089_we  ),
-    .prog_data   ( prog_data  ),
+    .prog_addr   ( prog_addr[12:0] ),
+    .prog_data   ( prog_data[ 7:0] ),
     // DIP switches
     .dip_pause   ( dip_pause  ),
     .dip_test    ( dip_test   ),
@@ -287,6 +287,11 @@ jts16_snd u_sound(
     .sample     ( sample    ),
     .peak       ( game_led  )
 );
+`else
+assign snd_cs=0;
+assign pcm_cs=0;
+assign snd_addr=0;
+assign pcm_addr=0;
 `endif
 
 jts16_video u_video(
