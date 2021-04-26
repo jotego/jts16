@@ -17,6 +17,7 @@ function s16a_mra {
     mkdir -p "$OUTDIR/$ALTFOLDER"
     mame2dip $NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder "$ALTFOLDER" \
         -skip_desc 16b -nobootlegs \
+        -skip_desc Taito \
         -header 32 0x0 \
         -header-dev 0x10 fd1089a=1 fd1089b=2 \
         -setword maincpu 16 reverse \
@@ -40,21 +41,21 @@ function s16a_mra {
 
 }
 
-s16a_mra wb3       "Wonder Boy 3" "Shot,Jump,Button 3"
+s16a_mra wb3       "Wonder Boy 3" "Shot,Jump,-"
 s16a_mra shinobi   "Shinobi" "Shuriken,Jump,Magic"
-s16a_mra alexkidd  "Alex Kidd" "Jump,Shot,Other"
-s16a_mra sdi       "SDI" "Fire"
+s16a_mra alexkidd  "Alex Kidd" "Jump/Swim,Shot,-"
+s16a_mra sdi       "SDI" "Shot"
 s16a_mra sjryuko   "Sukeban" "None"
-s16a_mra mjleague  "Major League" "None"
-s16a_mra quartet2a "Quartet" "Jump,Shot,Other"
-s16a_mra afighter  "Action Fighter" "Shot,Button 2,Button 3"
-s16a_mra fantzone  "Fantasy Zone" "Shot,Bomb,Button 3"
-s16a_mra tetris    "Tetris" "Turn,Turn,Turn"
-s16a_mra aliensyn  "Alien Syndrome" "Shot,Button 2,Button 3"
-s16a_mra bodyslam  "Body Slam" "Button 1,Button 2,Button 3"
+s16a_mra mjleague  "Major League" "Open Stance,Curb/Shoot/Fork,Close Stance,Pinch Hitter/Sliding/Runner"
+s16a_mra quartet   "Quartet" "Jump,Shot,-"
+s16a_mra afighter  "Action Fighter" "Shot,-,-"
+s16a_mra fantzone  "Fantasy Zone" "Shot,Bomb,-"
+s16a_mra tetris    "Tetris" "Rotate,Rotate,Rotate"
+s16a_mra aliensyn  "Alien Syndrome" "Shot,-,-"
+s16a_mra bodyslam  "Body Slam" "Punch/Throw/Attack,Kick/Tag/Pin,-"
 s16a_mra aceattac  "Ace Attack" "None"
-s16a_mra passsht   "Passing Shot" "Button 1,Button 2,Button 3, Button 4"
-s16a_mra timescan  "Time Scanner" "Button 1,Button 2,Button 3"
+s16a_mra passsht   "Passing Shot" "Flat,Slice,Lob,Top Spin"
+s16a_mra timescan  "Time Scanner" "Left Flipper/Ball Start,Right Flipper/Lane Shift,-"
 
 scp -r mra/* root@MiSTer.home:/media/fat/_S16
 
