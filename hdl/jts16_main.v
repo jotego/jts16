@@ -326,41 +326,11 @@ jts16_fd1089 u_alt(
 );
 `endif
 
-`ifdef USEJ68
-jtframe_j68 u_cpu(
+jtframe_m68k u_cpu(
     .clk        ( clk         ),
     .rst        ( rst         ),
-
-    .eRWn       ( RnW         ),
-    .LDSn       ( LDSn        ),
-    .UDSn       ( UDSn        ),
-    .ASn        ( ASn         ),
-
-
-    .DTACKn     ( DTACKn      ),
-    .IPL0n      ( 1'b1        ),
-    .IPL1n      ( 1'b1        ),
-    .IPL2n      ( irqn        ), // VBLANK
-
-    .eab        ( A           ),
-    .iEdb       ( cpu_din     ),
-    .oEdb       ( cpu_dout    ),
-
-    .BRn        ( BRn         ),
-    .BGACKn     ( BGACKn      ),
-    .BGn        ( BGn         ),
-
-    .FC0        ( FC[0]       ),
-    .FC1        ( FC[1]       ),
-    .FC2        ( FC[2]       )
-);
-`else
-fx68k u_cpu(
-    .clk        ( clk         ),
-    .extReset   ( rst         ),
-    .pwrUp      ( rst         ),
-    .enPhi1     ( cpu_cen     ),
-    .enPhi2     ( cpu_cenb    ),
+    .cpu_cen    ( cpu_cen     ),
+    .cpu_cenb   ( cpu_cenb    ),
 
     // Buses
     .eab        ( A           ),
@@ -373,9 +343,7 @@ fx68k u_cpu(
     .UDSn       ( UDSn        ),
     .ASn        ( ASn         ),
     .VPAn       ( inta_n      ),
-    .FC0        ( FC[0]       ),
-    .FC1        ( FC[1]       ),
-    .FC2        ( FC[2]       ),
+    .FC         ( FC          ),
 
     .BERRn      ( BERRn       ),
     // Bus arbitrion
@@ -385,15 +353,7 @@ fx68k u_cpu(
     .BGn        ( BGn         ),
 
     .DTACKn     ( DTACKn      ),
-    .IPL0n      ( 1'b1        ),
-    .IPL1n      ( 1'b1        ),
-    .IPL2n      ( irqn        ), // VBLANK
-
-    // Unused
-    .oRESETn    (             ),
-    .oHALTEDn   (             ),
-    .VMAn       (             ),
-    .E          (             )
+    .IPLn       ( { irqn, 2'b11 } ) // VBLANK
 );
-`endif
+
 endmodule
