@@ -68,6 +68,7 @@ if which ncverilog >/dev/null; then
     HEXDUMP=
 fi
 
+rm -f sdram_bank?.*
 jtsim_sdram $HEXDUMP -header 32 \
     -banks $BA1_START $BA2_START $BA3_START \
     -stop $MCU_START \
