@@ -9,7 +9,7 @@ SIMULATOR=-verilator
 SDRAM_SNAP=
 
 AUXTMP=/tmp/$RANDOM$RANDOM
-jtmacros.awk target=mist mode=bash ../../hdl/jts16.def|grep _START > $AUXTMP
+jtcfgstr -target=mist -output=bash -def ../../hdl/jts16.def |grep _START > $AUXTMP
 source $AUXTMP
 
 while [ $# -gt 0 ]; do

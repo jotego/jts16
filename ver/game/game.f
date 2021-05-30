@@ -29,7 +29,7 @@
 ../../modules/jtframe/hdl/ram/jtframe_obj_buffer.v
 ../../modules/jtframe/hdl/sound/jtframe_mixer.v
 ../../modules/jtframe/hdl/sdram/jtframe_dwnld.v
--F ../../modules/jtframe/hdl/sdram/jtframe_sdram_bank.f
+-F ../../modules/jtframe/hdl/sdram/jtframe_sdram64.f
 
 # 68000
 # ../../modules/jtframe/hdl/cpu/jtframe_68kdma.v

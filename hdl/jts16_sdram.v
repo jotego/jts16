@@ -88,10 +88,10 @@ module jts16_sdram(
     output  [15:0]  obj_data,
 
     // Bank 0: allows R/W
-    output   [22:0] ba0_addr,
-    output   [22:0] ba1_addr,
-    output   [22:0] ba2_addr,
-    output   [22:0] ba3_addr,
+    output   [21:0] ba0_addr,
+    output   [21:0] ba1_addr,
+    output   [21:0] ba2_addr,
+    output   [21:0] ba3_addr,
     output   [ 3:0] ba_rd,
     output          ba_wr,
     output   [15:0] ba0_din,

@@ -39,10 +39,10 @@ module jts16_game(
     output          dwnld_busy,
 
     // Bank 0: allows R/W
-    output   [22:0] ba0_addr,
-    output   [22:0] ba1_addr,
-    output   [22:0] ba2_addr,
-    output   [22:0] ba3_addr,
+    output   [21:0] ba0_addr,
+    output   [21:0] ba1_addr,
+    output   [21:0] ba2_addr,
+    output   [21:0] ba3_addr,
     output   [ 3:0] ba_rd,
     output          ba_wr,
     output   [15:0] ba0_din,
@@ -55,12 +55,12 @@ module jts16_game(
     input    [15:0] data_read,
 
     // RAM/ROM LOAD
-    input   [25:0]  ioctl_addr,
+    input   [24:0]  ioctl_addr,
     input   [ 7:0]  ioctl_data,
     input           ioctl_wr,
     output  [ 7:0]  ioctl_data2sd,
     input           ioctl_ram, // 0 - ROM, 1 - RAM(EEPROM)
-    output  [22:0]  prog_addr,
+    output  [21:0]  prog_addr,
     output  [15:0]  prog_data,
     output  [ 1:0]  prog_mask,
     output  [ 1:0]  prog_ba,
