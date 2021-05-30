@@ -34,6 +34,7 @@ $JTFRAME/hdl/sdram/jtframe_dwnld.v
 # 68000
 # $JTFRAME/hdl/cpu/jtframe_68kdma.v
 $JTFRAME/hdl/cpu/jtframe_68kramcs.v
+$JTFRAME/hdl/cpu/jtframe_m68k.v
 
 # J68
 $JTFRAME/hdl/cpu/j68/*.v
