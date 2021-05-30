@@ -325,6 +325,36 @@ jts16_fd1089 u_alt(
     .dec        ( dec_alt   )
 );
 `endif
+
+`ifdef USEJ68
+jtframe_j68 u_cpu(
+    .clk        ( clk         ),
+    .rst        ( rst         ),
+
+    .eRWn       ( RnW         ),
+    .LDSn       ( LDSn        ),
+    .UDSn       ( UDSn        ),
+    .ASn        ( ASn         ),
+
+
+    .DTACKn     ( DTACKn      ),
+    .IPL0n      ( 1'b1        ),
+    .IPL1n      ( 1'b1        ),
+    .IPL2n      ( irqn        ), // VBLANK
+
+    .eab        ( A           ),
+    .iEdb       ( cpu_din     ),
+    .oEdb       ( cpu_dout    ),
+
+    .BRn        ( BRn         ),
+    .BGACKn     ( BGACKn      ),
+    .BGn        ( BGn         ),
+
+    .FC0        ( FC[0]       ),
+    .FC1        ( FC[1]       ),
+    .FC2        ( FC[2]       )
+);
+`else
 fx68k u_cpu(
     .clk        ( clk         ),
     .extReset   ( rst         ),
@@ -365,5 +395,5 @@ fx68k u_cpu(
     .VMAn       (             ),
     .E          (             )
 );
-
+`endif
 endmodule
