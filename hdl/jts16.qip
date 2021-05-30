@@ -41,6 +41,7 @@ set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) ../modu
 set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) ../modules/fx68k/fx68kAlu.sv                 ]
 set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) ../modules/fx68k/fx68k.sv                    ]
 set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) ../modules/fx68k/uaddrPla.sv                 ]
+set_global_assignment -name QIP_FILE [file join $::quartus(qip_path) ../modules/jtframe/hdl/cpu/j68/j68.qip   ]
 
 # Clocking
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) ../modules/jtframe/hdl/clocking/jtframe_frac_cen.v   ]
