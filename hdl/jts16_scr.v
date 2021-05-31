@@ -41,7 +41,8 @@ module jts16_scr(
     // Video signal
     input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
-    output     [10:0]  pxl        // 1 priority + 7 palette + 3 colour = 11
+    output     [10:0]  pxl,       // 1 priority + 7 palette + 3 colour = 11
+    input      [ 7:0]  debug_bus
 );
 
 parameter [9:0] PXL_DLY=0;
@@ -61,14 +62,23 @@ reg        hov, vov; // overflow bits
 
 reg       done, draw;
 reg [7:0] busy;
+reg       hsel;
+reg [9:0] hpage;
 
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 
 always @(*) begin
     {hov, hpos } = {1'b0, hscan } + ~{hscr[8], hscr[8:0] }+PXL_DLY;
+    hpage = {hov,hpos} +{{2{debug_bus[7]}},  debug_bus};
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
-    case( {vov, ~hov} )
+    //case( debug_bus[1:0] )
+    //    0: hsel = ~hov | ~hpos[8];
+    //    1: hsel =  hov |  hpos[8];
+    //    2: hsel =  hov | ~hpos[8];
+    //    3: hsel = ~hov |  hpos[8];
+    //endcase
+    case( {vov, ~hpage[9]} )
         2'b11: page = pages[14:12];
         2'b10: page = pages[10: 8];
         2'b01: page = pages[ 6: 4];

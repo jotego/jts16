@@ -85,7 +85,8 @@ module jts16_game(
     input           enable_psg,
     input           enable_fm,
     // Debug
-    input   [3:0]   gfx_en
+    input   [3:0]   gfx_en,
+    input   [7:0]   debug_bus
 );
 
 // clock enable signals
@@ -345,7 +346,8 @@ jts16_video u_video(
     .hstart     ( hstart    ),
     .red        ( red       ),
     .green      ( green     ),
-    .blue       ( blue      )
+    .blue       ( blue      ),
+    .debug_bus  ( debug_bus )
 );
 
 jts16_sdram u_sdram(

@@ -80,7 +80,8 @@ module jts16_video(
     output     [ 4:0]  blue,
 
     // Debug
-    input      [ 3:0]  gfx_en
+    input      [ 3:0]  gfx_en,
+    input      [ 7:0]  debug_bus
 );
 
 localparam [8:0] SCR_DLY=18;
@@ -200,7 +201,8 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
     // Video signal
     .vrender   ( vrender1       ),
     .hdump     ( hdump          ),
-    .pxl       ( scr1_pxl       )
+    .pxl       ( scr1_pxl       ),
+    .debug_bus ( debug_bus      )
 );
 
 jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
@@ -226,7 +228,8 @@ jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
     // Video signal
     .vrender   ( vrender1       ),
     .hdump     ( hdump          ),
-    .pxl       ( scr2_pxl       )
+    .pxl       ( scr2_pxl       ),
+    .debug_bus ( debug_bus      )
 );
 
 jts16_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
