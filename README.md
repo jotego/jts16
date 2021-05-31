@@ -8,6 +8,31 @@ As of 2nd of April 2021, only unprotected, System 16A games that don't use the i
 
 Some of the features needed for the rest of the games are already implemented but I still haven't hooked up all the elements together.
 
+Game           |  System     | Status
+---------------|-------------|----------
+Ace Attacker   | 1094        | Won't boot
+Action Fighter | 1089A       | J68 Won't boot / Fx68k boots
+Alex Kidd      | 16A         | Boots, problem with scroll during demo?
+Alyen Syndrome | 16B         | Won't boot
+Alyen Syndrome | 16A/1089A   | Boots, bad graphics
+Body Slam      | 8751        | Boots, bad graphics
+Phantasy Zone  |             | Seems ok
+Major League   |             | Seems ok
+Passing Shot   | 1094        | Won't boot
+Quartet        | 8751        | Boots, bad graphics
+Quartet 2      |             | Won't boot. "BAD IC" message
+SDI            | 1089B       | J68 Won't boot / Fx68k boots
+Shinobi        |             | Ok
+Sukeban        | 1089B       | Won't boot
+Sukeban        | 16A / 1089B | Boots, controls don't work. Missing graphics
+Tetris         | 1094        | Won't boot
+Time Scanner   | 16A         | Boots, controls missing
+Time Scanner   | 16B         | Won't boot
+Wonder Boy III | 16A / 1089A | Boots, scroll layer offset wrong
+Wonder Boy III | 16B         | Won't boot
+
+
+
 # Known Problems
 
 -If you win the bonus stage the game will halt

@@ -44,7 +44,7 @@ module jts16_scr(
     output     [10:0]  pxl        // 1 priority + 7 palette + 3 colour = 11
 );
 
-parameter       PXL_DLY=0;
+parameter [9:0] PXL_DLY=0;
 parameter [8:0] HB_END=9'h70;
 
 reg  [10:0] scan_addr;
@@ -65,7 +65,7 @@ reg [7:0] busy;
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hscan } + {1'd0, ~hscr[8:0] }+PXL_DLY;
+    {hov, hpos } = {1'b0, hscan } + ~{hscr[8], hscr[8:0] }+PXL_DLY;
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( {vov, ~hov} )
