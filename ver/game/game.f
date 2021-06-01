@@ -32,12 +32,7 @@ $JTFRAME/hdl/sdram/jtframe_dwnld.v
 -F $JTFRAME/hdl/sdram/jtframe_sdram64.f
 
 # 68000
-# $JTFRAME/hdl/cpu/jtframe_68kdma.v
-$JTFRAME/hdl/cpu/jtframe_68kramcs.v
-$JTFRAME/hdl/cpu/jtframe_m68k.v
-
-# J68
-$JTFRAME/hdl/cpu/j68/*.v
+-F $JTFRAME/hdl/cpu/jtframe_m68k.f
 
 # 8255
 ../../modules/jt8255/hdl/jt8255.v

@@ -16,6 +16,8 @@
     Version: 1.0
     Date: 16-3-2021 */
 
+`ifndef NOSOUND
+
 module jts16_pcm(
     input                rst,
     input                clk,
@@ -176,3 +178,5 @@ jtframe_ram #(.aw(8)) u_ram(
 );
 
 endmodule
+
+`endif

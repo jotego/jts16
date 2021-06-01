@@ -16,6 +16,8 @@
     Version: 1.0
     Date: 16-3-2021 */
 
+`ifndef NOSOUND
+
 module jts16_snd(
     input                rst,
     input                clk,
@@ -231,5 +233,6 @@ jtframe_pole #(.WS(8)) u_pole(
     .sout       ( pcm_snd   )
 );
 
-
 endmodule
+
+`endif

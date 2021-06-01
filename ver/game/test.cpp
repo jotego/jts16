@@ -69,7 +69,7 @@ int SDRAM::read_bank( char *bank, int addr ) {
     const int mask = 0x7f'ffff; // 8MB
     addr <<= 1;
     int v=0;
-    for( int k=3; k>=0; k-- ) {
+    for( int k=2; k>=0; k-- ) {
         v <<= 8;
         v |= bank[(addr+k)&mask]&0xff;
     }
@@ -77,37 +77,48 @@ int SDRAM::read_bank( char *bank, int addr ) {
 }
 
 void SDRAM::update() {
-    CData *ba_ack[4]   = { &dut.ba0_ack, &dut.ba1_ack, &dut.ba2_ack, &dut.ba3_ack  };
-    CData *ba_rdy[4]   = { &dut.ba0_rdy, &dut.ba1_rdy, &dut.ba2_rdy, &dut.ba3_rdy  };
-    unsigned ba_rd [4] = {  dut.ba0_rd,   dut.ba1_rd,   dut.ba2_rd,   dut.ba3_rd   };
-    unsigned ba_add[4] = {  dut.ba0_addr, dut.ba1_addr, dut.ba2_addr, dut.ba3_addr };
+    CData *ba_ack   = &dut.ba_ack;
+    CData *ba_rdy   = &dut.ba_rdy;
+    CData *ba_dst   = &dut.ba_dst;
+    unsigned ba_rd  = dut.ba_rd;
+    unsigned ba_add[4] = { dut.ba0_addr, dut.ba1_addr, dut.ba2_addr, dut.ba3_addr };
 
     if( dut.rst ) {
+        *ba_ack = 0;
+        *ba_rdy = 0;
         for( int k=0; k<4; k++ ) {
             //last_rd[k] = 0;
-            *ba_ack[k] = 0;
-            *ba_rdy[k] = 0;
             dly[k] = -1;
         }
         return;
     }
 
     bool dout=false;
+    *ba_dst = 0;
+    *ba_rdy = 0;
     for( int k=0; k<4; k++) {
-        if( dly[k] == 0 && !dout) {
+        // Data output at dly==1 and dly==0
+        if( dly[k] == 1 && !dout) {
             dut.data_read = read_bank( banks[k], ba_add[k] );
-            *ba_rdy[k] = 1;
+            *ba_dst |= 1<<k;
+            dout=true;
+        }
+        if( dly[k] == 0 && !dout) {
+            dut.data_read = read_bank( banks[k], ba_add[k]+1 );
+            *ba_rdy |= 1<<k;
             dly[k] = -1;
             dout=true;
             continue;
         }
 
-        if( ba_rd[k] && dly[k]<0) {
+        if( (ba_rd &(1<<k)) && dly[k]<0) {
             dly[k]    = 8;
-            *ba_rdy[k] = 0;
-            *ba_ack[k] = 1;
+            unsigned aux = *ba_rdy & ~(1<<k);
+            *ba_rdy = aux;
+            aux = *ba_ack | (1<<k);
+            *ba_ack = aux;
         } else {
-            if( dly[k]==7) *ba_ack[k] = 0;
+            if( dly[k]==7) *ba_ack = 0;
             if( dly[k]>0 ) --dly[k];
         }
     }
