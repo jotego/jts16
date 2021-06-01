@@ -78,11 +78,11 @@ always @(*) begin
     //    2: hsel =  hov | ~hpos[8];
     //    3: hsel = ~hov |  hpos[8];
     //endcase
-    case( {vov, ~hpage[9]} )
-        2'b11: page = pages[14:12];
-        2'b10: page = pages[10: 8];
-        2'b01: page = pages[ 6: 4];
-        2'b00: page = pages[ 2: 0];
+    case( {vov, hpage[9]} )
+        2'b10: page = pages[14:12]; // upper left
+        2'b11: page = pages[10: 8]; // upper right
+        2'b00: page = pages[ 6: 4]; // lower left
+        2'b01: page = pages[ 2: 0]; // lower right
     endcase
 end
 
