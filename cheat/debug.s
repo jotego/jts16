@@ -11,7 +11,7 @@
     load sa,0   ; SA = frame counter, modulo 60
     load sb,0
     load s0,1
-    output s0,a ; enable display
+    output s0,b ; enable display
     call CLS
 BEGIN:
     output s0,0x40
@@ -41,7 +41,9 @@ ISR:
 SCREEN:
     ; Show scroll data
     ; Scroll 1 pages
-    load  s0,0x44
+    load  s0,6
+    output s0,9 ; column
+    load  s0,2
     load  s3,1
     call  write_st16
     ; Scroll 1 Hpos
@@ -54,7 +56,9 @@ SCREEN:
     call  write_st16
 
     ; Scroll 2 pages
-    load  s0,0x54
+    load  s0,0x7
+    output s0,9 ; column
+    load  s0,2
     load  s3,3
     call  write_st16
     ; Scroll 2 Hpos
@@ -82,16 +86,20 @@ CLOSE_FRAME:
     ; s0 is updated to point to the next column
 write_st16:
     output s3,c
-    load s1,d
+    add s3,0   ; nop
+    add s3,0   ; nop
+    input s1,d
     call WRITE_HEX
     sub s3,1
     output s3,c
-    load s1,d
+    add s3,0   ; nop
+    add s3,0   ; nop
+    input s1,d
     call WRITE_HEX
     return
 
 
-    ; s0 screen address
+    ; s0 screen row address
     ; s1 number to write
     ; modifies s2
     ; s0 updated to point to the next column
@@ -122,17 +130,27 @@ WRITE_HEX4:
 .over10:
     add s2,23'd
 .write:
-    output s2,9
+    output s2,a
     return
 
+    ; clear screen
+    ; modifies s0,s1,s2
 CLS:
-    load s0,0
-    load s1,0
-.loop:
+    load s0,31
+    load s1,31
+    load s2,0
+.loop_row:
+    load s1,31
     output s0,8
+.loop_col:
     output s1,9
-    add s0,1
-    jump nc,.loop
+    output s2,a
+    sub s1,1
+    jump nc,.loop_col
+    sub s0,1
+    jump nc,.loop_row
+    return
+
 
     ; SDRAM address in s2-s0
     ; SDRAM data out in s4-s3

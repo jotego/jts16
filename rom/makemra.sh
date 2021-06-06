@@ -6,7 +6,7 @@ mkdir -p $OUTDIR
 mkdir -p $OUTDIR/_alt
 
 AUXTMP=/tmp/$RANDOM$RANDOM
-jtmacros.awk target=mist mode=bash ../hdl/jts16.def|grep _START > $AUXTMP
+jtcfgstr -target=mist -output=bash -def ../hdl/jts16.def|grep _START > $AUXTMP
 source $AUXTMP
 
 function s16a_mra {
@@ -36,7 +36,7 @@ function s16a_mra {
         -order maincpu soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
         -header-offset-bits 8 \
         -header-offset 0 soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
-        -corebuttons 4 -buttons "$BUTTONS"
+        -corebuttons 4 -buttons "$BUTTONS" -cheat
 
 }
 
@@ -56,6 +56,7 @@ s16a_mra aceattac  "Ace Attack" "None"
 s16a_mra passsht   "Passing Shot" "Button 1,Button 2,Button 3, Button 4"
 s16a_mra timescan  "Time Scanner" "Button 1,Button 2,Button 3"
 
+echo "Enter MiSTer's root password"
 scp -r mra/* root@MiSTer.home:/media/fat/_S16
 
 exit 0
