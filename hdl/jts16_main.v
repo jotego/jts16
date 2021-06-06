@@ -34,6 +34,8 @@ module jts16_main(
     input       [15:0] obj_dout,
     output             flip,
     output             video_en,
+    output             colscr_en,
+    output             rowscr_en,
     // RAM access
     output             ram_cs,
     output             vram_cs,
@@ -164,6 +166,8 @@ wire       op_n; // low for CPU OP requests
 
 assign op_n        = FC[1:0]!=2'b10;
 assign snd_irqn    = ppic_dout[7];
+assign colscr_en   = ppic_dout[2];
+assign rowscr_en   = ppic_dout[1];
 assign ppic_din[6] = snd_ack;
 
 function [7:0] sort_joy( input [7:0] joy_in );

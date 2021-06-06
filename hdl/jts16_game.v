@@ -86,7 +86,10 @@ module jts16_game(
     input           enable_fm,
     // Debug
     input   [3:0]   gfx_en,
-    input   [7:0]   debug_bus
+    input   [7:0]   debug_bus,
+    // status dump
+    input   [ 7:0]  st_addr,
+    output  [ 7:0]  st_dout
 );
 
 // clock enable signals
@@ -98,6 +101,7 @@ wire    cpu_cen, cpu_cenb,
 wire        HB, VB, LVBL;
 wire [ 8:0] vdump, vrender;
 wire        hstart;
+wire        colscr_en, rowscr_en;
 
 // SDRAM interface
 wire        main_cs, vram_cs, ram_cs;
@@ -188,6 +192,8 @@ jts16_main u_main(
     .obj_dout   ( obj_dout  ),
 
     .flip       ( flip      ),
+    .colscr_en  ( colscr_en ),
+    .rowscr_en  ( rowscr_en ),
     // Sound communication
     .snd_latch  ( snd_latch ),
     .snd_irqn   ( snd_irqn  ),
@@ -307,6 +313,9 @@ jts16_video u_video(
     .obj_dout   ( obj_dout  ),
 
     .flip       ( flip      ),
+    .colscr_en  ( colscr_en ),
+    .rowscr_en  ( rowscr_en ),
+
     // SDRAM interface
     .char_ok    ( char_ok   ),
     .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
@@ -347,7 +356,10 @@ jts16_video u_video(
     .red        ( red       ),
     .green      ( green     ),
     .blue       ( blue      ),
-    .debug_bus  ( debug_bus )
+    // debug
+    .debug_bus  ( debug_bus ),
+    .st_addr    ( st_addr   ),
+    .st_dout    ( st_dout   )
 );
 
 jts16_sdram u_sdram(

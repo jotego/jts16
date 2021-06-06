@@ -35,7 +35,11 @@ module jts16_mmr(
     output reg [15:0]  scr1_vpos,
 
     output reg [15:0]  scr2_hpos,
-    output reg [15:0]  scr2_vpos
+    output reg [15:0]  scr2_vpos,
+
+    // status dump
+    input      [ 7:0]  st_addr,
+    output reg [ 7:0]  st_dout
 );
 
 reg [15:0]  scr1_pages_flip, scr2_pages_flip,
@@ -82,5 +86,25 @@ always @(posedge clk) begin
         endcase
     end
 end
+
+`ifdef JTFRAME_CHEAT
+always @(posedge clk) begin
+    case( st_addr )
+        0:  st_dout <= scr1_pages_nofl[ 7:0];
+        1:  st_dout <= scr1_pages_nofl[15:8];
+        2:  st_dout <= scr2_pages_nofl[ 7:0];
+        3:  st_dout <= scr2_pages_nofl[15:8];
+        4:  st_dout <= scr1_vpos[ 7:0];
+        5:  st_dout <= scr1_vpos[15:8];
+        6:  st_dout <= scr2_vpos[ 7:0];
+        7:  st_dout <= scr2_vpos[15:8];
+        8:  st_dout <= scr1_hpos[ 7:0];
+        9:  st_dout <= scr1_hpos[15:8];
+        10: st_dout <= scr2_hpos[ 7:0];
+        11: st_dout <= scr2_hpos[15:8];
+        default: st_dout <= 0;
+    endcase
+end
+`endif
 
 endmodule

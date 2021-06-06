@@ -37,6 +37,8 @@ module jts16_video(
 
     // Other configuration
     input              flip,
+    input              colscr_en,
+    input              rowscr_en,
 
     // SDRAM interface
     input              char_ok,
@@ -81,7 +83,10 @@ module jts16_video(
 
     // Debug
     input      [ 3:0]  gfx_en,
-    input      [ 7:0]  debug_bus
+    input      [ 7:0]  debug_bus,
+    // status dump
+    input      [ 7:0]  st_addr,
+    output     [ 7:0]  st_dout
 );
 
 localparam [9:0] SCR_DLY=18;
@@ -152,7 +157,10 @@ jts16_mmr u_mmr(
     .scr1_hpos  ( scr1_hpos     ),
     .scr1_vpos  ( scr1_vpos     ),
     .scr2_hpos  ( scr2_hpos     ),
-    .scr2_vpos  ( scr2_vpos     )
+    .scr2_vpos  ( scr2_vpos     ),
+
+    .st_addr    ( st_addr       ),
+    .st_dout    ( st_dout       )
 );
 
 jts16_char u_char(
@@ -280,6 +288,7 @@ jts16_colmix u_colmix(
 
     .char_pxl  ( char_pxl       ),
     .scr1_pxl  ( scr1_pxl       ),
+    //.scr1_pxl  ( 11'd0       ),
     .scr2_pxl  ( scr2_pxl       ),
     .obj_pxl   ( obj_pxl        ),
 
