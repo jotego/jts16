@@ -63,7 +63,7 @@ SCREEN:
     call  write_st16
     ; Scroll 2 Hpos
     add   s0,2
-    load  s3,11
+    load  s3,11'd
     call  write_st16
     ; Scroll 2 Vpos
     add   s0,2
