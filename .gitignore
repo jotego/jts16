@@ -1,4 +1,12 @@
 *.xml
 *.rom
 *.fst
+*.zip
+*.log
+*.hex
+cheat/*.bin
+cheat/*.fmt
 history
+ver/game/*.f
+ver/game/*.bin
+ver/game/*.jpg

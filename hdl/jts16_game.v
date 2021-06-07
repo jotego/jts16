@@ -258,6 +258,8 @@ jts16_snd u_sound(
 
     .fxlevel    ( dip_fxlevel ),
     .sound_en   ( sound_en  ),
+    .enable_fm  ( enable_fm ),
+    .enable_psg ( enable_psg),
 
     .latch      ( snd_latch ),
     .irqn       ( snd_irqn  ),

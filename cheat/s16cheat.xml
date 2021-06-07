@@ -1,0 +1,7 @@
+<cheats>
+    <fantzone>
+        <dip name="Invincibility" bits="0" ids="No,Yes"/>
+        <dip name="Rapid Fire - Shot" bits="1" ids="No,Yes"/>
+        <dip name="Stage clear in 7 seconds Now!" bits="2" ids="No,Yes"/>
+    </fantzone>
+</cheats>

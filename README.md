@@ -17,13 +17,13 @@ Action Fighter | 1089A/16A   | Missing analog controls. Digital version ok
 Action Fighter | 16B         | Won't boot
 Alex Kidd      | 16A         | Boots, problem with scroll during demo?
 Alyen Syndrome | 16B         | Won't boot
-Alyen Syndrome | 16A/1089A   | Scroll pages issue. Sprite issues
+Alyen Syndrome | 16A/1089A   | Sprite issues. FX disappear
 Body Slam      | 8751        | Boots, bad graphics
 Phantasy Zone  |             | Seems ok
 Major League   |             | Missing trackball (analog controls)
 Passing Shot   | 1094        | Won't boot
 Quartet / 2    | 8751        | Boots, bad graphics
-Quartet 2      | unprotected | Scroll pages issue
+Quartet 2      | unprotected | Sound effect missing upon selecting character
 SDI            | 1089B       | boots but cannot pass the title screen
 Shinobi        |             | Ok
 Sukeban        | 1089B       | Won't boot
@@ -31,7 +31,7 @@ Sukeban        | 16A / 1089B | Missing graphics. Needs over 10 buttons!
 Tetris         | 1094        | Won't boot
 Time Scanner   | 16A         | Boots to odd screen. No sprites shown.
 Time Scanner   | 16B         | Won't boot
-Wonder Boy III | 16A / 1089A | Scroll pages issue
+Wonder Boy III | 16A / 1089A | Ok
 Wonder Boy III | 16B         | Won't boot
 
 

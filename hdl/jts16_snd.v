@@ -30,6 +30,8 @@ module jts16_snd(
     input                sound_en,
     // options
     input         [ 1:0] fxlevel,
+    input                enable_fm,
+    input                enable_psg,
 
     input         [ 7:0] latch,
     input                irqn,
@@ -72,6 +74,7 @@ wire        pcm_irqn, pcm_rstn,
 
 wire signed [15:0] fm_left, fm_right, mixed;
 wire signed [ 7:0] pcm_raw;
+wire [7:0] fmgain;
 
 assign snd = sound_en ? mixed : 16'd0;
 
@@ -79,14 +82,17 @@ assign rom_good = rom_ok2 & rom_ok;
 assign rom_addr = A[14:0];
 assign ack      = latch_cs;
 assign cmd_cs   = !iorq_n && A[7:6]==2 && !wr_n; // 80
+assign fmgain   = enable_fm ? FMGAIN : 0;
 
+// PCM volume
 always @(posedge clk ) begin
     case( fxlevel )
-        2'd0: pcmgain = 8'h04;
-        2'd1: pcmgain = 8'h06;
-        2'd2: pcmgain = 8'h08;
-        2'd3: pcmgain = 8'h0C;
+        2'd0: pcmgain <= 8'h04;
+        2'd1: pcmgain <= 8'h06;
+        2'd2: pcmgain <= 8'h08;
+        2'd3: pcmgain <= 8'h0C;
     endcase
+    if( !enable_psg ) pcmgain <= 0;
 end
 
 always @(posedge clk ) begin
@@ -116,8 +122,8 @@ jtframe_mixer #(.W2(8)) u_mixer(
     .ch2    ( pcm_snd   ),
     .ch3    ( 16'd0     ),
     // gain for each channel in 4.4 fixed point format
-    .gain0  ( FMGAIN    ),
-    .gain1  ( FMGAIN    ),
+    .gain0  ( fmgain    ),
+    .gain1  ( fmgain    ),
     .gain2  ( pcmgain   ),
     .gain3  ( 8'h00     ),
     .mixed  ( mixed     ),
