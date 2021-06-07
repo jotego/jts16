@@ -89,7 +89,7 @@ module jts16_video(
     output     [ 7:0]  st_dout
 );
 
-localparam [9:0] SCR_DLY=18;
+localparam [9:0] SCR_DLY=19;
 /* verilator lint_off WIDTH */
 localparam [8:0] OBJ_DLY=SCR_DLY+9'd17;
 /* verilator lint_on WIDTH */
