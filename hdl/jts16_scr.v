@@ -63,29 +63,19 @@ reg        hov, vov; // overflow bits
 reg       done, draw;
 reg [7:0] busy;
 reg       hsel;
-reg [9:0] hpage;
 
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 
 always @(*) begin
     {hov, hpos } = {1'b0, hscan } - {1'b0, hscr[8:0] }+PXL_DLY;
-    //hpage = {hov,hpos} +{{2{debug_bus[7]}},  debug_bus};
-    hpage = {hov,hpos};
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
-    scan_addr = { vpos[7:3], hpage[8:3] };
-    //case( debug_bus[1:0] )
-    //    0: hsel = ~hov | ~hpos[8];
-    //    1: hsel =  hov |  hpos[8];
-    //    2: hsel =  hov | ~hpos[8];
-    //    3: hsel = ~hov |  hpos[8];
-    //endcase
-    case( { vov, hov^debug_bus[0] } )
+    scan_addr = { vpos[7:3], hpos[8:3] };
+    case( { vov, hov } )
         2'b10: page = pages[14:12]; // upper left
         2'b11: page = pages[10: 8]; // upper right
         2'b00: page = pages[ 6: 4]; // lower left
         2'b01: page = pages[ 2: 0]; // lower right
     endcase
-    //page = 5;
 end
 
 reg [1:0] map_st;

@@ -91,7 +91,7 @@ module jts16_video(
 
 localparam [9:0] SCR_DLY=19;
 /* verilator lint_off WIDTH */
-localparam [8:0] OBJ_DLY=SCR_DLY+9'd17;
+localparam [8:0] OBJ_DLY=SCR_DLY+9'd14;
 /* verilator lint_on WIDTH */
 
 wire [ 8:0] hdump, vrender1;
