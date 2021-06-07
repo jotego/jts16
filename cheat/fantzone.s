@@ -35,23 +35,52 @@ notblank:
 
 ISR:
     compare sa,0
-    jump nz,TEST_FLAGS
+    jump nz,CHEAT
     ; invert LED signal
     add sb,1
-TEST_FLAGS:
-    input sf,10
-    test sf,7
-    jump z,CLOSE_FRAME  ; nothing to do
-    test sf,1
-    jump z,.flag1
-    ; 4000
-.flag1:
-    test sf,2
-    jump z,.flag2
-.flag2:
-    test sf,4
-    jump z,CLOSE_FRAME
+CHEAT:
+    ; Directly apply cheats
+    ; invencibility
+    ; 8582 -> 10'42c1 set to 4e71
+    load s2,10
+    load s1,42
+    load s0,c1
+    load s3,4e
+    load s4,71
+    load s5,0
+    call WRITE_SDRAM
+    ; b134 -> 10'589a set to 4e75
+    load s2,9a
+    load s1,58
+    load s4,75
+    call WRITE_SDRAM
+    ; rapid fire
+    ; ff03bb=1 -> 10'01dd set low byte to 1
+    load s2,01
+    load s1,01
+    load s4,1
+    load s5,1
+    call WRITE_SDRAM
 
+    ; Read joystick
+    input s8,18
+    test s8,40
+    jump z,.nojoy
+    test s9,40
+    jump nz,.nojoy
+    ; button 3 was pressed, trigger level end
+    ; FFc23b -> 10'611d (LSB)
+    load s2,10
+    load s1,61
+    load s0,1d
+    call READ_SDRAM
+    or s7,10
+    load s4,s7
+    load s5,1
+    call WRITE_SDRAM
+
+.nojoy:
+    load s9,s8
 
 CLOSE_FRAME:
     output sb,6     ; LED
@@ -72,13 +101,13 @@ write_st16:
     add s3,0   ; nop
     add s3,0   ; nop
     input s1,d
-    call WRITE_HEX
+    call WRITE_SDRAM
     sub s3,1
     output s3,c
     add s3,0   ; nop
     add s3,0   ; nop
     input s1,d
-    call WRITE_HEX
+    call WRITE_SDRAM
     return
 
 
