@@ -68,8 +68,9 @@ reg [9:0] hpage;
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hscan } + ~{hscr[8], hscr[8:0] }+PXL_DLY;
-    hpage = {hov,hpos} +{{2{debug_bus[7]}},  debug_bus};
+    {hov, hpos } = {1'b0, hscan } - {1'b0, hscr[8:0] }+PXL_DLY;
+    //hpage = {hov,hpos} +{{2{debug_bus[7]}},  debug_bus};
+    hpage = {hov,hpos};
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpage[8:3] };
     //case( debug_bus[1:0] )
@@ -78,7 +79,7 @@ always @(*) begin
     //    2: hsel =  hov | ~hpos[8];
     //    3: hsel = ~hov |  hpos[8];
     //endcase
-    case( {vov, hpage[9]} )
+    case( { vov, hov^debug_bus[0] } )
         2'b10: page = pages[14:12]; // upper left
         2'b11: page = pages[10: 8]; // upper right
         2'b00: page = pages[ 6: 4]; // lower left

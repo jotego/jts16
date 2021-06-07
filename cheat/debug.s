@@ -42,7 +42,7 @@ SCREEN:
     ; Show scroll data
     ; Scroll 1 pages
     load  s0,6
-    output s0,9 ; column
+    output s0,9 ; row
     load  s0,2
     load  s3,1
     call  write_st16
@@ -57,7 +57,7 @@ SCREEN:
 
     ; Scroll 2 pages
     load  s0,0x7
-    output s0,9 ; column
+    output s0,9 ; row
     load  s0,2
     load  s3,3
     call  write_st16
@@ -69,6 +69,13 @@ SCREEN:
     add   s0,2
     load  s3,7
     call  write_st16
+
+    ; Debug byte
+    load s0,8
+    output s0,9 ; row
+    load s0,2
+    input  s1,f ; debug bus
+    call WRITE_HEX
 
 CLOSE_FRAME:
     output sb,6     ; LED
