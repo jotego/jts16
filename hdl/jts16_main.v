@@ -34,6 +34,8 @@ module jts16_main(
     input       [15:0] obj_dout,
     output             flip,
     output             video_en,
+    output             colscr_en,
+    output             rowscr_en,
     // RAM access
     output             ram_cs,
     output             vram_cs,
@@ -61,6 +63,15 @@ module jts16_main(
     output      [17:1] rom_addr,
     input       [15:0] rom_data,
     input              rom_ok,
+
+    // Decoder configuration
+    input             dec_en,
+    input             dec_type,
+    input      [12:0] prog_addr,
+    input             key_we,
+    input             fd1089_we,
+    input      [ 7:0] prog_data,
+
     // DIP switches
     input              dip_pause,
     input              dip_test,
@@ -70,14 +81,16 @@ module jts16_main(
 
 wire [23:1] A;
 wire        BERRn;
+wire [ 2:0] FC;
 
 `ifdef SIMULATION
 wire [23:0] A_full = {A,1'b0};
 `endif
 
 wire        BRn, BGACKn, BGn;
-wire        ASn;
-wire        UDSn, LDSn;
+wire        ASn, UDSn, LDSn;
+wire        ok_dly;
+wire [15:0] rom_dec;
 
 reg         io_cs, wdog_cs,
             pre_ram_cs, pre_vram_cs;
@@ -149,8 +162,12 @@ reg [ 7:0] ppi_b;
 reg        ppi_cs;
 
 wire [7:0] ppi_dout, ppic_din, ppic_dout, ppib_dout;
+wire       op_n; // low for CPU OP requests
 
+assign op_n        = FC[1:0]!=2'b10;
 assign snd_irqn    = ppic_dout[7];
+assign colscr_en   = ppic_dout[2];
+assign rowscr_en   = ppic_dout[1];
 assign ppic_din[6] = snd_ack;
 
 function [7:0] sort_joy( input [7:0] joy_in );
@@ -219,7 +236,7 @@ always @(posedge clk) begin
         cpu_din <= 16'hffff;
     end else begin
         cpu_din <= (ram_cs | vram_cs ) ? ram_data  : (
-                    rom_cs             ? rom_data  : (
+                    rom_cs             ? rom_dec   : (
                     char_cs            ? char_dout : (
                     pal_cs             ? pal_dout  : (
                     objram_cs          ? obj_dout  : (
@@ -230,7 +247,6 @@ end
 
 // interrupt generation
 reg        irqn; // VBLANK
-wire [2:0] FC;
 wire       inta_n = ~&{ FC[2], FC[1], FC[0], ~ASn }; // interrupt ack.
 reg        last_hstart;
 
@@ -250,7 +266,7 @@ end
 
 wire DTACKn;
 wire bus_cs   = pal_cs | char_cs | pre_vram_cs | pre_ram_cs | rom_cs | objram_cs | io_cs;
-wire bus_busy = |{ rom_cs & ~rom_ok, (pre_ram_cs | pre_vram_cs) & ~ram_ok };
+wire bus_busy = |{ rom_cs & ~ok_dly, (pre_ram_cs | pre_vram_cs) & ~ram_ok };
 
 jts16_dtack u_dtack(
     .rst        ( rst       ),
@@ -261,18 +277,64 @@ jts16_dtack u_dtack(
     .ASn        ( ASn       ),
     .bus_cs     ( bus_cs    ),
     .bus_busy   ( bus_busy  ),
-    .rom_ok     ( rom_ok    ),
+    .rom_ok     ( ok_dly    ),
     .ram_ok     ( ram_ok    ),
 
     .DTACKn     ( DTACKn    )
 );
 
-fx68k u_cpu(
+jts16_fd1089 u_dec1089(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+
+    // Configuration
+    .prog_addr  ( prog_addr ),
+    .key_we     ( key_we    ),
+    .fd1089_we  ( fd1089_we ),
+    .prog_data  ( prog_data ),
+
+    // Operation
+    .dec_type   ( dec_type  ), // 0=a, 1=b
+    .dec_en     ( dec_en    ),
+    .rom_ok     ( rom_ok    ),
+    .ok_dly     ( ok_dly    ),
+
+    .op_n       ( op_n      ),     // OP (0) or data (1)
+    .addr       ( A         ),
+    .enc        ( rom_data  ),
+    .dec        ( rom_dec   )
+);
+`ifdef SIMULATION
+wire [15:0] dec_alt;
+
+jts16_fd1089 u_alt(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+
+    // Configuration
+    .prog_addr  ( prog_addr ),
+    .key_we     ( key_we    ),
+    .fd1089_we  ( fd1089_we ),
+    .prog_data  ( prog_data ),
+
+    // Operation
+    .dec_type   ( dec_type  ), // 0=a, 1=b
+    .dec_en     ( dec_en    ),
+    .rom_ok     ( rom_ok    ),
+    .ok_dly     (           ),
+
+    .op_n       ( ~op_n      ),     // OP (0) or data (1)
+    .addr       ( A         ),
+    .enc        ( rom_data  ),
+    .dec        ( dec_alt   )
+);
+`endif
+
+jtframe_m68k u_cpu(
     .clk        ( clk         ),
-    .extReset   ( rst         ),
-    .pwrUp      ( rst         ),
-    .enPhi1     ( cpu_cen     ),
-    .enPhi2     ( cpu_cenb    ),
+    .rst        ( rst         ),
+    .cpu_cen    ( cpu_cen     ),
+    .cpu_cenb   ( cpu_cenb    ),
 
     // Buses
     .eab        ( A           ),
@@ -285,9 +347,7 @@ fx68k u_cpu(
     .UDSn       ( UDSn        ),
     .ASn        ( ASn         ),
     .VPAn       ( inta_n      ),
-    .FC0        ( FC[0]       ),
-    .FC1        ( FC[1]       ),
-    .FC2        ( FC[2]       ),
+    .FC         ( FC          ),
 
     .BERRn      ( BERRn       ),
     // Bus arbitrion
@@ -297,15 +357,7 @@ fx68k u_cpu(
     .BGn        ( BGn         ),
 
     .DTACKn     ( DTACKn      ),
-    .IPL0n      ( 1'b1        ),
-    .IPL1n      ( 1'b1        ),
-    .IPL2n      ( irqn        ), // VBLANK
-
-    // Unused
-    .oRESETn    (             ),
-    .oHALTEDn   (             ),
-    .VMAn       (             ),
-    .E          (             )
+    .IPLn       ( { irqn, 2'b11 } ) // VBLANK
 );
 
 endmodule

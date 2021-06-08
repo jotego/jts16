@@ -9,11 +9,19 @@ SIMULATOR=-verilator
 SDRAM_SNAP=
 
 AUXTMP=/tmp/$RANDOM$RANDOM
-jtmacros.awk target=mist mode=bash ../../hdl/jts16.def|grep _START > $AUXTMP
+jtcfgstr -target=mist -output=bash -def ../../hdl/jts16.def |grep _START > $AUXTMP
 source $AUXTMP
 
 while [ $# -gt 0 ]; do
     case $1 in
+        -g)
+            shift
+            GAME=$1
+            if [ ! -e $ROM/$GAME.rom ]; then
+                echo "Cannot find ROM file $ROM/$GAME.rom"
+                exit 1
+            fi
+            ;;
     	-s)
             shift
     		SCENE=$1;;
@@ -22,6 +30,8 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+ln -sf $ROM/$GAME.rom rom.bin
 
 if [ ! -z "$SCENE" ]; then
 	echo "Simulating scene $SCENE"
@@ -40,7 +50,7 @@ if [ ! -z "$SCENE" ]; then
 	drop1    < $GAME/obj${SCENE}.bin > obj_hi.bin
 	drop1 -l < $GAME/obj${SCENE}.bin > obj_lo.bin
 
-    hexdump -v -e '/1 "%02X "' -s 0xe00 shinobi/char${SCENE}.bin > mmr.hex
+    hexdump -v -e '/1 "%02X "' -s 0xe00 $GAME/char${SCENE}.bin > mmr.hex
 
 	cp $GAME/scr${SCENE}.bin scr.bin
     OTHER="$OTHER -d NOMAIN -video -nosnd"
@@ -58,9 +68,12 @@ if which ncverilog >/dev/null; then
     HEXDUMP=
 fi
 
+rm -f sdram_bank?.*
 jtsim_sdram $HEXDUMP -header 32 \
     -banks $BA1_START $BA2_START $BA3_START \
     -stop $MCU_START \
+    -dumpbin 317-5021.key $MAINKEY_START 0x2000 \
+    -dumpbin fd1089.bin   $FD1089_START  0x0100 \
     $SDRAM_SNAP || exit $?
 
 jtsim -mist -sysname $SYSNAME $SIMULATOR \

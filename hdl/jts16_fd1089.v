@@ -22,7 +22,7 @@ module jts16_fd1089(
 
     // Configuration
     input      [12:0] prog_addr,
-    input             prom_we,
+    input             key_we,
     input             fd1089_we,
     input      [ 7:0] prog_data,
 
@@ -31,9 +31,12 @@ module jts16_fd1089(
     input             dec_en,
 
     input             op_n,     // OP (0) or data (1)
-    input      [23:0] addr,
+    input      [23:1] addr,
     input      [15:0] enc,
-    output reg [15:0] dec
+    output reg [15:0] dec,
+
+    input             rom_ok,
+    output            ok_dly
     `ifdef DEBUG
     ,output [ 7:0] debug_key
     ,output [12:0] debug_luta
@@ -53,6 +56,7 @@ wire [ 7:0] second[0:15];
 wire [ 7:0] last[0:15];
 wire [ 7:0] xored_last_in[0:15];
 reg         bypass, lsbxor;
+reg         ok_latch;
 
 `ifdef DEBUG
 assign debug_key     = key;
@@ -63,8 +67,8 @@ assign debug_family  = family;
 assign debug_last_in = last_in;
 `endif
 
-`define BITSWAP( v, b7, b6, b5, b4, b3, b2, b1, b0 ) {v[b7], v[b6], v[b5], v[b4], v[b3], v[b2], v[b1], v[b0] };
-`define BITXOR(v, b, x) v[b]=v[b]^(x);
+`define BITSWAP( v, b7, b6, b5, b4, b3, b2, b1, b0 ) {v[b7], v[b6], v[b5], v[b4], v[b3], v[b2], v[b1], v[b0] }
+`define BITXOR(v, b, x) v[b]=v[b]^(x)
 
 // Common to 1089A and 1089B
 assign second[ 0] = 8'h23 ^ `BITSWAP( encbyte, 6,4,5,7,3,0,1,2 );
@@ -118,7 +122,11 @@ assign last[13] = `BITSWAP( xored_last_in[13], 6,3,7,0,5,4,2,1 );
 assign last[14] = `BITSWAP( xored_last_in[14], 6,1,3,2,7,4,5,0 );
 assign last[15] = `BITSWAP( xored_last_in[15], 1,6,3,5,0,7,4,2 );
 
-always @(*) begin
+assign ok_dly = dec_en ? ok_latch : rom_ok;
+
+always @(posedge clk) ok_latch <= rom_ok;
+
+always @(addr,op_n,enc,dec_type,dec_en,bypass,val_a,val_b) begin
     // LUT Address
     lut_a = {
         op_n,
@@ -145,7 +153,7 @@ always @(*) begin
 end
 
 
-always @(shkey, op_n) begin
+always @(shkey,op_n) begin
     bypass = shkey==0;
     key = shkey;
     // unshuffle the key
@@ -179,7 +187,7 @@ always @(shkey, op_n) begin
     end
 end
 
-always @(key, op_n) begin
+always @(key,encbyte,op_n,second) begin
     // Second LUT address
     lut2_addr = second[ key[7:4] ];
     if( key[3] ) lut2_addr[0] = ~lut2_addr[0];
@@ -191,7 +199,7 @@ always @(key, op_n) begin
 end
 
 // FD1089A variant
-always @(*) begin
+always @(preval,key,op_n) begin
     family = {1'b0,key[2:0]};
     if( op_n ) begin
         family[3] = family[3] ^(~key[6] & key[2]);
@@ -216,7 +224,7 @@ always @(*) begin
 end
 
 // FD1089B variant
-always @(*) begin
+always @(preval,key,op_n) begin
     lsbxor= 0;
     lastb = preval;
     if( op_n ) begin
@@ -246,7 +254,7 @@ jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
     .data   ( prog_data ),
     .rd_addr( lut_a     ),
     .wr_addr( prog_addr ),
-    .we     ( prom_we   ),
+    .we     ( key_we    ),
     .q      ( shkey     )
 );
 

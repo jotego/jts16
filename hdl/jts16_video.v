@@ -37,6 +37,8 @@ module jts16_video(
 
     // Other configuration
     input              flip,
+    input              colscr_en,
+    input              rowscr_en,
 
     // SDRAM interface
     input              char_ok,
@@ -80,12 +82,17 @@ module jts16_video(
     output     [ 4:0]  blue,
 
     // Debug
-    input      [ 3:0]  gfx_en
+    input      [ 3:0]  gfx_en,
+    input      [ 7:0]  debug_bus,
+    // status dump
+    input      [ 7:0]  st_addr,
+    output     [ 7:0]  st_dout
 );
 
-localparam [8:0] SCR_DLY=18;
-localparam [8:0] OBJ_DLY=SCR_DLY+9'd19;
-
+localparam [9:0] SCR_DLY=19;
+/* verilator lint_off WIDTH */
+localparam [8:0] OBJ_DLY=SCR_DLY+9'd14;
+/* verilator lint_on WIDTH */
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;
@@ -150,7 +157,10 @@ jts16_mmr u_mmr(
     .scr1_hpos  ( scr1_hpos     ),
     .scr1_vpos  ( scr1_vpos     ),
     .scr2_hpos  ( scr2_hpos     ),
-    .scr2_vpos  ( scr2_vpos     )
+    .scr2_vpos  ( scr2_vpos     ),
+
+    .st_addr    ( st_addr       ),
+    .st_dout    ( st_dout       )
 );
 
 jts16_char u_char(
@@ -200,7 +210,8 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
     // Video signal
     .vrender   ( vrender1       ),
     .hdump     ( hdump          ),
-    .pxl       ( scr1_pxl       )
+    .pxl       ( scr1_pxl       ),
+    .debug_bus ( debug_bus      )
 );
 
 jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
@@ -226,7 +237,8 @@ jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
     // Video signal
     .vrender   ( vrender1       ),
     .hdump     ( hdump          ),
-    .pxl       ( scr2_pxl       )
+    .pxl       ( scr2_pxl       ),
+    .debug_bus ( debug_bus      )
 );
 
 jts16_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
@@ -276,6 +288,7 @@ jts16_colmix u_colmix(
 
     .char_pxl  ( char_pxl       ),
     .scr1_pxl  ( scr1_pxl       ),
+    //.scr1_pxl  ( 11'd0       ),
     .scr2_pxl  ( scr2_pxl       ),
     .obj_pxl   ( obj_pxl        ),
 

@@ -40,37 +40,26 @@ module jts16_game(
 
     // Bank 0: allows R/W
     output   [21:0] ba0_addr,
-    output          ba0_rd,
-    output          ba0_wr,
+    output   [21:0] ba1_addr,
+    output   [21:0] ba2_addr,
+    output   [21:0] ba3_addr,
+    output   [ 3:0] ba_rd,
+    output          ba_wr,
     output   [15:0] ba0_din,
     output   [ 1:0] ba0_din_m,  // write mask
-    input           ba0_rdy,
-    input           ba0_ack,
+    input    [ 3:0] ba_ack,
+    input    [ 3:0] ba_dst,
+    input    [ 3:0] ba_dok,
+    input    [ 3:0] ba_rdy,
 
-    // Bank 1: Read only
-    output   [21:0] ba1_addr,
-    output          ba1_rd,
-    input           ba1_rdy,
-    input           ba1_ack,
+    input    [15:0] data_read,
 
-    // Bank 2: Read only
-    output   [21:0] ba2_addr,
-    output          ba2_rd,
-    input           ba2_rdy,
-    input           ba2_ack,
-
-    // Bank 3: Read only
-    output   [21:0] ba3_addr,
-    output          ba3_rd,
-    input           ba3_rdy,
-    input           ba3_ack,
-
-    input   [31:0]  data_read,
-    output          refresh_en,
-    // ROM LOAD
+    // RAM/ROM LOAD
     input   [24:0]  ioctl_addr,
     input   [ 7:0]  ioctl_data,
     input           ioctl_wr,
+    output  [ 7:0]  ioctl_data2sd,
+    input           ioctl_ram, // 0 - ROM, 1 - RAM(EEPROM)
     output  [21:0]  prog_addr,
     output  [15:0]  prog_data,
     output  [ 1:0]  prog_mask,
@@ -78,6 +67,8 @@ module jts16_game(
     output          prog_we,
     output          prog_rd,
     input           prog_ack,
+    input           prog_dok,
+    input           prog_dst,
     input           prog_rdy,
     // DIP switches
     input   [31:0]  status,
@@ -94,7 +85,11 @@ module jts16_game(
     input           enable_psg,
     input           enable_fm,
     // Debug
-    input   [3:0]   gfx_en
+    input   [3:0]   gfx_en,
+    input   [7:0]   debug_bus,
+    // status dump
+    input   [ 7:0]  st_addr,
+    output  [ 7:0]  st_dout
 );
 
 // clock enable signals
@@ -106,6 +101,7 @@ wire    cpu_cen, cpu_cenb,
 wire        HB, VB, LVBL;
 wire [ 8:0] vdump, vrender;
 wire        hstart;
+wire        colscr_en, rowscr_en;
 
 // SDRAM interface
 wire        main_cs, vram_cs, ram_cs;
@@ -147,6 +143,10 @@ wire        pcm_cs;
 wire [ 7:0] pcm_data;
 wire        pcm_ok;
 wire        n7751_prom;
+
+// Protection
+wire        key_we, fd1089_we;
+wire        dec_en, dec_type;
 
 wire [ 7:0] snd_latch;
 wire        snd_irqn, snd_ack;
@@ -192,6 +192,8 @@ jts16_main u_main(
     .obj_dout   ( obj_dout  ),
 
     .flip       ( flip      ),
+    .colscr_en  ( colscr_en ),
+    .rowscr_en  ( rowscr_en ),
     // Sound communication
     .snd_latch  ( snd_latch ),
     .snd_irqn   ( snd_irqn  ),
@@ -218,6 +220,13 @@ jts16_main u_main(
     .rom_addr    ( main_addr  ),
     .rom_data    ( main_data  ),
     .rom_ok      ( main_ok    ),
+    // Decoder configuration
+    .dec_en      ( dec_en     ),
+    .dec_type    ( dec_type   ),
+    .key_we      ( key_we     ),
+    .fd1089_we   ( fd1089_we  ),
+    .prog_addr   ( prog_addr[12:0] ),
+    .prog_data   ( prog_data[ 7:0] ),
     // DIP switches
     .dip_pause   ( dip_pause  ),
     .dip_test    ( dip_test   ),
@@ -249,6 +258,8 @@ jts16_snd u_sound(
 
     .fxlevel    ( dip_fxlevel ),
     .sound_en   ( sound_en  ),
+    .enable_fm  ( enable_fm ),
+    .enable_psg ( enable_psg),
 
     .latch      ( snd_latch ),
     .irqn       ( snd_irqn  ),
@@ -276,6 +287,11 @@ jts16_snd u_sound(
     .sample     ( sample    ),
     .peak       ( game_led  )
 );
+`else
+assign snd_cs=0;
+assign pcm_cs=0;
+assign snd_addr=0;
+assign pcm_addr=0;
 `endif
 
 jts16_video u_video(
@@ -299,6 +315,9 @@ jts16_video u_video(
     .obj_dout   ( obj_dout  ),
 
     .flip       ( flip      ),
+    .colscr_en  ( colscr_en ),
+    .rowscr_en  ( rowscr_en ),
+
     // SDRAM interface
     .char_ok    ( char_ok   ),
     .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
@@ -338,7 +357,11 @@ jts16_video u_video(
     .hstart     ( hstart    ),
     .red        ( red       ),
     .green      ( green     ),
-    .blue       ( blue      )
+    .blue       ( blue      ),
+    // debug
+    .debug_bus  ( debug_bus ),
+    .st_addr    ( st_addr   ),
+    .st_dout    ( st_dout   )
 );
 
 jts16_sdram u_sdram(
@@ -348,6 +371,10 @@ jts16_sdram u_sdram(
     .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),
 
+    .dec_en      ( dec_en   ),
+    .dec_type    ( dec_type ),
+    .key_we      ( key_we   ),
+    .fd1089_we   ( fd1089_we),
     // Main CPU
     .main_cs    ( main_cs   ),
     .vram_cs    ( vram_cs   ),
@@ -406,34 +433,20 @@ jts16_sdram u_sdram(
     .obj_data   ( obj_data  ),
 
     // Bank 0: allows R/W
-    .ba0_addr   ( ba0_addr  ),
-    .ba0_rd     ( ba0_rd    ),
-    .ba0_wr     ( ba0_wr    ),
-    .ba0_ack    ( ba0_ack   ),
-    .ba0_rdy    ( ba0_rdy   ),
-    .ba0_din    ( ba0_din   ),
-    .ba0_din_m  ( ba0_din_m ),
+    .ba0_addr    ( ba0_addr      ),
+    .ba1_addr    ( ba1_addr      ),
+    .ba2_addr    ( ba2_addr      ),
+    .ba3_addr    ( ba3_addr      ),
+    .ba_rd       ( ba_rd         ),
+    .ba_wr       ( ba_wr         ),
+    .ba_ack      ( ba_ack        ),
+    .ba_dst      ( ba_dst        ),
+    .ba_dok      ( ba_dok        ),
+    .ba_rdy      ( ba_rdy        ),
+    .ba0_din     ( ba0_din       ),
+    .ba0_din_m   ( ba0_din_m     ),
 
-    // Bank 1: Read only
-    .ba1_addr   ( ba1_addr  ),
-    .ba1_rd     ( ba1_rd    ),
-    .ba1_rdy    ( ba1_rdy   ),
-    .ba1_ack    ( ba1_ack   ),
-
-    // Bank 2: Read only
-    .ba2_addr   ( ba2_addr  ),
-    .ba2_rd     ( ba2_rd    ),
-    .ba2_rdy    ( ba2_rdy   ),
-    .ba2_ack    ( ba2_ack   ),
-
-    // Bank 2: Read only
-    .ba3_addr   ( ba3_addr  ),
-    .ba3_rd     ( ba3_rd    ),
-    .ba3_rdy    ( ba3_rdy   ),
-    .ba3_ack    ( ba3_ack   ),
-
-    .data_read  ( data_read ),
-    .refresh_en ( refresh_en),
+    .data_read   ( data_read     ),
 
     // ROM load
     .downloading(downloading ),

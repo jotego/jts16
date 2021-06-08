@@ -23,6 +23,10 @@ module jts16_sdram(
     input           LVBL,
     input    [ 8:0] vrender,
 
+    // Encryption
+    output          key_we,
+    output          fd1089_we,
+
     // Main CPU
     input           main_cs,
     input           vram_cs,
@@ -46,6 +50,8 @@ module jts16_sdram(
     output          n7751_prom,
 
     // ADPCM ROM
+    output reg      dec_en,
+    output reg      dec_type,
     input    [16:0] pcm_addr,
     input           pcm_cs,
     output   [ 7:0] pcm_data,
@@ -83,33 +89,19 @@ module jts16_sdram(
 
     // Bank 0: allows R/W
     output   [21:0] ba0_addr,
-    output          ba0_rd,
-    output          ba0_wr,
+    output   [21:0] ba1_addr,
+    output   [21:0] ba2_addr,
+    output   [21:0] ba3_addr,
+    output   [ 3:0] ba_rd,
+    output          ba_wr,
     output   [15:0] ba0_din,
     output   [ 1:0] ba0_din_m,  // write mask
-    input           ba0_rdy,
-    input           ba0_ack,
+    input    [ 3:0] ba_ack,
+    input    [ 3:0] ba_dst,
+    input    [ 3:0] ba_dok,
+    input    [ 3:0] ba_rdy,
 
-    // Bank 1: Read only
-    output   [21:0] ba1_addr,
-    output          ba1_rd,
-    input           ba1_rdy,
-    input           ba1_ack,
-
-    // Bank 2: Read only
-    output   [21:0] ba2_addr,
-    output          ba2_rd,
-    input           ba2_rdy,
-    input           ba2_ack,
-
-    // Bank 3: Read only
-    output   [21:0] ba3_addr,
-    output          ba3_rd,
-    input           ba3_rdy,
-    input           ba3_ack,
-
-    input    [31:0] data_read,
-    output          refresh_en,
+    input    [15:0] data_read,
 
     // ROM LOAD
     input           downloading,
@@ -138,21 +130,23 @@ localparam [24:0] BA1_START  = `BA1_START,
                   BA3_START  = `BA3_START,
                   MCU_PROM   = `MCU_START,
                   N7751_PROM = `N7751_START,
-                  KEY_PROM   = `MAINKEY_START;
+                  KEY_PROM   = `MAINKEY_START,
+                  FD_PROM    = `FD1089_START;
 /* verilator lint_on WIDTH */
 
 reg  [15:1] xram_addr;  // 32 kB VRAM + 16kB RAM
 wire [15:0] xram_data;
 wire        xram_cs;
-wire        prom_we;
+wire        prom_we, header;
 
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 
-assign refresh_en = LVBL;
 assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading;
-assign n7751_prom = prom_we && ioctl_addr[15:10]==N7751_PROM[15:10];
+assign n7751_prom = prom_we && prog_addr[21:10]==N7751_PROM[21:10];
+assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM  [21:13];
+assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM   [21: 8];
 
 always @(*) begin
     xram_addr = { ram_cs, main_addr[14:1] }; // RAM is mapped up
@@ -163,6 +157,13 @@ always @(*) begin
     else
     `endif
         ram_data=xram_data;
+end
+
+always @(posedge clk) begin
+    if( header && ioctl_wr && ioctl_addr[4:0]==5'h10 ) begin
+        dec_en   <= |ioctl_data[1:0];
+        dec_type <= ioctl_data[1];
+    end
 end
 
 jtframe_dwnld #(
@@ -185,7 +186,7 @@ jtframe_dwnld #(
     .prog_rd      ( prog_rd        ),
     .prog_ba      ( prog_ba        ),
     .prom_we      ( prom_we        ),
-    .header       (                ),
+    .header       ( header         ),
     .sdram_ack    ( prog_ack       )
 );
 
@@ -244,11 +245,12 @@ jtframe_ram_4slots #(
     .slot3_ok   ( map2_ok   ),
 
     // SDRAM controller interface
-    .sdram_ack   ( ba0_ack   ),
-    .sdram_rd    ( ba0_rd    ),
-    .sdram_wr    ( ba0_wr    ),
+    .sdram_ack   ( ba_ack[0] ),
+    .sdram_rd    ( ba_rd[0]  ),
+    .sdram_wr    ( ba_wr     ),
     .sdram_addr  ( ba0_addr  ),
-    .data_rdy    ( ba0_rdy   ),
+    .data_dst    ( ba_dst[0] ),
+    .data_rdy    ( ba_rdy[0] ),
     .data_write  ( ba0_din   ),
     .sdram_wrmask( ba0_din_m ),
     .data_read   ( data_read )
@@ -285,10 +287,11 @@ jtframe_rom_3slots #(
     .slot2_ok   ( scr2_ok   ),
 
     // SDRAM controller interface
-    .sdram_ack  ( ba2_ack   ),
-    .sdram_req  ( ba2_rd    ),
     .sdram_addr ( ba2_addr  ),
-    .data_rdy   ( ba2_rdy   ),
+    .sdram_req  ( ba_rd[2]  ),
+    .sdram_ack  ( ba_ack[2] ),
+    .data_dst   ( ba_dst[2] ),
+    .data_rdy   ( ba_rdy[2] ),
     .data_read  ( data_read )
 );
 
@@ -306,10 +309,11 @@ jtframe_rom_1slot #(
     .slot0_ok   ( obj_ok    ),
 
     // SDRAM controller interface
-    .sdram_ack  ( ba3_ack   ),
-    .sdram_req  ( ba3_rd    ),
     .sdram_addr ( ba3_addr  ),
-    .data_rdy   ( ba3_rdy   ),
+    .sdram_req  ( ba_rd[3]  ),
+    .sdram_ack  ( ba_ack[3] ),
+    .data_dst   ( ba_dst[3] ),
+    .data_rdy   ( ba_rdy[3] ),
     .data_read  ( data_read )
 );
 
@@ -337,10 +341,11 @@ jtframe_rom_2slots #(
     .slot1_ok   ( pcm_ok    ),
 
     // SDRAM controller interface
-    .sdram_ack  ( ba1_ack   ),
-    .sdram_req  ( ba1_rd    ),
     .sdram_addr ( ba1_addr  ),
-    .data_rdy   ( ba1_rdy   ),
+    .sdram_req  ( ba_rd[1]  ),
+    .sdram_ack  ( ba_ack[1] ),
+    .data_dst   ( ba_dst[1] ),
+    .data_rdy   ( ba_rdy[1] ),
     .data_read  ( data_read )
 );
 

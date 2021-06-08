@@ -41,11 +41,12 @@ module jts16_scr(
     // Video signal
     input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
-    output     [10:0]  pxl        // 1 priority + 7 palette + 3 colour = 11
+    output     [10:0]  pxl,       // 1 priority + 7 palette + 3 colour = 11
+    input      [ 7:0]  debug_bus
 );
 
-parameter       PXL_DLY=0;
-parameter [8:0] HB_END=9'h70;
+parameter [9:0] PXL_DLY=0;
+parameter [8:0] HB_END=9'h70, HSCAN0 = HB_END-9'd8;
 
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
@@ -61,18 +62,19 @@ reg        hov, vov; // overflow bits
 
 reg       done, draw;
 reg [7:0] busy;
+reg       hsel;
 
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hscan } + {1'd0, ~hscr[8:0] }+PXL_DLY;
+    {hov, hpos } = {1'b0, hscan } - {1'b0, hscr[8:0] }+PXL_DLY;
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
-    case( {vov, ~hov} )
-        2'b11: page = pages[14:12];
-        2'b10: page = pages[10: 8];
-        2'b01: page = pages[ 6: 4];
-        2'b00: page = pages[ 2: 0];
+    case( { vov, hov } )
+        2'b10: page = pages[14:12]; // upper left
+        2'b11: page = pages[10: 8]; // upper right
+        2'b00: page = pages[ 6: 4]; // lower left
+        2'b01: page = pages[ 2: 0]; // lower right
     endcase
 end
 
@@ -136,7 +138,7 @@ always @(posedge clk, posedge rst) begin
         end
 
         if( done ) begin
-            hscan <= HB_END-9'h8;
+            hscan <= HSCAN0;
         end
 
         if( draw && !done ) begin

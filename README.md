@@ -4,9 +4,37 @@ SEGA System 16 compatible verilog core for FPGA by Jose Tejada (jotego).
 
 # Supported Games
 
-As of 2nd of April 2021, only unprotected, System 16A games that don't use the i8751 microcontroller will work. The only game that has been throughfully tested is Shinobi.
+As of 2nd of April 2021, only unprotected, System 16A games that don't use the i8751 microcontroller will work. The only game that has been thoroughly tested is Shinobi.
 
 Some of the features needed for the rest of the games are already implemented but I still haven't hooked up all the elements together.
+
+Encrypted games don't work on the J68 CPU.
+
+Game           |  System     | Status
+---------------|-------------|----------
+Ace Attacker   | 1094        | Won't boot
+Action Fighter | 1089A/16A   | Missing analog controls. Digital version ok
+Action Fighter | 16B         | Won't boot
+Alex Kidd      | 16A         | ok
+Alyen Syndrome | 16B         | Won't boot
+Alyen Syndrome | 16A/1089A   | Sprite issues. FX disappear
+Body Slam      | 8751        | Boots, bad graphics
+Phantasy Zone  |             | ok
+Major League   |             | Missing trackball (analog controls)
+Passing Shot   | 1094        | Won't boot
+Quartet / 2    | 8751        | Boots, bad graphics
+Quartet 2      | unprotected | Sound effect missing upon selecting character
+SDI            | 1089B       | boots but cannot pass the title screen
+Shinobi        |             | Ok
+Sukeban        | 1089B       | Won't boot
+Sukeban        | 16A / 1089B | Missing graphics. Needs over 10 buttons!
+Tetris         | 1094        | Won't boot
+Time Scanner   | 16A         | Boots to odd screen. No sprites shown.
+Time Scanner   | 16B         | Won't boot
+Wonder Boy III | 16A / 1089A | Ok
+Wonder Boy III | 16B         | Won't boot
+
+
 
 # Known Problems
 

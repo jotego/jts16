@@ -1,17 +1,17 @@
-<!--          FPGA compatible core of arcade hardware by Jotego
+<!--          FPGA compatible core for White Board arcade hardware by Jotego
 
               This core is available for hardware compatible with MiST and MiSTer
               Other FPGA systems may be supported by the time you read this.
               This work is not mantained by the MiSTer project. Please contact the
               core author for issues and updates.
 
-              (c) Jose Tejada, 2020. Please support the author
+              (c) Jose Tejada, 2021. Please support the author
               Patreon: https://patreon.com/topapate
               Paypal:  https://paypal.me/topapate
 
               The author does not endorse or participate in illegal distribution
               of copyrighted material. This work can be used with legally
-              obtained ROM dumps or with compatible homebrew software
+              obtained ROM dumps or with compatible homebrew software.
 
               This file license is GNU GPLv2.
               You can read the whole license file in
@@ -24,7 +24,6 @@
     <name>Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)</name>
     <setname>sjryuko1</setname>
     <rbf>jts16</rbf>
-    <mraversion>1.0</mraversion>
     <mameversion>0229</mameversion>
     <year>1987</year>
     <manufacturer>White Board</manufacturer>
@@ -35,9 +34,9 @@
     <rom index="0" zip="sjryuko1.zip|sjryuko.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 
-        18 00 18 10 18 40 18 44 
+        18 00 18 20 18 40 18 44 
         02 00 00 00 00 00 00 00 
-        00 00 00 00 00 00 00 00 
+        00 00 00 00 00 00 00 00
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
@@ -48,7 +47,7 @@
             <part name="epr-12250.25" crc="52c40f19" map="01"/>
             <part name="epr-12252.42" crc="7ae309d6" map="10"/>
         </interleave>
-        <part repeat="0x20000"> FF </part>
+        <part repeat="0x20000"> FF</part>
         <!-- soundcpu - starts at 0x40000 -->
         <part name="epr-12227.12" crc="5b12409d"/>
         <!-- n7751data - starts at 0x48000 -->
@@ -56,7 +55,7 @@
         <part name="epr-12229.2" crc="b7aa015c"/>
         <part name="epr-12230.4" crc="d0f61fd4"/>
         <part name="epr-12231.5" crc="780bdc57"/>
-        <part repeat="0x20000"> FF </part>
+        <part repeat="0x20000"> FF</part>
         <!-- gfx1 - starts at 0x88000 -->
         <interleave output="32">
             <part name="12224-95.b9" crc="eac17ba1" map="0001"/>
@@ -64,7 +63,7 @@
             <part name="12226-93.b11" crc="210e6999" map="0100"/>
             <part name="12226-93.b11" crc="210e6999" map="1000"/>
         </interleave>
-        <part repeat="0x58000"> FF </part>
+        <part repeat="0x58000"> FF</part>
         <!-- sprites - starts at 0x100000 -->
         <interleave output="16">
             <part name="12232-10.b1" crc="0adec62b" map="01"/>
@@ -83,13 +82,13 @@
             <part name="12239-30.b8" crc="91f70c8b" map="10"/>
         </interleave>
         <!-- mcu - starts at 0x180000 -->
-        <part repeat="0x1000"> FF </part>
-        <!-- maincpu:key - starts at 0x181000 -->
+        <part repeat="0x1000"> FF</part>
+        <part repeat="0x1000"> FF</part>
+        <!-- maincpu:key - starts at 0x182000 -->
         <part name="317-5021.key" crc="8e40b2ab"/>
-        <part repeat="0x1000"> FF </part>
         <!-- n7751 - starts at 0x184000 -->
         <part name="7751.bin" crc="6a9534fc"/>
-        <part repeat="0x1C00"> FF </part>
+        <part repeat="0x1C00"> FF</part>
         <!-- FD1089 base table starts at 0x186000 -->
         <part>
             00 1C 76 6A 5E 42 24 38 4B 67 AD 81 E9 C5 03 2F 
@@ -107,14 +106,16 @@
             A8 B4 D2 CE D0 CC A6 BA 1F 33 F5 D9 FB D7 1D 31 
             57 7B B1 9D B3 9F 59 75 8C 90 FA E6 F4 E8 8E 92 
             12 0E 68 74 E2 FE 94 88 65 49 8F A3 99 B5 7F 53 
-            35 19 D3 FF C9 E5 23 0F BE A2 C8 D4 4E 52 34 28 
+            35 19 D3 FF C9 E5 23 0F BE A2 C8 D4 4E 52 34 28
         </part>
         <!-- Total 0x186100 bytes - 1560 kBytes -->
+    </rom>
+    <rom index="16" zip="cheat.zip" md5="None">
+        <part name="debug.bin"/>
     </rom>
     <rom index="1">
         <part>00</part>
     </rom>
-    <nvram index="2" size="0"/>
     <switches base="16" default="FF,FF">
         <!-- DSW1 -->
         <dip name="Coin A" bits="0,3" ids=" 1/1,None,None,None,None,None,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>

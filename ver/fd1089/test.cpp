@@ -44,7 +44,7 @@ int main() {
             int dec  = ref.decrypt_one( addr, enc, keys, op);
 
             dut.op_n     = 1-op;
-            dut.addr     = addr;
+            dut.addr     = addr>>1;
             dut.enc      = enc;
             dut.dec      = dec;
             clock_dut( dut, 3 );
