@@ -15,11 +15,11 @@ Game           |  System     | Status
 Ace Attacker   | 1094        | Won't boot
 Action Fighter | 1089A/16A   | Missing analog controls. Digital version ok
 Action Fighter | 16B         | Won't boot
-Alex Kidd      | 16A         | Boots, problem with scroll during demo?
+Alex Kidd      | 16A         | ok
 Alyen Syndrome | 16B         | Won't boot
 Alyen Syndrome | 16A/1089A   | Sprite issues. FX disappear
 Body Slam      | 8751        | Boots, bad graphics
-Phantasy Zone  |             | Seems ok
+Phantasy Zone  |             | ok
 Major League   |             | Missing trackball (analog controls)
 Passing Shot   | 1094        | Won't boot
 Quartet / 2    | 8751        | Boots, bad graphics
