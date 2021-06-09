@@ -72,7 +72,7 @@ assign scr_addr = { code, vpos[2:0], 1'b0 };
 assign eff_scr  = rowscr_en ? rowscr : hscr[8:0];
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hscan } - {1'b0, eff_scr }+PXL_DLY + { {2{debug_bus[7]}}, debug_bus};
+    {hov, hpos } = {1'b0, hscan } - {1'b0, eff_scr }+PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( { vov, hov } )

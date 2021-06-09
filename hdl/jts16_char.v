@@ -73,8 +73,10 @@ jtframe_dual_ram16 #(
     .q1     ( scan      )
 );
 
+localparam [4:0] ROWREAD=8;
+
 assign char_addr = { code, vdump[2:0], 1'b0 };
-assign scr_start = hdump[8:4]==8;
+assign scr_start = hdump[8:4]==ROWREAD+1;
 
 // Row scroll
 always @(*) begin
@@ -84,8 +86,8 @@ always @(*) begin
     //     scan_addr = { 5'h1f, vdump[7:3], hdump[4] };
     // end
     // Reads row scroll during blanking
-    if ( hdump[8:4] == 7 ) begin
-        scan_addr = { 5'h1f, vdump[7:3], hdump[4] };
+    if ( hdump[8:4] == ROWREAD ) begin
+        scan_addr = { 5'h1f, vdump[7:3], hdump[3] };
     end
 end
 
@@ -94,9 +96,11 @@ always @(posedge clk, posedge rst) begin
         rowscr1 <= 0;
         rowscr2 <= 0;
     end else begin
-        if ( hdump[8:4] == 7 ) begin
-            if( hdump[4:3]==1 ) rowscr1 <= scan;
-            if( hdump[4:3]==3 ) rowscr2 <= scan;
+        if ( hdump[8:4] == ROWREAD ) begin
+            if( !hdump[3] )
+                rowscr1 <= scan;
+            else
+                rowscr2 <= scan;
         end
     end
 end
