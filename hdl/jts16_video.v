@@ -89,13 +89,18 @@ module jts16_video(
     output     [ 7:0]  st_dout
 );
 
-localparam [9:0] SCR_DLY=19;
+//localparam [9:0] SCR_DLY=19;
+localparam [9:0] SCR_DLY=17;
 /* verilator lint_off WIDTH */
 localparam [8:0] OBJ_DLY=SCR_DLY+9'd14;
 /* verilator lint_on WIDTH */
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;
+
+// Scroll
+wire [ 8:0] rowscr1, rowscr2;
+wire        scr_start;
 
 // video layers
 wire [ 6:0] char_pxl;
@@ -181,6 +186,11 @@ jts16_char u_char(
     .char_addr ( char_addr      ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
     .char_data ( char_data      ),
 
+    // In-RAM data
+    .scr_start ( scr_start      ),
+    .rowscr1   ( rowscr1        ),
+    .rowscr2   ( rowscr2        ),
+
     // Video signal
     .vdump     ( vdump          ),
     .hdump     ( hdump          ),
@@ -192,11 +202,14 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
-    .LHBL      ( LHBL           ),
+    //.LHBL      ( LHBL           ),
+    .LHBL      ( ~scr_start     ),
 
     .pages     ( scr1_pages     ),
     .hscr      ( scr1_hpos      ),
     .vscr      ( scr1_vpos      ),
+    .rowscr_en ( rowscr_en      ),
+    .rowscr    ( rowscr1        ),
 
     // SDRAM interface
     .map_ok    ( map1_ok        ),
@@ -219,11 +232,14 @@ jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
-    .LHBL      ( LHBL           ),
+    //.LHBL      ( LHBL           ),
+    .LHBL      ( ~scr_start     ),
 
     .pages     ( scr2_pages     ),
     .hscr      ( scr2_hpos      ),
     .vscr      ( scr2_vpos      ),
+    .rowscr_en ( rowscr_en      ),
+    .rowscr    ( rowscr2        ),
 
     // SDRAM interface
     .map_ok    ( map2_ok        ),

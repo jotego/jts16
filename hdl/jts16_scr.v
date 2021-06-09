@@ -28,6 +28,8 @@ module jts16_scr(
     input      [15:0]  pages,
     input      [15:0]  hscr,
     input      [15:0]  vscr,
+    input      [ 8:0]  rowscr,
+    input              rowscr_en,
 
     // SDRAM interface
     input              map_ok,
@@ -64,10 +66,13 @@ reg       done, draw;
 reg [7:0] busy;
 reg       hsel;
 
+wire [8:0] eff_scr;
+
 assign scr_addr = { code, vpos[2:0], 1'b0 };
+assign eff_scr  = rowscr_en ? rowscr : hscr[8:0];
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hscan } - {1'b0, hscr[8:0] }+PXL_DLY;
+    {hov, hpos } = {1'b0, hscan } - {1'b0, eff_scr }+PXL_DLY + { {2{debug_bus[7]}}, debug_bus};
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( { vov, hov } )

@@ -34,6 +34,11 @@ module jts16_char(
     output     [12:0]  char_addr, // 9 addr + 3 vertical = 12 bits
     input      [31:0]  char_data,
 
+    // In-RAM data
+    output             scr_start,
+    output reg [ 8:0]  rowscr1,
+    output reg [ 8:0]  rowscr2,
+
     // Video signal
     input      [ 8:0]  vdump,
     input      [ 8:0]  hdump,
@@ -41,7 +46,7 @@ module jts16_char(
 );
 
 wire [15:0] scan;
-wire [10:0] scan_addr;
+reg  [10:0] scan_addr;
 wire [ 1:0] we;
 reg  [ 8:0] code;
 
@@ -68,8 +73,33 @@ jtframe_dual_ram16 #(
     .q1     ( scan      )
 );
 
-assign scan_addr = { vdump[7:3], hdump[8:3]+6'd2 };
 assign char_addr = { code, vdump[2:0], 1'b0 };
+assign scr_start = hdump[8:4]==8;
+
+// Row scroll
+always @(*) begin
+    scan_addr = { vdump[7:3], hdump[8:3]+6'd2 };
+    // Reads column scroll during blanking
+    // if( hdump[2:0]==0 ) begin
+    //     scan_addr = { 5'h1f, vdump[7:3], hdump[4] };
+    // end
+    // Reads row scroll during blanking
+    if ( hdump[8:4] == 7 ) begin
+        scan_addr = { 5'h1f, vdump[7:3], hdump[4] };
+    end
+end
+
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        rowscr1 <= 0;
+        rowscr2 <= 0;
+    end else begin
+        if ( hdump[8:4] == 7 ) begin
+            if( hdump[4:3]==1 ) rowscr1 <= scan;
+            if( hdump[4:3]==3 ) rowscr2 <= scan;
+        end
+    end
+end
 
 // SDRAM runs at pxl_cen x 8, so new data from SDRAM takes about a
 // pxl_cen time to arrive. Data has information for four pixels
