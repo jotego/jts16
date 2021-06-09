@@ -53,6 +53,7 @@ reg  [11:0] lyr0, lyr1, lyr2;
 wire [15:0] pal;
 wire [14:0] rgb;
 wire [ 1:0] obj_prio;
+reg         shadow;
 
 assign we = ~dsn & {2{pal_cs}};
 
