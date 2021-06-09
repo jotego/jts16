@@ -72,6 +72,10 @@ scp -r mra/* root@MiSTer.home:/media/fat/_S16
 
 mv '/mra/* root@MiSTer.home:/media/fat/_S16/mra/_alt/_Wonder Boy 3/Wonder Boy III Monster Lair (Set 5, Japan, S16A) [FD1089A 317-0086].mra' '/mra/* root@MiSTer.home:/media/fat/_S16/mra/Wonder Boy III Monster Lair (Set 5, Japan, S16A) [FD1089A 317-0086].mra'
 
+sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Action Fighter (World, S16A) [FD1089A 317-0018]".mra
+sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Fantasy Zone (Rev A, World, S16A) [No Protection]".mra
+sed -i 's/quot/amp/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Shinobi (Set 6, World, S16A) [No Protection]".mra
+
 sed -i 's/quot/amp/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/"*.mra
 sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Fantasy Zone (Rev A, World, S16A) [No Protection]".mra
 sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Action Fighter (World, S16A) [FD1089A 317-0018]".mra
