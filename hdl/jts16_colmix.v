@@ -48,8 +48,8 @@ module jts16_colmix(
 );
 
 wire [ 1:0] we;
-reg  [10:0] pal_addr,
-            lyr0, lyr1, lyr2;
+reg  [10:0] pal_addr;
+reg  [11:0] lyr0, lyr1, lyr2;
 wire [15:0] pal;
 wire [14:0] rgb;
 wire [ 1:0] obj_prio;
@@ -62,10 +62,13 @@ assign blue  = { rgb[11:8], rgb[14] };
 
 assign obj_prio = obj_pxl[11:10];
 
-function [10:0] tile_or_obj( input [9:0] obj, input [9:0] tile, input tile_prio, input obj_prio );
+// bit 11 = shadow bit
+// bit 10 = 0/tile 1/obj
+//    9:0 = palette and colour index
+function [11:0] tile_or_obj( input [9:0] obj, input [9:0] tile, input tile_prio, input obj_prio );
     tile_or_obj = obj[3:0]==0 || !obj_prio || tile_prio ?
-                        { 1'b0, tile } :
-                        { 1'b1, obj  };
+                        { 2'b0, tile } :
+                   ( &obj[9:4] ? { 2'b10, tile } : { 1'b1, obj  } ); // shadow or object
 endfunction
 
 // Layer gating
@@ -91,10 +94,10 @@ always @(posedge clk) if( pxl_cen ) begin
 end
 
 always @(*) begin
-    pal_addr = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0 : (
+    { shadow, pal_addr } =
+               (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0 : (
                (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1 : (
                 lyr2 ));
-               //(lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? lyr2 : 11'd0 ));
 end
 
 jtframe_dual_ram16 #(
@@ -118,7 +121,14 @@ jtframe_dual_ram16 #(
     .q1     ( pal       )
 );
 
-wire [14:0] gated = video_en ? pal[14:0] : 15'd0;
+function [14:0] apply_shadow;
+    input shadow;
+    input [15:0] pal;
+    apply_shadow = (shadow & pal[15]) ?
+        { pal[14:10]>>1, pal[9:5]>>1, pal[4:0]>>1 } : pal[14:0];
+endfunction
+
+wire [14:0] gated = video_en ? apply_shadow( shadow, pal ) : 15'd0;
 
 jtframe_blank #(.DLY(2),.DW(15)) u_blank(
     .clk        ( clk       ),
