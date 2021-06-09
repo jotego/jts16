@@ -57,19 +57,28 @@ reg         shadow;
 
 assign we = ~dsn & {2{pal_cs}};
 
-assign red   = { rgb[ 3:0], rgb[12] };
-assign green = { rgb[ 7:4], rgb[13] };
-assign blue  = { rgb[11:8], rgb[14] };
+// assign red   = { rgb[ 3:0], rgb[12] };
+// assign green = { rgb[ 7:4], rgb[13] };
+// assign blue  = { rgb[11:8], rgb[14] };
+assign { red, green, blue } = rgb;
+
+wire [4:0] rpal, gpal, bpal;
+
+assign rpal  = { pal[ 3:0], pal[12] };
+assign gpal  = { pal[ 7:4], pal[13] };
+assign bpal  = { pal[11:8], pal[14] };
+
 
 assign obj_prio = obj_pxl[11:10];
 
 // bit 11 = shadow bit
 // bit 10 = 0/tile 1/obj
-//    9:0 = palette and colour index
+//    9:4 = palette
+//    3:0 = colour index
 function [11:0] tile_or_obj( input [9:0] obj, input [9:0] tile, input tile_prio, input obj_prio );
     tile_or_obj = obj[3:0]==0 || !obj_prio || tile_prio ?
                         { 2'b0, tile } :
-                   ( &obj[9:4] ? { 2'b10, tile } : { 1'b1, obj  } ); // shadow or object
+                   ( &obj[9:4] ? { 2'b10, tile } : { 2'b1, obj  } ); // shadow or object
 endfunction
 
 // Layer gating
@@ -95,10 +104,10 @@ always @(posedge clk) if( pxl_cen ) begin
 end
 
 always @(*) begin
-    { shadow, pal_addr } =
-               (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0 : (
-               (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1 : (
-                lyr2 ));
+    pal_addr = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0[10:0] : (
+               (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1[10:0] : (
+                lyr2[10:0] ));
+    shadow = lyr0[11] | lyr1[11] | lyr2[11];
 end
 
 jtframe_dual_ram16 #(
@@ -122,11 +131,16 @@ jtframe_dual_ram16 #(
     .q1     ( pal       )
 );
 
+function [4:0] dim;
+    input [4:0] a;
+    dim = a - (a>>2);
+endfunction
+
 function [14:0] apply_shadow;
     input shadow;
     input [15:0] pal;
-    apply_shadow = (shadow & pal[15]) ?
-        { pal[14:10]>>1, pal[9:5]>>1, pal[4:0]>>1 } : pal[14:0];
+    apply_shadow = (shadow & ~pal[15]) ?
+        { dim(rpal), dim(gpal), dim(bpal) } : {rpal, gpal, bpal};
 endfunction
 
 wire [14:0] gated = video_en ? apply_shadow( shadow, pal ) : 15'd0;

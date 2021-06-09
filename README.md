@@ -34,7 +34,12 @@ Time Scanner   | 16B         | Won't boot
 Wonder Boy III | 16A / 1089A | Ok
 Wonder Boy III | 16B         | Won't boot
 
+# PCB Check List
 
+These items need double checking on the PCB
+
+* How much shadow is created by sprite palette 3F? The core assumes a 25% attenuation
+* Idle bus cycles (other than the 1-cycle delay required by the M68000)
 
 # Known Problems
 
