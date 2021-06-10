@@ -90,7 +90,7 @@ module jts16_video(
     output     [ 7:0]  st_dout
 );
 
-localparam [9:0] SCR_DLY=15;
+localparam [9:0] SCR_DLY=17; // 15
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;

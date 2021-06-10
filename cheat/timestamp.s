@@ -11,6 +11,16 @@
     load s0,1
     output s0,b ; enable display
     call CLS
+
+    ;load s0,30
+    ;output s0,30
+    ;load s0,31
+    ;output s0,31
+    ;load s0,32
+    ;output s0,32
+    ;load s0,33
+    ;output s0,33
+
 BEGIN:
     output s0,0x40
 
