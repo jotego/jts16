@@ -31,6 +31,7 @@
     <joystick>8-way</joystick>
     <rotation>horizontal</rotation>
     <region>World</region>
+    <platform>Sega S16A</platform>
     <category>Platformer</category>
     <catver>Platform/Run, Jump &quot; Scrolling</catver>
     <rom index="0" zip="alexkidd1.zip|alexkidd.zip" type="merged" md5="None">

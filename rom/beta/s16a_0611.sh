@@ -26,6 +26,7 @@ function s16a_mra {
         -skip_desc "Fantasy Zone (Prototype, S16A)" \
         -rmdipsw "Unused" \
         -dipdef "$DIPS" \
+        -info platform "Sega S16A" \
         -info category "$CATEGORY" \
         -info catver "$CATVER" \
         -header 32 0x0 \
@@ -82,6 +83,10 @@ sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Action Fight
 sed -i 's/quot/amp/g' "/mra/* root@MiSTer.home:/media/fat/_S16mra/_alt/_Shinobi/"*.mra
 sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/_alt/_Action Fighter/"*.mra
 sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/_alt/_Fantasy Zone/"*.mra
+
+sed -i 's/bootleg (Beta)/Sega/g' "/mra/* root@MiSTer.home:/media/fat/_S16mra/_alt/_Shinobi/"*.mra
+sed -i 's/bootleg (Star)/Sega/g' "/mra/* root@MiSTer.home:/media/fat/_S16mra/_alt/_Shinobi/"*.mra
+sed -i 's/bootleg/Sega/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/_alt/_Wonderboy 3/"*.mra
 
 
 exit 0

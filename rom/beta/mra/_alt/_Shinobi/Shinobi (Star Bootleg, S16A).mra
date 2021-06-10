@@ -26,11 +26,12 @@
     <rbf>jts16</rbf>
     <mameversion>0229</mameversion>
     <year>1987</year>
-    <manufacturer>bootleg (Star)</manufacturer>
+    <manufacturer>Sega</manufacturer>
     <players>2</players>
     <joystick>8-way</joystick>
     <rotation>horizontal</rotation>
     <region>World</region>
+    <platform>Sega S16A</platform>
     <category>Hack &amp; Slash</category>
     <catver>Platform/Fighter Scrolling</catver>
     <rom index="0" zip="shinobls.zip|shinobi.zip" type="merged" md5="None">
