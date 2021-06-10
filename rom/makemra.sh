@@ -37,7 +37,7 @@ function s16a_mra {
         -order maincpu soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
         -header-offset-bits 8 \
         -header-offset 0 soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
-        -corebuttons 4 -buttons "$BUTTONS" -cheat
+        -corebuttons 4 -buttons "$BUTTONS" -beta
 
 }
 
