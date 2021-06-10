@@ -6,7 +6,7 @@ mkdir -p $OUTDIR
 mkdir -p $OUTDIR/_alt
 
 AUXTMP=/tmp/$RANDOM$RANDOM
-jtcfgstr -target=mist -output=bash -def ../hdl/jts16.def|grep _START > $AUXTMP
+jtcfgstr -target=mist -output=bash -def $JTROOT/hdl/jts16.def | grep _START > $AUXTMP
 source $AUXTMP
 
 function s16a_mra {
@@ -18,7 +18,7 @@ function s16a_mra {
     CATVER="$6"
     ALTFOLDER="_alt/_$FOLDER"
     mkdir -p "$OUTDIR/$ALTFOLDER"
-    mame2dip $NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder "$ALTFOLDER" \
+    mame2dip $ROM/$NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder "$ALTFOLDER" \
         -skip_desc 16B \
         -skip_desc Taito \
         -skip_desc FD1094 \
@@ -48,7 +48,7 @@ function s16a_mra {
         -order maincpu soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
         -header-offset-bits 8 \
         -header-offset 0 soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
-        -corebuttons 4 -buttons "$BUTTONS" -cheat
+        -corebuttons 4 -buttons "$BUTTONS" -beta
 
 }
 
@@ -71,25 +71,3 @@ s16a_mra fantzone  "Fantasy Zone" "Shot,Bomb,-" "ff,fc" "Shoot'em Up" "Shooter/F
 echo "Enter MiSTer's root password"
 scp -r mra/* root@MiSTer.home:/media/fat/_S16
 
-mv '/mra/* root@MiSTer.home:/media/fat/_S16/mra/_alt/_Wonder Boy 3/Wonder Boy III Monster Lair (Set 5, Japan, S16A) [FD1089A 317-0086].mra' '/mra/* root@MiSTer.home:/media/fat/_S16/mra/Wonder Boy III Monster Lair (Set 5, Japan, S16A) [FD1089A 317-0086].mra'
-
-sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Action Fighter (World, S16A) [FD1089A 317-0018]".mra
-sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Fantasy Zone (Rev A, World, S16A) [No Protection]".mra
-sed -i 's/quot/amp/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Shinobi (Set 6, World, S16A) [No Protection]".mra
-
-sed -i 's/quot/amp/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/"*.mra
-sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Fantasy Zone (Rev A, World, S16A) [No Protection]".mra
-sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/Action Fighter (World, S16A) [FD1089A 317-0018]".mra
-sed -i 's/quot/amp/g' "/mra/* root@MiSTer.home:/media/fat/_S16mra/_alt/_Shinobi/"*.mra
-sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/_alt/_Action Fighter/"*.mra
-sed -i 's/quot/apos/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/_alt/_Fantasy Zone/"*.mra
-
-sed -i 's/bootleg (Beta)/Sega/g' "/mra/* root@MiSTer.home:/media/fat/_S16mra/_alt/_Shinobi/"*.mra
-sed -i 's/bootleg (Star)/Sega/g' "/mra/* root@MiSTer.home:/media/fat/_S16mra/_alt/_Shinobi/"*.mra
-sed -i 's/bootleg/Sega/g' "/mra/* root@MiSTer.home:/media/fat/_S16/mra/_alt/_Wonderboy 3/"*.mra
-
-
-exit 0
-
-#/mnt/c/jotego/s16/mra/
-#/mnt/c/jotego/s16/mra/_alt/

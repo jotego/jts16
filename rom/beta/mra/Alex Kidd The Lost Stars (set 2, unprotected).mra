@@ -21,7 +21,7 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>Alex Kidd: The Lost Stars (Set 2, World, S16A) [No Protection]</name>
+    <name>Alex Kidd: The Lost Stars (set 2, unprotected)</name>
     <setname>alexkidd</setname>
     <rbf>jts16</rbf>
     <mameversion>0229</mameversion>
@@ -33,7 +33,7 @@
     <region>World</region>
     <platform>Sega S16A</platform>
     <category>Platformer</category>
-    <catver>Platform/Run, Jump &quot; Scrolling</catver>
+    <catver>Platform/Run, Jump &amp; Scrolling</catver>
     <rom index="0" zip="alexkidd.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 
@@ -92,21 +92,21 @@
         <part name="7751.bin" crc="6a9534fc"/>
         <!-- Total 0x184400 bytes - 1553 kBytes -->
     </rom>
-    <rom index="16" zip="cheat.zip" md5="None">
-        <part name="debug.bin"/>
+    <rom index="16" zip="beta.zip" md5="None">
+        <part name="beta.bin"/>
     </rom>
     <rom index="1">
         <part>00</part>
     </rom>
     <switches base="16" default="ff,ec">
         <!-- DSW1 -->
-        <dip name="Coin A" bits="0,3" ids="Free Play  or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
-        <dip name="Coin B" bits="4,7" ids="Free Play  or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
+        <dip name="Coin A" bits="0,3" ids="Free Play  or 1/1,1/1, 2/3,1/1, 4/5,1/1, 5/6,2/1, 4/3,2/1, 5/3, 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
+        <dip name="Coin B" bits="4,7" ids="Free Play  or 1/1,1/1, 2/3,1/1, 4/5,1/1, 5/6,2/1, 4/3,2/1, 5/3, 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <!-- DSW2 -->
         <dip name="Continues" bits="8" ids="Unlimited,Only before level 5"/>
         <dip name="Demo Sounds" bits="9" ids="On,Off"/>
         <dip name="Lives" bits="10,11" ids="240,5,4,3"/>
-        <dip name="Extend" bits="12,13" ids="40k,10k,20k"/>
+        <dip name="Bonus Life" bits="12,13" ids="None,40k,10k,20k"/>
         <dip name="Time Adjust" bits="14,15" ids="40,50,70,60"/>
     </switches>
     <buttons names="Jump/Swim,Shot,-,-,Start,Coin,Core credits" default="Y,X,BA,R,L,Start" count="3"/>
