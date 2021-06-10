@@ -133,7 +133,7 @@ jts16_obj_draw u_draw(
 );
 
 reg [8:0] hobj;
-localparam [8:0] HOBJ_START = 9'ha7-PXL_DLY,
+localparam [8:0] HOBJ_START = 9'ha6-PXL_DLY, //a7
                  FLIP_START = 9'hc0-HOBJ_START;
 
 always @(posedge clk) begin
