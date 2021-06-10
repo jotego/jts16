@@ -1,7 +1,5 @@
-*.xml
 *.rom
 *.fst
-*.zip
 *.log
 *.hex
 cheat/*.bin
