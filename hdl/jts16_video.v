@@ -37,6 +37,7 @@ module jts16_video(
 
     // Other configuration
     input              flip,
+    input              ext_flip,
     input              colscr_en,
     input              rowscr_en,
 
@@ -89,11 +90,7 @@ module jts16_video(
     output     [ 7:0]  st_dout
 );
 
-//localparam [9:0] SCR_DLY=19;
-localparam [9:0] SCR_DLY=17;
-/* verilator lint_off WIDTH */
-localparam [8:0] OBJ_DLY=SCR_DLY+9'd14;
-/* verilator lint_on WIDTH */
+localparam [9:0] SCR_DLY=15;
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;
@@ -112,6 +109,7 @@ wire [15:0] scr1_pages,      scr2_pages,
             scr1_hpos,       scr1_vpos,
             scr2_hpos,       scr2_vpos;
 
+wire        flipx = ext_flip ^ flip;
 // Frame rate and horizontal frequency as the original
 // "The sprite X position defines the starting location of the sprite. The
 //  leftmost pixel of the screen is $00B6, and the rightmost is $1F5."
@@ -192,9 +190,11 @@ jts16_char u_char(
     .rowscr2   ( rowscr2        ),
 
     // Video signal
+    .flip      ( flipx          ),
     .vdump     ( vdump          ),
     .hdump     ( hdump          ),
-    .pxl       ( char_pxl       )
+    .pxl       ( char_pxl       ),
+    .debug_bus ( debug_bus      )
 );
 
 jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
@@ -221,7 +221,8 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
     .scr_data  ( scr1_data      ),
 
     // Video signal
-    .vrender   ( vrender1       ),
+    .flip      ( flipx          ),
+    .vrender   ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( scr1_pxl       ),
     .debug_bus ( debug_bus      )
@@ -251,13 +252,14 @@ jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
     .scr_data  ( scr2_data      ),
 
     // Video signal
-    .vrender   ( vrender1       ),
+    .flip      ( flipx          ),
+    .vrender   ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( scr2_pxl       ),
     .debug_bus ( debug_bus      )
 );
 
-jts16_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
+jts16_obj #(.PXL_DLY(SCR_DLY)) u_obj(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl_cen   ( pxl_cen        ),
@@ -278,9 +280,11 @@ jts16_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
     // Video signal
     .hstart    ( hstart         ),
     .LHBL      ( ~HS            ),
+    .flip      ( flipx          ),
     .vrender   ( vdump          ),
     .hdump     ( hdump          ),
-    .pxl       ( obj_pxl        )
+    .pxl       ( obj_pxl        ),
+    .debug_bus ( debug_bus      )
 );
 
 jts16_colmix u_colmix(

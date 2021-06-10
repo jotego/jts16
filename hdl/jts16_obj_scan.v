@@ -36,6 +36,7 @@ module jts16_obj_scan(
     output reg [ 5:0]  dr_pal,
 
     // Video signal
+    input              flip,
     input              hstart,
     input      [ 8:0]  vrender
 );
@@ -56,6 +57,7 @@ reg        [ 2:0] bank;
 reg        [ 1:0] prio;
 reg        [ 5:0] pal;
 wire       [15:0] next_offset;
+wire       [ 8:0] vrf = flip ? 9'd223-vrender : vrender;
 
 assign tbl_addr    = { cur_obj, idx };
 assign next_offset = (first ? offset : tbl_dout) + pitch;
@@ -63,7 +65,7 @@ assign tbl_din     = offset;
 
 wire [7:0] top    = tbl_dout[ 7:0],
            bottom = tbl_dout[15:8];
-wire       inzone = vrender[7:0]>=top && bottom>vrender[7:0];
+wire       inzone = vrf[7:0]>=top && bottom>vrf[7:0];
 wire       badobj = top >= bottom;
 
 always @(posedge clk, posedge rst) begin
@@ -92,7 +94,7 @@ always @(posedge clk, posedge rst) begin
                 idx      <= 0;
                 stop     <= 0;
                 dr_start <= 0;
-                if( !hstart || vrender>223 ) begin // holds it still
+                if( !hstart || vrf>223 ) begin // holds it still
                     st  <= 0;
                     idx <= 0;
                 end
@@ -108,7 +110,7 @@ always @(posedge clk, posedge rst) begin
                         st      <= 1;
                         stop    <= 1;
                     end else begin // draw this one
-                        first <= top == vrender[7:0]; // first line
+                        first <= top == vrf[7:0]; // first line
                     end
                 end
             end

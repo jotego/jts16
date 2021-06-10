@@ -41,6 +41,7 @@ module jts16_scr(
     input      [31:0]  scr_data,
 
     // Video signal
+    input              flip,
     input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
     output     [10:0]  pxl,       // 1 priority + 7 palette + 3 colour = 11
@@ -48,11 +49,13 @@ module jts16_scr(
 );
 
 parameter [9:0] PXL_DLY=0;
-parameter [8:0] HB_END=9'h70, HSCAN0 = HB_END-9'd8;
+parameter [8:0] HB_END=9'h70, HSCAN0 = HB_END-9'd8-PXL_DLY;
+
 
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
 reg  [12:0] code;
+wire [ 8:0] vrf;
 
 reg  [8:0] hscan, vscan;
 
@@ -62,17 +65,20 @@ reg  [7:0] vpos;
 reg  [2:0] page;
 reg        hov, vov; // overflow bits
 
-reg       done, draw;
-reg [7:0] busy;
-reg       hsel;
+reg        done, draw;
+reg  [7:0] busy;
+reg        hsel;
 
 wire [8:0] eff_scr;
+reg  [8:0] hdly;
 
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 assign eff_scr  = rowscr_en ? rowscr : hscr[8:0];
+assign vrf      = flip ? 9'd223-vrender : vrender;
+//assign hdly     = hdump - PXL_DLY;
 
 always @(*) begin
-    {hov, hpos } = {1'b0, hscan } - {1'b0, eff_scr }+PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
+    {hov, hpos } = {1'b0, hscan } - {1'b0, eff_scr } + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( { vov, hov } )
@@ -81,6 +87,7 @@ always @(*) begin
         2'b00: page = pages[ 6: 4]; // lower left
         2'b01: page = pages[ 2: 0]; // lower right
     endcase
+    hdly = flip ? 9'hb0 -hdump : hdump;
 end
 
 reg [1:0] map_st;
@@ -137,7 +144,7 @@ always @(posedge clk, posedge rst) begin
         if( scr_good==2'b01 ) pxl_data <= scr_data[23:0];
 
         if( !LHBL && last_LHBL ) begin
-            vscan <= vrender;
+            vscan <= vrf;
             done  <= 0;
             busy  <= 0;
         end
@@ -173,9 +180,9 @@ jtframe_linebuf #(.DW(11),.AW(9)) u_linebuf(
     // New data writes
     .wr_addr( hscan    ),
     .wr_data( buf_data ),
-    .we     ( busy[7]   ),
+    .we     ( busy[7]  ),
     // Old data reads (and erases)
-    .rd_addr( hdump    ),
+    .rd_addr( hdly     ),
     .rd_data( pxl      ),
     .rd_gated(         )
 );

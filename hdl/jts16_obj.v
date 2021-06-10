@@ -35,11 +35,13 @@ module jts16_obj(
     input      [15:0]  obj_data,
 
     // Video signal
+    input              flip,
     input              hstart,
     input              LHBL,
     input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
-    output     [11:0]  pxl
+    output     [11:0]  pxl,
+    input      [ 7:0]  debug_bus
 );
 
 parameter [8:0] PXL_DLY=8;
@@ -99,6 +101,7 @@ jts16_obj_scan #(.PXL_DLY(0)) u_scan(
     .dr_pal    ( dr_pal         ),
 
     // Video signal
+    .flip      ( flip           ),
     .hstart    ( hstart         ),
     .vrender   ( vrender        )
 );
@@ -130,11 +133,12 @@ jts16_obj_draw u_draw(
 );
 
 reg [8:0] hobj;
-localparam [8:0] HOBJ_START = 9'hbc-PXL_DLY;
+localparam [8:0] HOBJ_START = 9'ha7-PXL_DLY,
+                 FLIP_START = 9'hc0-HOBJ_START;
 
 always @(posedge clk) begin
-    if( !LHBL ) hobj <= HOBJ_START;
-    else if(pxl_cen) hobj<= hobj+1'd1;
+    if( !LHBL ) hobj <= (flip ? (9'h1ff+FLIP_START) : HOBJ_START); //+ {debug_bus[7], debug_bus};
+    else if(pxl_cen) hobj<= flip ? hobj-1'd1 : hobj+1'd1;
 end
 
 jtframe_obj_buffer #(

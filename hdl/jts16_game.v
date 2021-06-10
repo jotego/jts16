@@ -315,6 +315,7 @@ jts16_video u_video(
     .obj_dout   ( obj_dout  ),
 
     .flip       ( flip      ),
+    .ext_flip   ( dip_flip  ),
     .colscr_en  ( colscr_en ),
     .rowscr_en  ( rowscr_en ),
 
