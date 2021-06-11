@@ -1,0 +1,367 @@
+<mame>
+	<machine name="aceattac" sourcefile="segas16b.cpp">
+		<description>Ace Attacker (FD1094 317-0059)</description>
+		<year>1988</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-11491.a4" size="65536" crc="f3c19c36" sha1="e45ca6d1d943d6cc140867055033884c738e2ac2" region="maincpu" offset="0"/>
+		<rom name="epr-11489.a1" size="65536" crc="bbe623c5" sha1="6d047699c7b6df7ebb7a3c9bee032e2536eed84c" region="maincpu" offset="1"/>
+		<rom name="epr-11492.a5" size="65536" crc="d8bd3139" sha1="54915d4e8a616e0e54135ca34daf4357b8bfa068" region="maincpu" offset="20000"/>
+		<rom name="epr-11490.a2" size="65536" crc="38cb3a41" sha1="1d74cc69907cdff2d85e965b80bf3f551465257e" region="maincpu" offset="20001"/>
+		<rom name="317-0059.key" size="8192" crc="4512e2fa" sha1="c703fb482f846fb1a3bdba738b125221dc52bf22" status="baddump" region="maincpu:key" offset="0"/>
+		<rom name="epr-11493.b9" size="65536" crc="654485d9" sha1="b431270564c4e33fd70c8c85af1fcbff8b59ba49" region="gfx1" offset="0"/>
+		<rom name="epr-11494.b10" size="65536" crc="b67971ab" sha1="95cb6927baf425bcc290832ea9741b19852c7a1b" region="gfx1" offset="10000"/>
+		<rom name="epr-11495.b11" size="65536" crc="b687ab61" sha1="b08130a9d777c918972895136b1bf520d7117114" region="gfx1" offset="20000"/>
+		<rom name="epr-11501.b1" size="65536" crc="09179ead" sha1="3e6bf04e1e9ea867d087a47ff04ad0a064a8e299" region="sprites" offset="1"/>
+		<rom name="epr-11505.b5" size="65536" crc="b67f1ecf" sha1="3a26cdf91e5a1a11c1a8857e713a9e00cc1bfce0" region="sprites" offset="0"/>
+		<rom name="epr-11502.b2" size="65536" crc="7464bae4" sha1="c6b6ca240cee72e7fbd17bad5ca2d5cfe8e835c6" region="sprites" offset="20001"/>
+		<rom name="epr-11506.b6" size="65536" crc="b0104def" sha1="c81a66ec3a600c1d4c5d058caef15936c59b2574" region="sprites" offset="20000"/>
+		<rom name="epr-11503.b3" size="65536" crc="344c0692" sha1="3125701f6bb91d8f64515e214b571e169c30a444" region="sprites" offset="40001"/>
+		<rom name="epr-11507.b7" size="65536" crc="a2af710a" sha1="1c8b75b72797146c2eb788511f8cb1b367fc3e0d" region="sprites" offset="40000"/>
+		<rom name="epr-11504.b4" size="65536" crc="42b4a5f8" sha1="efb7beee7b45023861711f56b7cc907400cb266e" region="sprites" offset="60001"/>
+		<rom name="epr-11508.b8" size="65536" crc="5cbb833c" sha1="dc7041b6a4fa75d050bfc2176d0f9e242b55a0b8" region="sprites" offset="60000"/>
+		<rom name="epr-11496.a7" size="32768" crc="82cb40a9" sha1="daf2233438331ba6e6ff8bda4015e92d23e616c5" region="soundcpu" offset="0"/>
+		<rom name="epr-11497.a8" size="32768" crc="b04f62cc" sha1="29b468e5a565dc14e00c371913663eca66ccb44d" region="soundcpu" offset="10000"/>
+		<rom name="epr-11498.a9" size="32768" crc="97baf52b" sha1="97800014250b0099c7e53d597b0ef02ae14e6dba" region="soundcpu" offset="20000"/>
+		<rom name="epr-11499.a10" size="32768" crc="ea332866" sha1="eba0b422b39f7f3f81af1059043a87d944c4aff7" region="soundcpu" offset="30000"/>
+		<rom name="epr-11500.a11" size="32768" crc="2ddf1c31" sha1="77b20edbbd801072b20d9dc5e8fa2f468e53d79e" region="soundcpu" offset="40000"/>
+		<device_ref name="fd1094"/>
+		<device_ref name="z80"/>
+		<device_ref name="nvram"/>
+		<device_ref name="sega_315_5195"/>
+		<device_ref name="gfxdecode"/>
+		<device_ref name="palette"/>
+		<device_ref name="screen"/>
+		<device_ref name="sega_sys16b_sprite"/>
+		<device_ref name="segaic16_video"/>
+		<device_ref name="speaker"/>
+		<device_ref name="ym2151"/>
+		<device_ref name="upd7759"/>
+		<device_ref name="netlist_sound"/>
+		<device_ref name="nl_stream_in"/>
+		<device_ref name="nl_stream_in"/>
+		<device_ref name="nl_stream_in"/>
+		<device_ref name="nl_stream_out"/>
+		<device_ref name="upd4701a"/>
+		<device_ref name="upd4701a"/>
+		<device_ref name="cxd1095"/>
+		<chip type="cpu" tag="maincpu" name="Hitachi FD1094 Encrypted CPU" clock="10000000"/>
+		<chip type="cpu" tag="soundcpu" name="Zilog Z80" clock="5000000"/>
+		<chip type="audio" tag="mono" name="Speaker"/>
+		<chip type="audio" tag="ym2151" name="Yamaha YM2151 OPM" clock="4000000"/>
+		<chip type="audio" tag="upd" name="NEC uPD7759" clock="640000"/>
+		<chip type="audio" tag="netlist" name="Netlist Sound Device" clock="48000"/>
+		<display tag="screen" type="raster" rotate="270" width="320" height="224" refresh="60.054389" pixclock="6293700" htotal="400" hbend="0" hbstart="320" vtotal="262" vbend="0" vbstart="224" />
+		<sound channels="1"/>
+		<input players="4" coins="2" service="yes">
+			<control type="positional" player="1" buttons="1" minimum="0" maximum="10" sensitivity="10" keydelta="1"/>
+			<control type="trackball" player="1" minimum="0" maximum="4095" sensitivity="100" keydelta="30" reverse="yes"/>
+			<control type="stick" player="2" buttons="1" minimum="0" maximum="255" sensitivity="100" keydelta="30"/>
+			<control type="positional" player="2" minimum="0" maximum="10" sensitivity="10" keydelta="1"/>
+			<control type="pedal" player="2" minimum="0" maximum="7" sensitivity="100" keydelta="1"/>
+			<control type="trackball" player="3" minimum="0" maximum="4095" sensitivity="100" keydelta="30" reverse="yes"/>
+			<control type="stick" player="4" minimum="0" maximum="255" sensitivity="100" keydelta="30"/>
+			<control type="pedal" player="4" minimum="0" maximum="7" sensitivity="100" keydelta="1"/>
+		</input>
+		<dipswitch name="Coin A" tag="DSW1" mask="15">
+			<diplocation name="SW1" number="1"/>
+			<diplocation name="SW1" number="2"/>
+			<diplocation name="SW1" number="3"/>
+			<diplocation name="SW1" number="4"/>
+			<dipvalue name="4 Coins/1 Credit" value="7"/>
+			<dipvalue name="3 Coins/1 Credit" value="8"/>
+			<dipvalue name="2 Coins/1 Credit" value="9"/>
+			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="2 Coins/3 Credits" value="6"/>
+			<dipvalue name="1 Coin/2 Credits" value="14"/>
+			<dipvalue name="1 Coin/3 Credits" value="13"/>
+			<dipvalue name="1 Coin/4 Credits" value="12"/>
+			<dipvalue name="1 Coin/5 Credits" value="11"/>
+			<dipvalue name="1 Coin/6 Credits" value="10"/>
+			<dipvalue name="Free Play (if Coin B too) or 1/1" value="0"/>
+		</dipswitch>
+		<dipswitch name="Coin B" tag="DSW1" mask="240">
+			<diplocation name="SW1" number="5"/>
+			<diplocation name="SW1" number="6"/>
+			<diplocation name="SW1" number="7"/>
+			<diplocation name="SW1" number="8"/>
+			<dipvalue name="4 Coins/1 Credit" value="112"/>
+			<dipvalue name="3 Coins/1 Credit" value="128"/>
+			<dipvalue name="2 Coins/1 Credit" value="144"/>
+			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="2 Coins/3 Credits" value="96"/>
+			<dipvalue name="1 Coin/2 Credits" value="224"/>
+			<dipvalue name="1 Coin/3 Credits" value="208"/>
+			<dipvalue name="1 Coin/4 Credits" value="192"/>
+			<dipvalue name="1 Coin/5 Credits" value="176"/>
+			<dipvalue name="1 Coin/6 Credits" value="160"/>
+			<dipvalue name="Free Play (if Coin A too) or 1/1" value="0"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds" tag="DSW2" mask="1">
+			<diplocation name="SW2" number="1"/>
+			<dipvalue name="Off" value="1"/>
+			<dipvalue name="On" value="0" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Starting Points" tag="DSW2" mask="14">
+			<diplocation name="SW2" number="2"/>
+			<diplocation name="SW2" number="3"/>
+			<diplocation name="SW2" number="4"/>
+			<dipvalue name="2000" value="6"/>
+			<dipvalue name="3000" value="10"/>
+			<dipvalue name="4000" value="12"/>
+			<dipvalue name="5000" value="14" default="yes"/>
+			<dipvalue name="6000" value="8"/>
+			<dipvalue name="7000" value="4"/>
+			<dipvalue name="8000" value="2"/>
+			<dipvalue name="9000" value="0"/>
+		</dipswitch>
+		<dipswitch name="Point Table" tag="DSW2" mask="48">
+			<diplocation name="SW2" number="5"/>
+			<diplocation name="SW2" number="6"/>
+			<dipvalue name="Easy" value="32"/>
+			<dipvalue name="Normal" value="48" default="yes"/>
+			<dipvalue name="Hard" value="16"/>
+			<dipvalue name="Hardest" value="0"/>
+		</dipswitch>
+		<dipswitch name="Difficulty" tag="DSW2" mask="192">
+			<diplocation name="SW2" number="7"/>
+			<diplocation name="SW2" number="8"/>
+			<dipvalue name="Easy" value="0"/>
+			<dipvalue name="Normal" value="192" default="yes"/>
+			<dipvalue name="Hard" value="0"/>
+			<dipvalue name="Hardest" value="0"/>
+		</dipswitch>
+		<port tag=":DIAL1">
+			<analog mask="15"/>
+		</port>
+		<port tag=":DIAL2">
+			<analog mask="15"/>
+		</port>
+		<port tag=":DSW1">
+		</port>
+		<port tag=":DSW2">
+		</port>
+		<port tag=":HANDX1">
+			<analog mask="255"/>
+		</port>
+		<port tag=":HANDX2">
+			<analog mask="255"/>
+		</port>
+		<port tag=":HANDY1">
+			<analog mask="7"/>
+		</port>
+		<port tag=":HANDY2">
+			<analog mask="7"/>
+		</port>
+		<port tag=":P1">
+		</port>
+		<port tag=":P2">
+		</port>
+		<port tag=":SERVICE">
+		</port>
+		<port tag=":TRACKX1">
+			<analog mask="4095"/>
+		</port>
+		<port tag=":TRACKX2">
+			<analog mask="4095"/>
+		</port>
+		<port tag=":TRACKY1">
+			<analog mask="4095"/>
+		</port>
+		<port tag=":TRACKY2">
+			<analog mask="4095"/>
+		</port>
+		<port tag=":UNUSED">
+		</port>
+		<driver status="good" emulation="good" savestate="unsupported"/>
+	</machine>
+	<machine name="aceattaca" sourcefile="segas16a.cpp" cloneof="aceattac" romof="aceattac">
+		<description>Ace Attacker (Japan, System 16A, FD1094 317-0060)</description>
+		<year>1988</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-11573.43" size="65536" crc="ca116367" sha1="ca09b01568dafec48354072267accb73a97a670f" region="maincpu" offset="0"/>
+		<rom name="epr-11571.26" size="65536" crc="5631d1d6" sha1="08a2d375e3e4caf392cf2da2dc5497fd1142ab15" region="maincpu" offset="1"/>
+		<rom name="epr-11574.42" size="65536" crc="8d3ed7bd" sha1="0cb947a796071b0b787638a85fce39135ad8d3cb" region="maincpu" offset="20000"/>
+		<rom name="epr-11572.25" size="65536" crc="35c27c25" sha1="ac983db30edb4c4b71f04359cd22c663940435f5" region="maincpu" offset="20001"/>
+		<rom name="317-0060.key" size="8192" crc="f4ee940f" sha1="13cca3f19bd9761d484185a3476bec3c8c18efcf" region="maincpu:key" offset="0"/>
+		<rom name="epr-11575.95" size="65536" crc="bab9fbf3" sha1="53d78dfc003e04730c7679c830cc086cbf3e3548" region="gfx1" offset="0"/>
+		<rom name="epr-11576.94" size="65536" crc="067ed682" sha1="13e2e1f812e5a3994a0f1d35eb210881645e74cd" region="gfx1" offset="10000"/>
+		<rom name="epr-11577.93" size="65536" crc="f67cf331" sha1="457b9e618dfa678ae374cdeb25488af3de2e8949" region="gfx1" offset="20000"/>
+		<rom name="epr-11501.10" merge="epr-11501.b1" size="65536" crc="09179ead" sha1="3e6bf04e1e9ea867d087a47ff04ad0a064a8e299" region="sprites" offset="1"/>
+		<rom name="epr-11505.11" merge="epr-11505.b5" size="65536" crc="b67f1ecf" sha1="3a26cdf91e5a1a11c1a8857e713a9e00cc1bfce0" region="sprites" offset="0"/>
+		<rom name="epr-11502.17" merge="epr-11502.b2" size="65536" crc="7464bae4" sha1="c6b6ca240cee72e7fbd17bad5ca2d5cfe8e835c6" region="sprites" offset="10001"/>
+		<rom name="epr-11506.18" merge="epr-11506.b6" size="65536" crc="b0104def" sha1="c81a66ec3a600c1d4c5d058caef15936c59b2574" region="sprites" offset="10000"/>
+		<rom name="epr-11503.23" merge="epr-11503.b3" size="65536" crc="344c0692" sha1="3125701f6bb91d8f64515e214b571e169c30a444" region="sprites" offset="20001"/>
+		<rom name="epr-11507.24" merge="epr-11507.b7" size="65536" crc="a2af710a" sha1="1c8b75b72797146c2eb788511f8cb1b367fc3e0d" region="sprites" offset="20000"/>
+		<rom name="epr-11504.29" merge="epr-11504.b4" size="65536" crc="42b4a5f8" sha1="efb7beee7b45023861711f56b7cc907400cb266e" region="sprites" offset="30001"/>
+		<rom name="epr-11508.30" merge="epr-11508.b8" size="65536" crc="5cbb833c" sha1="dc7041b6a4fa75d050bfc2176d0f9e242b55a0b8" region="sprites" offset="30000"/>
+		<rom name="epr-11578.12" size="32768" crc="3d58e39a" sha1="3e3591ac96903376698cf95d1b1a5f5db590db3c" region="soundcpu" offset="0"/>
+		<rom name="7751.bin" size="1024" crc="6a9534fc" sha1="67ad94674db5c2aab75785668f610f6f4eccd158" region="n7751" offset="0"/>
+		<rom name="epr-11579.1" size="32768" crc="1a994135" sha1="f42444521a878d32b189876f8854f6363e1b353b" region="n7751data" offset="0"/>
+		<rom name="epr-11580.2" size="32768" crc="961646ed" sha1="4c8f87a10ffd7035145dedba86deb373368b0e49" region="n7751data" offset="8000"/>
+		<rom name="epr-11581.4" size="32768" crc="d271a6e5" sha1="de303f70abfa28e599e5eb0c2b314f43faa1b484" region="n7751data" offset="10000"/>
+		<rom name="epr-11582.5" size="32768" crc="bcbe3d8a" sha1="2e4bb0ebffdd594b192c5b854ea425029d92fdb1" region="n7751data" offset="18000"/>
+		<device_ref name="fd1094"/>
+		<device_ref name="z80"/>
+		<device_ref name="n7751"/>
+		<device_ref name="i8243"/>
+		<device_ref name="nvram"/>
+		<device_ref name="watchdog"/>
+		<device_ref name="i8255"/>
+		<device_ref name="screen"/>
+		<device_ref name="sega_sys16a_sprite"/>
+		<device_ref name="segaic16_video"/>
+		<device_ref name="gfxdecode"/>
+		<device_ref name="palette"/>
+		<device_ref name="speaker"/>
+		<device_ref name="generic_latch_8"/>
+		<device_ref name="ym2151"/>
+		<device_ref name="dac_8bit_r2r"/>
+		<device_ref name="volt_reg"/>
+		<device_ref name="cxd1095"/>
+		<chip type="cpu" tag="maincpu" name="Hitachi FD1094 Encrypted CPU" clock="10000000"/>
+		<chip type="cpu" tag="soundcpu" name="Zilog Z80" clock="4000000"/>
+		<chip type="cpu" tag="n7751" name="N7751" clock="6000000"/>
+		<chip type="audio" tag="speaker" name="Speaker"/>
+		<chip type="audio" tag="ymsnd" name="Yamaha YM2151 OPM" clock="4000000"/>
+		<chip type="audio" tag="dac" name="8-Bit R-2R DAC"/>
+		<display tag="screen" type="raster" rotate="270" width="320" height="224" refresh="60.000000" pixclock="5376240" htotal="342" hbend="0" hbstart="320" vtotal="262" vbend="0" vbstart="224" />
+		<sound channels="1"/>
+		<input players="4" coins="2" service="yes">
+			<control type="positional" player="1" buttons="1" minimum="0" maximum="10" sensitivity="10" keydelta="1"/>
+			<control type="trackball" player="1" minimum="0" maximum="255" sensitivity="100" keydelta="30" reverse="yes"/>
+			<control type="stick" player="2" buttons="1" minimum="0" maximum="255" sensitivity="100" keydelta="30"/>
+			<control type="positional" player="2" minimum="0" maximum="10" sensitivity="10" keydelta="1"/>
+			<control type="pedal" player="2" minimum="0" maximum="127" sensitivity="100" keydelta="10"/>
+			<control type="trackball" player="3" minimum="0" maximum="255" sensitivity="100" keydelta="30" reverse="yes"/>
+			<control type="stick" player="4" minimum="0" maximum="255" sensitivity="100" keydelta="30"/>
+			<control type="pedal" player="4" minimum="0" maximum="127" sensitivity="100" keydelta="10"/>
+		</input>
+		<dipswitch name="Coin A" tag="DSW1" mask="15">
+			<diplocation name="SW1" number="1"/>
+			<diplocation name="SW1" number="2"/>
+			<diplocation name="SW1" number="3"/>
+			<diplocation name="SW1" number="4"/>
+			<dipvalue name="4 Coins/1 Credit" value="7"/>
+			<dipvalue name="3 Coins/1 Credit" value="8"/>
+			<dipvalue name="2 Coins/1 Credit" value="9"/>
+			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="2 Coins/3 Credits" value="6"/>
+			<dipvalue name="1 Coin/2 Credits" value="14"/>
+			<dipvalue name="1 Coin/3 Credits" value="13"/>
+			<dipvalue name="1 Coin/4 Credits" value="12"/>
+			<dipvalue name="1 Coin/5 Credits" value="11"/>
+			<dipvalue name="1 Coin/6 Credits" value="10"/>
+			<dipvalue name="Free Play (if Coin B too) or 1/1" value="0"/>
+		</dipswitch>
+		<dipswitch name="Coin B" tag="DSW1" mask="240">
+			<diplocation name="SW1" number="5"/>
+			<diplocation name="SW1" number="6"/>
+			<diplocation name="SW1" number="7"/>
+			<diplocation name="SW1" number="8"/>
+			<dipvalue name="4 Coins/1 Credit" value="112"/>
+			<dipvalue name="3 Coins/1 Credit" value="128"/>
+			<dipvalue name="2 Coins/1 Credit" value="144"/>
+			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="2 Coins/3 Credits" value="96"/>
+			<dipvalue name="1 Coin/2 Credits" value="224"/>
+			<dipvalue name="1 Coin/3 Credits" value="208"/>
+			<dipvalue name="1 Coin/4 Credits" value="192"/>
+			<dipvalue name="1 Coin/5 Credits" value="176"/>
+			<dipvalue name="1 Coin/6 Credits" value="160"/>
+			<dipvalue name="Free Play (if Coin A too) or 1/1" value="0"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds" tag="DSW2" mask="1">
+			<diplocation name="SW2" number="1"/>
+			<dipvalue name="Off" value="1"/>
+			<dipvalue name="On" value="0" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Starting Points" tag="DSW2" mask="14">
+			<diplocation name="SW2" number="2"/>
+			<diplocation name="SW2" number="3"/>
+			<diplocation name="SW2" number="4"/>
+			<dipvalue name="2000" value="6"/>
+			<dipvalue name="3000" value="10"/>
+			<dipvalue name="4000" value="12"/>
+			<dipvalue name="5000" value="14" default="yes"/>
+			<dipvalue name="6000" value="8"/>
+			<dipvalue name="7000" value="4"/>
+			<dipvalue name="8000" value="2"/>
+			<dipvalue name="9000" value="0"/>
+		</dipswitch>
+		<dipswitch name="Point Table" tag="DSW2" mask="48">
+			<diplocation name="SW2" number="5"/>
+			<diplocation name="SW2" number="6"/>
+			<dipvalue name="Easy" value="32"/>
+			<dipvalue name="Normal" value="48" default="yes"/>
+			<dipvalue name="Hard" value="16"/>
+			<dipvalue name="Hardest" value="0"/>
+		</dipswitch>
+		<dipswitch name="Difficulty" tag="DSW2" mask="192">
+			<diplocation name="SW2" number="7"/>
+			<diplocation name="SW2" number="8"/>
+			<dipvalue name="Easy" value="0"/>
+			<dipvalue name="Normal" value="192" default="yes"/>
+			<dipvalue name="Hard" value="0"/>
+			<dipvalue name="Hardest" value="0"/>
+		</dipswitch>
+		<port tag=":DIAL1">
+			<analog mask="15"/>
+		</port>
+		<port tag=":DIAL2">
+			<analog mask="15"/>
+		</port>
+		<port tag=":DSW1">
+		</port>
+		<port tag=":DSW2">
+		</port>
+		<port tag=":HANDY1">
+			<analog mask="127"/>
+		</port>
+		<port tag=":HANDY2">
+			<analog mask="127"/>
+		</port>
+		<port tag=":P1">
+			<analog mask="255"/>
+		</port>
+		<port tag=":P2">
+			<analog mask="255"/>
+		</port>
+		<port tag=":SERVICE">
+		</port>
+		<port tag=":TRACKX1">
+			<analog mask="255"/>
+		</port>
+		<port tag=":TRACKX2">
+			<analog mask="255"/>
+		</port>
+		<port tag=":TRACKY1">
+			<analog mask="255"/>
+		</port>
+		<port tag=":TRACKY2">
+			<analog mask="255"/>
+		</port>
+		<port tag=":UNUSED">
+		</port>
+		<driver status="good" emulation="good" savestate="supported"/>
+	</machine>
+</mame>
