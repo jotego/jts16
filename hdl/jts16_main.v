@@ -195,7 +195,7 @@ always @(posedge clk, posedge rst) begin
             end
             2'd1:
                 case( A[2:1] )
-                    2'd0: cab_dout <= { 2'b11, start_button, service, 1'b1, coin_input };
+                    2'd0: cab_dout <= { 2'b11, start_button, service, dip_test, coin_input };
                     2'd1: cab_dout <= {sort_joy(joystick1)};
                     2'd3: cab_dout <= {sort_joy(joystick2)};
                     default: cab_dout <= 8'hff;
