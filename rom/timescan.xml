@@ -204,12 +204,12 @@
 		<rom name="epr-10545.93" merge="epr-10545.b11" size="32768" crc="c8694bc0" sha1="e48fc349ef454ded86141937f70b006e64da6b6b" region="gfx1" offset="10000"/>
 		<rom name="epr-10548.10" merge="epr-10548.b1" size="32768" crc="aa150735" sha1="b6e6ff9229c641e196fc7a0a2cf7aa362f554676" region="sprites" offset="1"/>
 		<rom name="epr-10552.11" merge="epr-10552.b5" size="32768" crc="6fcbb9f7" sha1="0a0fab930477d8b79e500263bbc80d3bf73778f8" region="sprites" offset="0"/>
-		<rom name="epr-10549.17" merge="epr-10549.b2" size="32768" crc="2f59f067" sha1="1fb64cce2f98ddcb5ecb662e63ea636a8da08bcd" region="sprites" offset="20001"/>
-		<rom name="epr-10553.18" merge="epr-10553.b6" size="32768" crc="8a220a9f" sha1="c17547d85721fa19e5f445b5be30b3fbf5e8cc6e" region="sprites" offset="20000"/>
-		<rom name="epr-10550.23" merge="epr-10550.b3" size="32768" crc="f05069ff" sha1="bd95761036c2fad8ddf4e169d899b173822ee4b0" region="sprites" offset="40001"/>
-		<rom name="epr-10554.24" merge="epr-10554.b7" size="32768" crc="dc64f809" sha1="ea85eefa98ec55e9e872940821a959ff4eb1bd1c" region="sprites" offset="40000"/>
-		<rom name="epr-10551.29" merge="epr-10551.b4" size="32768" crc="435d811f" sha1="b28eb09620113cd7578387c4d96029f2acb8ec06" region="sprites" offset="60001"/>
-		<rom name="epr-10555.30" merge="epr-10555.b8" size="32768" crc="2143c471" sha1="d413aa216349ddf773a39d2826c3a940b4149229" region="sprites" offset="60000"/>
+		<rom name="epr-10549.17" merge="epr-10549.b2" size="32768" crc="2f59f067" sha1="1fb64cce2f98ddcb5ecb662e63ea636a8da08bcd" region="sprites" offset="10001"/>
+		<rom name="epr-10553.18" merge="epr-10553.b6" size="32768" crc="8a220a9f" sha1="c17547d85721fa19e5f445b5be30b3fbf5e8cc6e" region="sprites" offset="10000"/>
+		<rom name="epr-10550.23" merge="epr-10550.b3" size="32768" crc="f05069ff" sha1="bd95761036c2fad8ddf4e169d899b173822ee4b0" region="sprites" offset="20001"/>
+		<rom name="epr-10554.24" merge="epr-10554.b7" size="32768" crc="dc64f809" sha1="ea85eefa98ec55e9e872940821a959ff4eb1bd1c" region="sprites" offset="20000"/>
+		<rom name="epr-10551.29" merge="epr-10551.b4" size="32768" crc="435d811f" sha1="b28eb09620113cd7578387c4d96029f2acb8ec06" region="sprites" offset="30001"/>
+		<rom name="epr-10555.30" merge="epr-10555.b8" size="32768" crc="2143c471" sha1="d413aa216349ddf773a39d2826c3a940b4149229" region="sprites" offset="30000"/>
 		<rom name="epr-10546.12" size="32768" crc="1ebee5cc" sha1="5e24ee25e770068a1292e657307cf53f6a8ae1c9" region="soundcpu" offset="0"/>
 		<rom name="7751.bin" size="1024" crc="6a9534fc" sha1="67ad94674db5c2aab75785668f610f6f4eccd158" region="n7751" offset="0"/>
 		<rom name="epr-10547.1" size="32768" crc="d24ffc4b" sha1="3b250e1f026664f7a37f65d1c1a07381e88f11e8" region="n7751data" offset="0"/>
