@@ -35,7 +35,7 @@
     <category>Shoot&apos;em Up</category>
     <catver>Shooter/Misc. Vertical</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210610</mratimestamp>
+    <mratimestamp>20210611</mratimestamp>
     <rom index="0" zip="afighter.zip" type="merged" md5="None">
         <part>
         04 00 00 00 08 80 10 00 

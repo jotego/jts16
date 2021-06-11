@@ -293,7 +293,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="shinobi1d" sourcefile="segas16a.cpp" cloneof="shinobi" romof="shinobi">
-		<description>Shinobi (Set 1 Bootleg, World S16A) [FD1094 317-0050]</description>
+		<description>Shinobi (Set 1 Bootleg, World S16A) [No Protection]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="bootleg_epr-11262.42" size="65536" crc="9a54a498" sha1="34413767d09178f715be4147dfe48e3b1ef95021" region="maincpu" offset="0"/>
@@ -584,7 +584,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="shinobi2d" sourcefile="segas16b.cpp" cloneof="shinobi" romof="shinobi">
-		<description>Shinobi (Set 2 Bootleg, World, S16B) [FD1094 317-0049]</description>
+		<description>Shinobi (Set 2 Bootleg, World, S16B) [No Protection]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="bootleg_epr-11282.a4" size="65536" crc="b930399d" sha1="955ff2948e1990463631b0bc5c7f5275384236cc" region="maincpu" offset="0"/>
@@ -1443,7 +1443,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="shinobld" sourcefile="system16.cpp" cloneof="shinobi" romof="shinobi">
-		<description>Shinobi (Datsu Bootleg, Set 1, World, S16B) [FD1094 317-0050]</description>
+		<description>Shinobi (Datsu Bootleg, Set 1, World, S16B) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega / Datsu</manufacturer>
 		<rom name="12.bin" size="65536" crc="757a0c71" sha1="8f476b0fd5f5dd480489af09b99585c58a4801fc" region="maincpu" offset="1"/>
@@ -1581,7 +1581,7 @@
 		<feature type="sound" status="imperfect"/>
 	</machine>
 	<machine name="shinoblda" sourcefile="system16.cpp" cloneof="shinobi" romof="shinobi">
-		<description>Shinobi (Datsu Bootleg, Set 2, World, S16B) [FD1094 317-0049]</description>
+		<description>Shinobi (Datsu Bootleg, Set 2, World, S16B) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega / Datsu</manufacturer>
 		<rom name="12.bin" size="65536" crc="68c91fd5" sha1="54dc1d26711c73b30cbb5387dde27ba21cc102f4" region="maincpu" offset="1"/>
@@ -1719,7 +1719,7 @@
 		<feature type="sound" status="imperfect"/>
 	</machine>
 	<machine name="shinobldb" sourcefile="system16.cpp" cloneof="shinobi" romof="shinobi">
-		<description>Shinobi (Datsu Bootleg, Set 3, World, S16B) [MC-8123B 317-0054]</description>
+		<description>Shinobi (Datsu Bootleg, Set 3, World, S16B) [No Protection]</description>
 		<year>1987</year>
 		<manufacturer>Sega / Datsu</manufacturer>
 		<rom name="sh1.ic6" size="65536" crc="7275a738" sha1="8f233764dc48b931afd1b679e5107ba7e3042657" region="maincpu" offset="1"/>

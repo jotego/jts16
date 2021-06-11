@@ -287,7 +287,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="wb31d" sourcefile="segas16a.cpp" cloneof="wb3" romof="wb3">
-		<description>Wonder Boy III Monster Lair (Set 1 Bootleg, Japan, S16A) [FD1094 317-0084]</description>
+		<description>Wonder Boy III Monster Lair (Set 1 Bootleg, Japan, S16A) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega / Westone</manufacturer>
 		<rom name="bootleg_epr12084.bin" size="65536" crc="0cfe1b00" sha1="b4e50bb0d677647a71c1d3adac9f955774e3fa0e" region="maincpu" offset="0"/>
@@ -572,7 +572,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="wb32d" sourcefile="segas16b.cpp" cloneof="wb3" romof="wb3">
-		<description>Wonder Boy III Monster Lair (Set 2 Bootleg, Japan, S16B) [FD1094 317-0085]</description>
+		<description>Wonder Boy III Monster Lair (Set 2 Bootleg, Japan, S16B) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega / Westone</manufacturer>
 		<rom name="bootleg_epr-12098.a1" size="65536" crc="41a46e75" sha1="6053aada74be9bf26893f73384a2a52f2bf5561e" region="maincpu" offset="1"/>
@@ -861,7 +861,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="wb33d" sourcefile="segas16b.cpp" cloneof="wb3" romof="wb3">
-		<description>Wonder Boy III - Monster Lair (Set 3 Bootleg, World, S16B) [FD1094 317-0089]</description>
+		<description>Wonder Boy III - Monster Lair (Set 3 Bootleg, World, S16B) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega / Westone</manufacturer>
 		<rom name="bootleg_epr-12137.a7" size="131072" crc="18a898af" sha1="4614fab9f27bdfefc0c402edbac454c517b78c2f" region="maincpu" offset="0"/>
@@ -1148,7 +1148,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="wb34d" sourcefile="segas16b.cpp" cloneof="wb3" romof="wb3">
-		<description>Wonder Boy III Monster Lair (Set 4 Bootleg, Japan, S16B) [FD1094 317-0087]</description>
+		<description>Wonder Boy III Monster Lair (Set 4 Bootleg, Japan, S16B) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega / Westone</manufacturer>
 		<rom name="bootleg_epr-12131.a7" size="131072" crc="64e864b1" sha1="35ff3c2e9a53391ab7be9e2b479bb6ee3fc86600" region="maincpu" offset="0"/>
@@ -1432,7 +1432,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="wb35d" sourcefile="segas16a.cpp" cloneof="wb3" romof="wb3">
-		<description>Wonder Boy III Monster Lair (Set 5 Bootleg, Japan, S16A) [FD1089A 317-0086]</description>
+		<description>Wonder Boy III Monster Lair (Set 5 Bootleg, Japan, S16A) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega / Westone</manufacturer>
 		<rom name="bootleg_epr-12120.43" size="65536" crc="47e62031" sha1="842e7aac5d2ed2b38c68e70b65494b6511900ee0" region="maincpu" offset="0"/>
@@ -1571,7 +1571,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="wb3bbl" sourcefile="system16.cpp" cloneof="wb3" romof="wb3">
-		<description>Wonder Boy III Monster Lair (Bootleg, Japan, S16A) [No Protection]</description>
+		<description>Wonder Boy III Monster Lair (Bootleg Ver. 1, Japan, S16A) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega / Westone</manufacturer>
 		<rom name="wb3_03" size="65536" crc="0019ab3b" sha1="89d49a437690fa6e0c35bb9f1450042f89504714" region="maincpu" offset="0"/>
@@ -1707,7 +1707,7 @@
 		<feature type="graphics" status="imperfect"/>
 	</machine>
 	<machine name="wb3bble" sourcefile="system16.cpp" cloneof="wb3" romof="wb3">
-		<description>Wonder Boy III Monster Lair (Bootleg, Japan, S16A) [FD1094 317-0084]</description>
+		<description>Wonder Boy III Monster Lair (Bootleg Ver. 2, Japan, S16A) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega / Westone</manufacturer>
 		<rom name="a-4 ic41" size="65536" crc="0c3c5fb7" sha1="cf90c75fedbc87f8b5c809efeb8f18259ef6a9f1" region="maincpu" offset="0"/>
