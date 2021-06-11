@@ -26,7 +26,6 @@ function s16a_mra {
         -skip_desc Analog \
         -skip_desc "Fantasy Zone (Prototype, S16A) [No Protection]" \
         -skip_desc "Wonder Boy III Monster Lair (Bootleg, Japan, S16A) [No Protection]" \
-        -skip_desc "Wonder Boy III Monster Lair (Bootleg, Japan, S16A) [No Protection]" \
         -rmdipsw Unused \
         -rmdipsw Unknown \
         -dipdef "$DIPS" \
