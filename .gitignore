@@ -9,3 +9,4 @@ history
 ver/game/*.f
 ver/game/*.bin
 ver/game/*.jpg
+mister/output_*
