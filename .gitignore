@@ -3,8 +3,6 @@
 *.fst
 *.log
 *.hex
-*.qpf
-*.qsf
 cheat/*.bin
 cheat/*.fmt
 history
@@ -12,7 +10,3 @@ ver/game/*.f
 ver/game/*.bin
 ver/game/*.jpg
 mister/output_*
-db
-incremental_db
-/releases
-/log
