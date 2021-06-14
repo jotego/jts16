@@ -40,20 +40,20 @@ func push( last []string, newv string ) {
 	last[1] = newv
 }
 
-func append_rom( data []string, newv string ) []string {
+func append_rom( data []string, newv string ) ([]string, bool) {
 	iv,_ := strconv.ParseInt( newv, 16, 0 )
 	if iv < 0x40000 {
 		if len(data)>0 {
 			if data[ len(data)-1 ] != newv {
-				return append( data, newv )
+				return append( data, newv ), true
 			} else {
-				return data
+				return data, false
 			}
 		} else {
-			return append( data, newv )
+			return append( data, newv ), true
 		}
 	} else {
-		return data
+		return data, false
 	}
 }
 
@@ -70,6 +70,8 @@ func main() {
 	r := csv.NewReader(fin)
 	fx68k := make([]string, 0, 100000)
 	j68 := make([]string, 0, 100000)
+    fx68k_times := make([]string,0,100000)
+    j68_times := make([]string,0,100000)
     const J68_X = 1
     const FX_X  = 5
     const FRAME = 0
@@ -77,11 +79,14 @@ func main() {
     const PC=2
     const FC=3
     // Frame at which the important data starts
-    const FX_START=1603
-    const J68_START=1598
+    // const FX_START=1599
+    // const J68_START=1595
+    const FX_START=1599+2
+    const J68_START=FX_START-4
     dump := [2]bool{false,false}
 	for k:= 0; ; k++ {
 		record, err := r.Read()
+        var aux bool
 		if err == io.EOF {
 			break
 		}
@@ -98,10 +103,17 @@ func main() {
             dump[1] = true
         }
 		if dump[0] {
-			j68   = append_rom( j68, record[J68_X+PC] )
+			j68, aux = append_rom( j68, record[J68_X+PC] )
+            if aux {
+                j68_times = append( j68_times, record[0] )
+            }
+
 		}
         if dump[1] {
-			fx68k = append_rom( fx68k, record[FX_X+PC] )
+			fx68k, aux = append_rom( fx68k, record[FX_X+PC] )
+            if aux {
+                fx68k_times = append( fx68k_times, record[0] )
+            }
         }
 	}
 	tlen := len(j68)
@@ -173,7 +185,7 @@ func main() {
 		   }
 		*/
 		if div > 6 {
-			fmt.Printf("Diverged\n")
+			fmt.Printf("Diverged at FX time %s, J68 time %s\n", fx68k_times[k], j68_times[j])
 			break
 		}
 	}

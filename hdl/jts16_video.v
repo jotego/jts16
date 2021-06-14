@@ -109,7 +109,11 @@ wire [15:0] scr1_pages,      scr2_pages,
             scr1_hpos,       scr1_vpos,
             scr2_hpos,       scr2_vpos;
 
-wire        flipx = ext_flip ^ flip;
+`ifdef JTFRAME_OSD_FLIP
+    wire flipx = ext_flip ^ flip;
+`else
+    wire flipx = flip;
+`endif
 // Frame rate and horizontal frequency as the original
 // "The sprite X position defines the starting location of the sprite. The
 //  leftmost pixel of the screen is $00B6, and the rightmost is $1F5."

@@ -39,6 +39,7 @@ jtframe_frac_cen #(2) u_pxlcen(
     .cenb   (           )
 );
 
+`ifndef FAST_CPU
 jtframe_frac_cen u_cpucen(
     .clk    ( clk       ),
     .n      ( 10'd29    ),
@@ -46,6 +47,14 @@ jtframe_frac_cen u_cpucen(
     .cen    ( { nc,  cpu_cen  } ),
     .cenb   ( { ncb, cpu_cenb } )
 );
+`else
+reg fastx=0;
+always @(posedge clk) begin
+    fastx <= ~fastx;
+end
+assign cpu_cen = fastx;
+assign cpu_cenb = ~fastx;
+`endif
 
 jtframe_frac_cen u_sndcen(
     .clk    ( clk       ),

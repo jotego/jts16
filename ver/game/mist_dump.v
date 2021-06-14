@@ -57,10 +57,11 @@ module mist_dump(
             `ifndef NOMAIN
             //$shm_probe(UUT.u_game,"AS");
             $shm_probe(UUT.u_game.u_main,"A");
+            $shm_probe(UUT.u_game.u_main.u_cpu,"A");
             `endif
             //$shm_probe(UUT.u_game.u_sound,"A");
             //$shm_probe(UUT.u_game.u_main.u_dtack,"A");
-            //$shm_probe(UUT.u_game.u_video,"AS");
+            $shm_probe(UUT.u_game.u_video,"AS");
             `ifdef LOADROM
                 $shm_probe(UUT.u_game.u_sdram.u_dwnld,"A");
             `endif
