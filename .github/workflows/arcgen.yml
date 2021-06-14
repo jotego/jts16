@@ -19,8 +19,6 @@ jobs:
     steps:
       - name: check out
         uses: actions/checkout@v2
-        with:
-          repository: JTFPGA/jts16
       - name: convert MRA
         run: find -name "*.mra" -print0 | xargs -0 -l1 mra -A -s
   
