@@ -22,5 +22,5 @@ jobs:
         with:
           repository: JTFPGA/jts16
       - name: convert MRA
-        run: find -name "*.mra" -print0 | xargs -0 -l0 mra -A -s
+        run: find -name "*.mra" -print0 | xargs -0 -l1 mra -A -s
   
