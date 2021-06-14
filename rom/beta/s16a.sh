@@ -25,7 +25,8 @@ function s16a_mra {
         -skip_desc FD1094 \
         -skip_desc Analog \
         -skip_desc "Fantasy Zone (Prototype, S16A) [No Protection]" \
-        -skip_desc "Wonder Boy III Monster Lair (Bootleg, Japan, S16A) [No Protection]" \
+        -skip_desc "Wonder Boy III Monster Lair (Bootleg Ver. 1, Japan, S16A) [No Protection]" \
+        -skip_desc "Wonder Boy III Monster Lair (Bootleg Ver. 2, Japan, S16A) [No Protection]" \
         -rmdipsw Unused \
         -rmdipsw Unknown \
         -dipdef "$DIPS" \
@@ -72,8 +73,6 @@ s16a_mra fantzone  "Fantasy Zone" "Shot,Bomb,-" "ff,fc" "Shoot'em Up" "Shooter/F
 #s16a_mra aceattac  "Ace Attack" "None"
 #s16a_mra passsht   "Passing Shot" "Flat,Slice,Lob,Top Spin"
 #s16a_mra timescan  "Time Scanner" "L. Flipper/Ball Start,R. Flipper/Lane Shift,-"
-
-mv '/RELATIVE PATH/_alt/_Wonder Boy 3/Wonder Boy III Monster Lair (Set 5, Japan, S16A) [FD1089A 317-0086].mra' '/RELATIVE PATH/Wonder Boy III Monster Lair (Set 5, Japan, S16A) [FD1089A 317-0086].mra'
 
 echo "Enter MiSTer's root password"
 scp -r mra/* root@MiSTer.home:/media/fat/_S16
