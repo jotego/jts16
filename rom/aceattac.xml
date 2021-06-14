@@ -1,6 +1,6 @@
 <mame>
 	<machine name="aceattac" sourcefile="segas16b.cpp">
-		<description>Ace Attacker (FD1094 317-0059)</description>
+		<description>Ace Attacker (World, S16B) [FD1094 317-0059]</description>
 		<year>1988</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-11491.a4" size="65536" crc="f3c19c36" sha1="e45ca6d1d943d6cc140867055033884c738e2ac2" region="maincpu" offset="0"/>
@@ -70,12 +70,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -92,12 +92,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -185,7 +185,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="aceattaca" sourcefile="segas16a.cpp" cloneof="aceattac" romof="aceattac">
-		<description>Ace Attacker (Japan, System 16A, FD1094 317-0060)</description>
+		<description>Ace Attacker (Japan, S16A) [FD1094 317-0060]</description>
 		<year>1988</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-11573.43" size="65536" crc="ca116367" sha1="ca09b01568dafec48354072267accb73a97a670f" region="maincpu" offset="0"/>
@@ -254,12 +254,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -276,12 +276,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>

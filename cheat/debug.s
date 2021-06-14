@@ -173,7 +173,7 @@ WRITE_SDRAM:
     output s1, 0xC0   ; s1 value doesn't matter
 .loop:
     input  sf, 0x80
-    compare sf, 0xC0
+    test sf, 0xC0
     return z
     jump .loop
 
@@ -186,7 +186,7 @@ READ_SDRAM:
     output s1, 0x80   ; s1 value doesn't matter
 .loop:
     input  sf, 0x80
-    compare sf, 0xC0
+    test sf, 0xC0
     jump nz,.loop
     input s6,6
     input s7,7

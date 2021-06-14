@@ -1,6 +1,6 @@
 <mame>
 	<machine name="defense" sourcefile="segas16b.cpp" cloneof="sdi" romof="sdi">
-		<description>Defense (System 16B, FD1089A 317-0028)</description>
+		<description>Defense (World, S16B) [FD1089A 317-0028]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10917a.a4" size="32768" crc="d91ac47c" sha1="298e4a9c1b00bd6090e7c4f42efd4c6e20b69d62" region="maincpu" offset="0"/>
@@ -59,12 +59,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -81,12 +81,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -156,7 +156,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="sdi" sourcefile="segas16a.cpp">
-		<description>SDI - Strategic Defense Initiative (Japan, newer, System 16A, FD1089B 317-0027)</description>
+		<description>SDI: Strategic Defense Initiative (Japan, New Ver., S16A) [FD1089B 317-0027]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10970.43" size="32768" crc="b8fa4a2c" sha1="06b448bbee0a2b2809d9af7a2a22c5847343c079" region="maincpu" offset="0"/>
@@ -210,12 +210,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -232,12 +232,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -307,7 +307,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="sdia" sourcefile="segas16a.cpp" cloneof="sdi" romof="sdi">
-		<description>SDI - Strategic Defense Initiative (Japan, old, System 16A, FD1089B 317-0027)</description>
+		<description>SDI: Strategic Defense Initiative (Japan, Old Ver., S16A) [FD1089B 317-0027]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10881.43" size="32768" crc="3455a6a0" sha1="2cf32da891424caf95ec93bf572993c1031e1aa8" region="maincpu" offset="0"/>
@@ -361,12 +361,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -383,12 +383,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -458,7 +458,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="sdib" sourcefile="segas16b.cpp" cloneof="sdi" romof="sdi">
-		<description>SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)</description>
+		<description>SDI: Strategic Defense Initiative (World, S16B) [FD1089A 317-0028]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10986a.a4" size="32768" crc="3e136215" sha1="e90b55d03c515752cc2c647cb30f6f23a0a91b01" region="maincpu" offset="0"/>
@@ -517,12 +517,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -539,12 +539,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -614,9 +614,9 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="sdibl" sourcefile="segas16b.cpp" cloneof="sdi" romof="sdi">
-		<description>SDI - Strategic Defense Initiative (bootleg, original hardware)</description>
+		<description>SDI: Strategic Defense Initiative (Bootleg, World, S16B) [No Protection]</description>
 		<year>1987</year>
-		<manufacturer>bootleg</manufacturer>
+		<manufacturer>Sega</manufacturer>
 		<rom name="a4.rom" size="32768" crc="f2c41dd6" sha1="7fdbf819e42c7af0efe3976ffd919ee142efe1bc" region="maincpu" offset="0"/>
 		<rom name="a1.rom" size="32768" crc="a9f816ef" sha1="5ccab14b088d2249f83ff5e80591eccb4afb6e20" region="maincpu" offset="1"/>
 		<rom name="a5.rom" size="32768" crc="7952e27e" sha1="caead75724a6744fc6fc7fbbc9894932a7a22eed" region="maincpu" offset="10000"/>
@@ -672,12 +672,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -694,12 +694,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -769,9 +769,9 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="sdibl2" sourcefile="segas16b.cpp" cloneof="sdi" romof="sdi">
-		<description>SDI - Strategic Defense Initiative (bootleg, set 1)</description>
+		<description>SDI: Strategic Defense Initiative (Set 1 Bootleg, World, S16B) [No Protection]</description>
 		<year>1987</year>
-		<manufacturer>bootleg</manufacturer>
+		<manufacturer>Sega</manufacturer>
 		<rom name="de1" size="32768" crc="56f6fd26" sha1="15ca2567102f931329163b76a2be4cf8fb634cc4" region="maincpu" offset="0"/>
 		<rom name="do1" size="32768" crc="549c759f" sha1="253b544fd4353d4ca81ccd60488f6eb810ed84b1" region="maincpu" offset="1"/>
 		<rom name="de2" size="32768" crc="b0a9ad05" sha1="f413b306c8bc51718fbb459efff8357dde5b5a85" region="maincpu" offset="10000"/>
@@ -833,12 +833,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -855,12 +855,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -930,9 +930,9 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="sdibl3" sourcefile="segas16b.cpp" cloneof="sdi" romof="sdi">
-		<description>SDI - Strategic Defense Initiative (bootleg, set 2)</description>
+		<description>SDI: Strategic Defense Initiative (Set 2 Bootleg, World, S16B) [No Protection]</description>
 		<year>1987</year>
-		<manufacturer>bootleg</manufacturer>
+		<manufacturer>Sega</manufacturer>
 		<rom name="de1a" size="32768" crc="3908c6a0" sha1="36ee48a993c55806982443364bd9d3372a801e63" region="maincpu" offset="0"/>
 		<rom name="do1a" size="32768" crc="cd7b7750" sha1="4b19e845d17146ee755ec1151f6dafed464e6dfc" region="maincpu" offset="1"/>
 		<rom name="de2a" size="32768" crc="f45f6935" sha1="0b3edbec4701ff9beabacf20f0204adb185a03d1" region="maincpu" offset="10000"/>
@@ -994,12 +994,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -1016,12 +1016,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -1091,9 +1091,9 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="sdibl4" sourcefile="segas16b.cpp" cloneof="sdi" romof="sdi">
-		<description>SDI - Strategic Defense Initiative (bootleg, set 3)</description>
+		<description>SDI: Strategic Defense Initiative (Set 3 Bootleg, World, S16B) [No Protection]</description>
 		<year>1987</year>
-		<manufacturer>bootleg</manufacturer>
+		<manufacturer>Sega</manufacturer>
 		<rom name="de1b" size="32768" crc="8045bfd1" sha1="42e84f6f0f23ee3176727cb127a8a2192ec395f0" region="maincpu" offset="0"/>
 		<rom name="do1b" size="32768" crc="8f86f2ad" sha1="66694460769af9034e8c48739707b68624ea1e20" region="maincpu" offset="1"/>
 		<rom name="de2b" size="32768" crc="1b284afd" sha1="8064a8949ad5c42dcb358c7668ae296e423b0ff6" region="maincpu" offset="10000"/>
@@ -1155,12 +1155,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -1177,12 +1177,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -1252,9 +1252,9 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="sdibl5" sourcefile="segas16b.cpp" cloneof="sdi" romof="sdi">
-		<description>SDI - Strategic Defense Initiative (bootleg, set 4)</description>
+		<description>SDI: Strategic Defense Initiative (Set 4 Bootleg, World, S16B) [No Protection]</description>
 		<year>1987</year>
-		<manufacturer>bootleg</manufacturer>
+		<manufacturer>Sega</manufacturer>
 		<rom name="de1c" size="32768" crc="3e3d4cc1" sha1="5a72da8ad074123fccdc8760d599a404c862d355" region="maincpu" offset="0"/>
 		<rom name="do1c" size="32768" crc="a71ad68c" sha1="6c5056304f1e84be6362a03b4d066658a343eead" region="maincpu" offset="1"/>
 		<rom name="de2c" size="32768" crc="770bbec5" sha1="2ece8e4f9cc5f5de6d30e16edfdcc93715a5cb30" region="maincpu" offset="10000"/>
@@ -1316,12 +1316,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -1338,12 +1338,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -1413,9 +1413,9 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="sdibl6" sourcefile="segas16b.cpp" cloneof="sdi" romof="sdi">
-		<description>SDI - Strategic Defense Initiative (bootleg, set 5)</description>
+		<description>SDI: Strategic Defense Initiative (Set 5 Bootleg, World, S16B) [No Protection]</description>
 		<year>1987</year>
-		<manufacturer>bootleg</manufacturer>
+		<manufacturer>Sega</manufacturer>
 		<rom name="de1c" size="32768" crc="3e3d4cc1" sha1="5a72da8ad074123fccdc8760d599a404c862d355" region="maincpu" offset="0"/>
 		<rom name="do1c" size="32768" crc="a71ad68c" sha1="6c5056304f1e84be6362a03b4d066658a343eead" region="maincpu" offset="1"/>
 		<rom name="de2c" size="32768" crc="770bbec5" sha1="2ece8e4f9cc5f5de6d30e16edfdcc93715a5cb30" region="maincpu" offset="10000"/>
@@ -1477,12 +1477,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -1499,12 +1499,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>

@@ -1,6 +1,6 @@
 <mame>
 	<machine name="timescan" sourcefile="segas16b.cpp">
-		<description>Time Scanner (set 2, System 16B)</description>
+		<description>Time Scanner (Set 2, World, S16B) [No Encryption]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10853.a4" size="32768" crc="24d7c5fb" sha1="b1796e77cf968f9bdae7a47c5c02b93aaec10ade" region="maincpu" offset="0"/>
@@ -59,12 +59,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -81,12 +81,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -190,7 +190,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="timescan1" sourcefile="segas16a.cpp" cloneof="timescan" romof="timescan">
-		<description>Time Scanner (set 1, System 16A, FD1089B 317-0024)</description>
+		<description>Time Scanner (Set 1, World, S16A) [FD1089B 317-0024]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10540a.43" size="32768" crc="76848b0b" sha1="a7755898c2b3212d80034c47760440db6dcde83c" region="maincpu" offset="0"/>
@@ -251,12 +251,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -273,12 +273,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>

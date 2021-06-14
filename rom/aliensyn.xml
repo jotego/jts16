@@ -1,6 +1,6 @@
 <mame>
 	<machine name="aliensyn" sourcefile="segas16b.cpp">
-		<description>Alien Syndrome (set 4, System 16B, unprotected)</description>
+		<description>Alien Syndrome (Set 4, World, S16B) [No Protection]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-11083.a4" size="32768" crc="cb2ad9b3" sha1="66284b4e1071b3cb4b36960a2dba8949325f9e86" region="maincpu" offset="0"/>
@@ -61,12 +61,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -83,12 +83,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -146,7 +146,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="aliensyn2" sourcefile="segas16a.cpp" cloneof="aliensyn" romof="aliensyn">
-		<description>Alien Syndrome (set 2, System 16A, FD1089A 317-0033)</description>
+		<description>Alien Syndrome (Set 2, World, S16A) [FD1089A 317-0033]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10808.b9" size="32768" crc="e669929f" sha1="b5ab41d6f31f0369f8c5f5eb6fc08e8c23312b96" region="maincpu" offset="0"/>
@@ -209,12 +209,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -231,12 +231,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -294,7 +294,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="aliensyn3" sourcefile="segas16b.cpp" cloneof="aliensyn" romof="aliensyn">
-		<description>Alien Syndrome (set 3, System 16B, FD1089A 317-0033)</description>
+		<description>Alien Syndrome (Set 3, World, S16B) [FD1089A 317-0033]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10816.a4" size="32768" crc="17bf5304" sha1="f6318c6c4a606d21ba43354229b60a51d8a3baa6" region="maincpu" offset="0"/>
@@ -356,12 +356,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -378,12 +378,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -441,7 +441,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="aliensyn5" sourcefile="segas16a.cpp" cloneof="aliensyn" romof="aliensyn">
-		<description>Alien Syndrome (set 5, System 16A, FD1089B 317-0037)</description>
+		<description>Alien Syndrome (Set 5, World, S16A) [FD1089B 317-0037]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10804.43" size="32768" crc="23f78b83" sha1="76538663e8f7ffffeea4928e3ebe091dac954dc7" region="maincpu" offset="0"/>
@@ -504,12 +504,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -526,12 +526,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -589,7 +589,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="aliensyn7" sourcefile="segas16b.cpp" cloneof="aliensyn" romof="aliensyn">
-		<description>Alien Syndrome (set 7, System 16B, MC-8123B 317-00xx)</description>
+		<description>Alien Syndrome (Set 7, World, S16B) [MC-8123B 317-00xx]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-11083.a4" merge="epr-11083.a4" size="32768" crc="cb2ad9b3" sha1="66284b4e1071b3cb4b36960a2dba8949325f9e86" region="maincpu" offset="0"/>
@@ -651,12 +651,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -673,12 +673,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -736,7 +736,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="aliensynj" sourcefile="segas16b.cpp" cloneof="aliensyn" romof="aliensyn">
-		<description>Alien Syndrome (set 6, Japan, new, System 16B, FD1089A 317-0033)</description>
+		<description>Alien Syndrome (Set 6, Japan, S16B) [FD1089A 317-0033]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10720a.a4" size="32768" crc="1b920893" sha1="f40ace9cd69c7f7910440a20bf8a3249351d28af" region="maincpu" offset="0"/>
@@ -798,12 +798,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -820,12 +820,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -883,7 +883,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="aliensynjo" sourcefile="segas16a.cpp" cloneof="aliensyn" romof="aliensyn">
-		<description>Alien Syndrome (set 1, Japan, old, System 16A, FD1089A 317-0033)</description>
+		<description>Alien Syndrome (Set 1, Japan, S16A) [FD1089A 317-0033]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-10699.43" size="32768" crc="3fd38d17" sha1="538c1246121051a1af9ba2a4259eb1fe7e4952e1" region="maincpu" offset="0"/>
@@ -946,12 +946,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -968,12 +968,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>

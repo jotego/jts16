@@ -1,6 +1,6 @@
 <mame>
 	<machine name="quartet" sourcefile="segas16a.cpp">
-		<description>Quartet (Rev A, 8751 315-5194)</description>
+		<description>Quartet (Rev A, 4p, World, S16A) [8751 315-5194]</description>
 		<year>1986</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-7458a.9b" size="32768" crc="42e7b23e" sha1="9df3b1b915723f9a927ef03d80ae7983a8c91a21" region="maincpu" offset="0"/>
@@ -71,12 +71,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -93,12 +93,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -158,7 +158,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="quartet2" sourcefile="segas16a.cpp" cloneof="quartet" romof="quartet">
-		<description>Quartet 2 (8751 317-0010)</description>
+		<description>Quartet 2 (World, S16A) [8751 317-0010]</description>
 		<year>1986</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-7695.b9" size="32768" crc="67177cd8" sha1="c4ea001dfbeeb29a09d597fb50d71f54e4e9572a" region="maincpu" offset="0"/>
@@ -224,12 +224,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -246,12 +246,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -311,7 +311,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="quartet2a" sourcefile="segas16a.cpp" cloneof="quartet" romof="quartet">
-		<description>Quartet 2 (unprotected)</description>
+		<description>Quartet 2 (World, S16A) [No Protection)</description>
 		<year>1986</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-7728.b9" size="32768" crc="56a8c88e" sha1="33eaca5272f3588058952ca0b1fa298b89418e81" region="maincpu" offset="0"/>
@@ -374,12 +374,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -396,12 +396,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
@@ -461,7 +461,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="quarteta" sourcefile="segas16a.cpp" cloneof="quartet" romof="quartet">
-		<description>Quartet (8751 315-5194)</description>
+		<description>Quartet (4p, World, S16A) [8751 315-5194]</description>
 		<year>1986</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-7458.9b" size="32768" crc="0096499f" sha1="dcf8e33513ce7c6660ea546c8e1c574fde629a22" region="maincpu" offset="0"/>
@@ -532,12 +532,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="7"/>
 			<dipvalue name="3 Coins/1 Credit" value="8"/>
 			<dipvalue name="2 Coins/1 Credit" value="9"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="5"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="4"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="5"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="4"/>
 			<dipvalue name="1 Coin/1 Credit" value="15" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="3"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="2"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="1"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="2"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="1"/>
 			<dipvalue name="2 Coins/3 Credits" value="6"/>
 			<dipvalue name="1 Coin/2 Credits" value="14"/>
 			<dipvalue name="1 Coin/3 Credits" value="13"/>
@@ -554,12 +554,12 @@
 			<dipvalue name="4 Coins/1 Credit" value="112"/>
 			<dipvalue name="3 Coins/1 Credit" value="128"/>
 			<dipvalue name="2 Coins/1 Credit" value="144"/>
-			<dipvalue name="2 Coins/1 Credit, 5/3, 6/4" value="80"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3" value="64"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4" value="80"/>
+			<dipvalue name="2 Coins/1 Credit 4/3" value="64"/>
 			<dipvalue name="1 Coin/1 Credit" value="240" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6" value="48"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5" value="32"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3" value="16"/>
+			<dipvalue name="1 Coin/1 Credit 5/6" value="48"/>
+			<dipvalue name="1 Coin/1 Credit 4/5" value="32"/>
+			<dipvalue name="1 Coin/1 Credit 2/3" value="16"/>
 			<dipvalue name="2 Coins/3 Credits" value="96"/>
 			<dipvalue name="1 Coin/2 Credits" value="224"/>
 			<dipvalue name="1 Coin/3 Credits" value="208"/>
