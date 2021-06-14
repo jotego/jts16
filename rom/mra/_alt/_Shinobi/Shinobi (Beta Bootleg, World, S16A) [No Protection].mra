@@ -35,7 +35,7 @@
     <category>Hack &amp; Slash</category>
     <catver>Platform/Fighter Scrolling</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210611</mratimestamp>
+    <mratimestamp>20210614</mratimestamp>
     <rom index="0" zip="shinoblb.zip|shinobi.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 

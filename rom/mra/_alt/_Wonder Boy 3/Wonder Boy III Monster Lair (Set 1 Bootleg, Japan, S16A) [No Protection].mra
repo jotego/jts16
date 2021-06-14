@@ -35,7 +35,7 @@
     <category>Platformer</category>
     <catver>Platform/Shooter Scrolling</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210611</mratimestamp>
+    <mratimestamp>20210614</mratimestamp>
     <rom index="0" zip="wb31d.zip|wb3.zip" type="merged" md5="None">
         <part>
         04 00 00 00 08 80 10 00 

@@ -35,7 +35,7 @@
     <category/>
     <catver/>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210611</mratimestamp>
+    <mratimestamp>20210614</mratimestamp>
     <rom index="0" zip="timescan1.zip|timescan.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 
@@ -75,22 +75,19 @@
             <part name="epr-10548.10" crc="aa150735" map="01"/>
             <part name="epr-10552.11" crc="6fcbb9f7" map="10"/>
         </interleave>
-        <part repeat="0x10000"> FF</part>
         <interleave output="16">
             <part name="epr-10549.17" crc="2f59f067" map="01"/>
             <part name="epr-10553.18" crc="8a220a9f" map="10"/>
         </interleave>
-        <part repeat="0x10000"> FF</part>
         <interleave output="16">
             <part name="epr-10550.23" crc="f05069ff" map="01"/>
             <part name="epr-10554.24" crc="dc64f809" map="10"/>
         </interleave>
-        <part repeat="0x10000"> FF</part>
         <interleave output="16">
             <part name="epr-10551.29" crc="435d811f" map="01"/>
             <part name="epr-10555.30" crc="2143c471" map="10"/>
         </interleave>
-        <part repeat="0x10000"> FF</part>
+        <part repeat="0x40000"> FF</part>
         <!-- mcu - starts at 0x180000 -->
         <part repeat="0x1000"> FF</part>
         <part repeat="0x1000"> FF</part>
