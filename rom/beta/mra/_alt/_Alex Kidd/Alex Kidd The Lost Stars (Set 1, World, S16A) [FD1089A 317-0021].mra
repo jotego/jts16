@@ -21,7 +21,7 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>Alex Kidd The Lost Stars (Set 1, World, S16A) (FD1089A 317-0021)</name>
+    <name>Alex Kidd: The Lost Stars (Set 1, World, S16A) [FD1089A 317-0021]</name>
     <setname>alexkidd1</setname>
     <rbf>jts16</rbf>
     <mameversion>0229</mameversion>
@@ -35,7 +35,7 @@
     <category>Platformer</category>
     <catver>Platform/Run, Jump &amp; Scrolling</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210611</mratimestamp>
+    <mratimestamp>20210615</mratimestamp>
     <rom index="0" zip="alexkidd1.zip|alexkidd.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 

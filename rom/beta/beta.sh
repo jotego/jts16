@@ -1,13 +1,10 @@
 #!/bin/bash
 
-OUTDIR=mra
+OUTDIR=beta
 
 mkdir -p $OUTDIR
 mkdir -p $OUTDIR/_alt
 
-AUXTMP=/tmp/$RANDOM$RANDOM
-jtcfgstr -target=mist -output=bash -def $JTROOT/hdl/jts16.def | grep _START > $AUXTMP
-source $AUXTMP
 
 function s16a_mra {
     NAME=$1
@@ -74,8 +71,9 @@ s16a_mra fantzone  "Fantasy Zone" "Shot,Bomb,-" "ff,fc" "Shoot'em Up" "Shooter/F
 #s16a_mra passsht   "Passing Shot" "Flat,Slice,Lob,Top Spin"
 #s16a_mra timescan  "Time Scanner" "L. Flipper/Ball Start,R. Flipper/Lane Shift,-"
 
-echo "Enter MiSTer's root password"
-scp -r mra/* root@MiSTer.home:/media/fat/_S16
-
 
 exit 0
+
+
+#/mnt/c/jotego/s16/mra/
+#/mnt/c/jotego/s16/mra/_alt/

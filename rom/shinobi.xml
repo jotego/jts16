@@ -1299,7 +1299,7 @@
 	<machine name="shinoblb" sourcefile="segas16a.cpp" cloneof="shinobi" romof="shinobi">
 		<description>Shinobi (Beta Bootleg, World, S16A) [No Protection]</description>
 		<year>1987</year>
-		<manufacturer>Sega / Beta</manufacturer>
+		<manufacturer>Beta</manufacturer>
 		<rom name="4.3k" size="65536" crc="c178a39c" sha1="05ff1679cdfc3618df8b3fabdeab64b1f2299aa3" region="maincpu" offset="0"/>
 		<rom name="2.3n" size="65536" crc="5ad8ebf2" sha1="b22e0c8d4b27c553abface17c625e207d19417ab" region="maincpu" offset="1"/>
 		<rom name="5.2k" size="65536" crc="a2a620bd" sha1="f8b135ce14d6c5eac5e40ddfd5ad2f1e6f2bc7a6" region="maincpu" offset="20000"/>
@@ -1445,7 +1445,7 @@
 	<machine name="shinobld" sourcefile="system16.cpp" cloneof="shinobi" romof="shinobi">
 		<description>Shinobi (Datsu Bootleg, Set 1, World, S16B) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Datsu</manufacturer>
+		<manufacturer>Datsu</manufacturer>
 		<rom name="12.bin" size="65536" crc="757a0c71" sha1="8f476b0fd5f5dd480489af09b99585c58a4801fc" region="maincpu" offset="1"/>
 		<rom name="14.bin" size="65536" crc="a65870b2" sha1="3e9b4aa694bf86ef9db4756ebaa3d8d87d7f269a" region="maincpu" offset="0"/>
 		<rom name="13.bin" size="65536" crc="c4334bcd" sha1="ea1dd23ca6fbf632d8e10bbb9ced6515a69bd14a" region="maincpu" offset="20001"/>
@@ -1583,7 +1583,7 @@
 	<machine name="shinoblda" sourcefile="system16.cpp" cloneof="shinobi" romof="shinobi">
 		<description>Shinobi (Datsu Bootleg, Set 2, World, S16B) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Datsu</manufacturer>
+		<manufacturer>Datsu</manufacturer>
 		<rom name="12.bin" size="65536" crc="68c91fd5" sha1="54dc1d26711c73b30cbb5387dde27ba21cc102f4" region="maincpu" offset="1"/>
 		<rom name="14.bin" size="65536" crc="9e887c80" sha1="798a3dc499ef14b362bc37ff91b247e367f42ab9" region="maincpu" offset="0"/>
 		<rom name="13.bin" size="65536" crc="c4334bcd" sha1="ea1dd23ca6fbf632d8e10bbb9ced6515a69bd14a" region="maincpu" offset="20001"/>
@@ -1721,7 +1721,7 @@
 	<machine name="shinobldb" sourcefile="system16.cpp" cloneof="shinobi" romof="shinobi">
 		<description>Shinobi (Datsu Bootleg, Set 3, World, S16B) [No Protection]</description>
 		<year>1987</year>
-		<manufacturer>Sega / Datsu</manufacturer>
+		<manufacturer>Datsu</manufacturer>
 		<rom name="sh1.ic6" size="65536" crc="7275a738" sha1="8f233764dc48b931afd1b679e5107ba7e3042657" region="maincpu" offset="1"/>
 		<rom name="sh2.ic3" size="65536" crc="a73dd977" sha1="01a410deb604b0e164d1f2e39411093ce65e46a9" region="maincpu" offset="0"/>
 		<rom name="13.bin" size="65536" crc="c4334bcd" sha1="ea1dd23ca6fbf632d8e10bbb9ced6515a69bd14a" region="maincpu" offset="20001"/>
@@ -1859,7 +1859,7 @@
 	<machine name="shinobls" sourcefile="segas16a.cpp" cloneof="shinobi" romof="shinobi">
 		<description>Shinobi (Star Bootleg, World, S16A) [No Protection]</description>
 		<year>1987</year>
-		<manufacturer>Sega / Star</manufacturer>
+		<manufacturer>Star</manufacturer>
 		<rom name="b3" size="65536" crc="38e59646" sha1="6a13015a93260ab99811b95950bb122eade01c27" region="maincpu" offset="0"/>
 		<rom name="b1" size="65536" crc="8529d192" sha1="202b912d20a2d82abe055b4a5e8c509ab7d69ff8" region="maincpu" offset="1"/>
 		<rom name="b4" size="65536" crc="a2a620bd" sha1="f8b135ce14d6c5eac5e40ddfd5ad2f1e6f2bc7a6" region="maincpu" offset="20000"/>

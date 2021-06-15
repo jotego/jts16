@@ -31,11 +31,11 @@
     <joystick>8-way</joystick>
     <rotation>horizontal</rotation>
     <region>World</region>
-    <platform/>
-    <category/>
-    <catver/>
+    <platform>Sega S16A</platform>
+    <category>Sports</category>
+    <catver>Sports/Wrestling</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210614</mratimestamp>
+    <mratimestamp>20210615</mratimestamp>
     <rom index="0" zip="bodyslam.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 
@@ -78,19 +78,22 @@
             <part name="epr-10012.c5" crc="990824e8" map="01"/>
             <part name="epr-10016.b2" crc="af5dc72f" map="10"/>
         </interleave>
+        <part repeat="0x10000"> FF</part>
         <interleave output="16">
             <part name="epr-10013.c6" crc="9a0919c5" map="01"/>
             <part name="epr-10017.b3" crc="62aafd95" map="10"/>
         </interleave>
+        <part repeat="0x10000"> FF</part>
         <interleave output="16">
             <part name="epr-10027.c7" crc="3f1c57c7" map="01"/>
             <part name="epr-10028.b4" crc="80d4946d" map="10"/>
         </interleave>
+        <part repeat="0x10000"> FF</part>
         <interleave output="16">
             <part name="epr-10015.c8" crc="582d3b6a" map="01"/>
             <part name="epr-10019.b5" crc="e020c38b" map="10"/>
         </interleave>
-        <part repeat="0x40000"> FF</part>
+        <part repeat="0x10000"> FF</part>
         <!-- mcu - starts at 0x180000 -->
         <part name="317-0015.bin" crc="833869e2"/>
         <part repeat="0x1000"> FF</part>
@@ -106,7 +109,7 @@
     <rom index="1">
         <part>00</part>
     </rom>
-    <switches base="16" default="FF,FF">
+    <switches base="16" default="ff,ff">
         <!-- DSW1 -->
         <dip name="Coin A" bits="0,3" ids="Free Play  or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <dip name="Coin B" bits="4,7" ids="Free Play  or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>

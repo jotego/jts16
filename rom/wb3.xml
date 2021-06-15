@@ -2,7 +2,7 @@
 	<machine name="wb3" sourcefile="segas16b.cpp">
 		<description>Wonder Boy III Monster Lair (Set 6, World, S16B) [8751 317-0098]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="epr-12259.a7" size="131072" crc="54927c7e" sha1="09a4c25b40aba2056c79b5c2e6e8cb7e6c05bc16" region="maincpu" offset="0"/>
 		<rom name="epr-12258.a5" size="131072" crc="01f5898c" sha1="2422b4199ce5b63482f7fa1c790c90fc70a2b872" region="maincpu" offset="1"/>
 		<rom name="epr-12124.a14" size="65536" crc="dacefb6f" sha1="789a5a99ad9419aee9da5397bcea34452ea8b4b3" region="gfx1" offset="0"/>
@@ -148,7 +148,7 @@
 	<machine name="wb31" sourcefile="segas16a.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III Monster Lair (Set 1, Japan, S16A) [FD1094 317-0084]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="epr-12084.bin" size="65536" crc="b6deb654" sha1="37066cc63902233bb8b56d3171c42bf8a8f82e58" region="maincpu" offset="0"/>
 		<rom name="epr-12082.bin" size="65536" crc="38dc5b15" sha1="b25bf60d269a87f9d8dbc1a3787c8ff9a6e7482c" region="maincpu" offset="1"/>
 		<rom name="epr-12085.bin" size="65536" crc="0962098b" sha1="150fc439dd5e773bef706f058abdb4d2ec44e355" region="maincpu" offset="20000"/>
@@ -289,7 +289,7 @@
 	<machine name="wb31d" sourcefile="segas16a.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III Monster Lair (Set 1 Bootleg, Japan, S16A) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="bootleg_epr12084.bin" size="65536" crc="0cfe1b00" sha1="b4e50bb0d677647a71c1d3adac9f955774e3fa0e" region="maincpu" offset="0"/>
 		<rom name="bootleg_epr12082.bin" size="65536" crc="9e324162" sha1="49cbec212bec832722b4816e2186e6cb1c204b0e" region="maincpu" offset="1"/>
 		<rom name="epr-12085.bin" size="65536" crc="0962098b" sha1="150fc439dd5e773bef706f058abdb4d2ec44e355" region="maincpu" offset="20000"/>
@@ -428,7 +428,7 @@
 	<machine name="wb32" sourcefile="segas16b.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III Monster Lair (Set 2, Japan, S16B) [FD1094 317-0085]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="epr-12098.a1" size="65536" crc="d998e5e5" sha1="a7398b7338a33451a650c2f1d382dad2e5130528" region="maincpu" offset="1"/>
 		<rom name="epr-12100.a4" size="65536" crc="f5ca4abc" sha1="1331db10cf99905fb13c1606a3f4d8bbf3d681b6" region="maincpu" offset="0"/>
 		<rom name="epr-12099.a2" size="65536" crc="3e243b45" sha1="2a079553d1b61aaf18025847570003b79c8d6edf" region="maincpu" offset="20001"/>
@@ -574,7 +574,7 @@
 	<machine name="wb32d" sourcefile="segas16b.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III Monster Lair (Set 2 Bootleg, Japan, S16B) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="bootleg_epr-12098.a1" size="65536" crc="41a46e75" sha1="6053aada74be9bf26893f73384a2a52f2bf5561e" region="maincpu" offset="1"/>
 		<rom name="bootleg_epr-12100.a4" size="65536" crc="15e3117e" sha1="ec03366ab36371e568ece13fa4ef3fd4dbf121a3" region="maincpu" offset="0"/>
 		<rom name="epr-12099.a2" size="65536" crc="3e243b45" sha1="2a079553d1b61aaf18025847570003b79c8d6edf" region="maincpu" offset="20001"/>
@@ -719,7 +719,7 @@
 	<machine name="wb33" sourcefile="segas16b.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III Monster Lair (Set 3, World, S16B) [FD1094 317-0089]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="epr-12137.a7" size="131072" crc="6f81238e" sha1="b578165c1624f8a112e9eea098fb4551cc38faa1" region="maincpu" offset="0"/>
 		<rom name="epr-12136.a5" size="131072" crc="4cf05003" sha1="bd4c64c327e53143aa94062f91946eda0a7146c2" region="maincpu" offset="1"/>
 		<rom name="317-0089.key" size="8192" crc="597d30d3" sha1="3ee713128595a3423a3c826d6bbcedf4099c1178" region="maincpu:key" offset="0"/>
@@ -863,7 +863,7 @@
 	<machine name="wb33d" sourcefile="segas16b.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III - Monster Lair (Set 3 Bootleg, World, S16B) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="bootleg_epr-12137.a7" size="131072" crc="18a898af" sha1="4614fab9f27bdfefc0c402edbac454c517b78c2f" region="maincpu" offset="0"/>
 		<rom name="bootleg_epr-12136.a5" size="131072" crc="e3d21248" sha1="6d146a0c9a5b1f8cb0d2770b2c272fafe58360c0" region="maincpu" offset="1"/>
 		<rom name="epr-12124.a14" merge="epr-12124.a14" size="65536" crc="dacefb6f" sha1="789a5a99ad9419aee9da5397bcea34452ea8b4b3" region="gfx1" offset="0"/>
@@ -1006,7 +1006,7 @@
 	<machine name="wb34" sourcefile="segas16b.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III Monster Lair (Set 4, Japan, S16B) [FD1094 317-0087]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="epr-12131.a7" size="131072" crc="b95ecf88" sha1="a431f8ecfffc0090047a6dda23e1f3bf9a46124e" region="maincpu" offset="0"/>
 		<rom name="epr-12128.a5" size="131072" crc="b711372b" sha1="f7367ab0ec4e6066148a7821aea6122bc840fd8b" region="maincpu" offset="1"/>
 		<rom name="317-0087.key" size="8192" crc="162cb531" sha1="b94ae9df54edd228a462af35465d918b17da6d88" region="maincpu:key" offset="0"/>
@@ -1150,7 +1150,7 @@
 	<machine name="wb34d" sourcefile="segas16b.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III Monster Lair (Set 4 Bootleg, Japan, S16B) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="bootleg_epr-12131.a7" size="131072" crc="64e864b1" sha1="35ff3c2e9a53391ab7be9e2b479bb6ee3fc86600" region="maincpu" offset="0"/>
 		<rom name="bootleg_epr-12128.a5" size="131072" crc="1b0fdaec" sha1="41de62e185a75009fbb96d5c434d29321af29b4e" region="maincpu" offset="1"/>
 		<rom name="epr-12124.a14" merge="epr-12124.a14" size="65536" crc="dacefb6f" sha1="789a5a99ad9419aee9da5397bcea34452ea8b4b3" region="gfx1" offset="0"/>
@@ -1293,7 +1293,7 @@
 	<machine name="wb35" sourcefile="segas16a.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III Monster Lair (Set 5, Japan, S16A) [FD1089A 317-0086]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="epr-12120.43" size="65536" crc="cbd8c99b" sha1="2401aab80293bbe3b603a0b6af33ebc8834915e9" region="maincpu" offset="0"/>
 		<rom name="epr-12118.26" size="65536" crc="e9a3280c" sha1="b7725171286915f8e1039d8063ba9e9f6ab40b56" region="maincpu" offset="1"/>
 		<rom name="epr-12121.42" size="65536" crc="5e44c0a9" sha1="4d4c9575a6cd571a7cf635164e92afd92d4b63fe" region="maincpu" offset="20000"/>
@@ -1434,7 +1434,7 @@
 	<machine name="wb35d" sourcefile="segas16a.cpp" cloneof="wb3" romof="wb3">
 		<description>Wonder Boy III Monster Lair (Set 5 Bootleg, Japan, S16A) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="bootleg_epr-12120.43" size="65536" crc="47e62031" sha1="842e7aac5d2ed2b38c68e70b65494b6511900ee0" region="maincpu" offset="0"/>
 		<rom name="bootleg_epr-12118.26" size="65536" crc="d2f74be8" sha1="83414365b921b617406535f387e6722c14ad8e09" region="maincpu" offset="1"/>
 		<rom name="bootleg_epr-12121.42" size="65536" crc="0962098b" sha1="150fc439dd5e773bef706f058abdb4d2ec44e355" region="maincpu" offset="20000"/>
@@ -1571,9 +1571,9 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="wb3bbl" sourcefile="system16.cpp" cloneof="wb3" romof="wb3">
-		<description>Wonder Boy III Monster Lair (Bootleg Ver. 1, Japan, S16A) [No Protection]</description>
+		<description>Wonder Boy III Monster Lair (Bootleg Ver. 1, Japan, S16B) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="wb3_03" size="65536" crc="0019ab3b" sha1="89d49a437690fa6e0c35bb9f1450042f89504714" region="maincpu" offset="0"/>
 		<rom name="wb3_05" size="65536" crc="196e17ee" sha1="71e4345b2c3d1612a3d424c9310fad1e23c8a9f7" region="maincpu" offset="1"/>
 		<rom name="wb3_02" size="65536" crc="c87350cb" sha1="55a8cb68d70b6060dd9a55e281e216ce3917ea5b" region="maincpu" offset="20000"/>
@@ -1707,9 +1707,9 @@
 		<feature type="graphics" status="imperfect"/>
 	</machine>
 	<machine name="wb3bble" sourcefile="system16.cpp" cloneof="wb3" romof="wb3">
-		<description>Wonder Boy III Monster Lair (Bootleg Ver. 2, Japan, S16A) [No Protection]</description>
+		<description>Wonder Boy III Monster Lair (Bootleg Ver. 2, Japan, S16B) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>Sega / Westone</manufacturer>
+		<manufacturer>Westone</manufacturer>
 		<rom name="a-4 ic41" size="65536" crc="0c3c5fb7" sha1="cf90c75fedbc87f8b5c809efeb8f18259ef6a9f1" region="maincpu" offset="0"/>
 		<rom name="a-2 ic42" size="65536" crc="f279aff5" sha1="876f7b59c9745703926756d9d1b7dc8305a76b0b" region="maincpu" offset="1"/>
 		<rom name="a-5 ic39" size="65536" crc="0962098b" sha1="150fc439dd5e773bef706f058abdb4d2ec44e355" region="maincpu" offset="20000"/>

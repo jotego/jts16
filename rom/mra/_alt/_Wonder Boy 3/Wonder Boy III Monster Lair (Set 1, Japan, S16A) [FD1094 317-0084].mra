@@ -1,4 +1,4 @@
-<!--          FPGA compatible core for Sega / Westone arcade hardware by Jotego
+<!--          FPGA compatible core for Westone arcade hardware by Jotego
 
               This core is available for hardware compatible with MiST and MiSTer
               Other FPGA systems may be supported by the time you read this.
@@ -26,7 +26,7 @@
     <rbf>jts16</rbf>
     <mameversion>0229</mameversion>
     <year>1988</year>
-    <manufacturer>Sega / Westone</manufacturer>
+    <manufacturer>Westone</manufacturer>
     <players>2</players>
     <joystick>8-way</joystick>
     <rotation>horizontal</rotation>
@@ -35,7 +35,7 @@
     <category>Platformer</category>
     <catver>Platform/Shooter Scrolling</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210614</mratimestamp>
+    <mratimestamp>20210615</mratimestamp>
     <rom index="0" zip="wb31.zip|wb3.zip" type="merged" md5="None">
         <part>
         04 00 00 00 08 80 10 00 
