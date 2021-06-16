@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OUTDIR=mra
+OUTDIR=betamra
 
 mkdir -p $OUTDIR
 mkdir -p $OUTDIR/_alt
@@ -77,5 +77,8 @@ s16a_mra fantzone  "Fantasy Zone" "Shot,Bomb,-" "ff,fc" "Shoot'em Up" "Shooter/F
 echo "Enter MiSTer's root password"
 scp -r mra/* root@MiSTer.home:/media/fat/_S16
 
+
+					   
+							
 
 exit 0

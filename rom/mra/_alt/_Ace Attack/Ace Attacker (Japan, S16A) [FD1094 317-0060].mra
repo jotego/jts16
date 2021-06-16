@@ -31,11 +31,11 @@
     <joystick>4-way</joystick>
     <rotation>vertical</rotation>
     <region>Japan</region>
-    <platform/>
-    <category/>
-    <catver/>
+    <platform>Sega S16A</platform>
+    <category>Sports</category>
+    <catver>Sports/Volleyball</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210614</mratimestamp>
+    <mratimestamp>20210615</mratimestamp>
     <rom index="0" zip="aceattaca.zip|aceattac.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 
@@ -101,7 +101,7 @@
     <rom index="1">
         <part>01</part>
     </rom>
-    <switches base="16" default="FF,FF">
+    <switches base="16" default="ff,ff">
         <!-- DSW1 -->
         <dip name="Coin A" bits="0,3" ids="Free Play  or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <dip name="Coin B" bits="4,7" ids="Free Play  or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>

@@ -947,7 +947,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="tetrisbl" sourcefile="system16.cpp" cloneof="tetris" romof="tetris">
-		<description>Tetris (Bootleg, World, S16A) [No Protection]</description>
+		<description>Tetris (Bootleg, World, S16B) [No Protection]</description>
 		<year>1988</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="rom2.bin" size="65536" crc="4d165c38" sha1="04706b1977ae18bd09bafaf8ea65f8e5f32e04b8" region="maincpu" offset="0"/>

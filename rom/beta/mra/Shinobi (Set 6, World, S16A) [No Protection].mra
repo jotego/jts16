@@ -21,7 +21,7 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>Shinobi (Set 6, World, S16A)</name>
+    <name>Shinobi (Set 6, World, S16A) [No Protection]</name>
     <setname>shinobi</setname>
     <rbf>jts16</rbf>
     <mameversion>0229</mameversion>
@@ -35,7 +35,7 @@
     <category>Hack &amp; Slash</category>
     <catver>Platform/Fighter Scrolling</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210611</mratimestamp>
+    <mratimestamp>20210615</mratimestamp>
     <rom index="0" zip="shinobi.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 
