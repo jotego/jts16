@@ -35,7 +35,6 @@
     <category>Puzzle</category>
     <catver>Puzzle/Drop</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210615</mratimestamp>
     <rom index="0" zip="tetris.zip" type="merged" md5="None">
         <part>
         04 00 00 00 08 80 10 00 

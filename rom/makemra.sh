@@ -29,7 +29,6 @@ function s16a_mra {
         -info category "$CATEGORY" \
         -info catver "$CATVER" \
         -info mraauthor jotego,atrac17 \
-        -info mratimestamp $(date +"%Y%m%d")\
         -header 32 0x0 \
         -header-dev 0x10 fd1089a=1 fd1089b=2 \
         -setword maincpu 16 reverse \

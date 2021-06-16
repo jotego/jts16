@@ -35,7 +35,6 @@
     <category>Run &amp; Gun</category>
     <catver>Maze/Shooter Large</catver>
     <mraauthor>jotego,atrac17</mraauthor>
-    <mratimestamp>20210615</mratimestamp>
     <rom index="0" zip="quartet2.zip|quartet.zip" type="merged" md5="None">
         <part>
         04 00 04 80 08 80 10 00 
