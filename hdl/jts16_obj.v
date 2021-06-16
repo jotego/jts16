@@ -133,8 +133,8 @@ jts16_obj_draw u_draw(
 );
 
 reg [8:0] hobj;
-localparam [8:0] HOBJ_START = 9'haa-PXL_DLY, //a6
-                 FLIP_START = 9'hc0-HOBJ_START;
+localparam [8:0] HOBJ_START = 9'haa-PXL_DLY; //a6
+localparam [8:0] FLIP_START = 9'hc0-HOBJ_START;
 
 always @(posedge clk) begin
     if( !LHBL ) hobj <= (flip ? (9'h1ff+FLIP_START) : HOBJ_START) + {debug_bus[7], debug_bus};

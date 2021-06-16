@@ -22,7 +22,7 @@ module jts16_dtack(
     input       cpu_cen,
     input       cpu_cenb,
 
-    input       ASn,
+    input       BUSn,
     input       bus_cs,
     input       bus_busy,
     input       rom_ok,
@@ -31,7 +31,7 @@ module jts16_dtack(
     output reg  DTACKn
 );
 
-reg       fail_cnt_ok, last_ASn;
+reg       fail_cnt_ok, last_BUSn;
 reg [2:0] wait_cycles;
 reg [3:0] fail_cnt;
 
@@ -45,11 +45,11 @@ always @(posedge clk, posedge rst) begin : dtack_gen
         fail_cnt_ok <= 0;
     end else begin
         if( sdram_ok ) fail_cnt_ok <= 1;
-        last_ASn <= ASn;
-        if( (!ASn && last_ASn) || ASn ) begin // for falling edge of ASn
+        last_BUSn <= BUSn;
+        if( (!BUSn && last_BUSn) || BUSn ) begin // for falling edge of BUSn
             DTACKn <= 1'b1;
             wait_cycles <= {2'b0, 1'b1};
-        end else if( !ASn  ) begin
+        end else if( !BUSn  ) begin
             if( cpu_cenb ) begin
                 wait_cycles[2] <= 1'b1;
                 wait_cycles[1] <= wait_cycles[2];
