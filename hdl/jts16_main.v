@@ -88,7 +88,7 @@ wire [23:0] A_full = {A,1'b0};
 `endif
 
 wire        BRn, BGACKn, BGn;
-wire        ASn, UDSn, LDSn;
+wire        ASn, UDSn, LDSn, BUSn;
 wire        ok_dly;
 wire [15:0] rom_dec;
 
@@ -97,6 +97,7 @@ reg         io_cs, wdog_cs,
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
+assign BUSn  = ASn | (LDSn & UDSn);
 
 // No peripheral bus access for now
 assign BRn   = 1;
@@ -129,8 +130,11 @@ always @(posedge clk, posedge rst) begin
             io_cs     <= A[23:22]==3 && A[18:17]==2;    // c4
             wdog_cs   <= A[23:22]==3 && A[18:16]==6;    // c6
 
-            pre_vram_cs <= A[22] && A[18:16]==0;        // 40
-            pre_ram_cs  <= A[23:22]==3 && A[18:16]==7;  // c7
+            // jtframe_ramrq requires cs to toggle to
+            // process a new request. BUSn will toggle for
+            // read-modify-writes
+            pre_vram_cs <= !BUSn && A[22] && A[18:16]==0;        // 40
+            pre_ram_cs  <= !BUSn && A[23:22]==3 && A[18:16]==7;  // c7
         end else begin
             rom_cs    <= 0;
             char_cs   <= 0;
@@ -143,7 +147,7 @@ always @(posedge clk, posedge rst) begin
         end
     end
 end
-
+/*
 jtframe_68kramcs u_ramcs(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -155,6 +159,9 @@ jtframe_68kramcs u_ramcs(
     .pre_cs     ( { pre_ram_cs, pre_vram_cs } ),
     .cs         ( {     ram_cs,     vram_cs } )
 );
+*/
+assign ram_cs  = pre_ram_cs,
+       vram_cs = pre_vram_cs;
 
 // cabinet input
 reg [ 7:0] cab_dout;
@@ -274,7 +281,7 @@ jts16_dtack u_dtack(
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
 
-    .ASn        ( ASn       ),
+    .BUSn       ( BUSn      ),
     .bus_cs     ( bus_cs    ),
     .bus_busy   ( bus_busy  ),
     .rom_ok     ( ok_dly    ),
