@@ -21,7 +21,7 @@
 
 <misterromdescription>
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
-    <name>Sukeban Jansi Ryuko (Set 1, S16A) [FD1089B 317-5021]</name>
+    <name>Sukeban Jansi Ryuko (Set 1, Japan, S16A) [FD1089B 317-5021]</name>
     <setname>sjryuko1</setname>
     <rbf>jts16</rbf>
     <mameversion>0229</mameversion>
@@ -30,7 +30,7 @@
     <players>1</players>
     <joystick>4-way</joystick>
     <rotation>horizontal</rotation>
-    <region>World</region>
+    <region>Japan</region>
     <platform>Sega S16A</platform>
     <category>Puzzle</category>
     <catver>Tabletop/Mahjong * Mature *</catver>

@@ -161,7 +161,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="sjryuko1" sourcefile="segas16a.cpp" cloneof="sjryuko" romof="sjryuko">
-		<description>Sukeban Jansi Ryuko (Set 1, S16A) [FD1089B 317-5021]</description>
+		<description>Sukeban Jansi Ryuko (Set 1, Japan, S16A) [FD1089B 317-5021]</description>
 		<year>1987</year>
 		<manufacturer>White Board</manufacturer>
 		<rom name="epr-12251.43" size="32768" crc="1af3cd0b" sha1="a14907bf8da8010bacaf35893037310f1bb8d375" region="maincpu" offset="0"/>

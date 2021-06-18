@@ -1076,7 +1076,7 @@
 	<machine name="tetrisd" sourcefile="segas16a.cpp" cloneof="tetris" romof="tetris">
 		<description>Tetris (Set 4 Bootleg, Japan, S16A) [No Protection]</description>
 		<year>1988</year>
-		<manufacturer>bootleg</manufacturer>
+		<manufacturer>Sega</manufacturer>
 		<rom name="bootleg_epr-12201.rom" size="32768" crc="0b694740" sha1="c480e14c36f063851732d0a5985a6c744fa96062" region="maincpu" offset="0"/>
 		<rom name="bootleg_epr-12200.rom" size="32768" crc="343c0670" sha1="cc0b7eeea411d533e973e71fe3121285e24869b0" region="maincpu" offset="1"/>
 		<rom name="epr-12202.rom" merge="epr-12202.rom" size="65536" crc="2f7da741" sha1="51a685673b4a57a13818eca65d122230f20bd9a0" region="gfx1" offset="0"/>
