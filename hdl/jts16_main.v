@@ -19,8 +19,8 @@
 module jts16_main(
     input              rst,
     input              clk,
-    input              cpu_cen,
-    input              cpu_cenb,
+    output             cpu_cen,
+    output             cpu_cenb,
 
     // Video
     input  [8:0]       vdump,
@@ -147,19 +147,7 @@ always @(posedge clk, posedge rst) begin
         end
     end
 end
-/*
-jtframe_68kramcs u_ramcs(
-    .rst        ( rst       ),
-    .clk        ( clk       ),
-    .cpu_cen    ( cpu_cen   ),
 
-    .UDSWn      ( UDSWn     ),
-    .LDSWn      ( LDSWn     ),
-
-    .pre_cs     ( { pre_ram_cs, pre_vram_cs } ),
-    .cs         ( {     ram_cs,     vram_cs } )
-);
-*/
 assign ram_cs  = pre_ram_cs,
        vram_cs = pre_vram_cs;
 
@@ -272,21 +260,21 @@ always @(posedge clk, posedge rst) begin
 end
 
 wire DTACKn;
-wire bus_cs   = pal_cs | char_cs | pre_vram_cs | pre_ram_cs | rom_cs | objram_cs | io_cs;
-wire bus_busy = |{ rom_cs & ~ok_dly, (pre_ram_cs | pre_vram_cs) & ~ram_ok };
+wire bus_cs    = pal_cs | char_cs | pre_vram_cs | pre_ram_cs | rom_cs | objram_cs | io_cs;
+wire bus_busy  = |{ rom_cs & ~ok_dly, (pre_ram_cs | pre_vram_cs) & ~ram_ok };
+wire bus_legit = 0;
 
-jts16_dtack u_dtack(
+jtframe_68kdtack #(.W(8)) u_dtack(
     .rst        ( rst       ),
     .clk        ( clk       ),
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
-
-    .BUSn       ( BUSn      ),
     .bus_cs     ( bus_cs    ),
     .bus_busy   ( bus_busy  ),
-    .rom_ok     ( ok_dly    ),
-    .ram_ok     ( ram_ok    ),
-
+    .bus_legit  ( bus_legit ),
+    .BUSn       ( BUSn      ),   // BUSn = ASn | (LDSn & UDSn)
+    .num        ( 8'd29     ),  // numerator
+    .den        ( 8'd146    ),  // denominator
     .DTACKn     ( DTACKn    )
 );
 
