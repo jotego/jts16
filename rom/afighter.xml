@@ -866,7 +866,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="afighterf" sourcefile="segas16b.cpp" cloneof="afighter" romof="afighter">
-		<description>Action Fighter (World S16B) [FD1089B 317-xxxx] [Analog Controls]</description>
+		<description>Action Fighter (World, S16B) [FD1089B 317-xxxx] [Analog Controls]</description>
 		<year>1986</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr10033.bin" size="32768" crc="1b836a91" sha1="a770a0ca9db052553184ffb0f647d033a0a4ab63" region="maincpu" offset="1"/>
@@ -1164,7 +1164,7 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="afighterh" sourcefile="segas16b.cpp" cloneof="afighter" romof="afighter">
-		<description>Action Fighter (World 16B, FD1089A 317-0018)</description>
+		<description>Action Fighter (World, 16B) [FD1089A 317-0018]</description>
 		<year>1986</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr10354.bin" size="32768" crc="6dad6dd1" sha1="8cdd1c10d60cda09f888b2f03b7d4c76100b4ad0" region="maincpu" offset="1"/>

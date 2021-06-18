@@ -1,27 +1,27 @@
 <mame>
 	<machine name="timescan" sourcefile="segas16b.cpp">
-		<description>Time Scanner (set 2, System 16B)</description>
+		<description>Time Scanner (Set 2, World, S16B) [No Encryption]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr-10853.a4" size="32768" crc="24d7c5fb" sha1="b1796e77cf968f9bdae7a47c5c02b93aaec10ade" region="maincpu" offset="0" flags="1000"/>
-		<rom name="epr-10850.a1" size="32768" crc="f1575732" sha1="d0c8fc42171c436cc1cd55a33295bd019a474d47" region="maincpu" offset="1" flags="1000"/>
-		<rom name="epr-10854.a5" size="32768" crc="82d0b237" sha1="c1defda4785014ccd7164f49f53f77e36fcb3a8d" region="maincpu" offset="10000" flags="1000"/>
-		<rom name="epr-10851.a2" size="32768" crc="f5ce271b" sha1="8b4f1178c87e657d8d5805d908100f0d5fb030da" region="maincpu" offset="10001" flags="1000"/>
-		<rom name="epr-10855.a6" size="32768" crc="63e95a53" sha1="60c42bbb1c316deb493a237990a7938551f8bc2e" region="maincpu" offset="20000" flags="1000"/>
-		<rom name="epr-10852.a3" size="32768" crc="7cd1382b" sha1="6263cc863cbf0ef66a7ba8cc1c98212917d7c131" region="maincpu" offset="20001" flags="1000"/>
-		<rom name="epr-10543.b9" size="32768" crc="07dccc37" sha1="544cc6a3b3ef64727ecf5098b84ade2dd5330614" region="gfx1" offset="0" flags="0"/>
-		<rom name="epr-10544.b10" size="32768" crc="84fb9a3a" sha1="efde54cc9582f68e58cae05f717a4fc8f620c0fc" region="gfx1" offset="8000" flags="0"/>
-		<rom name="epr-10545.b11" size="32768" crc="c8694bc0" sha1="e48fc349ef454ded86141937f70b006e64da6b6b" region="gfx1" offset="10000" flags="0"/>
-		<rom name="epr-10548.b1" size="32768" crc="aa150735" sha1="b6e6ff9229c641e196fc7a0a2cf7aa362f554676" region="sprites" offset="1" flags="1000"/>
-		<rom name="epr-10552.b5" size="32768" crc="6fcbb9f7" sha1="0a0fab930477d8b79e500263bbc80d3bf73778f8" region="sprites" offset="0" flags="1000"/>
-		<rom name="epr-10549.b2" size="32768" crc="2f59f067" sha1="1fb64cce2f98ddcb5ecb662e63ea636a8da08bcd" region="sprites" offset="20001" flags="1000"/>
-		<rom name="epr-10553.b6" size="32768" crc="8a220a9f" sha1="c17547d85721fa19e5f445b5be30b3fbf5e8cc6e" region="sprites" offset="20000" flags="1000"/>
-		<rom name="epr-10550.b3" size="32768" crc="f05069ff" sha1="bd95761036c2fad8ddf4e169d899b173822ee4b0" region="sprites" offset="40001" flags="1000"/>
-		<rom name="epr-10554.b7" size="32768" crc="dc64f809" sha1="ea85eefa98ec55e9e872940821a959ff4eb1bd1c" region="sprites" offset="40000" flags="1000"/>
-		<rom name="epr-10551.b4" size="32768" crc="435d811f" sha1="b28eb09620113cd7578387c4d96029f2acb8ec06" region="sprites" offset="60001" flags="1000"/>
-		<rom name="epr-10555.b8" size="32768" crc="2143c471" sha1="d413aa216349ddf773a39d2826c3a940b4149229" region="sprites" offset="60000" flags="1000"/>
-		<rom name="epr-10562.a7" size="32768" crc="3f5028bf" sha1="02081569a5f4dc64771e97651a9902a98d54a952" region="soundcpu" offset="0" flags="0"/>
-		<rom name="epr-10563.a8" size="32768" crc="9db7eddf" sha1="8b9a27442a623bee6b9b5b06275226734d132e17" region="soundcpu" offset="10000" flags="0"/>
+		<rom name="epr-10853.a4" size="32768" crc="24d7c5fb" sha1="b1796e77cf968f9bdae7a47c5c02b93aaec10ade" region="maincpu" offset="0"/>
+		<rom name="epr-10850.a1" size="32768" crc="f1575732" sha1="d0c8fc42171c436cc1cd55a33295bd019a474d47" region="maincpu" offset="1"/>
+		<rom name="epr-10854.a5" size="32768" crc="82d0b237" sha1="c1defda4785014ccd7164f49f53f77e36fcb3a8d" region="maincpu" offset="10000"/>
+		<rom name="epr-10851.a2" size="32768" crc="f5ce271b" sha1="8b4f1178c87e657d8d5805d908100f0d5fb030da" region="maincpu" offset="10001"/>
+		<rom name="epr-10855.a6" size="32768" crc="63e95a53" sha1="60c42bbb1c316deb493a237990a7938551f8bc2e" region="maincpu" offset="20000"/>
+		<rom name="epr-10852.a3" size="32768" crc="7cd1382b" sha1="6263cc863cbf0ef66a7ba8cc1c98212917d7c131" region="maincpu" offset="20001"/>
+		<rom name="epr-10543.b9" size="32768" crc="07dccc37" sha1="544cc6a3b3ef64727ecf5098b84ade2dd5330614" region="gfx1" offset="0"/>
+		<rom name="epr-10544.b10" size="32768" crc="84fb9a3a" sha1="efde54cc9582f68e58cae05f717a4fc8f620c0fc" region="gfx1" offset="8000"/>
+		<rom name="epr-10545.b11" size="32768" crc="c8694bc0" sha1="e48fc349ef454ded86141937f70b006e64da6b6b" region="gfx1" offset="10000"/>
+		<rom name="epr-10548.b1" size="32768" crc="aa150735" sha1="b6e6ff9229c641e196fc7a0a2cf7aa362f554676" region="sprites" offset="1"/>
+		<rom name="epr-10552.b5" size="32768" crc="6fcbb9f7" sha1="0a0fab930477d8b79e500263bbc80d3bf73778f8" region="sprites" offset="0"/>
+		<rom name="epr-10549.b2" size="32768" crc="2f59f067" sha1="1fb64cce2f98ddcb5ecb662e63ea636a8da08bcd" region="sprites" offset="20001"/>
+		<rom name="epr-10553.b6" size="32768" crc="8a220a9f" sha1="c17547d85721fa19e5f445b5be30b3fbf5e8cc6e" region="sprites" offset="20000"/>
+		<rom name="epr-10550.b3" size="32768" crc="f05069ff" sha1="bd95761036c2fad8ddf4e169d899b173822ee4b0" region="sprites" offset="40001"/>
+		<rom name="epr-10554.b7" size="32768" crc="dc64f809" sha1="ea85eefa98ec55e9e872940821a959ff4eb1bd1c" region="sprites" offset="40000"/>
+		<rom name="epr-10551.b4" size="32768" crc="435d811f" sha1="b28eb09620113cd7578387c4d96029f2acb8ec06" region="sprites" offset="60001"/>
+		<rom name="epr-10555.b8" size="32768" crc="2143c471" sha1="d413aa216349ddf773a39d2826c3a940b4149229" region="sprites" offset="60000"/>
+		<rom name="epr-10562.a7" size="32768" crc="3f5028bf" sha1="02081569a5f4dc64771e97651a9902a98d54a952" region="soundcpu" offset="0"/>
+		<rom name="epr-10563.a8" size="32768" crc="9db7eddf" sha1="8b9a27442a623bee6b9b5b06275226734d132e17" region="soundcpu" offset="10000"/>
 		<device_ref name="m68000"/>
 		<device_ref name="z80"/>
 		<device_ref name="nvram"/>
@@ -42,9 +42,9 @@
 		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="10000000"/>
 		<chip type="cpu" tag="soundcpu" name="Zilog Z80" clock="5000000"/>
 		<chip type="audio" tag="mono" name="Speaker"/>
-		<chip type="audio" tag="ym2151" name="YM2151 OPM" clock="4000000"/>
+		<chip type="audio" tag="ym2151" name="Yamaha YM2151 OPM" clock="4000000"/>
 		<chip type="audio" tag="upd" name="NEC uPD7759" clock="640000"/>
-		<chip type="audio" tag="netlist" name="Netlist Sound Device"/>
+		<chip type="audio" tag="netlist" name="Netlist Sound Device" clock="48000"/>
 		<display tag="screen" type="raster" rotate="270" width="320" height="224" refresh="60.054389" pixclock="6293700" htotal="400" hbend="0" hbstart="320" vtotal="262" vbend="0" vbstart="224" />
 		<sound channels="1"/>
 		<input players="2" coins="2" service="yes">
@@ -190,30 +190,30 @@
 		<driver status="good" emulation="good" savestate="unsupported"/>
 	</machine>
 	<machine name="timescan1" sourcefile="segas16a.cpp" cloneof="timescan" romof="timescan">
-		<description>Time Scanner (set 1, System 16A, FD1089B 317-0024)</description>
+		<description>Time Scanner (Set 1, World, S16A) [FD1089B 317-0024]</description>
 		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr-10540a.43" size="32768" crc="76848b0b" sha1="a7755898c2b3212d80034c47760440db6dcde83c" region="maincpu" offset="0" flags="1000"/>
-		<rom name="epr-10537a.26" size="32768" crc="4ddc434a" sha1="54908654f1445f2d3a3b1496015f3347ad603225" region="maincpu" offset="1" flags="1000"/>
-		<rom name="epr-10541.42" size="32768" crc="cc6d945e" sha1="0ace2a8fddc27da4c8c3efb16f245f6325f02ed5" region="maincpu" offset="10000" flags="1000"/>
-		<rom name="epr-10538.25" size="32768" crc="68379473" sha1="7f6e0b3fb29ef5dd1023625ef7a7270fc230d40f" region="maincpu" offset="10001" flags="1000"/>
-		<rom name="epr-10542.41" size="32768" crc="10217dfa" sha1="845ea0483dca0aae042da52fbd7bc07e7e2f026d" region="maincpu" offset="20000" flags="1000"/>
-		<rom name="epr-10539.24" size="32768" crc="10943b2e" sha1="a297ed455062a3d39b9eecfe2b92474d47ce758f" region="maincpu" offset="20001" flags="1000"/>
-		<rom name="epr-10543.95" merge="epr-10543.b9" size="32768" crc="07dccc37" sha1="544cc6a3b3ef64727ecf5098b84ade2dd5330614" region="gfx1" offset="0" flags="0"/>
-		<rom name="epr-10544.94" merge="epr-10544.b10" size="32768" crc="84fb9a3a" sha1="efde54cc9582f68e58cae05f717a4fc8f620c0fc" region="gfx1" offset="8000" flags="0"/>
-		<rom name="epr-10545.93" merge="epr-10545.b11" size="32768" crc="c8694bc0" sha1="e48fc349ef454ded86141937f70b006e64da6b6b" region="gfx1" offset="10000" flags="0"/>
-		<rom name="epr-10548.10" merge="epr-10548.b1" size="32768" crc="aa150735" sha1="b6e6ff9229c641e196fc7a0a2cf7aa362f554676" region="sprites" offset="1" flags="1000"/>
-		<rom name="epr-10552.11" merge="epr-10552.b5" size="32768" crc="6fcbb9f7" sha1="0a0fab930477d8b79e500263bbc80d3bf73778f8" region="sprites" offset="0" flags="1000"/>
-		<rom name="epr-10549.17" merge="epr-10549.b2" size="32768" crc="2f59f067" sha1="1fb64cce2f98ddcb5ecb662e63ea636a8da08bcd" region="sprites" offset="10001" flags="1000"/>
-		<rom name="epr-10553.18" merge="epr-10553.b6" size="32768" crc="8a220a9f" sha1="c17547d85721fa19e5f445b5be30b3fbf5e8cc6e" region="sprites" offset="10000" flags="1000"/>
-		<rom name="epr-10550.23" merge="epr-10550.b3" size="32768" crc="f05069ff" sha1="bd95761036c2fad8ddf4e169d899b173822ee4b0" region="sprites" offset="20001" flags="1000"/>
-		<rom name="epr-10554.24" merge="epr-10554.b7" size="32768" crc="dc64f809" sha1="ea85eefa98ec55e9e872940821a959ff4eb1bd1c" region="sprites" offset="20000" flags="1000"/>
-		<rom name="epr-10551.29" merge="epr-10551.b4" size="32768" crc="435d811f" sha1="b28eb09620113cd7578387c4d96029f2acb8ec06" region="sprites" offset="30001" flags="1000"/>
-		<rom name="epr-10555.30" merge="epr-10555.b8" size="32768" crc="2143c471" sha1="d413aa216349ddf773a39d2826c3a940b4149229" region="sprites" offset="30000" flags="1000"/>
-		<rom name="epr-10546.12" size="32768" crc="1ebee5cc" sha1="5e24ee25e770068a1292e657307cf53f6a8ae1c9" region="soundcpu" offset="0" flags="0"/>
-		<rom name="7751.bin" size="1024" crc="6a9534fc" sha1="67ad94674db5c2aab75785668f610f6f4eccd158" region="n7751" offset="0" flags="0"/>
-		<rom name="epr-10547.1" size="32768" crc="d24ffc4b" sha1="3b250e1f026664f7a37f65d1c1a07381e88f11e8" region="n7751data" offset="0" flags="0"/>
-		<rom name="317-0024.key" size="8192" crc="dcd41d24" sha1="2bd96bc7467ad40f4d981d767f9685ec142d6d87" region="maincpu:key" offset="0" flags="0"/>
+		<rom name="epr-10540a.43" size="32768" crc="76848b0b" sha1="a7755898c2b3212d80034c47760440db6dcde83c" region="maincpu" offset="0"/>
+		<rom name="epr-10537a.26" size="32768" crc="4ddc434a" sha1="54908654f1445f2d3a3b1496015f3347ad603225" region="maincpu" offset="1"/>
+		<rom name="epr-10541.42" size="32768" crc="cc6d945e" sha1="0ace2a8fddc27da4c8c3efb16f245f6325f02ed5" region="maincpu" offset="10000"/>
+		<rom name="epr-10538.25" size="32768" crc="68379473" sha1="7f6e0b3fb29ef5dd1023625ef7a7270fc230d40f" region="maincpu" offset="10001"/>
+		<rom name="epr-10542.41" size="32768" crc="10217dfa" sha1="845ea0483dca0aae042da52fbd7bc07e7e2f026d" region="maincpu" offset="20000"/>
+		<rom name="epr-10539.24" size="32768" crc="10943b2e" sha1="a297ed455062a3d39b9eecfe2b92474d47ce758f" region="maincpu" offset="20001"/>
+		<rom name="epr-10543.95" merge="epr-10543.b9" size="32768" crc="07dccc37" sha1="544cc6a3b3ef64727ecf5098b84ade2dd5330614" region="gfx1" offset="0"/>
+		<rom name="epr-10544.94" merge="epr-10544.b10" size="32768" crc="84fb9a3a" sha1="efde54cc9582f68e58cae05f717a4fc8f620c0fc" region="gfx1" offset="8000"/>
+		<rom name="epr-10545.93" merge="epr-10545.b11" size="32768" crc="c8694bc0" sha1="e48fc349ef454ded86141937f70b006e64da6b6b" region="gfx1" offset="10000"/>
+		<rom name="epr-10548.10" merge="epr-10548.b1" size="32768" crc="aa150735" sha1="b6e6ff9229c641e196fc7a0a2cf7aa362f554676" region="sprites" offset="1"/>
+		<rom name="epr-10552.11" merge="epr-10552.b5" size="32768" crc="6fcbb9f7" sha1="0a0fab930477d8b79e500263bbc80d3bf73778f8" region="sprites" offset="0"/>
+		<rom name="epr-10549.17" merge="epr-10549.b2" size="32768" crc="2f59f067" sha1="1fb64cce2f98ddcb5ecb662e63ea636a8da08bcd" region="sprites" offset="20001"/>
+		<rom name="epr-10553.18" merge="epr-10553.b6" size="32768" crc="8a220a9f" sha1="c17547d85721fa19e5f445b5be30b3fbf5e8cc6e" region="sprites" offset="20000"/>
+		<rom name="epr-10550.23" merge="epr-10550.b3" size="32768" crc="f05069ff" sha1="bd95761036c2fad8ddf4e169d899b173822ee4b0" region="sprites" offset="40001"/>
+		<rom name="epr-10554.24" merge="epr-10554.b7" size="32768" crc="dc64f809" sha1="ea85eefa98ec55e9e872940821a959ff4eb1bd1c" region="sprites" offset="40000"/>
+		<rom name="epr-10551.29" merge="epr-10551.b4" size="32768" crc="435d811f" sha1="b28eb09620113cd7578387c4d96029f2acb8ec06" region="sprites" offset="60001"/>
+		<rom name="epr-10555.30" merge="epr-10555.b8" size="32768" crc="2143c471" sha1="d413aa216349ddf773a39d2826c3a940b4149229" region="sprites" offset="60000"/>
+		<rom name="epr-10546.12" size="32768" crc="1ebee5cc" sha1="5e24ee25e770068a1292e657307cf53f6a8ae1c9" region="soundcpu" offset="0"/>
+		<rom name="7751.bin" size="1024" crc="6a9534fc" sha1="67ad94674db5c2aab75785668f610f6f4eccd158" region="n7751" offset="0"/>
+		<rom name="epr-10547.1" size="32768" crc="d24ffc4b" sha1="3b250e1f026664f7a37f65d1c1a07381e88f11e8" region="n7751data" offset="0"/>
+		<rom name="317-0024.key" size="8192" crc="dcd41d24" sha1="2bd96bc7467ad40f4d981d767f9685ec142d6d87" region="maincpu:key" offset="0"/>
 		<device_ref name="fd1089b"/>
 		<device_ref name="z80"/>
 		<device_ref name="n7751"/>
@@ -230,11 +230,12 @@
 		<device_ref name="generic_latch_8"/>
 		<device_ref name="ym2151"/>
 		<device_ref name="dac_8bit_r2r"/>
+		<device_ref name="volt_reg"/>
 		<chip type="cpu" tag="maincpu" name="Hitachi FD1089B Encrypted CPU" clock="10000000"/>
 		<chip type="cpu" tag="soundcpu" name="Zilog Z80" clock="4000000"/>
 		<chip type="cpu" tag="n7751" name="N7751" clock="6000000"/>
 		<chip type="audio" tag="speaker" name="Speaker"/>
-		<chip type="audio" tag="ymsnd" name="YM2151 OPM" clock="4000000"/>
+		<chip type="audio" tag="ymsnd" name="Yamaha YM2151 OPM" clock="4000000"/>
 		<chip type="audio" tag="dac" name="8-Bit R-2R DAC"/>
 		<display tag="screen" type="raster" rotate="270" width="320" height="224" refresh="60.000000" pixclock="5376240" htotal="342" hbend="0" hbstart="320" vtotal="262" vbend="0" vbstart="224" />
 		<sound channels="1"/>
