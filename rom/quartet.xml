@@ -311,7 +311,7 @@
 		<driver status="good" emulation="good" savestate="supported"/>
 	</machine>
 	<machine name="quartet2a" sourcefile="segas16a.cpp" cloneof="quartet" romof="quartet">
-		<description>Quartet 2 (World, S16A) [No Protection)</description>
+		<description>Quartet 2 (World, S16A) [No Protection]</description>
 		<year>1986</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-7728.b9" size="32768" crc="56a8c88e" sha1="33eaca5272f3588058952ca0b1fa298b89418e81" region="maincpu" offset="0"/>
