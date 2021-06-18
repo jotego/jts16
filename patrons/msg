@@ -1,14 +1,16 @@
  \B System 16\W core by \RJotego\W
   http://patreon.com/topapate
 
-     Beta 2 -- 11-June-21
+     Beta 3 -- 18-June-21
 supervised by the \RJTAlpha team\W
 
-    Only tested with Shinobi
+Special thanks to Blackwine
+and Ijor for helping with the
+CPU bus cycle problem
 
 Known issues:
--Winning on bonus stage halts
- Shinobi
+-Body Slam:
+    -Missing some graphics
 -Speed may not be accurate
 -Sprites may not be properly
  displayed at the top and bottom
@@ -26,17 +28,18 @@ Sorry for the wait & thank you
 
         \RDirectors\W
 
+atrac17         Suv
 AnotherJoe      Antonio Villena
 Bender          Boogermann
 Chris Gelatt    DJ Hard Rich
 Filip Kindt     Frederic Mahe
-JPS (RetroFPGA) Jeffrey Pierce
-John Biscevic   Louis Martinez
+JPS (RetroFPGA) James D
+Jeffrey Pierce  John Biscevic
+amoore2600      Louis Martinez
 Martin Birkeldh Michael Yount
 Purple Tinker   Shawn Henderson
-Silvercloud     Spencer Bradley
-TT_Hipster1941  amoore2600
-Atrac17         Suv
+Spencer Bradley TT_Hipster1941
+Kevin finisterre
 
         \RThanks to\W
 
@@ -46,25 +49,27 @@ Jo Tomiyori    Phillip McMahon
 
 ARCADEAGES      Adam Davis
 Anders Rensberg Andreas Wester
-Andrew Francomb Andyways
-Arjan de        Bob Gallardo
-Chi Wai         Chris Brown
-Chris Doyle     Chris Harvey
-Chris Jardine   Christian
-Connor Glynn    D.J. Estreito
-DMG             Darren Chell
-David Agudo     David Ashby
-David Mills     David Moylan
-Dean Winger     Don Gafford
-Ed Balan        Eduardo Javier
-Edward Rana     Epixjava
-Gladius         Gus Douboulidis
-Gwaland         H. Osterholz
-Henrik Nordstrom Ian Court
-Ivo             James Baker
-James Trautner  James Williams
-Jason Nagy      Joeri van
-John Casey      Jorge Slowfret
+Andrew Francomb Andy Palmer
+Andyways        Arjan de
+Bob Gallardo    Chi Wai
+Chris Brown     Chris Doyle
+Chris Harvey    Chris Jardine
+Christian       Connor Glynn
+D.J. Estreito   DMG
+Darren Chell    David Agudo
+David Ashby     David Mills
+David Moylan    Dean Winger
+Don Gafford     Ed Balan
+Eduardo Javier  Edward Rana
+Epixjava        Gladius
+Gus Douboulidis Gwaland
+H. Osterholz    Henrik Nords.
+Ian Court       Ivo
+James Baker     James Trautner
+James Williams  Jason Nagy
+Jeffrey Haas    Jim Weinhart
+Joeri van       John Casey
+Jorge Slowfret  Jose Pulgar
 Joseph Hsieh    Juan Francisco
 Krycek7o2       Leslie Law
 Lionel LENOBLE  MakeshiftMoney
