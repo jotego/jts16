@@ -37,9 +37,6 @@ module jts16_fd1094(
 
     input             rom_ok,
     output            ok_dly
-
-//    `ifdef DEBUG
-//    `endif
 );
 
 `define BITSWAP( v, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 ) { \
@@ -115,7 +112,7 @@ end
 
 always @(*) begin
     key_addr = addr[13:1];
-    if( addr[13:1]>=4 && addr[13:1]<6 )
+    if ((addr[16:1] & 16'h0ffc) == 0 && addr >= 4)
         key_addr[12] = 1;
     key_F = addr[13] ? mainkey[7] : mainkey[6];
 
@@ -130,6 +127,12 @@ always @(*) begin
         if( addr <= 1 ) key_F = 0;
     end
 end
+
+`ifdef SIMULATION
+always @(mainkey) begin
+    $display("mainkey = %X",mainkey);
+end
+`endif
 
 // decoding, pretty much copy-paste from MAME's fd1094.cpp
 // I trust the synthesizer to simplify the equations
@@ -146,7 +149,7 @@ always @(*) begin
 
         if (!key_2b)        val = `BITSWAP(val,15,10,13,12,11,14,9,8,7,6,0,4,3,2,1,5);             // 0-5, 10-14
     end
-
+    $display("Check point 0: %X (%d,%d,%d,%d)",val, global_xor1, key_1b, global_swap2, key_2b);
     if (val[14] ) begin
         val = `BITSWAP(val, 13,14, 7, 0, 8, 6, 4, 2, 1,15, 3,11,12,10, 5, 9);
 

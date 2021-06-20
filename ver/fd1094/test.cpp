@@ -46,12 +46,12 @@ int main() {
         }
         dut.fd1094_we = 0;
         for( int k=0; k<100000; k++ ) {
-            //printf("------------- %d -----------\n",k);
-            int addr = rand()&0xff'ffff;
-            int enc  = rand()&0xffff;
+            printf("------------- %d -----------\n",k);
+            int addr  = rand()&0xff'ffff;
+            int enc   = rand()&0xffff;
             int state = rand()&0xff;
-            int vrq   = 0; // rand()&1;
-            int dec  = decrypt_one( addr, enc, keys, state, vrq );
+            int vrq   = rand()&1;
+            int dec   = decrypt_one( addr, enc, keys, state, vrq );
 
             dut.addr = addr;
             dut.enc  = enc;

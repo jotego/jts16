@@ -76,6 +76,8 @@ uint16_t decrypt_one(offs_t address, uint16_t val, const uint8_t *main_key,
     else
         mainkey = main_key[address & 0x1fff];
 
+    printf("Ref mainkey = %X\n", mainkey );
+
     uint8_t key_F;
     if (address & 0x1000)   key_F = BIT(mainkey,7);
     else                    key_F = BIT(mainkey,6);
@@ -138,7 +140,7 @@ uint16_t decrypt_one(offs_t address, uint16_t val, const uint8_t *main_key,
 
         if (!key_2b)        val = bitswap<16>(val,15,10,13,12,11,14,9,8,7,6,0,4,3,2,1,5);             // 0-5, 10-14
     }
-
+    printf("Ref point 0: %X (%d,%d,%d,%d)\n",val, global_xor1, key_1b, global_swap2, key_2b);
     if (val & 0x4000)           // block invariant: val & 0x4000 != 0
     {
         val = bitswap<16>(val, 13,14, 7, 0, 8, 6, 4, 2, 1,15, 3,11,12,10, 5, 9);
