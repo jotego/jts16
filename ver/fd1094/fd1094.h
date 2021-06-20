@@ -36,6 +36,7 @@ template <unsigned B, typename T, typename... U> T bitswap(T val, U... b) noexce
         return bitswap(val, b...);
 }
 
+void fd1094_init();
 uint16_t decrypt_one(offs_t address, uint16_t val, const uint8_t *main_key,
                      uint8_t state, bool vector_fetch);
 

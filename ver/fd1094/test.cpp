@@ -31,6 +31,7 @@ void clock_dut( S& dut, int times ) {
 int main() {
     try {
         ROM keys("317-0080.key");
+        fd1094_init();
         DUT dut;
         dut.dec_en = 1;
         dut.op_n = 0;
@@ -45,8 +46,8 @@ int main() {
             clock_dut( dut, 2 );
         }
         dut.fd1094_we = 0;
-        for( int k=0; k<100000; k++ ) {
-            printf("------------- %d -----------\n",k);
+        for( int k=0; k<400000; k++ ) {
+            //printf("------------- %d -----------\n",k);
             int addr  = rand()&0xff'ffff;
             int enc   = rand()&0xffff;
             int state = rand()&0xff;
@@ -64,6 +65,7 @@ int main() {
                 throw runtime_error("Decoder mismatch");
             }
         }
+        printf("No errors\n");
     } catch( const exception& error ) {
         cout.flush();
         cout << "ERROR: " << error.what() << endl;
