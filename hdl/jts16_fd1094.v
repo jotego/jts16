@@ -22,7 +22,6 @@ module jts16_fd1094(
 
     // Configuration
     input      [12:0] prog_addr,
-    input             key_we,
     input             fd1094_we,
     input      [ 7:0] prog_data,
 
@@ -38,9 +37,9 @@ module jts16_fd1094(
 
     input             rom_ok,
     output            ok_dly
-    `ifdef DEBUG
 
-    `endif
+//    `ifdef DEBUG
+//    `endif
 );
 
 `define BITSWAP( v, b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0 ) { \
@@ -55,7 +54,7 @@ reg  [12:0] key_addr;
 reg         key_F;
 reg  [15:0] val;
 
-assign dec = val;
+assign dec = op_n ? enc : val;
 
 assign xor_mask1 = { st[2], st[4], st[3], st[6],
                      st[5], st[0], st[4], st[1]};
@@ -102,12 +101,15 @@ wire key_6b = mainkey[6] ^ gkey2_st[6];
 wire key_7a = mainkey[7] ^ gkey2_st[4];
 
 always @(posedge clk) begin
-    if( fd1094_we && prog_addr<3 ) begin
+    if( fd1094_we && prog_addr<4 ) begin
         case( prog_addr[1:0] )
-            0: gkey1 <= prog_data;
-            1: gkey2 <= prog_data;
-            2: gkey3 <= prog_data;
+            1: gkey1 <= prog_data;
+            2: gkey2 <= prog_data;
+            3: gkey3 <= prog_data;
         endcase
+        `ifdef SIMULATION
+        $display("global key %d = %X",prog_addr, prog_data);
+        `endif
     end
 end
 
@@ -120,6 +122,7 @@ always @(*) begin
     gkey1_st = gkey1 ^ xor_mask1;
     gkey2_st = gkey2 ^ xor_mask2;
     gkey3_st = gkey3 ^ xor_mask3;
+
     if( vrq ) begin
         if( addr <= 3 ) gkey3_st = 0;
         if( addr <= 2 ) gkey2_st = 0;
@@ -191,12 +194,6 @@ always @(*) begin
     if ((val & 16'hf000) == 16'hc000) val ^= 16'h0080;
     if ((val & 16'hb100) == 16'h0000) val ^= 16'h4000;
 end
-
-`ifdef SIMULATION
-initial begin
-    $readmemh( "fd1094.bin", gkey );
-end
-`endif
 
 jtframe_prom #(.aw(13),.simfile("fd1094.bin")) u_lut(
     .clk    ( clk            ),
