@@ -28,11 +28,22 @@ SDI            | 1089B       | boots but cannot pass the title screen
 Shinobi        |             | Ok
 Sukeban        | 1089B       | Won't boot
 Sukeban        | 16A / 1089B | Missing graphics. Needs over 10 buttons!
-Tetris         | 1094        | Won't boot
-Time Scanner   | 16A         | Boots to odd screen. No sprites shown.
+Tetris         | 1094        | Ok
+Time Scanner   | 16A         | Boots to odd screen. Some sprites not shown?
 Time Scanner   | 16B         | Won't boot
 Wonder Boy III | 16A / 1089A | Ok
 Wonder Boy III | 16B         | Won't boot
+
+# Core Division
+
+Because of the hardware variety, there are different cores targeted for each of them
+
+System                   |  Core
+-------------------------|---------
+16A no protection/FD1089 | jts16
+16A with MCU support     | jts16a1
+16A FD1094 protection    | jts16a2
+16B                      | jts16b
 
 # PCB Check List
 
