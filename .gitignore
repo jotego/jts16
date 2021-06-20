@@ -1,8 +1,13 @@
+*.qpf
+*.qsf
+*.bin
 *.zip
 *.rom
 *.fst
 *.log
 *.hex
+*.jpg
+*.cdf
 cheat/*.bin
 cheat/*.fmt
 history

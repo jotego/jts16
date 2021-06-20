@@ -141,11 +141,11 @@ always @(*) begin
     if (val[15] ) begin
         val = `BITSWAP(val, 15, 9,10,13, 3,12, 0,14, 6, 5, 2,11, 8, 1, 4, 7);
 
-        if (!global_xor1)   if (~val[11] /*& 16'h0800*/)  val ^= 16'h3002;                                      // 1,12,13
-                            if (~val[ 5] /*& 16'h0020*/)  val ^= 16'h0044;                                      // 2,6
-        if (!key_1b)        if (~val[10] /*& 16'h0400*/)  val ^= 16'h0890;                                      // 4,7,11
-        if (!global_swap2)  if (!key_0c)        val ^= 16'h0308;                                      // 3,8,9
-                                                val ^= 16'h6561;
+        if (!global_xor1)   if (~val[11] /*& 16'h0800*/)  val = val ^ 16'h3002;                                      // 1,12,13
+                            if (~val[ 5] /*& 16'h0020*/)  val = val ^ 16'h0044;                                      // 2,6
+        if (!key_1b)        if (~val[10] /*& 16'h0400*/)  val = val ^ 16'h0890;                                      // 4,7,11
+        if (!global_swap2)  if (!key_0c)        val = val ^ 16'h0308;                                      // 3,8,9
+                                                val = val ^ 16'h6561;
 
         if (!key_2b)        val = `BITSWAP(val,15,10,13,12,11,14,9,8,7,6,0,4,3,2,1,5);             // 0-5, 10-14
     end
@@ -153,11 +153,11 @@ always @(*) begin
     if (val[14] ) begin
         val = `BITSWAP(val, 13,14, 7, 0, 8, 6, 4, 2, 1,15, 3,11,12,10, 5, 9);
 
-        if (!global_xor0)   if (val[4] /*& 16'h0010*/)   val ^= 16'h0468;                                      // 3,5,6,10
-        if (!key_3a)        if (val[8] /*& 16'h0100*/)   val ^= 16'h0081;                                      // 0,7
-        if (!key_6a)        if (val[2] /*& 16'h0004*/)   val ^= 16'h0100;                                      // 8
-        if (!key_5b)        if (!key_0b)        val ^= 16'h3012;                                      // 1,4,12,13
-                                                val ^= 16'h3523;
+        if (!global_xor0)   if (val[4] /*& 16'h0010*/)   val = val ^ 16'h0468;                                      // 3,5,6,10
+        if (!key_3a)        if (val[8] /*& 16'h0100*/)   val = val ^ 16'h0081;                                      // 0,7
+        if (!key_6a)        if (val[2] /*& 16'h0004*/)   val = val ^ 16'h0100;                                      // 8
+        if (!key_5b)        if (!key_0b)        val = val ^ 16'h3012;                                      // 1,4,12,13
+                                                val = val ^ 16'h3523;
 
         if (!global_swap0b) val = `BITSWAP(val, 2,14,13,12, 9,10,11, 8, 7, 6, 5, 4, 3,15, 1, 0);   // 2-15, 9-11
     end
@@ -165,12 +165,12 @@ always @(*) begin
     if (val[13] ) begin     // block invariant: val & 16'h2000 != 0
         val = `BITSWAP(val, 10, 2,13, 7, 8, 0, 3,14, 6,15, 1,11, 9, 4, 5,12);
 
-        if (!key_4a)        if (val[11] /*& 16'h0800*/)   val ^= 16'h010c;                                      // 2,3,8
-        if (!key_1a)        if (val[ 7] /*& 16'h0080*/)   val ^= 16'h1000;                                      // 12
-        if (!key_7a)        if (val[10] /*& 16'h0400*/)   val ^= 16'h0a21;                                      // 0,5,9,11
-        if (!key_4b)        if (!key_0a)        val ^= 16'h0080;                                      // 7
-        if (!global_swap0a) if (!key_6b)        val ^= 16'hc000;                                      // 14,15
-                                                val ^= 16'h99a5;
+        if (!key_4a)        if (val[11] /*& 16'h0800*/)   val = val ^ 16'h010c;                                      // 2,3,8
+        if (!key_1a)        if (val[ 7] /*& 16'h0080*/)   val = val ^ 16'h1000;                                      // 12
+        if (!key_7a)        if (val[10] /*& 16'h0400*/)   val = val ^ 16'h0a21;                                      // 0,5,9,11
+        if (!key_4b)        if (!key_0a)        val = val ^ 16'h0080;                                      // 7
+        if (!global_swap0a) if (!key_6b)        val = val ^ 16'hc000;                                      // 14,15
+                                                val = val ^ 16'h99a5;
 
         if (!key_5b)        val = `BITSWAP(val,15,14,13,12,11, 1, 9, 8, 7,10, 5, 6, 3, 2, 4, 0);   // 1,4,6,10
     end
@@ -178,7 +178,7 @@ always @(*) begin
     if (val[15:13]!=0 ) begin
         val = `BITSWAP(val,15,13,14, 5, 6, 0, 9,10, 4,11, 1, 2,12, 3, 7, 8);
 
-        val ^= 16'h17ff;
+        val = val ^ 16'h17ff;
 
         if (!global_swap4)  val = `BITSWAP(val, 15,14,13, 6,11,10, 9, 5, 7,12, 8, 4, 3, 2, 1, 0);  // 5-8, 6-12
         if (!global_swap3)  val = `BITSWAP(val, 13,15,14,12,11,10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);  // 15-14-13
@@ -193,9 +193,9 @@ always @(*) begin
 
     val = `BITSWAP(val, 12,15,14,13,11,10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
 
-    if ((val & 16'hb080) == 16'h8000) val ^= 16'h4000;
-    if ((val & 16'hf000) == 16'hc000) val ^= 16'h0080;
-    if ((val & 16'hb100) == 16'h0000) val ^= 16'h4000;
+    if ((val & 16'hb080) == 16'h8000) val = val ^ 16'h4000;
+    if ((val & 16'hf000) == 16'hc000) val = val ^ 16'h0080;
+    if ((val & 16'hb100) == 16'h0000) val = val ^ 16'h4000;
 end
 
 always @(posedge clk) begin
