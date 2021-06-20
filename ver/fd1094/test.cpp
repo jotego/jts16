@@ -2,7 +2,7 @@
 #include <iostream>
 #include <exception>
 #include "fd1094.h"
-#include "obj_dir/Vjts16_fd1094.h"
+#include "obj_dir/Vjts16_fd1094_dec.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ public:
     int operator[](int k) { return (int)buf[k]; }
 };
 
-using DUT=Vjts16_fd1094;
+using DUT=Vjts16_fd1094_dec;
 
 template <typename S>
 void clock_dut( S& dut, int times ) {

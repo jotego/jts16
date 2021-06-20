@@ -1,5 +1,5 @@
 #!/bin/bash
-TOP=jts16_fd1094
+TOP=jts16_fd1094_dec
 
 verilator ../../hdl/$TOP.v $JTFRAME/hdl/ram/jtframe_prom.v \
 	-cc test.cpp fd1094.cpp -exe --top-module $TOP -DSIMULATION -DDEBUG

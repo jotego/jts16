@@ -299,31 +299,6 @@ jts16_fd1089 u_dec1089(
     .enc        ( rom_data  ),
     .dec        ( rom_dec   )
 );
-`ifdef SIMULATION
-wire [15:0] dec_alt;
-
-jts16_fd1089 u_alt(
-    .rst        ( rst       ),
-    .clk        ( clk       ),
-
-    // Configuration
-    .prog_addr  ( prog_addr ),
-    .key_we     ( key_we    ),
-    .fd1089_we  ( fd1089_we ),
-    .prog_data  ( prog_data ),
-
-    // Operation
-    .dec_type   ( dec_type  ), // 0=a, 1=b
-    .dec_en     ( dec_en    ),
-    .rom_ok     ( rom_ok    ),
-    .ok_dly     (           ),
-
-    .op_n       ( ~op_n      ),     // OP (0) or data (1)
-    .addr       ( A         ),
-    .enc        ( rom_data  ),
-    .dec        ( dec_alt   )
-);
-`endif
 
 jtframe_m68k u_cpu(
     .clk        ( clk         ),
