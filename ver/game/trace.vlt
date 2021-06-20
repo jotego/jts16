@@ -1,3 +1,0 @@
-`verilator_config
-tracing_off -file "../../hdl/jts16_cen.v"
-tracing_off -file "../../modules/jtframe/hdl/video/jtframe_vtimer.v"
