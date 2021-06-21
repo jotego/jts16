@@ -289,7 +289,7 @@
 		<feature type="sound" status="imperfect"/>
 	</machine>
 	<machine name="passsht" sourcefile="segas16b.cpp">
-		<description>Passing Shot (World, 2p, S16A) [FD1094 317-0080]</description>
+		<description>Passing Shot (World, 2p, S16B) [FD1094 317-0080]</description>
 		<year>1988</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-11871.a4" size="65536" crc="0f9ccea5" sha1="515a2721a35332df0303f4b9616122194b5c7170" region="maincpu" offset="0"/>
