@@ -199,7 +199,7 @@ always @(*) begin
 end
 
 always @(posedge clk) begin
-    masked <= mask_en ? 16'hffff : val;
+    if(rom_ok) masked <= mask_en ? 16'hffff : val;
     ok_dly <= rom_ok;
 end
 

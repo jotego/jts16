@@ -59,6 +59,9 @@ module mist_dump(
             $shm_probe(UUT.u_game.u_main,"A");
             $shm_probe(UUT.u_game.u_main.u_cpu,"A");
             `endif
+            `ifdef FD1094
+                $shm_probe(UUT.u_game.u_main.u_dec,"AS");
+            `endif
             //$shm_probe(UUT.u_game.u_sound,"A");
             //$shm_probe(UUT.u_game.u_main.u_dtack,"A");
             $shm_probe(UUT.u_game.u_video,"AS");

@@ -285,7 +285,7 @@ jtframe_68kdtack #(.W(8)) u_dtack(
 
         // Configuration
         .prog_addr  ( prog_addr ),
-        .fd1094_we  ( fd1089_we ), // keep the pin name -for now
+        .fd1094_we  ( key_we    ),
         .prog_data  ( prog_data ),
 
         // Operation

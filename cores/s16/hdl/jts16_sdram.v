@@ -143,7 +143,7 @@ wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 
 assign xram_cs    = ram_cs | vram_cs;
 
-assign dwnld_busy = downloading;
+assign dwnld_busy = downloading | prom_we; // prom_we is really just for sims
 assign n7751_prom = prom_we && prog_addr[21:10]==N7751_PROM[21:10];
 assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM  [21:13];
 assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM   [21: 8];
@@ -159,12 +159,16 @@ always @(*) begin
         ram_data=xram_data;
 end
 
-always @(posedge clk) begin
-    if( header && ioctl_wr && ioctl_addr[4:0]==5'h10 ) begin
-        dec_en   <= |ioctl_data[1:0];
-        dec_type <= ioctl_data[1];
+`ifdef FD1094
+    initial dec_en = 1;
+`else
+    always @(posedge clk) begin
+        if( header && ioctl_wr && ioctl_addr[4:0]==5'h10 ) begin
+            dec_en   <= |ioctl_data[1:0];
+            dec_type <= ioctl_data[1];
+        end
     end
-end
+`endif
 
 jtframe_dwnld #(
     .HEADER    ( 32        ),

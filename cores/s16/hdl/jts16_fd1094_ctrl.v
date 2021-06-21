@@ -32,39 +32,50 @@ module jts16_fd1094_ctrl(
     output     [ 7:0] st
 );
 
-reg [7:0] state;
-reg       irqmode, stchange, staddr;
+reg [ 7:0] state;
+reg        irqmode;
+reg [ 1:0] stchange;
+reg [15:0] stcode;
 
 assign st = irqmode ? gkey0 : state;
 
+reg  [1:0] last_addr;
+wire       addr_change = addr[2:1] != last_addr;
+wire       stadv = addr_change && ok_dly && stchange!=0;
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        state <= 0;
-        stchange <= 0;
-        staddr   <= 0;
-        irqmode  <= 0;
+        state     <= 0;
+        stchange  <= 0;
+        last_addr <= 0;
+        irqmode   <= 0;
     end else begin
-        if( !op_n ) begin
-            // cmp.l #data
-            if( dec[15:12]==4'b1011 && dec[5:0]==6'b111_100 ) begin
-                stchange <= 1;
-                staddr   <= ~addr[2];
+        if( !op_n && ok_dly )
+            last_addr <= addr[2:1];
+        if( !op_n && ok_dly && stchange==0 ) begin
+            // cmpi.l #data
+            if( dec[15:8]==8'h0c && dec[7:6]==2'b10 ) begin
+                stchange <= 2'b01;
             end
             // rte
             if( dec == 16'h4e73 ) irqmode <= 0;
         end
         if( !inta_n ) irqmode <= 1;
-        if( addr[2]==staddr && stchange ) begin
-            stchange <= 0;
-            case( dec[13:12])
-                0: state <= dec[11:8];
-                1: begin
-                    state   <= 0; // reset
-                    irqmode <= 0;
-                end
-                2: irqmode <= 1; // enter interruption
-                3: irqmode <= 0; // leave interruption
-            endcase
+        if( stadv ) begin
+            stchange <= stchange << 1;
+            if( stchange[0] )
+                stcode   <= dec;
+            if( stchange[1] && dec==16'hffff ) begin
+                case( stcode[9:8])
+                    0: state <= stcode[7:0];
+                    1: begin
+                        state   <= 0; // reset
+                        irqmode <= 0;
+                    end
+                    2: irqmode <= 1; // enter interruption
+                    3: irqmode <= 0; // leave interruption
+                endcase
+            end
         end
     end
 end
