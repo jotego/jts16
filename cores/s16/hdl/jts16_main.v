@@ -278,7 +278,7 @@ jtframe_68kdtack #(.W(8)) u_dtack(
     .DTACKn     ( DTACKn    )
 );
 
-`ifdef FD1092
+`ifdef FD1094
     jts16_fd1094 u_dec(
         .rst        ( rst       ),
         .clk        ( clk       ),
@@ -295,7 +295,7 @@ jtframe_68kdtack #(.W(8)) u_dtack(
 
         .addr       ( A         ),
         .enc        ( rom_data  ),
-        .dec        ( rom_dec   )
+        .dec        ( rom_dec   ),
 
         .rom_ok     ( rom_ok    ),
         .ok_dly     ( ok_dly    )

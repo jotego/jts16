@@ -11,10 +11,14 @@
 ../../hdl/jts16_obj_scan.v
 ../../hdl/jts16_main.v
 ../../hdl/jts16_mmr.v
-../../hdl/jts16_dtack.v
 ../../hdl/jts16_snd.v
 ../../hdl/jts16_pcm.v
 ../../hdl/jts16_fd1089.v
+
+# FD1094 - only for some versions
+../../hdl/jts16_fd1094.v
+../../hdl/jts16_fd1094_ctrl.v
+../../hdl/jts16_fd1094_dec.v
 
 $JTFRAME/hdl/jtframe_sh.v
 $JTFRAME/hdl/jtframe_ff.v
@@ -35,4 +39,4 @@ $JTFRAME/hdl/sdram/jtframe_dwnld.v
 -F $JTFRAME/hdl/cpu/jtframe_m68k.f
 
 # 8255
-../../modules/jt8255/hdl/jt8255.v
+$MODULES/jt8255/hdl/jt8255.v

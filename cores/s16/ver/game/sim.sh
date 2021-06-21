@@ -76,6 +76,8 @@ jtsim_sdram $HEXDUMP -header 32 \
     -dumpbin fd1089.bin   $FD1089_START  0x0100 \
     $SDRAM_SNAP || exit $?
 
+jtsim_sdram -header 32 -dumpbin fd1094.bin 0x182000 8192
+
 jtsim -mist -sysname $SYSNAME $SIMULATOR \
 	-videow 320 -videoh 224 \
     -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER || exit $?

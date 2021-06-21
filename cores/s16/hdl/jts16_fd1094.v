@@ -74,6 +74,7 @@ jts16_fd1094_dec u_dec(
     .dec_en     ( dec_en    ),
     .vrq        ( vrq       ),      // vector request
     .st         ( st        ),       // state
+    .gkey0      ( gkey0     ),
 
     .op_n       ( op_n      ),     // OP (0) or data (1)
     .addr       ( addr      ),
