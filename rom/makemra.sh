@@ -6,7 +6,7 @@ mkdir -p $OUTDIR
 mkdir -p $OUTDIR/_alt
 
 AUXTMP=/tmp/$RANDOM$RANDOM
-jtcfgstr -target=mist -output=bash -def ../hdl/jts16.def|grep _START > $AUXTMP
+jtcfgstr -target=mist -output=bash -def $CORES/s16/hdl/jts16.def|grep _START > $AUXTMP
 source $AUXTMP
 
 function s16a_mra {
@@ -20,6 +20,7 @@ function s16a_mra {
     ALTFOLDER="_alt/_$FOLDER"
     mkdir -p "$OUTDIR/$ALTFOLDER"
     mame2dip $NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder "$ALTFOLDER" \
+        -rbf-dev fd1094 jts16a2 \
         -skip_desc 16B \
         -skip_desc Taito \
         -rmdipsw Unused \

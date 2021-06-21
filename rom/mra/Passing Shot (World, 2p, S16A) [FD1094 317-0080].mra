@@ -23,7 +23,7 @@
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
     <name>Passing Shot (World, 2p, S16A) [FD1094 317-0080]</name>
     <setname>passsht</setname>
-    <rbf>jts16</rbf>
+    <rbf>jts16a2</rbf>
     <mameversion>0229</mameversion>
     <year>1988</year>
     <manufacturer>Sega</manufacturer>
