@@ -55,6 +55,8 @@ module jts16_main(
     // cabinet I/O
     input       [ 7:0] joystick1,
     input       [ 7:0] joystick2,
+    input       [ 7:0] joystick3,
+    input       [ 7:0] joystick4,
     input       [ 1:0] start_button,
     input       [ 1:0] coin_input,
     input              service,
@@ -184,7 +186,7 @@ always @(posedge clk, posedge rst) begin
         cab_dout <= 8'hff;
         if(io_cs) case( A[13:12] )
             default: cab_dout <= 8'hff;
-            2'd0: begin // 8255 (fake implementation)
+            2'd0: begin // 8255
                 ppi_cs   <= 1;
                 cab_dout <= ppi_dout;
             end

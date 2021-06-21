@@ -33,6 +33,8 @@ module jts16_game(
     input   [ 1:0]  coin_input,
     input   [ 7:0]  joystick1,
     input   [ 7:0]  joystick2,
+    input   [ 7:0]  joystick3,
+    input   [ 7:0]  joystick4,
 
     // SDRAM interface
     input           downloading,
@@ -212,6 +214,8 @@ jts16_main u_main(
     // cabinet I/O
     .joystick1   ( joystick1  ),
     .joystick2   ( joystick2  ),
+    .joystick3   ( joystick3  ),
+    .joystick4   ( joystick4  ),
     .start_button(start_button),
     .coin_input  ( coin_input ),
     .service     ( service    ),

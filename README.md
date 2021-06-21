@@ -10,6 +10,8 @@ Some of the features needed for the rest of the games are already implemented bu
 
 Encrypted games don't work on the J68 CPU.
 
+## System 16A
+
 Game           |  System            | Status
 ---------------|--------------------|----------
 Ace Attacker   | 1094               | Won't boot
@@ -33,6 +35,57 @@ Time Scanner   | 16A                | Boots to odd screen. Some sprites not show
 Time Scanner   | 16B                | Won't boot
 Wonder Boy III | 16A / 1089A / 1094 | Ok
 Wonder Boy III | 16B                | Won't boot
+
+## System 16B
+
+Game                |  System            | Status
+--------------------|--------------------|----------
+Ace Attacker        | FD1094 317-0059)
+Alien Syndrome      | unprotected / MC-8123B / FD1089A
+Action Fighter      | unprotected / FD1089B
+Altered Beast       | 8751
+Altered Beast       | 8751 / FD1094 / MC-8123B
+Aurail              | unprotected / FD1089A/B
+Bay Route           | unprotected
+Bullet              | FD1094
+Cotton              | FD1094
+Dynamite Dux        | FD1094 / 8751
+Dunk Shot           | FD1089A
+E-Swat              | FD1094
+Excite League       | FD1094
+Flash Point         | FD1094
+Golden Axe          | 8751 / FD1094
+Heavyweight Champ   | /FD1094
+MVP                 | FD1094
+Passing Shot        | FD1094
+Center Court        | MC-8123B
+Riot City (Japan)   |
+RyuKyu              | FD1094
+Defense             | FD1089A
+SDI                 | FD1089A
+Shinobi             | unprotected/MC-8123B/FD1094 317-0049
+Sonic Boom          | FD1094
+Sukeban Jansi Ryuko | FD1089B
+Super League        | FD1094
+Tetris              | FD1094
+Time Scanner        |
+Toryumon            |
+Tough Turf          | 8751
+Waku Waku U. R.     |
+Wonder Boy III      | 8751 / FD1094
+Wrestle War         | 8751 / FD1094
+
+# Special Inputs
+
+Game           |  Players |  Analog    | Other
+---------------|----------|------------|---------------
+Passing Shot   |    4     |            |
+SDI            |    1     |  2 axis    |
+Sukeban        |    1     |            | Keyboard-like
+Major League   |    1     |  3 axis    |
+Dump Matsumoto |    1     |            | inputs via 8751
+Ace Attack     |    1     |            | inputs via CXD1095
+
 
 # Core Division
 
