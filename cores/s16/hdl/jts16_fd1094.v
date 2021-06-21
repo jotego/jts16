@@ -45,6 +45,7 @@ wire [7:0] st,       // state
 wire inta_n = ~&{ FC[2], FC[1], FC[0], ~ASn }; // interrupt ack
 wire vrq    = ~&FC;
 wire op_n   = FC[1:0]!=2'b10;
+wire sup_prog = FC == 3'd6;
 
 jts16_fd1094_ctrl u_ctrl(
     .rst        ( rst       ),
@@ -58,6 +59,7 @@ jts16_fd1094_ctrl u_ctrl(
     .dec        ( dec       ),
     .gkey0      ( gkey0     ),
 
+    .sup_prog   ( sup_prog  ),
     .dtackn     ( dtackn    ),
     .st         ( st        )
 );

@@ -28,6 +28,7 @@ module jts16_fd1094_ctrl(
     input      [15:0] dec,    
     input      [ 7:0] gkey0,
 
+    input             sup_prog,
     input             dtackn,
     output     [ 7:0] st
 );
@@ -41,7 +42,7 @@ assign st = irqmode ? gkey0 : state;
 
 reg  [1:0] last_addr;
 wire       addr_change = addr[2:1] != last_addr;
-wire       stadv = addr_change && !dtackn && stchange!=0;
+wire       stadv = addr_change && !dtackn && sup_prog && stchange!=0;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -50,9 +51,9 @@ always @(posedge clk, posedge rst) begin
         last_addr <= 0;
         irqmode   <= 0;
     end else begin
-        if( !op_n && !dtackn )
+        if( !op_n && !dtackn && sup_prog )
             last_addr <= addr[2:1];
-        if( !op_n && !dtackn && stchange==0 ) begin
+        if( !op_n && !dtackn && sup_prog && stchange==0 ) begin
             // cmpi.l #data
             if( dec[15:8]==8'h0c && dec[7:6]==2'b10 ) begin
                 stchange <= 2'b01;
