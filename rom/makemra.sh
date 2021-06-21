@@ -65,7 +65,7 @@ s16a_mra fantzone  "Fantasy Zone" "Shot,Bomb,-" "ff,fc" "Shoot'em Up" "Shooter/F
 s16a_mra tetris    "Tetris" "Rotate,Rotate,Rotate" "ff,fd" "Puzzle" "Puzzle/Drop" "Sega S16A"
 s16a_mra aliensyn  "Alien Syndrome" "Shot,-,-" "ff,ff" "Run & Gun" "Maze/Shooter Large" "Sega S16A"
 s16a_mra bodyslam  "Body Slam" "Punch/Throw,Kick/Pin,Get Up/Tag" "ff,fd" "Sports" "Sports/Wrestling" "Sega S16A"
-s16a_mra aceattac  "Ace Attack" "None" "ff,ff" "Sports" "Sports/Volleyball" "Sega S16A"
+s16a_mra aceattac  "Ace Attacker" "None" "ff,ff" "Sports" "Sports/Volleyball" "Sega S16A"
 s16a_mra passsht   "Passing Shot" "Flat,Slice,Lob,Top Spin" "ff,ff" "Sports" "Sports/Tennis" "Sega S16A"
 s16a_mra timescan  "Time Scanner" "L. Flipper/Ball Start,R. Flipper/Lane Shift,-" "ff,ff" "Pinball" "Arcade/Pinball" "Sega S16A"
 
