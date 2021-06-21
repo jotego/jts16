@@ -35,6 +35,7 @@ module jts16_fd1094(
     output     [15:0] dec,
 
     input             rom_ok,
+    input             dtackn,
     output            ok_dly
 );
 
@@ -57,7 +58,7 @@ jts16_fd1094_ctrl u_ctrl(
     .dec        ( dec       ),
     .gkey0      ( gkey0     ),
 
-    .ok_dly     ( ok_dly    ),
+    .dtackn     ( dtackn    ),
     .st         ( st        )
 );
 

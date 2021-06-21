@@ -297,6 +297,7 @@ jtframe_68kdtack #(.W(8)) u_dtack(
         .enc        ( rom_data  ),
         .dec        ( rom_dec   ),
 
+        .dtackn     ( DTACKn    ),
         .rom_ok     ( rom_ok    ),
         .ok_dly     ( ok_dly    )
     );
