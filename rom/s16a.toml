@@ -1,7 +1,7 @@
 [global]
 # info = [ {tag="name", value="value"} ]
 
-[common-rom]
+[features]
 # ddr = true
 beta = true
 # qsound=true
@@ -45,20 +45,23 @@ dev = [
 [header.offset]
 bits=8
 # reverse = true # writes the LSB first
-regions=[0, "soundcpu", "n7751data", "gfx1", "sprites", "mcu", "maincpu:key", "n7751"]
+regions=["maincpu", "soundcpu", "n7751data", "gfx1", "sprites", "mcu", "maincpu:key", "n7751"]
 
-[regions]
+[ROM]
 # values starting with $ refer to macro definitions in the .def file
-maincpu       = { width=16, reverse=true }
-mcu           = { start="$MCU_START", len=0x1000, ghost=true }
-soundcpu      = { start="$BA1_START" }
-gfx1          = { start="$BA2_START", frac={ bytes=1, parts=4} }
-sprites       = { start="$BA3_START", fill=true, width=16, reverse=true }
-"maincpu:key" = { start="$MAINKEY_START", len=0x2000, ghost=true }
-n7751         = { start="$N7751_START", len=0x400, ghost=true }
-fd1089        = { start="$FD1089_START" }
-# myregion = { ignore=true } # ignores a region
-# myregion = { reorder=[3,2,1,0] } # reorder files inside a region
+# or arguments passed to mame2mra
+regions = [
+ { name="maincpu",       width=16, reverse=true },
+ { name="mcu",           start=$MCU_START, len=0x1000, ghost=true },
+ { name="soundcpu",      start=$BA1_START },
+ { name="gfx1",          start=$BA2_START, frac={ bytes=1, parts=4} },
+ { name="sprites",       start=$BA3_START, fill=true, width=16, reverse=true },
+ { name="maincpu:key",   start=$MAINKEY_START, len=0x2000, ghost=true },
+ { name="n7751",         start=$N7751_START, len=0x400, ghost=true },
+ { name="fd1089",        start=$FD1089_START }
+]
+# { name="myregion", ignore=true } # ignores a region
+# { name="myregion", reorder=[3,2,1,0] } # reorder files inside a region
 order = [
     "maincpu", "soundcpu", "n7751data", "gfx1",
     "sprites", "mcu", "maincpu:key", "n7751"
