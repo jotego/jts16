@@ -1,0 +1,6 @@
+#!/bin/bash
+cd $JTUTIL/src
+make || exit $?
+cd -
+echo "------------"
+mame2mra $*
