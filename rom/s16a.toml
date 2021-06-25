@@ -1,5 +1,5 @@
 [global]
-info = [ {tag="mameversion", value="0229"} ]
+# info = [ {tag="mameversion", value="0229"} ]
 mraauthor=["jotego","atrac17"]
 
 [features]
@@ -13,6 +13,7 @@ sourcefile="segas16a.cpp"
 
 [parse.skip]
 description = [ "16B", "Taito" ]
+setnames = { "fantzonepr" }
 # bootlegs = true # do not process bootlegs
 
 [buttons]
@@ -30,7 +31,7 @@ delete = [ "Unused", "Unknown" ]
 # base = 16
 
 [header]
-length=32
+len=32
 fill=0
 dev = [
     { byte=0x10, dev="fd1089a", value=1 },
@@ -47,7 +48,7 @@ dev = [
 [header.offset]
 bits=8
 # reverse = true # writes the LSB first
-regions=["maincpu", "soundcpu", "n7751data", "gfx1", "sprites", "mcu", "maincpu:key", "n7751"]
+regions=["soundcpu", "n7751data", "gfx1", "sprites", "mcu", "maincpu:key", "n7751"]
 
 [ROM]
 # values starting with $ refer to macro definitions in the .def file
