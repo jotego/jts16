@@ -12,8 +12,8 @@ beta = true
 sourcefile="segas16a.cpp"
 
 [parse.skip]
-description = [ "16B", "Taito" ]
-setnames = { "fantzonepr" }
+descriptions = [ "16B", "Taito" ]
+setnames = [ "fantzonepr" ]
 # bootlegs = true # do not process bootlegs
 
 [buttons]
