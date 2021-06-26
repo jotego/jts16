@@ -1,12 +1,19 @@
 #!/bin/bash
 
+cd $JTUTIL/src
+make || exit $?
+cd -
+echo "------------"
+
+
 OUTDIR=mra
 
 mkdir -p $OUTDIR
 mkdir -p $OUTDIR/_alt
 
 AUXTMP=/tmp/$RANDOM$RANDOM
-jtcfgstr -target=mist -output=bash -def $CORES/s16/hdl/jts16.def|grep _START > $AUXTMP
+DEF=$CORES/s16/hdl/jts16.def
+jtcfgstr -target=mist -output=bash -def $DEF|grep _START > $AUXTMP
 source $AUXTMP
 
 function s16a_mra {
@@ -19,37 +26,39 @@ function s16a_mra {
     PLATFORM="$7"
     ALTFOLDER="_alt/_$FOLDER"
     mkdir -p "$OUTDIR/$ALTFOLDER"
-    mame2dip $NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder "$ALTFOLDER" \
-        -rbf-dev fd1094 jts16a2 \
-        -skip_desc 16B \
-        -skip_desc Taito \
-        -rmdipsw Unused \
-        -rmdipsw Unknown \
-        -dipdef "$DIPS" \
-        -info platform "$PLATFORM" \
-        -info category "$CATEGORY" \
-        -info catver "$CATVER" \
-        -info mraauthor jotego,atrac17 \
-        -header 32 0x0 \
-        -header-dev 0x10 fd1089a=1 fd1089b=2 \
-        -setword maincpu 16 reverse \
-        -setword sprites 16 reverse \
-        -ghost n7751 0x400 \
-        -ghost mcu   0x1000 \
-        -ghost maincpu:key 0x2000 \
-        -start soundcpu    $BA1_START \
-        -start gfx1        $BA2_START \
-        -start sprites     $BA3_START \
-        -start mcu         $MCU_START \
-        -start maincpu:key $MAINKEY_START \
-        -start n7751       $N7751_START \
-        -start fd1089      $FD1089_START \
-        -fill sprites \
-        -frac 1 gfx1 4 \
-        -order maincpu soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
-        -header-offset-bits 8 \
-        -header-offset 0 soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
-        -corebuttons 4 -buttons "$BUTTONS" -beta
+    mame2mra -def $DEF -toml s16a.toml -xml $NAME.xml \
+        -outdir $OUTDIR -altdir "$ALTFOLDER"
+    # mame2dip $NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder "$ALTFOLDER" \
+    #     -rbf-dev fd1094 jts16a2 \
+    #     -skip_desc 16B \
+    #     -skip_desc Taito \
+    #     -rmdipsw Unused \
+    #     -rmdipsw Unknown \
+    #     -dipdef "$DIPS" \
+    #     -info platform "$PLATFORM" \
+    #     -info category "$CATEGORY" \
+    #     -info catver "$CATVER" \
+    #     -info mraauthor jotego,atrac17 \
+    #     -header 32 0x0 \
+    #     -header-dev 0x10 fd1089a=1 fd1089b=2 \
+    #     -setword maincpu 16 reverse \
+    #     -setword sprites 16 reverse \
+    #     -ghost n7751 0x400 \
+    #     -ghost mcu   0x1000 \
+    #     -ghost maincpu:key 0x2000 \
+    #     -start soundcpu    $BA1_START \
+    #     -start gfx1        $BA2_START \
+    #     -start sprites     $BA3_START \
+    #     -start mcu         $MCU_START \
+    #     -start maincpu:key $MAINKEY_START \
+    #     -start n7751       $N7751_START \
+    #     -start fd1089      $FD1089_START \
+    #     -fill sprites \
+    #     -frac 1 gfx1 4 \
+    #     -order maincpu soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
+    #     -header-offset-bits 8 \
+    #     -header-offset 0 soundcpu n7751data gfx1 sprites mcu maincpu:key n7751 \
+    #     -corebuttons 4 -buttons "$BUTTONS" -beta
 
 }
 
@@ -69,7 +78,5 @@ s16a_mra aceattac  "Ace Attacker" "None" "ff,ff" "Sports" "Sports/Volleyball" "S
 s16a_mra passsht   "Passing Shot" "Flat,Slice,Lob,Top Spin" "ff,ff" "Sports" "Sports/Tennis" "Sega S16A"
 s16a_mra timescan  "Time Scanner" "L. Flipper/Ball Start,R. Flipper/Lane Shift,-" "ff,ff" "Pinball" "Arcade/Pinball" "Sega S16A"
 
-echo "Enter MiSTer's root password"
-scp -r mra/* root@MiSTer.home:/media/fat/_S16
-
-exit 0
+# echo "Enter MiSTer's root password"
+# scp -r mra/* root@MiSTer.home:/media/fat/_S16
