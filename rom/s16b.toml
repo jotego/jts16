@@ -1,0 +1,71 @@
+[global]
+# info = [ {tag="mameversion", value="0229"} ]
+mraauthor=["jotego","atrac17"]
+
+[features]
+# ddr = true
+beta = true
+# qsound=true
+# cheat=true
+
+[parse]
+sourcefile="segas16b.cpp"
+
+[parse.skip]
+descriptions = [ "16B", "Taito" ]
+# setnames = [ "fantzonepr" ]
+# bootlegs = true # do not process bootlegs
+
+[buttons]
+core=4 # max number of buttons supported by the core
+
+[rbf]
+name="jts16"
+dev = [
+    { dev="fd1094", rbf="jts16a2" },
+    { dev="8751", rbf="jts16a1"}
+]
+
+[dipsw]
+delete = [ "Unused", "Unknown" ]
+# base = 16
+
+[header]
+len=32
+fill=0
+dev = [
+    { byte=0x10, dev="fd1089a", value=1 },
+    { byte=0x10, dev="fd1089b", value=2 }
+]
+
+# Sample header data
+# data=[
+#     { pointer=8,    data=[0xff, 0x43, 0x34] },
+#     { pointer=0x10, data=[0xca, 0xfe] }
+# ]
+
+# automatic filling of the header with the offset of each region
+[header.offset]
+bits=8
+# reverse = true # writes the LSB first
+regions=["soundcpu", "n7751data", "gfx1", "sprites", "mcu", "maincpu:key", "n7751"]
+
+[ROM]
+# values starting with $ refer to macro definitions in the .def file
+# or arguments passed to mame2mra
+regions = [
+    { name="maincpu",       width=16, reverse=true },
+    { name="mcu",           start=$MCU_START, len=0x1000, ghost=true },
+    { name="soundcpu",      start=$BA1_START },
+    { name="gfx1",          start=$BA2_START, frac={ bytes=1, parts=4} },
+    { name="sprites",       start=$BA3_START, width=16, reverse=true },
+    { name="maincpu:key",   start=$MAINKEY_START, len=0x2000, ghost=true },
+    { name="n7751",         start=$N7751_START, len=0x400, ghost=true },
+    { name="fd1089",        start=$FD1089_START },
+    { name="plds",          skip=true }
+]
+# { name="myregion", reorder=[3,2,1,0] } # reorder files inside a region
+order = [
+    "maincpu", "soundcpu", "n7751data", "gfx1",
+    "sprites", "mcu", "maincpu:key", "n7751"
+]
