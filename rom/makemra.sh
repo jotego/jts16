@@ -27,7 +27,12 @@ function s16a_mra {
     ALTFOLDER="_alt/_$FOLDER"
     mkdir -p "$OUTDIR/$ALTFOLDER"
     mame2mra -def $DEF -toml s16a.toml -xml $NAME.xml \
-        -outdir $OUTDIR -altdir "$ALTFOLDER"
+        -outdir $OUTDIR -altdir "$ALTFOLDER" \
+        -info platform="$PLATFORM" \
+        -info category="$CATEGORY" \
+        -info catver="$CATVER" \
+        -buttons "$BUTTONS"
+
     # mame2dip $NAME.xml -rbf jts16 -outdir $OUTDIR -altfolder "$ALTFOLDER" \
     #     -rbf-dev fd1094 jts16a2 \
     #     -skip_desc 16B \
