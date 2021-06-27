@@ -13,7 +13,7 @@ sourcefile="segas16b.cpp"
 
 [parse.skip]
 descriptions = [ "16B", "Taito" ]
-# setnames = [ "fantzonepr" ]
+setnames = [ "lockonph" ]
 # bootlegs = true # do not process bootlegs
 
 [buttons]
