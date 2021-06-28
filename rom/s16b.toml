@@ -35,7 +35,9 @@ len=32
 fill=0
 dev = [
     { byte=0x10, dev="fd1089a", value=1 },
-    { byte=0x10, dev="fd1089b", value=2 }
+    { byte=0x10, dev="fd1089b", value=2 },
+    { byte=0x11, dev="mc8123",  value=1 },
+    { byte=0x12, dev="i8751",   value=1 }
 ]
 
 # Sample header data
@@ -44,28 +46,23 @@ dev = [
 #     { pointer=0x10, data=[0xca, 0xfe] }
 # ]
 
-# automatic filling of the header with the offset of each region
-[header.offset]
-bits=8
-# reverse = true # writes the LSB first
-regions=["soundcpu", "n7751data", "gfx1", "sprites", "mcu", "maincpu:key", "n7751"]
 
 [ROM]
 # values starting with $ refer to macro definitions in the .def file
 # or arguments passed to mame2mra
 regions = [
     { name="maincpu",       width=16, reverse=true },
-    { name="mcu",           start=$MCU_START, len=0x1000, ghost=true },
+    { name="mcu",           start=$MCU_START, len=0x1000 },
     { name="soundcpu",      start=$BA1_START },
     { name="gfx1",          start=$BA2_START, frac={ bytes=1, parts=4} },
     { name="sprites",       start=$BA3_START, width=16, reverse=true },
-    { name="maincpu:key",   start=$MAINKEY_START, len=0x2000, ghost=true },
-    { name="n7751",         start=$N7751_START, len=0x400, ghost=true },
+    { name="maincpu:key",   start=$MAINKEY_START, len=0x2000 },
+    { name="soundcpu:key",  start=$SNDKEY_START, len=0x2000 },
     { name="fd1089",        start=$FD1089_START },
     { name="plds",          skip=true }
 ]
 # { name="myregion", reorder=[3,2,1,0] } # reorder files inside a region
 order = [
-    "maincpu", "soundcpu", "n7751data", "gfx1",
-    "sprites", "mcu", "maincpu:key", "n7751"
+    "maincpu", "soundcpu", "gfx1",
+    "sprites", "mcu", "maincpu:key", "soundcpu:key"
 ]
