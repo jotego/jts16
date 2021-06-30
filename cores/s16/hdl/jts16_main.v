@@ -83,7 +83,7 @@ module jts16_main(
     input    [7:0]     dipsw_b
 );
 
-localparam [7:0] GAME_SDI=1;
+localparam [7:0] GAME_SDI=1, GAME_PASSSHT=2;
 
 wire [23:1] A;
 wire        BERRn;
@@ -208,11 +208,11 @@ always @(posedge clk, posedge rst) begin
                         end
                     end
                     1: begin
-                        if( game_id == GAME_SDI ) begin
-                            cab_dout <= ppib_dout[2] ? ~joyana1[15:8] : joyana1[7:0];
-                        end else begin
-                            cab_dout <= sort1;
-                        end
+                        case( game_id )
+                            GAME_SDI: cab_dout <= ppib_dout[2] ? ~joyana1[15:8] : joyana1[7:0];
+                            GAME_PASSSHT:
+                            default: cab_dout <= sort1;
+                        endcase
                     end
                     2: begin
                         if( game_id == GAME_SDI ) begin

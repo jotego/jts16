@@ -183,8 +183,7 @@ jts16_main u_main(
     .clk        ( clk       ),
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
-    //.game_id    ( game_id   ),
-    .game_id    ( 8'h1   ),
+    .game_id    ( game_id   ),
     // Video
     .vdump      ( vdump     ),
     .hstart     ( hstart    ),
