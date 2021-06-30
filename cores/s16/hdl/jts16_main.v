@@ -176,6 +176,11 @@ function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
 endfunction
 
+function [7:0] pass_joy( input [7:0] joy_in );
+    pass_joy = { joy_in[7:4], joy_in[1:0], joy_in[3:2], };
+endfunction
+
+
 function [7:0] sdi_joy( input [15:0] joyana );
     sdi_joy = ppib_dout[2] ? (~joyana[15:8]+8'd1) : joyana[7:0];
 endfunction
@@ -209,7 +214,7 @@ always @(posedge clk, posedge rst) begin
             2'd1:
                 case( A[2:1] )
                     0: begin
-                        port_cnt <= 0;
+                        if( !last_iocs ) port_cnt <= 0;
                         cab_dout <= { 2'b11, start_button[1:0], service, dip_test, coin_input };
                         case( game_id )
                             GAME_SDI: begin
@@ -227,10 +232,10 @@ always @(posedge clk, posedge rst) begin
                             GAME_PASSSHT: begin
                                 if( !last_iocs ) port_cnt <= port_cnt + 2'd1;
                                 case( port_cnt )
-                                    0: cab_dout <= sort1;
-                                    1: cab_dout <= sort2;
-                                    2: cab_dout <= sort_joy( joystick3 );
-                                    3: cab_dout <= sort_joy( joystick4 );
+                                    1: cab_dout <= pass_joy( joystick1 );
+                                    2: cab_dout <= pass_joy( joystick2 );
+                                    3: cab_dout <= pass_joy( joystick3 );
+                                    0: cab_dout <= pass_joy( joystick4 );
                                 endcase
                             end
                             default: cab_dout <= sort1;
