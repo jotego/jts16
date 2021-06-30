@@ -59,7 +59,7 @@ module jts16_main(
     input       [ 7:0] joystick4,
     input       [15:0] joyana1,
     input       [15:0] joyana2,
-    input       [ 1:0] start_button,
+    input       [ 3:0] start_button,
     input       [ 1:0] coin_input,
     input              service,
     // ROM access
@@ -160,7 +160,8 @@ assign ram_cs  = pre_ram_cs,
 // cabinet input
 reg [ 7:0] cab_dout, sort1, sort2;
 reg [ 7:0] ppi_b;
-reg        ppi_cs;
+reg [ 1:0] port_cnt;    // used by Passing Shot
+reg        ppi_cs, last_iocs;
 
 wire [7:0] ppi_dout, ppic_din, ppic_dout, ppib_dout;
 wire       op_n; // low for CPU OP requests
@@ -174,6 +175,11 @@ assign ppic_din[6] = snd_ack;
 function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
 endfunction
+
+function [7:0] sdi_joy( input [15:0] joyana );
+    sdi_joy = ppib_dout[2] ? (~joyana[15:8]+8'd1) : joyana[7:0];
+endfunction
+
 
 //assign { flip, sound_en, video_en } = { ppib_dout[7], ~ppib_dout[5], ppib_dout[4] };
 assign flip = ppib_dout[7];
@@ -190,8 +196,10 @@ always @(posedge clk, posedge rst) begin
         ppi_b     <= 8'hff;
         cab_dout  <= 8'hff;
         ppi_cs    <= 0;
+        port_cnt  <= 0;
     end else  begin
         ppi_cs   <= 0;
+        last_iocs <= io_cs;
         cab_dout <= 8'hff;
         if(io_cs) case( A[13:12] )
             2'd0: begin // 8255
@@ -201,16 +209,30 @@ always @(posedge clk, posedge rst) begin
             2'd1:
                 case( A[2:1] )
                     0: begin
-                        cab_dout <= { 2'b11, start_button, service, dip_test, coin_input };
-                        if( game_id == GAME_SDI ) begin
-                            cab_dout[7] <= joystick2[4];
-                            cab_dout[6] <= joystick1[4];
-                        end
+                        port_cnt <= 0;
+                        cab_dout <= { 2'b11, start_button[1:0], service, dip_test, coin_input };
+                        case( game_id )
+                            GAME_SDI: begin
+                                cab_dout[7] <= joystick2[4];
+                                cab_dout[6] <= joystick1[4];
+                            end
+                            GAME_PASSSHT: begin
+                                cab_dout[7:6] <= start_button[3:2];
+                            end
+                        endcase
                     end
                     1: begin
                         case( game_id )
-                            GAME_SDI: cab_dout <= ppib_dout[2] ? ~joyana1[15:8] : joyana1[7:0];
-                            GAME_PASSSHT:
+                            GAME_SDI: cab_dout <= sdi_joy( joyana1 );
+                            GAME_PASSSHT: begin
+                                if( !last_iocs ) port_cnt <= port_cnt + 2'd1;
+                                case( port_cnt )
+                                    0: cab_dout <= sort1;
+                                    1: cab_dout <= sort2;
+                                    2: cab_dout <= sort_joy( joystick3 );
+                                    3: cab_dout <= sort_joy( joystick4 );
+                                endcase
+                            end
                             default: cab_dout <= sort1;
                         endcase
                     end
@@ -221,7 +243,7 @@ always @(posedge clk, posedge rst) begin
                     end
                     3: begin
                         if( game_id == GAME_SDI ) begin
-                            cab_dout <= ppib_dout[2] ? ~joyana2[15:8] : joyana2[7:0];
+                            cab_dout <= sdi_joy( joyana2 );
                         end else begin
                             cab_dout <= sort2;
                         end
