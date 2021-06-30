@@ -21,7 +21,7 @@ module jts16_main(
     input              clk,
     output             cpu_cen,
     output             cpu_cenb,
-
+    input  [7:0]       game_id,
     // Video
     input  [8:0]       vdump,
     input              hstart,
@@ -57,6 +57,8 @@ module jts16_main(
     input       [ 7:0] joystick2,
     input       [ 7:0] joystick3,
     input       [ 7:0] joystick4,
+    input       [15:0] joyana1,
+    input       [15:0] joyana2,
     input       [ 1:0] start_button,
     input       [ 1:0] coin_input,
     input              service,
@@ -80,6 +82,8 @@ module jts16_main(
     input    [7:0]     dipsw_a,
     input    [7:0]     dipsw_b
 );
+
+localparam [7:0] GAME_SDI=1;
 
 wire [23:1] A;
 wire        BERRn;
@@ -154,7 +158,7 @@ assign ram_cs  = pre_ram_cs,
        vram_cs = pre_vram_cs;
 
 // cabinet input
-reg [ 7:0] cab_dout;
+reg [ 7:0] cab_dout, sort1, sort2;
 reg [ 7:0] ppi_b;
 reg        ppi_cs;
 
@@ -176,6 +180,11 @@ assign flip = ppib_dout[7];
 assign sound_en = 1;
 assign video_en = 1;
 
+always @(*) begin
+    sort1 = sort_joy( joystick1 );
+    sort2 = sort_joy( joystick2 );
+end
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         ppi_b     <= 8'hff;
@@ -185,17 +194,38 @@ always @(posedge clk, posedge rst) begin
         ppi_cs   <= 0;
         cab_dout <= 8'hff;
         if(io_cs) case( A[13:12] )
-            default: cab_dout <= 8'hff;
             2'd0: begin // 8255
                 ppi_cs   <= 1;
                 cab_dout <= ppi_dout;
             end
             2'd1:
                 case( A[2:1] )
-                    2'd0: cab_dout <= { 2'b11, start_button, service, dip_test, coin_input };
-                    2'd1: cab_dout <= {sort_joy(joystick1)};
-                    2'd3: cab_dout <= {sort_joy(joystick2)};
-                    default: cab_dout <= 8'hff;
+                    0: begin
+                        cab_dout <= { 2'b11, start_button, service, dip_test, coin_input };
+                        if( game_id == GAME_SDI ) begin
+                            cab_dout[7] <= joystick2[4];
+                            cab_dout[6] <= joystick1[4];
+                        end
+                    end
+                    1: begin
+                        if( game_id == GAME_SDI ) begin
+                            cab_dout <= ppib_dout[2] ? ~joyana1[15:8] : joyana1[7:0];
+                        end else begin
+                            cab_dout <= sort1;
+                        end
+                    end
+                    2: begin
+                        if( game_id == GAME_SDI ) begin
+                            cab_dout <= { sort2[7:4], sort1[7:4] };
+                        end
+                    end
+                    3: begin
+                        if( game_id == GAME_SDI ) begin
+                            cab_dout <= ppib_dout[2] ? ~joyana2[15:8] : joyana2[7:0];
+                        end else begin
+                            cab_dout <= sort2;
+                        end
+                    end
                 endcase
             2'd2:
                 cab_dout <= { A[1] ? dipsw_b : dipsw_a };

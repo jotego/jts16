@@ -35,6 +35,8 @@ module jts16_game(
     input   [ 7:0]  joystick2,
     input   [ 7:0]  joystick3,
     input   [ 7:0]  joystick4,
+    input   [15:0]  joyana1,
+    input   [15:0]  joyana2,
 
     // SDRAM interface
     input           downloading,
@@ -157,6 +159,7 @@ wire        flip, video_en, sound_en;
 
 // Cabinet inputs
 wire [ 7:0] dipsw_a, dipsw_b;
+wire [ 7:0] game_id;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn = { UDSWn, LDSWn };
@@ -180,6 +183,8 @@ jts16_main u_main(
     .clk        ( clk       ),
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
+    //.game_id    ( game_id   ),
+    .game_id    ( 8'h1   ),
     // Video
     .vdump      ( vdump     ),
     .hstart     ( hstart    ),
@@ -216,6 +221,8 @@ jts16_main u_main(
     .joystick2   ( joystick2  ),
     .joystick3   ( joystick3  ),
     .joystick4   ( joystick4  ),
+    .joyana1     ( joyana1    ),
+    .joyana2     ( joyana2    ),
     .start_button(start_button),
     .coin_input  ( coin_input ),
     .service     ( service    ),
@@ -375,6 +382,7 @@ jts16_sdram u_sdram(
 
     .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),
+    .game_id    ( game_id   ),
 
     .dec_en      ( dec_en   ),
     .dec_type    ( dec_type ),

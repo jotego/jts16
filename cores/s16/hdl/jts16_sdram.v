@@ -17,107 +17,107 @@
     Date: 10-3-2021 */
 
 module jts16_sdram(
-    input           rst,
-    input           clk,
+    input            rst,
+    input            clk,
 
-    input           LVBL,
-    input    [ 8:0] vrender,
+    input            LVBL,
+    input      [8:0] vrender,
+    output reg [7:0] game_id,
 
     // Encryption
-    output          key_we,
-    output          fd1089_we,
+    output           key_we,
+    output           fd1089_we,
 
     // Main CPU
-    input           main_cs,
-    input           vram_cs,
-    input           ram_cs,
-    input    [17:1] main_addr,
-    output   [15:0] main_data,
-    output reg  [15:0] ram_data,
-    output          main_ok,
-    output          ram_ok,
-    input    [ 1:0] dsn,
-    input    [15:0] main_dout,
-    input           main_rnw,
+    input            main_cs,
+    input            vram_cs,
+    input            ram_cs,
+    input     [17:1] main_addr,
+    output    [15:0] main_data,
+    output reg [15:0] ram_data,
+    output           main_ok,
+    output           ram_ok,
+    input     [ 1:0] dsn,
+    input     [15:0] main_dout,
+    input            main_rnw,
 
     // Sound CPU
-    input           snd_cs,
-    output          snd_ok,
-    input   [14:0]  snd_addr,
-    output  [ 7:0]  snd_data,
+    input            snd_cs,
+    output           snd_ok,
+    input    [14:0]  snd_addr,
+    output   [ 7:0]  snd_data,
 
     // PROM
-    output          n7751_prom,
+    output           n7751_prom,
 
     // ADPCM ROM
-    output reg      dec_en,
-    output reg      dec_type,
-    input    [16:0] pcm_addr,
-    input           pcm_cs,
-    output   [ 7:0] pcm_data,
-    output          pcm_ok,
-
+    output  reg      dec_en,
+    output  reg      dec_type,
+    input     [16:0] pcm_addr,
+    input            pcm_cs,
+    output    [ 7:0] pcm_data,
+    output           pcm_ok,
 
     // Char
-    output          char_ok,
-    input   [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    output  [31:0]  char_data,
+    output           char_ok,
+    input    [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    output   [31:0]  char_data,
 
     // Scroll 1
-    output          map1_ok,
-    input   [13:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
-    output  [15:0]  map1_data,
+    output           map1_ok,
+    input    [13:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output   [15:0]  map1_data,
 
-    output          scr1_ok,
-    input   [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
-    output  [31:0]  scr1_data,
+    output           scr1_ok,
+    input    [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output   [31:0]  scr1_data,
 
     // Scroll 1
-    output          map2_ok,
-    input   [13:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
-    output  [15:0]  map2_data,
+    output           map2_ok,
+    input    [13:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output   [15:0]  map2_data,
 
-    output          scr2_ok,
-    input   [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
-    output  [31:0]  scr2_data,
+    output           scr2_ok,
+    input    [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output   [31:0]  scr2_data,
 
     // Obj
-    output          obj_ok,
-    input           obj_cs,
-    input   [17:0]  obj_addr,
-    output  [15:0]  obj_data,
+    output           obj_ok,
+    input            obj_cs,
+    input    [17:0]  obj_addr,
+    output   [15:0]  obj_data,
 
     // Bank 0: allows R/W
-    output   [21:0] ba0_addr,
-    output   [21:0] ba1_addr,
-    output   [21:0] ba2_addr,
-    output   [21:0] ba3_addr,
-    output   [ 3:0] ba_rd,
-    output          ba_wr,
-    output   [15:0] ba0_din,
-    output   [ 1:0] ba0_din_m,  // write mask
-    input    [ 3:0] ba_ack,
-    input    [ 3:0] ba_dst,
-    input    [ 3:0] ba_dok,
-    input    [ 3:0] ba_rdy,
+    output    [21:0] ba0_addr,
+    output    [21:0] ba1_addr,
+    output    [21:0] ba2_addr,
+    output    [21:0] ba3_addr,
+    output    [ 3:0] ba_rd,
+    output           ba_wr,
+    output    [15:0] ba0_din,
+    output    [ 1:0] ba0_din_m,  // write mask
+    input     [ 3:0] ba_ack,
+    input     [ 3:0] ba_dst,
+    input     [ 3:0] ba_dok,
+    input     [ 3:0] ba_rdy,
 
-    input    [15:0] data_read,
+    input     [15:0] data_read,
 
     // ROM LOAD
-    input           downloading,
-    output          dwnld_busy,
+    input            downloading,
+    output           dwnld_busy,
 
-    input   [24:0]  ioctl_addr,
-    input   [ 7:0]  ioctl_data,
-    input           ioctl_wr,
-    output  [21:0]  prog_addr,
-    output  [15:0]  prog_data,
-    output  [ 1:0]  prog_mask,
-    output  [ 1:0]  prog_ba,
-    output          prog_we,
-    output          prog_rd,
-    input           prog_ack,
-    input           prog_rdy
+    input    [24:0]  ioctl_addr,
+    input    [ 7:0]  ioctl_data,
+    input            ioctl_wr,
+    output   [21:0]  prog_addr,
+    output   [15:0]  prog_data,
+    output   [ 1:0]  prog_mask,
+    output   [ 1:0]  prog_ba,
+    output           prog_we,
+    output           prog_rd,
+    input            prog_ack,
+    input            prog_rdy
 );
 
 localparam [21:0] ZERO_OFFSET=0,
@@ -169,6 +169,11 @@ end
         end
     end
 `endif
+
+// Capture the game byte
+always @(posedge clk) begin
+    if( header && ioctl_wr && ioctl_addr[4:0]==5'h18) game_id <= ioctl_data;
+end
 
 jtframe_dwnld #(
     .HEADER    ( 32        ),

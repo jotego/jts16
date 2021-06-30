@@ -26,7 +26,7 @@ Major League   |                    | Missing trackball (analog controls)
 Passing Shot   | 1094               | Won't boot
 Quartet / 2    | 8751               | Boots, bad graphics
 Quartet 2      | unprotected        | Sound effect missing upon selecting character
-SDI            | 1089B              | boots but cannot pass the title screen
+SDI            | 1089B              | Missing analog controls.
 Shinobi        | 16A / 1094         | Ok
 Sukeban        | 1089B              | Won't boot
 Sukeban        | 16A / 1089B        | Missing graphics. Needs over 10 buttons!
@@ -80,7 +80,7 @@ Wrestle War         | 8751 / FD1094
 Game           |  Players |  Analog    | Other
 ---------------|----------|------------|---------------
 Passing Shot   |    4     |            |
-SDI            |    1     |  2 axis    |
+SDI            |    1     |  2 axis    | trackball
 Sukeban        |    1     |            | Keyboard-like
 Major League   |    1     |  3 axis    |
 Dump Matsumoto |    1     |            | inputs via 8751
