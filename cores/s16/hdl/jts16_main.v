@@ -182,7 +182,7 @@ function [7:0] sort_joy( input [7:0] joy_in );
 endfunction
 
 function [7:0] pass_joy( input [7:0] joy_in );
-    pass_joy = { joy_in[7:4], joy_in[1:0], joy_in[3:2], };
+    pass_joy = { joy_in[7:4], joy_in[1:0], joy_in[3:2] };
 endfunction
 
 

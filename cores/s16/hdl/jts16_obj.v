@@ -44,7 +44,9 @@ module jts16_obj(
     input      [ 7:0]  debug_bus
 );
 
+/* verilator lint_off WIDTH */
 parameter [8:0] PXL_DLY=8;
+/* verilator lint_on WIDTH */
 
 // Object scan
 wire [10:1] tbl_addr;

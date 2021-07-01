@@ -107,9 +107,9 @@ always @(posedge clk, posedge rst) begin
     end else begin
         if ( hdump[8:4] == ROWREAD ) begin
             if( !hdump[3] )
-                rowscr1 <= scan;
+                rowscr1 <= scan[8:0];
             else
-                rowscr2 <= scan;
+                rowscr2 <= scan[8:0];
         end
     end
 end

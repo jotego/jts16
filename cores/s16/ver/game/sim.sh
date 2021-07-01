@@ -9,7 +9,7 @@ SIMULATOR=-verilator
 SDRAM_SNAP=
 
 AUXTMP=/tmp/$RANDOM$RANDOM
-jtcfgstr -target=mist -output=bash -def ../../hdl/jts16.def |grep _START > $AUXTMP
+jtcfgstr -target=mist -output=bash -parse ../../hdl/jts16.def |grep _START > $AUXTMP
 source $AUXTMP
 
 while [ $# -gt 0 ]; do
@@ -22,7 +22,7 @@ while [ $# -gt 0 ]; do
                 exit 1
             fi
             ;;
-    	-s)
+    	-s|-scene)
             shift
     		SCENE=$1;;
     	*)

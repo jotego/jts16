@@ -232,7 +232,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
     .debug_bus ( debug_bus      )
 );
 
-jts16_scr #(.PXL_DLY(SCR_DLY)) u_scr2(
+jts16_scr #(.PXL_DLY(SCR_DLY[8:0])) u_scr2(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
