@@ -19,6 +19,7 @@
 module jts16_main(
     input              rst,
     input              clk,
+    input              clk_rom,
     output             cpu_cen,
     output             cpu_cenb,
     input  [7:0]       game_id,
@@ -80,7 +81,11 @@ module jts16_main(
     input              dip_pause,
     input              dip_test,
     input    [7:0]     dipsw_a,
-    input    [7:0]     dipsw_b
+    input    [7:0]     dipsw_b,
+
+    // NVRAM - debug
+    input       [15:0] ioctl_addr,
+    output      [ 7:0] ioctl_din
 );
 
 localparam [7:0] GAME_SDI=1, GAME_PASSSHT=2;
@@ -117,13 +122,13 @@ assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
             rom_cs    <= 0;
-            char_cs   <= 0;
-            objram_cs <= 0;
-            pal_cs    <= 0;
+            char_cs   <= 0; // 4 kB
+            objram_cs <= 0; // 2 kB
+            pal_cs    <= 0; // 4 kB
             io_cs     <= 0;
             wdog_cs   <= 0;
 
-            pre_vram_cs <= 0;
+            pre_vram_cs <= 0; // 32kB
             pre_ram_cs  <= 0;
             //rom_addr  <= 0;
     end else begin
@@ -412,6 +417,25 @@ jtframe_m68k u_cpu(
 
     .DTACKn     ( DTACKn      ),
     .IPLn       ( { irqn, 2'b11 } ) // VBLANK
+);
+
+// Debug
+jts16_shadow u_shadow(
+    .clk        ( clk       ),
+    .clk_rom    ( clk_rom   ),
+
+    // Capture SDRAM bank 0 inputs
+    .addr       ( A[14:1]   ),
+    .char_cs    ( char_cs   ),    //  4k
+    .vram_cs    ( vram_cs   ),    // 32k
+    .pal_cs     ( pal_cs    ),     //  4k
+    .objram_cs  ( objram_cs ),  //  2k
+    .din        ( cpu_dout  ),
+    .dswn       ( {UDSWn, LDSWn } ),  // write mask -active low
+
+    // Let data be dumped via NVRAM interface
+    .ioctl_addr ( ioctl_addr),
+    .ioctl_din  ( ioctl_din )
 );
 
 endmodule

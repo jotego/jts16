@@ -181,6 +181,7 @@ jts16_cen u_cen(
 jts16_main u_main(
     .rst        ( rst       ),
     .clk        ( clk       ),
+    .clk_rom    ( clk       ),  // same clock - at least for now
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
     .game_id    ( game_id   ),
@@ -241,7 +242,10 @@ jts16_main u_main(
     .dip_pause   ( dip_pause  ),
     .dip_test    ( dip_test   ),
     .dipsw_a     ( dipsw_a    ),
-    .dipsw_b     ( dipsw_b    )
+    .dipsw_b     ( dipsw_b    ),
+    // NVRAM dump
+    .ioctl_din   ( ioctl_data2sd    ),
+    .ioctl_addr  ( ioctl_addr[15:0] )
 );
 `else
     assign flip      = 0;

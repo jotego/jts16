@@ -50,3 +50,6 @@ VIDEO_WIDTH=320
 
 # Needed for Action Fighter
 JTFRAME_MR_ROTCCW
+
+# Debug - only mister
+CORE_NVRAM_SIZE=43008
