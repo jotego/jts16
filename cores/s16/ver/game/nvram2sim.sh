@@ -29,9 +29,14 @@ if [ -z "$SCENE" ]; then
     exit 1
 fi
 
-dd if="$FILE" of=scr$SCENE.bin  skip=$SCR_START  count=32 bs=1024 || exit $?
-dd if="$FILE" of=char$SCENE.bin skip=$CHAR_START count=4 bs=1024 || exit $?
-dd if="$FILE" of=pal$SCENE.bin skip=$PAL_START count=4 bs=1024 || exit $?
-dd if="$FILE" of=obj$SCENE.bin skip=$OBJRAM_START count=2 bs=1024 || exit $?
+function dump {
+    dd if="$FILE" of=$1$SCENE.bin skip=$2 count=$3 bs=1024
+
+}
+
+dump scr  $SCR_START 32 || exit $?
+dump char $CHAR_START  4 || exit $?
+dump pal  $PAL_START  4 || exit $?
+dump obj  $OBJRAM_START  2 || exit $?
 
 # rm "$FILE"

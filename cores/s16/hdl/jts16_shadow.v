@@ -17,8 +17,8 @@
     Date: 30-6-2021 */
 
 module jts16_shadow(
-    input            clk,
-    input            clk_rom,
+    input             clk,
+    input             clk_rom,
 
     // Capture SDRAM bank 0 inputs
     input      [14:1] addr,
@@ -39,22 +39,27 @@ module jts16_shadow(
 `else
 
 wire [15:0] vram_dout, char_dout, pal_dout, objram_dout;
-reg  [15:0] dout;
+reg  [15:0] dout, dout_latch;
 
 wire [ 1:0] vram_we   = vram_cs   ? ~dswn : 2'b0;
 wire [ 1:0] char_we   = char_cs   ? ~dswn : 2'b0;
 wire [ 1:0] pal_we    = pal_cs    ? ~dswn : 2'b0;
 wire [ 1:0] objram_we = objram_cs ? ~dswn : 2'b0;
 
-assign ioctl_din = ioctl_addr[0] ? dout[15:8] : dout[7:0];
+assign ioctl_din = ~ioctl_addr[0] ? dout_latch[15:8] : dout_latch[7:0];
 
-always @(posedge clk) begin
-    casez( ioctl_addr[15:12] )
-        8'b0???: dout <= vram_dout;
-        8'b1??0: dout <= char_dout;
-        8'b1??1: dout <= pal_dout;
-        default: dout <= objram_dout;
+always @(*) begin
+    casez( ioctl_addr[15:11] )
+        5'b0???_?: dout = vram_dout;
+        5'b1000_?: dout = char_dout;
+        5'b1001_?: dout = pal_dout;
+        5'b1010_0: dout = objram_dout;
     endcase
+end
+
+always @(posedge clk_rom) begin
+    if( ioctl_addr[0] )
+        dout_latch <= dout;
 end
 
 jtframe_dual_ram16 #(.aw(14)) u_vram(

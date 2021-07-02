@@ -91,7 +91,6 @@ always @(posedge clk, posedge rst) begin
         case( st )
             0: begin
                 cur_obj  <= 0;
-                idx      <= 0;
                 stop     <= 0;
                 dr_start <= 0;
                 if( !hstart || vrf>223 ) begin // holds it still

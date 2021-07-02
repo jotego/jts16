@@ -420,6 +420,9 @@ jtframe_m68k u_cpu(
 );
 
 // Debug
+`ifdef MISTER
+`ifndef JTFRAME_RELEASE
+`ifndef BETA
 jts16_shadow u_shadow(
     .clk        ( clk       ),
     .clk_rom    ( clk_rom   ),
@@ -431,11 +434,14 @@ jts16_shadow u_shadow(
     .pal_cs     ( pal_cs    ),     //  4k
     .objram_cs  ( objram_cs ),  //  2k
     .din        ( cpu_dout  ),
-    .dswn       ( {UDSWn, LDSWn } ),  // write mask -active low
+    .dswn       ( {UDSWn, LDSWn} ),  // write mask -active low
 
     // Let data be dumped via NVRAM interface
     .ioctl_addr ( ioctl_addr),
     .ioctl_din  ( ioctl_din )
 );
+`endif
+`endif
+`endif
 
 endmodule
