@@ -1,8 +1,8 @@
  \B System 16\W core by \RJotego\W
   http://patreon.com/topapate
 
-     Beta 3 -- 18-June-21
-supervised by the \RJTAlpha team\W
+     Beta 4 -- 2-July-21
+Supervised by the \RJTAlpha team\W
 
 Special thanks to Blackwine
 and Ijor for helping with the
@@ -18,30 +18,28 @@ Known issues:
 
         \BHardware\W
 
-System16 and System18 hardware
-provided by
+  System16  and System18
+   hardware provided by
 
-   AMoore2600 &
-   FunkyCochise
+      AMoore2600 &
+      FunkyCochise
 
-Sorry for the wait & thank you
+      \RDirectors\W
 
-        \RDirectors\W
+Atrac17          amoore2600
+AnotherJoe       A. Villena
+Bender           Boogermann
+Chris Gelatt     DJ Hard Rich
+Filip Kindt      Frederic Mahe
+JPS (RetroFPGA)  James D
+Jeffrey Pierce   John Biscevic
+Kevin finisterre L. Martinez
+Martin Birkeldh  Michael Yount
+Porkchop Express Purple Tinker
+Rysha            S. Henderson
+Suv              TT_Hipster1941
 
-atrac17         Suv
-AnotherJoe      Antonio Villena
-Bender          Boogermann
-Chris Gelatt    DJ Hard Rich
-Filip Kindt     Frederic Mahe
-JPS (RetroFPGA) James D
-Jeffrey Pierce  John Biscevic
-amoore2600      Louis Martinez
-Martin Birkeldh Michael Yount
-Purple Tinker   Shawn Henderson
-Spencer Bradley TT_Hipster1941
-Kevin finisterre
-
-        \RThanks to\W
+       \RThanks to\W
 
 Arcade Express Brian Sallee
 Cohge          Daniel Bauza
@@ -63,7 +61,7 @@ Don Gafford     Ed Balan
 Eduardo Javier  Edward Rana
 Epixjava        Gladius
 Gus Douboulidis Gwaland
-H. Osterholz    Henrik Nords.
+H. Osterholz    Henrik Nordstrom
 Ian Court       Ivo
 James Baker     James Trautner
 James Williams  Jason Nagy
@@ -73,13 +71,12 @@ Jorge Slowfret  Jose Pulgar
 Joseph Hsieh    Juan Francisco
 Krycek7o2       Leslie Law
 Lionel LENOBLE  MakeshiftMoney
-Marcelo C.      Marcus Hogue
-Marcus Sid      Martin DiPalma
-Matt Postema    Matthew Young
-MoonZ           Oliver Jaksch
-Oliver Wndmth   Oscar Laguna
-Per Sweden      Peter Bray
-PsyFX           ReTr0~g!GGles
+Marcus Hogue    Marcus Sid
+Martin DiPalma  Matt Postema
+Matthew Young   MoonZ
+Oliver Jaksch   Oliver Wndmth
+Oscar Laguna    Per Sweden
+Peter Bray      PsyFX
 RetroPrez       Retroludo
 Richard MS      Robert MacLean
 Robert Mullings Roman Buser
