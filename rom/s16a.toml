@@ -5,7 +5,7 @@ mraauthor=["jotego","atrac17"]
 [features]
 # ddr = true
 beta = true
-nvram = 43008
+#nvram = 43008
 # qsound=true
 # cheat=true
 
