@@ -14,7 +14,7 @@ sourcefile="segas16a.cpp"
 
 [parse.skip]
 descriptions = [ "16B", "Taito" ]
-setnames = [ "fantzonepr" ]
+# setnames = [ "fantzonepr" ]
 # bootlegs = true # do not process bootlegs
 
 [buttons]
@@ -76,4 +76,8 @@ regions = [
 order = [
     "maincpu", "soundcpu", "n7751data", "gfx1",
     "sprites", "mcu", "maincpu:key", "n7751"
+]
+
+remove = [
+    "ic93-de1b.bin", "ic17-5f7c.bin" # fantzonepr
 ]

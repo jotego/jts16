@@ -24,23 +24,23 @@
     <name>Fantasy Zone (Prototype, S16A) [No Protection]</name>
     <setname>fantzonepr</setname>
     <rbf>jts16</rbf>
-    <mameversion>0229</mameversion>
+    <mameversion>0232</mameversion>
     <year>1986</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
-    <joystick>8-way</joystick>
+    <joystick>8</joystick>
     <rotation>horizontal</rotation>
     <region>World</region>
-    <platform>Sega S16A</platform>
     <category>Shoot&apos;em Up</category>
     <catver>Shooter/Flying Horizontal</catver>
+    <platform>Sega S16A</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="fantzonepr.zip|fantzone.zip" type="merged" md5="None">
+    <rom index="0" zip="fantzonepr.zip|fantzone.zip" md5="None">
         <part>
-        04 00 00 00 08 80 10 00 
-        18 00 18 20 18 40 18 44 
-        00 00 00 00 00 00 00 00 
-        00 00 00 00 00 00 00 00
+            04 00 04 80 08 80 10 00
+            18 00 18 20 18 40 18 44
+            00 00 00 00 00 00 00 00
+            00 00 00 00 00 00 00 00
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
@@ -58,12 +58,13 @@
         <part repeat="0x10000"> FF</part>
         <!-- soundcpu - starts at 0x40000 -->
         <part name="ic12-sound-56-5.bin" crc="e62ddff6"/>
+        <!-- n7751data - starts at 0x48000 -->
         <part repeat="0x40000"> FF</part>
         <!-- gfx1 - starts at 0x88000 -->
         <interleave output="32">
             <part name="ic95-1413.bin" crc="158af770" map="0001"/>
             <part name="ic94-3e96.bin" crc="2fea4fe7" map="0010"/>
-            <part name="ic93-de1b.bin" crc="335fe57a" map="0100"/>
+            <part name="epr-7390.93" crc="d90609c6" map="0100"/>
             <part name="epr-7390.93" crc="d90609c6" map="1000"/>
         </interleave>
         <part repeat="0x58000"> FF</part>
@@ -72,16 +73,17 @@
             <part name="epr-7392.10" crc="5bb7c8b6" map="01"/>
             <part name="ic11-6235.bin" crc="74ae4b57" map="10"/>
         </interleave>
+        <part repeat="0x10000"> FF</part>
         <interleave output="16">
-            <part name="epr-7393.17" crc="14fc7e82" map="00"/>
-            <part name="ic17-5f7c.bin" crc="9d5b5be8" map="00"/>
-            <part name="ic18-2614.bin" crc="e05a1e25" map="00"/>
+            <part name="epr-7393.17" crc="14fc7e82" map="01"/>
+            <part name="ic18-2614.bin" crc="e05a1e25" map="10"/>
         </interleave>
+        <part repeat="0x10000"> FF</part>
         <interleave output="16">
             <part name="ic23" crc="531ca13f" map="01"/>
             <part name="ic24" crc="68807b49" map="10"/>
         </interleave>
-        <part repeat="0x48000"> FF</part>
+        <part repeat="0x30000"> FF</part>
         <!-- mcu - starts at 0x180000 -->
         <part name="8751.bin" crc="c0d325e6"/>
         <part repeat="0x1000"> FF</part>
@@ -94,19 +96,20 @@
     <rom index="16" zip="beta.zip" md5="None">
         <part name="beta.bin"/>
     </rom>
+    <nvram index="2" size="43008"/>
     <rom index="1">
         <part>00</part>
     </rom>
     <switches page_id="1" page_name="Switches" base="16" default="ff,fc">
         <!-- DSW1 -->
-        <dip name="Coin A" bits="0,3" ids="Free Play  or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
-        <dip name="Coin B" bits="4,7" ids="Free Play  or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
+        <dip name="Coin A" bits="0,3" ids="Free Play or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
+        <dip name="Coin B" bits="4,7" ids="Free Play or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <!-- DSW2 -->
         <dip name="Cabinet" bits="8" ids="Upright,Cocktail"/>
         <dip name="Demo Sounds" bits="9" ids="On,Off"/>
-        <dip name="Lives" bits="10,11" ids="240,4,2,3"/>
+        <dip name="Lives" bits="10,11" ids="240 ,4,2,3"/>
         <dip name="Extra Ship Cost" bits="12,13" ids="20k,15000,10k,5000"/>
         <dip name="Difficulty" bits="14,15" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Shot,Bomb,-,-,Start,Coin,Core credits" default="Y,X,BA,R,L,Start" count="3"/>
+    <buttons names="Shot,Bomb,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>
