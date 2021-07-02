@@ -95,14 +95,17 @@ always @(posedge clk ) begin
     if( !enable_psg ) pcmgain <= 0;
 end
 
-always @(posedge clk ) begin
-    rom_ok2  <= rom_ok;
-    rom_cs   <=  !mreq_n && !A[15];
-    ram_cs   <=  !mreq_n && &A[15:11];
-    latch_cs <= (!mreq_n &&  A[15:12]==4'he && A[11]) // e800
+always @(*) begin
+    latch_cs = (!mreq_n &&  A[15:12]==4'he && A[11]) // e800
              || (!iorq_n &&  A[7:6]==3);
 
-    fm_cs    <= !iorq_n && A[7:6]==0;
+    fm_cs    = !iorq_n && A[7:6]==0;
+end
+
+always @(posedge clk) begin
+    ram_cs   <=  !mreq_n && &A[15:11];
+    rom_cs   <=  !mreq_n && !A[15];
+    rom_ok2  <= rom_ok;
     if( cmd_cs ) pcm_cmd <= dout;
 
     din      <= rom_cs   ? rom_data : (
