@@ -34,7 +34,7 @@ module jts16_sdram(
     input            ram_cs,
     input     [17:1] main_addr,
     output    [15:0] main_data,
-    output reg [15:0] ram_data,
+    output    [15:0] ram_data,
     output           main_ok,
     output           ram_ok,
     input     [ 1:0] dsn,
