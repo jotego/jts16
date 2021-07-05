@@ -178,7 +178,11 @@ jts16_cen u_cen(
 );
 
 `ifndef NOMAIN
-jts16_main u_main(
+`ifdef S16B
+    jts16b_main u_main(
+`else
+    jts16_main u_main(
+`endif
     .rst        ( rst       ),
     .clk        ( clk       ),
     .clk_rom    ( clk       ),  // same clock - at least for now

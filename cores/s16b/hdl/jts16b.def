@@ -1,6 +1,9 @@
 include ../../s16/hdl/jts16.def
 
 [all]
+S16B=1
+FD1094
+
 # Redefine memory regions
 BA1_START    =0x080000
 PCM_START    =0x100000
@@ -11,3 +14,6 @@ MAINKEY_START=0x442000
 N7751_START  =0x444000
 FD1089_START =0x446000
 SNDKEY_START =0x448000
+
+# Redefine memory size
+VRAMW=16

@@ -33,7 +33,7 @@ module jts16b_main(
     input       [15:0] char_dout,
     input       [15:0] pal_dout,
     input       [15:0] obj_dout,
-    output             flip,
+    output reg         flip,
     output             video_en,
     output             colscr_en,
     output             rowscr_en,
@@ -74,7 +74,6 @@ module jts16b_main(
     input             dec_type,
     input      [12:0] prog_addr,
     input             key_we,
-    input             fd1089_we,
     input      [ 7:0] prog_data,
 
     // DIP switches
@@ -155,7 +154,7 @@ always @(posedge clk, posedge rst) begin
     end else begin
         if( !ASn && BGACKn ) begin
             rom_cs    <= |active[2:0];
-            char_cs   <= active[REG_VRAM];
+            char_cs   <= active[REG_VRAM] && addr[16];
 
             objram_cs <= active[REG_ORAM];
             pal_cs    <= active[REG_PAL];
@@ -164,7 +163,7 @@ always @(posedge clk, posedge rst) begin
             // jtframe_ramrq requires cs to toggle to
             // process a new request. BUSn will toggle for
             // read-modify-writes
-            vram_cs <= !BUSn && active[REG_VRAM];
+            vram_cs <= !BUSn && active[REG_VRAM] && !addr[16];
             ram_cs  <= !BUSn && active[REG_RAM];
         end else begin
             rom_cs    <= 0;
@@ -181,25 +180,19 @@ end
 
 // cabinet input
 reg [ 7:0] cab_dout, sort1, sort2;
-reg [ 7:0] ppi_b;
-reg [ 1:0] port_cnt;    // used by Passing Shot
-reg        ppi_cs, last_iocs;
+reg        last_iocs;
 
-wire [7:0] ppi_dout, ppic_din, ppic_dout, ppib_dout;
 wire       op_n; // low for CPU OP requests
 
 assign op_n        = FC[1:0]!=2'b10;
 assign snd_irqn    = ppic_dout[7];
 assign colscr_en   = ~ppic_dout[2];
 assign rowscr_en   = ~ppic_dout[1];
-assign ppic_din[6] = snd_ack;
 
 function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
 endfunction
 
-//assign { flip, sound_en, video_en } = { ppib_dout[7], ~ppib_dout[5], ppib_dout[4] };
-assign flip = ppib_dout[7];
 assign sound_en = 1;
 assign video_en = 1;
 
@@ -210,89 +203,34 @@ end
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        ppi_b     <= 8'hff;
         cab_dout  <= 8'hff;
-        ppi_cs    <= 0;
-        port_cnt  <= 0;
+        flip      <= 0;
     end else  begin
-        ppi_cs   <= 0;
         last_iocs <= io_cs;
         cab_dout <= 8'hff;
         if(io_cs) case( A[13:12] )
-            2'd0: begin // 8255
-                ppi_cs   <= 1;
-                cab_dout <= ppi_dout;
+            0: if( !LDSWn ) begin
+                flip    <= cpu_dout[6];
+                //video_en <= cpu_dout[5];
             end
-            2'd1:
+            1:
                 case( A[2:1] )
                     0: begin
                         if( !last_iocs ) port_cnt <= 0;
                         cab_dout <= { 2'b11, start_button[1:0], service, dip_test, coin_input };
-                        case( game_id )
-                            GAME_SDI: begin
-                                cab_dout[7] <= joystick2[4];
-                                cab_dout[6] <= joystick1[4];
-                            end
-                            GAME_PASSSHT: begin
-                                cab_dout[7:6] <= start_button[3:2];
-                            end
-                        endcase
                     end
                     1: begin
-                        case( game_id )
-                            GAME_SDI: cab_dout <= sdi_joy( joyana1 );
-                            GAME_PASSSHT: begin
-                                if( !last_iocs ) port_cnt <= port_cnt + 2'd1;
-                                case( port_cnt )
-                                    1: cab_dout <= pass_joy( joystick1 );
-                                    2: cab_dout <= pass_joy( joystick2 );
-                                    3: cab_dout <= pass_joy( joystick3 );
-                                    0: cab_dout <= pass_joy( joystick4 );
-                                endcase
-                            end
-                            default: cab_dout <= sort1;
-                        endcase
-                    end
-                    2: begin
-                        if( game_id == GAME_SDI ) begin
-                            cab_dout <= { sort2[7:4], sort1[7:4] };
-                        end
+                        cab_dout <= sort1;
                     end
                     3: begin
-                        if( game_id == GAME_SDI ) begin
-                            cab_dout <= sdi_joy( joyana2 );
-                        end else begin
-                            cab_dout <= sort2;
-                        end
+                        cab_dout <= sort2;
                     end
                 endcase
-            2'd2:
+            2:
                 cab_dout <= { A[1] ? dipsw_b : dipsw_a };
         endcase
     end
 end
-
-jt8255 u_8255(
-    .rst       ( rst        ),
-    .clk       ( clk        ),
-
-    // CPU interface
-    .addr      ( A[2:1]     ),
-    .din       ( cpu_dout[7:0] ),
-    .dout      ( ppi_dout   ),
-    .rdn       ( ~RnW       ),
-    .wrn       ( LDSWn      ),
-    .csn       ( ~ppi_cs    ),
-
-    // External pins to peripherals
-    .porta_din ( 8'hFF      ),
-    .portb_din ( 8'hFF      ),
-    .portc_din ( ppic_din   ),
-
-    .porta_dout( snd_latch  ),
-    .portb_dout( ppib_dout  ),
-    .portc_dout( ppic_dout  )
-);
 
 // Data bus input
 reg  [15:0] cpu_din;
@@ -349,52 +287,28 @@ jtframe_68kdtack #(.W(8)) u_dtack(
     .DTACKn     ( DTACKn    )
 );
 
-`ifdef FD1094
-    jts16_fd1094 u_dec(
-        .rst        ( rst       ),
-        .clk        ( clk       ),
+jts16_fd1094 u_dec(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
 
-        // Configuration
-        .prog_addr  ( prog_addr ),
-        .fd1094_we  ( key_we    ),
-        .prog_data  ( prog_data ),
+    // Configuration
+    .prog_addr  ( prog_addr ),
+    .fd1094_we  ( key_we    ),
+    .prog_data  ( prog_data ),
 
-        // Operation
-        .dec_en     ( dec_en    ),
-        .FC         ( FC        ),
-        .ASn        ( ASn       ),
+    // Operation
+    .dec_en     ( dec_en    ),
+    .FC         ( FC        ),
+    .ASn        ( ASn       ),
 
-        .addr       ( A         ),
-        .enc        ( rom_data  ),
-        .dec        ( rom_dec   ),
+    .addr       ( A         ),
+    .enc        ( rom_data  ),
+    .dec        ( rom_dec   ),
 
-        .dtackn     ( DTACKn    ),
-        .rom_ok     ( rom_ok    ),
-        .ok_dly     ( ok_dly    )
-    );
-`else
-    jts16_fd1089 u_dec(
-        .rst        ( rst       ),
-        .clk        ( clk       ),
-
-        // Configuration
-        .prog_addr  ( prog_addr ),
-        .key_we     ( key_we    ),
-        .fd1089_we  ( fd1089_we ),
-        .prog_data  ( prog_data ),
-
-        // Operation
-        .dec_type   ( dec_type  ), // 0=a, 1=b
-        .dec_en     ( dec_en    ),
-        .rom_ok     ( rom_ok    ),
-        .ok_dly     ( ok_dly    ),
-
-        .op_n       ( op_n      ),     // OP (0) or data (1)
-        .addr       ( A         ),
-        .enc        ( rom_data  ),
-        .dec        ( rom_dec   )
-    );
-`endif
+    .dtackn     ( DTACKn    ),
+    .rom_ok     ( rom_ok    ),
+    .ok_dly     ( ok_dly    )
+);
 
 jtframe_m68k u_cpu(
     .clk        ( clk         ),

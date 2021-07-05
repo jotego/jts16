@@ -134,8 +134,10 @@ localparam [24:0] BA1_START  = `BA1_START,
                   FD_PROM    = `FD1089_START;
 /* verilator lint_on WIDTH */
 
-reg  [15:1] xram_addr;  // 32 kB VRAM + 16kB RAM
-wire [15:0] xram_data;
+localparam VRAMW = `VRAMW;
+
+reg  [VRAMW-1:1] xram_addr;  // S16A = 32 kB VRAM + 16kB RAM
+                             // S16B = 64 kB VRAM + 16-256kB RAM
 wire        xram_cs;
 wire        prom_we, header;
 
@@ -149,14 +151,11 @@ assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM  [21:13];
 assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM   [21: 8];
 
 always @(*) begin
-    xram_addr = { ram_cs, main_addr[14:1] }; // RAM is mapped up
-    if( ram_cs ) xram_addr[14]=0; // only 16kB for RAM
-    `ifdef SHINOBI_BONUS
-    if( ram_cs && xram_addr[13:1]==13'hbc0 )
-        ram_data=16'h5;
-    else
-    `endif
-        ram_data=xram_data;
+    xram_addr = { ram_cs, main_addr[VRAMW-2:1] }; // RAM is mapped up
+`ifndef S16B
+    if( ram_cs ) xram_addr[VRAMW-2:14]=0; // only 16kB for RAM
+    // RAM may also need masking on System16B
+`endif
 end
 
 `ifdef FD1094
@@ -230,7 +229,7 @@ jtframe_ram_4slots #(
     .slot3_addr ( map2_addr ),
 
     //  output data
-    .slot0_dout ( xram_data ),
+    .slot0_dout ( ram_data  ),
     .slot1_dout ( main_data ),
     .slot2_dout ( map1_data ),
     .slot3_dout ( map2_data ),
