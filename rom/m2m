@@ -3,4 +3,5 @@ cd $JTUTIL/src
 make || exit $?
 cd -
 echo "------------"
+mkdir -p test
 mame2mra -def $CORES/s16b/hdl/jts16b.def -toml s16b.toml -outdir test $*

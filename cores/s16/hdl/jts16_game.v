@@ -239,7 +239,9 @@ jts16_cen u_cen(
     .dec_en      ( dec_en     ),
     .dec_type    ( dec_type   ),
     .key_we      ( key_we     ),
+`ifndef S16B
     .fd1089_we   ( fd1089_we  ),
+`endif
     .prog_addr   ( prog_addr[12:0] ),
     .prog_data   ( prog_data[ 7:0] ),
     // DIP switches

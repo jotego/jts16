@@ -35,9 +35,10 @@ module jts16b_mem_map(
 
 reg [7:0] base[0:7];
 reg [1:0] size[0:7];
-wire      none = active==0
+wire      none = active==0;
 
 integer aux;
+
 always @(*) begin
     for( aux=0; aux<8; aux=aux+1 ) begin
         case( size[aux] )

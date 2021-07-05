@@ -20,11 +20,11 @@ setnames = [ "lockonph" ]
 core=4 # max number of buttons supported by the core
 
 [rbf]
-name="jts16"
-dev = [
-    { dev="fd1094", rbf="jts16a2" },
-    { dev="8751", rbf="jts16a1"}
-]
+name="jts16b"
+# dev = [
+#     { dev="fd1094", rbf="jts16a2" },
+#     { dev="8751", rbf="jts16a1"}
+# ]
 
 [dipsw]
 delete = [ "Unused", "Unknown" ]

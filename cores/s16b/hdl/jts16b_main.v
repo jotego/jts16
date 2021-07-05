@@ -38,8 +38,8 @@ module jts16b_main(
     output             colscr_en,
     output             rowscr_en,
     // RAM access
-    output             ram_cs,
-    output             vram_cs,
+    output reg         ram_cs,
+    output reg         vram_cs,
     input       [15:0] ram_data,   // coming from VRAM or RAM
     input              ram_ok,
     // CPU bus
@@ -154,7 +154,7 @@ always @(posedge clk, posedge rst) begin
     end else begin
         if( !ASn && BGACKn ) begin
             rom_cs    <= |active[2:0];
-            char_cs   <= active[REG_VRAM] && addr[16];
+            char_cs   <= active[REG_VRAM] && A[16];
 
             objram_cs <= active[REG_ORAM];
             pal_cs    <= active[REG_PAL];
@@ -163,7 +163,7 @@ always @(posedge clk, posedge rst) begin
             // jtframe_ramrq requires cs to toggle to
             // process a new request. BUSn will toggle for
             // read-modify-writes
-            vram_cs <= !BUSn && active[REG_VRAM] && !addr[16];
+            vram_cs <= !BUSn && active[REG_VRAM] && !A[16];
             ram_cs  <= !BUSn && active[REG_RAM];
         end else begin
             rom_cs    <= 0;
@@ -185,9 +185,9 @@ reg        last_iocs;
 wire       op_n; // low for CPU OP requests
 
 assign op_n        = FC[1:0]!=2'b10;
-assign snd_irqn    = ppic_dout[7];
-assign colscr_en   = ~ppic_dout[2];
-assign rowscr_en   = ~ppic_dout[1];
+assign snd_irqn    = 1;
+assign colscr_en   = 0;
+assign rowscr_en   = 0;
 
 function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
@@ -216,7 +216,6 @@ always @(posedge clk, posedge rst) begin
             1:
                 case( A[2:1] )
                     0: begin
-                        if( !last_iocs ) port_cnt <= 0;
                         cab_dout <= { 2'b11, start_button[1:0], service, dip_test, coin_input };
                     end
                     1: begin
@@ -245,7 +244,7 @@ always @(posedge clk) begin
                     pal_cs             ? pal_dout  : (
                     objram_cs          ? obj_dout  : (
                     io_cs              ? { 8'hff, cab_dout } :
-                                       16'hFFFF )))));
+                                       cpu_din ))))); // no change for unmapped memory
     end
 end
 
