@@ -24,8 +24,7 @@ module jts16_main(
     output             cpu_cenb,
     input  [7:0]       game_id,
     // Video
-    input  [8:0]       vdump,
-    input              hstart,
+    input              vint,
     // Video circuitry
     output reg         char_cs,
     output reg         pal_cs,
@@ -307,17 +306,17 @@ end
 // interrupt generation
 reg        irqn; // VBLANK
 wire       inta_n = ~&{ FC[2], FC[1], FC[0], ~ASn }; // interrupt ack.
-reg        last_hstart;
+reg        last_vint;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         irqn <= 1;
     end else begin
-        last_hstart <= hstart;
+        last_vint <= vint;
 
         if( !inta_n ) begin
             irqn <= 1;
-        end else if( hstart && !last_hstart && vdump==223 ) begin
+        end else if( vint && !last_vint ) begin
             irqn <= 0;
         end
     end

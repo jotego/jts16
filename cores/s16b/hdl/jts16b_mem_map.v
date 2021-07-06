@@ -16,6 +16,7 @@
     Version: 1.0
     Date: 5-7-2021 */
 
+// This module represents the SEGA 315-5195
 //
 //  Region 0 - Program ROM
 //  Region 3 - 68000 work RAM
@@ -27,47 +28,114 @@
 module jts16b_mem_map(
     input             rst,
     input             clk,
+    input             cpu_cen,
+    input             vint,
+
+    // M68000 interface
     input      [23:1] addr,
     input      [15:0] cpu_dout,
     input      [ 1:0] dswn,
+    input      [ 2:0] fc,
+    output            cpu_haltn,
+    output            cpu_rstn,
+
+    // Bus sharing
+    output            cpu_berrn,
+    output            cpu_brn,
+    input             cpu_bgn,
+    output            cpu_bgackn,
+    input             cpu_dtackn,
+    input             cpu_asn,
+
+    // MCU side
+    input      [ 7:0] mcu_dout,
+    output     [ 7:0] mcu_din,
+    output            mcu_intn,
+    input      [15:0] mcu_addr,
+    input             mcu_wr,
+    output reg [ 1:0] mcu_intn,
+
+    // Bus interface
+    output reg [23:1] addr_out,
+    input      [15:0] bus_dout,
+    output     [15:0] bus_din,
     output reg [ 7:0] active
 );
 
-reg [7:0] base[0:7];
-reg [1:0] size[0:7];
+reg [7:0] mmr[0:31];
 wire      none = active==0;
+reg       bus_rq;
+wire      mcu_cen;
+
+assign cpu_berrn = 1;
 
 integer aux;
 
 always @(*) begin
     for( aux=0; aux<8; aux=aux+1 ) begin
         case( size[aux] )
-            0: active[aux] = addr[23:16] == base[aux];      //   64 kB
-            1: active[aux] = addr[23:17] == base[aux][7:1]; //  128 kB
-            2: active[aux] = addr[23:19] == base[aux][7:3]; //  512 kB
-            3: active[aux] = addr[23:21] == base[aux][7:5]; // 2048 kB
+            0: active[aux] = addr[23:16] == mmr[ {1'b1, aux[2:0], 1'b0 } ];      //   64 kB
+            1: active[aux] = addr[23:17] == mmr[ {1'b1, aux[2:0], 1'b0 } ][7:1]; //  128 kB
+            2: active[aux] = addr[23:19] == mmr[ {1'b1, aux[2:0], 1'b0 } ][7:3]; //  512 kB
+            3: active[aux] = addr[23:21] == mmr[ {1'b1, aux[2:0], 1'b0 } ][7:5]; // 2048 kB
         endcase
     end
+    // no more than one signal can be set
+    if( active[0] ) active[7:1] = 0;
+    if( active[1] ) active[7:2] = 0;
+    if( active[2] ) active[7:3] = 0;
+    if( active[3] ) active[7:4] = 0;
+    if( active[4] ) active[7:5] = 0;
+    if( active[5] ) active[7:6] = 0;
+    if( active[6] ) active[7]   = 0;
 end
+
+integer aux2;
 
 always @(posedge clk, posedge rst ) begin
     if( rst ) begin
-        base[0] <= 0; base[1] <= 0; base[2] <= 0; // ROM
-        base[3] <= 0; // RAM
-        base[4] <= 0; // VRAM
-        base[5] <= 0; // object RAM
-        base[6] <= 0; // palette RAM
-        base[7] <= 0; // I/O
-        size[0] <= 0; size[1] <= 0; size[2] <= 0; size[3] <= 0;
-        size[4] <= 0; size[5] <= 0; size[6] <= 0; size[7] <= 0;
+        for( aux2=0; aux2<32; aux2=aux2+1 )
+            mmr[aux2] <= 0;
     end else begin
         if( none ) begin
-            if(  addr[1] && !dswn[0])
-                base[ addr[4:2] ] <= cpu_dout[7:0];
-            if( !addr[1] && !dswn[0])
-                size[ addr[4:2] ] <= cpu_dout[1:0];
+            if( !dswn[0] )
+                mmr[ addr[5:1] ] <= cpu_dout[7:0];
+        end
+        if( mcu_wr ) begin
+            mmr[ mcu_addr[4:0] ] <= mcu_dout;
         end
     end
 end
+
+// interrupt generation
+reg        irqn; // VBLANK
+wire       inta_n = ~&{ FC[2], FC[1], FC[0], ~ASn }; // interrupt ack.
+reg        last_vint;
+
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        irqn <= 1;
+    end else begin
+        last_vint <= vint;
+
+        if( !inta_n ) begin
+            irqn <= 1;
+        end else if( vint && !last_vint ) begin
+            irqn <= 0;
+        end
+    end
+end
+
+jtframe_68kdma u_dma(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .cen        ( cpu_cen   ),
+    .cpu_BRn    ( cpu_brn   ),
+    .cpu_BGACKn ( cpu_bgackn),
+    .cpu_BGn    ( cpu_bgn   ),
+    .cpu_ASn    ( cpu_asn   ),
+    .cpu_DTACKn ( cpu_dtackn),
+    .dev_br     ( bus_rq    )      // high to signal a bus request from a device
+);
 
 endmodule

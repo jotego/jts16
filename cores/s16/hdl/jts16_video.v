@@ -23,6 +23,7 @@ module jts16_video(
     input              pxl_cen,   // pixel clock enable
 
     input              video_en,
+
     // CPU interface
     input              char_cs,
     input              pal_cs,
@@ -34,6 +35,7 @@ module jts16_video(
     output     [15:0]  char_dout,
     output     [15:0]  pal_dout,
     output     [15:0]  obj_dout,
+    output             vint,
 
     // Other configuration
     input              flip,
@@ -119,6 +121,8 @@ wire [15:0] scr1_pages,      scr2_pages,
 //  leftmost pixel of the screen is $00B6, and the rightmost is $1F5."
 
 parameter [8:0] HB_END = 9'h0bf;
+
+assign vint = vdump==223;
 
 jtframe_vtimer #(
     .HB_START  ( 9'h1ff ),

@@ -24,8 +24,7 @@ module jts16b_main(
     output             cpu_cenb,
     input  [7:0]       game_id,
     // Video
-    input  [8:0]       vdump,
-    input              hstart,
+    input              vint,
     // Video circuitry
     output reg         char_cs,
     output reg         pal_cs,
@@ -70,17 +69,20 @@ module jts16b_main(
     input              rom_ok,
 
     // Decoder configuration
-    input             dec_en,
-    input             dec_type,
-    input      [12:0] prog_addr,
-    input             key_we,
-    input      [ 7:0] prog_data,
+    input              dec_en,
+    input              dec_type,
+    input       [12:0] prog_addr,
+    input              key_we,
+    input       [ 7:0] prog_data,
 
     // DIP switches
     input              dip_pause,
     input              dip_test,
     input    [7:0]     dipsw_a,
     input    [7:0]     dipsw_b,
+
+    // MCU ROM programming
+    input              mcu_we,
 
     // NVRAM - debug
     input       [15:0] ioctl_addr,
@@ -121,22 +123,74 @@ assign LDSWn = RnW | LDSn;
 assign BUSn  = ASn | (LDSn & UDSn);
 
 // No peripheral bus access for now
-assign BRn   = 1;
-assign BGACKn= 1;
 assign cpu_addr = A[12:1];
 assign rom_addr = A[18:1]; //  18:0 = 512kB
-assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
-                              && !io_cs  && !wdog_cs && vram_cs && ram_cs);
+// assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
+//                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
 
-wire [7:0] active;
+wire [ 7:0] active, mcu_din, mcu_dout;
+wire [15:0] mcu_addr;
+wire [ 1:0] mcu_intn;
 
 jts16b_mem_map u_memmap(
     .rst        ( rst            ),
     .clk        ( clk            ),
+    .cpu_cen    ( cpu_cen        ),
+    .vint       ( vint           ),
+
+
     .addr       ( A              ),
     .cpu_dout   ( cpu_dout       ),
     .dswn       ( {UDSWn, LDSWn} ),
+
+    // Bus sharing
+    .cpu_berrn  ( BERRn          ),
+    .cpu_brn    ( BRn            ),
+    .cpu_bgn    ( BGn            ),
+    .cpu_bgackn ( BGACKn         ),
+    .cpu_dtackn ( DTACKn         ),
+    .cpu_asn    ( ASn            ),
+
+    // MCU side
+    .mcu_dout   ( mcu_dout       ),
+    .mcu_din    ( mcu_din        ),
+    .mcu_intn   ( mcu_intn       ),
+    .mcu_addr   ( mcu_addr       ),
+    .mcu_wr     ( mcu_wr         ),
+    .mcu_intn   ( mcu_intn       ),
+
     .active     ( active         )
+);
+
+jtframe_8751mcu u_mcu(
+    .rst        ( rst           ),
+    .clk        ( clk           ),
+    .cen        ( cen_mcu       ),
+
+    .int0n      ( mcu_intn[0]   ),
+    .int1n      ( mcu_intn[1]   ),
+
+    .p0_i       ( mcu_din       ),
+    .p1_i       ( 8'hff         ),
+    .p2_i       ( 8'hff         ),
+    input  [ 7:0] p3_i,
+
+    .p0_o       ( mcu_dout      ),
+    .p1_o       (               ),
+    .p2_o       (               ),
+    .p3_o       (               ),
+
+    // external memory
+    .x_din      ( mcu_din       ),
+    .x_dout     ( mcu_dout      ),
+    .x_addr     ( mcu_addr      ),
+    .x_wr       ( mcu_wr        ),
+
+    // ROM programming
+    .clk_rom    ( clk           ),
+    .prog_addr  ( prog_addr[11:0] ),
+    .prom_din   ( prog_data     ),
+    .prom_we    ( mcu_we        )
 );
 
 // System 16B memory map
@@ -245,25 +299,6 @@ always @(posedge clk) begin
                     objram_cs          ? obj_dout  : (
                     io_cs              ? { 8'hff, cab_dout } :
                                        cpu_din ))))); // no change for unmapped memory
-    end
-end
-
-// interrupt generation
-reg        irqn; // VBLANK
-wire       inta_n = ~&{ FC[2], FC[1], FC[0], ~ASn }; // interrupt ack.
-reg        last_hstart;
-
-always @(posedge clk, posedge rst) begin
-    if( rst ) begin
-        irqn <= 1;
-    end else begin
-        last_hstart <= hstart;
-
-        if( !inta_n ) begin
-            irqn <= 1;
-        end else if( hstart && !last_hstart && vdump==223 ) begin
-            irqn <= 0;
-        end
     end
 end
 

@@ -103,7 +103,7 @@ wire    cpu_cen, cpu_cenb,
 
 // video signals
 wire        HB, VB, LVBL;
-wire [ 8:0] vdump, vrender;
+wire [ 8:0] vrender;
 wire        hstart;
 wire        colscr_en, rowscr_en;
 
@@ -190,8 +190,7 @@ jts16_cen u_cen(
     .cpu_cenb   ( cpu_cenb  ),
     .game_id    ( game_id   ),
     // Video
-    .vdump      ( vdump     ),
-    .hstart     ( hstart    ),
+    .vint       ( vint      ),
     .video_en   ( video_en  ),
     // Video circuitry
     .vram_cs    ( vram_cs   ),
@@ -327,6 +326,7 @@ jts16_video u_video(
     .char_cs    ( char_cs   ),
     .pal_cs     ( pal_cs    ),
     .objram_cs  ( objram_cs ),
+    .vint       ( vint      ),
 
     .cpu_dout   ( main_dout ),
     .dsn        ( dsn       ),
@@ -373,7 +373,7 @@ jts16_video u_video(
     .LVBL       ( LVBL      ),
     .LHBL_dly   ( LHBL_dly  ),
     .LVBL_dly   ( LVBL_dly  ),
-    .vdump      ( vdump     ),
+    .vdump      (           ),
     .vrender    ( vrender   ),
     .hstart     ( hstart    ),
     .red        ( red       ),
