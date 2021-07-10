@@ -84,6 +84,13 @@ module jts16b_main(
     // MCU ROM programming
     input              mcu_we,
 
+    // Sound - Mapper interface
+    input              sndmap_rd,
+    input              sndmap_wr,
+    input    [7:0]     sndmap_din,
+    output   [7:0]     sndmap_dout,
+    output             sndmap_obf, // pbf signal == buffer full ?
+
     // NVRAM - debug
     input       [15:0] ioctl_addr,
     output      [ 7:0] ioctl_din
@@ -150,6 +157,13 @@ jts16b_mem_map u_memmap(
     .cpu_bgackn ( BGACKn         ),
     .cpu_dtackn ( DTACKn         ),
     .cpu_asn    ( ASn            ),
+
+    // Sound CPU
+    .sndmap_rd  ( sndmap_rd      ),
+    .sndmap_wr  ( sndmap_wr      ),
+    .sndmap_din ( sndmap_din     ),
+    .sndmap_dout( sndmap_dout    ),
+    .sndmap_obf ( sndmap_obf     ),
 
     // MCU side
     .mcu_dout   ( mcu_dout       ),

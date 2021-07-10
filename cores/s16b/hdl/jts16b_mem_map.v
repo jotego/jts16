@@ -47,6 +47,13 @@ module jts16b_mem_map(
     input             cpu_dtackn,
     input             cpu_asn,
 
+    // Z80 interface
+    input             sndmap_rd,
+    input             sndmap_wr,
+    input      [ 7:0] sndmap_din,
+    output     [ 7:0] sndmap_dout,
+    output            sndmap_obf, // pbf signal == buffer full ?
+
     // MCU side
     input      [ 7:0] mcu_dout,
     output     [ 7:0] mcu_din,

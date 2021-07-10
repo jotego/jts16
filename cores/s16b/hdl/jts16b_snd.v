@@ -27,14 +27,10 @@ module jts16b_snd(
     input                cen_fm2,   // 2MHz
     input                cen_pcm,   // 0.640
 
-    input                sound_en,
     // options
     input         [ 1:0] fxlevel,
     input                enable_fm,
     input                enable_psg,
-
-    input         [ 7:0] latch,
-    output               ack,
 
     // Mapper device 315-5195
     output               mapper_rd,
@@ -74,8 +70,6 @@ reg  [ 5:0] rom_msb;
 wire signed [15:0] fm_left, fm_right, mixed;
 wire signed [ 8:0] pcm_raw, pcm_snd;
 wire [7:0] fmgain;
-
-assign snd = sound_en ? mixed : 16'd0;
 
 assign rom_good = rom_ok2 & rom_ok;
 assign ack      = mapper_cs;
@@ -164,7 +158,7 @@ jtframe_mixer #(.W2(9)) u_mixer(
     .gain1  ( fmgain    ),
     .gain2  ( pcmgain   ),
     .gain3  ( 8'h00     ),
-    .mixed  ( mixed     ),
+    .mixed  ( snd       ),
     .peak   ( peak      )
 );
 

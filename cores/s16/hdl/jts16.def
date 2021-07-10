@@ -13,6 +13,10 @@ JTFRAME_VERTICAL
 JTFRAME_4PLAYERS
 JTFRAME_ANALOG
 
+# instance names
+JTS16_MAIN=jts16_main
+JTS16_SND=jts16_snd
+
 # ROM file layout
 # BA0, main CPU ROM
 # BA1, sound CPU and PCM

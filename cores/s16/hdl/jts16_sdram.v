@@ -16,7 +16,9 @@
     Version: 1.0
     Date: 10-3-2021 */
 
-module jts16_sdram(
+module jts16_sdram #(
+    parameter SNDW=15
+) (
     input            rst,
     input            clk,
 
@@ -44,8 +46,8 @@ module jts16_sdram(
     // Sound CPU
     input            snd_cs,
     output           snd_ok,
-    input    [14:0]  snd_addr,
-    output   [ 7:0]  snd_data,
+    input [SNDW-1:0] snd_addr,
+    output     [7:0] snd_data,
 
     // PROM
     output           n7751_prom,
@@ -327,11 +329,11 @@ jtframe_rom_1slot #(
 
 // Sound
 jtframe_rom_2slots #(
-    .SLOT0_DW( 8),
-    .SLOT0_AW(15),
+    .SLOT0_DW(   8),
+    .SLOT0_AW(SNDW),
 
-    .SLOT1_DW( 8),
-    .SLOT1_AW(17),
+    .SLOT1_DW(   8),
+    .SLOT1_AW(  17),
 
     .SLOT1_OFFSET( PCM_OFFSET )
 ) u_bank1(

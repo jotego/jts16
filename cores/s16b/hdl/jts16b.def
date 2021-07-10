@@ -4,6 +4,10 @@ include ../../s16/hdl/jts16.def
 S16B=1
 FD1094
 
+# instance names
+JTS16_MAIN=jts16b_main
+JTS16_SND=jts16b_snd
+
 # Redefine memory regions
 BA1_START    =0x080000
 PCM_START    =0x100000

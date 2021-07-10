@@ -96,6 +96,15 @@ module jts16_game(
     output  [ 7:0]  st_dout
 );
 
+`ifndef S16B
+    localparam SNDW=15;
+`else
+    localparam SNDW=19;
+
+    wire [7:0] sndmap_din, sndmap_dout;
+    wire       sndmap_rd, sndmap_wr, sndmap_obf;
+``endif
+
 // clock enable signals
 wire    cpu_cen, cpu_cenb,
         cen_fm,  cen_fm2,
@@ -137,7 +146,7 @@ wire        UDSWn, LDSWn, main_rnw;
 wire        char_cs, scr1_cs, pal_cs, objram_cs;
 
 // Sound CPU
-wire [14:0] snd_addr;
+wire [SNDW-1:0] snd_addr;
 wire [ 7:0] snd_data;
 wire        snd_cs, snd_ok;
 
@@ -178,11 +187,7 @@ jts16_cen u_cen(
 );
 
 `ifndef NOMAIN
-`ifdef S16B
-    jts16b_main u_main(
-`else
-    jts16_main u_main(
-`endif
+`JTS16_MAIN u_main(
     .rst        ( rst       ),
     .clk        ( clk       ),
     .clk_rom    ( clk       ),  // same clock - at least for now
@@ -204,11 +209,6 @@ jts16_cen u_cen(
     .flip       ( flip      ),
     .colscr_en  ( colscr_en ),
     .rowscr_en  ( rowscr_en ),
-    // Sound communication
-    .snd_latch  ( snd_latch ),
-    .snd_irqn   ( snd_irqn  ),
-    .snd_ack    ( snd_ack   ),
-    .sound_en   ( sound_en  ),
     // RAM access
     .ram_cs     ( ram_cs    ),
     .ram_data   ( ram_data  ),
@@ -240,6 +240,17 @@ jts16_cen u_cen(
     .key_we      ( key_we     ),
 `ifndef S16B
     .fd1089_we   ( fd1089_we  ),
+    // Sound communication
+    .snd_latch   ( snd_latch  ),
+    .snd_irqn    ( snd_irqn   ),
+    .snd_ack     ( snd_ack    ),
+    .sound_en    ( sound_en   ),
+`else
+    .sndmap_rd   ( sndmap_rd  ),
+    .sndmap_wr   ( sndmap_wr  ),
+    .sndmap_din  ( sndmap_din ),
+    .sndmap_dout (sndmap_dout ),
+    .sndmap_obf  ( sndmap_obf ),
 `endif
     .prog_addr   ( prog_addr[12:0] ),
     .prog_data   ( prog_data[ 7:0] ),
@@ -266,30 +277,33 @@ jts16_cen u_cen(
 `endif
 
 `ifndef NOSOUND
-jts16_snd u_sound(
+`JTS16_SND u_sound(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
-    .cen_fm     ( cen_fm    ),   // 4MHz
+    .cen_fm     ( cen_fm    ),   // 4MHz or 5MHz
     .cen_fm2    ( cen_fm2   ),   // 2MHz
-    .cen_pcm    ( cen_pcm   ),   // 6MHz
-    .cen_pcmb   ( cen_pcmb  ),   // 6MHz
+    .cen_pcm    ( cen_pcm   ),   // 6MHz or 640kHz
 
-    .fxlevel    ( dip_fxlevel ),
-    .sound_en   ( sound_en  ),
+    .fxlevel    (dip_fxlevel),
     .enable_fm  ( enable_fm ),
     .enable_psg ( enable_psg),
+
+`ifdef S16B
+    // System 16B
+    .mapper_rd  ( sndmap_rd ),
+    .mapper_wr  ( sndmap_wr ),
+    .mapper_din ( sndmap_din),
+    .mapper_dout(sndmap_dout),
+    .mapper_obf ( sndmap_obf),
+`else
+    // System 16A
+    .cen_pcmb   ( cen_pcmb  ),   // 6MHz
+    .sound_en   ( sound_en  ),
 
     .latch      ( snd_latch ),
     .irqn       ( snd_irqn  ),
     .ack        ( snd_ack   ),
-
-    // ROM
-    .rom_addr   ( snd_addr  ),
-    .rom_cs     ( snd_cs    ),
-    .rom_data   ( snd_data  ),
-    .rom_ok     ( snd_ok    ),
-
     // MCU PROM
     .prom_we    ( n7751_prom     ),
     .prog_addr  ( prog_addr[9:0] ),
@@ -300,6 +314,12 @@ jts16_snd u_sound(
     .pcm_cs     ( pcm_cs    ),
     .pcm_data   ( pcm_data  ),
     .pcm_ok     ( pcm_ok    ),
+`endif
+    // ROM
+    .rom_addr   ( snd_addr  ),
+    .rom_cs     ( snd_cs    ),
+    .rom_data   ( snd_data  ),
+    .rom_ok     ( snd_ok    ),
 
     // Sound output
     .snd        ( snd       ),
@@ -311,6 +331,11 @@ assign snd_cs=0;
 assign pcm_cs=0;
 assign snd_addr=0;
 assign pcm_addr=0;
+`endif
+
+`ifdef S16B
+assign pcm_cs   = 0;
+assign pcm_addr = 0;
 `endif
 
 jts16_video u_video(
