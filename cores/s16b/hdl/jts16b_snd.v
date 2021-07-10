@@ -22,10 +22,10 @@ module jts16b_snd(
     input                rst,
     input                clk,
 
+    input                cen_snd,   // 5MHz -- jumper to select 5 or 4MHz
     input                cen_fm,    // 4MHz
     input                cen_fm2,   // 2MHz
-    input                cen_pcm,   // 6MHz
-    input                cen_pcmb,
+    input                cen_pcm,   // 0.640
 
     input                sound_en,
     // options
@@ -34,24 +34,20 @@ module jts16b_snd(
     input                enable_psg,
 
     input         [ 7:0] latch,
-    input                irqn,
     output               ack,
+
+    // Mapper device 315-5195
+    output               mapper_rd,
+    output               mapper_wr,
+    output [7:0]         mapper_din,
+    input  [7:0]         mapper_dout,
+    input                mapper_obf, // pbf signal == buffer full ?
+
     // ROM
-    output        [14:0] rom_addr,
+    output    reg [18:0] rom_addr,
     output    reg        rom_cs,
     input         [ 7:0] rom_data,
     input                rom_ok,
-
-    // PROM
-    input         [ 9:0] prog_addr,
-    input                prom_we,
-    input         [ 7:0] prog_data,
-
-    // ADPCM ROM
-    output        [16:0] pcm_addr,
-    output               pcm_cs,
-    input         [ 7:0] pcm_data,
-    input                pcm_ok,
 
     // Sound output
     output signed [15:0] snd,
@@ -62,15 +58,18 @@ module jts16b_snd(
 localparam [7:0] FMGAIN=8'h10;
 
 wire [15:0] A;
-reg         fm_cs, latch_cs, ram_cs;
-wire        mreq_n, iorq_n, int_n, nmi_n;
+reg         fm_cs, mapper_cs, ram_cs, bank_cs;
+wire        mreq_n, iorq_n, int_n;
 wire        WRn;
 reg  [ 7:0] din, pcm_cmd, pcmgain;
 reg         rom_ok2;
 wire        rom_good, cmd_cs;
 wire [ 7:0] dout, fm_dout, ram_dout;
-wire        pcm_irqn, pcm_rstn,
+wire        nmi_n, pcm_busyn,
             wr_n, rd_n;
+reg         pcm_mdn, pcm_rst;
+reg  [ 5:0] rom_msb;
+
 
 wire signed [15:0] fm_left, fm_right, mixed;
 wire signed [ 8:0] pcm_raw, pcm_snd;
@@ -79,10 +78,28 @@ wire [7:0] fmgain;
 assign snd = sound_en ? mixed : 16'd0;
 
 assign rom_good = rom_ok2 & rom_ok;
-assign rom_addr = A[14:0];
-assign ack      = latch_cs;
+assign ack      = mapper_cs;
 assign cmd_cs   = !iorq_n && A[7:6]==2 && !wr_n; // 80
 assign fmgain   = enable_fm ? FMGAIN : 0;
+
+assign mapper_rd   = mapper_cs && !rd_n;
+assign mapper_wr   = mapper_cs && !wr_n;
+assign mapper_dout = cpu_dout;
+
+// ROM bank address
+always @(*) begin
+    rom_addr = { 6'd0, A[14:0] };
+    if( bank_cs ) begin
+        // For board type 171-5358
+        rom_addr[15:14] = rom_msb[1:0];
+        casez( rom_msb[5:2] ) // A11-A8 refer to the ROM label in the PCB:
+            4'b1???: rom_addr[17:16] = 3; // A11 at top
+            4'b01??: rom_addr[17:16] = 2; // A10
+            4'b001?: rom_addr[17:16] = 1; // A9
+            4'b0001: rom_addr[17:16] = 0; // A8
+        endcase
+    end
+end
 
 // PCM volume
 always @(posedge clk ) begin
@@ -96,30 +113,41 @@ always @(posedge clk ) begin
 end
 
 always @(*) begin
+    bank_cs = !mreq_n && (A[15:12]>=8 && A[15:12]<4'he);
+    // Port Map
     if( !iorq_n ) begin
         case( A[7:6] )
-            0: fm_cs        = 1;
-            1: upd_ctrl_cs  = 1;
-            2: upd_st_cs    = 1;
-            3: latch_cs     = 1;
+            0: fm_cs     = 1;
+            1: misc_cs   = 1;
+            2: upd_st_cs = 1;
+            3: mapper_cs = 1;
         endcase
     end else begin
-        latch_cs = (!mreq_n &&  A[15:12]==4'he && A[11]) // e800
-    end
+        mapper_cs = (!mreq_n &&  A[15:12]==4'he && A[11]) // e800
     end
 end
 
 always @(posedge clk) begin
     ram_cs   <=  !mreq_n && &A[15:11];
-    rom_cs   <=  !mreq_n && !A[15];
+    rom_cs   <=  (!mreq_n && !A[15]) || bank_cs;
     rom_ok2  <= rom_ok;
     if( cmd_cs ) pcm_cmd <= dout;
 
-    din      <= rom_cs   ? rom_data : (
-                ram_cs   ? ram_dout : (
-                fm_cs    ? fm_dout  : (
-                latch_cs ? latch    : (
+    din      <= rom_cs    ? rom_data : (
+                ram_cs    ? ram_dout : (
+                fm_cs     ? fm_dout  : (
+                mapper_cs ? mapper_dout : (
                     8'hff ))));
+end
+
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        rom_msb <= 0;
+    end else if(misc_cs) begin
+        rom_msb <= cpu_dout[5:0];
+        pcm_rst <= ~cpu_dout[6];
+        pcm_mdn <= cpu_dout[7];
+    end
 end
 
 jtframe_mixer #(.W2(9)) u_mixer(
@@ -146,16 +174,16 @@ jtframe_ff u_ff(
     .cen    ( 1'b1      ),
     .din    ( 1'b1      ),
     .q      (           ),
-    .qn     ( nmi_n     ),
+    .qn     ( int_n     ),
     .set    ( 1'b0      ),    // active high
-    .clr    ( latch_cs  ),    // active high
-    .sigedge( ~irqn     ) // signal whose edge will trigger the FF
+    .clr    ( mapper_cs  ),    // active high
+    .sigedge( mapper_obf ) // signal whose edge will trigger the FF
 );
 
 jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
     .rst_n      ( ~rst        ),
     .clk        ( clk         ),
-    .cen        ( cen_fm      ),
+    .cen        ( cen_snd     ),
     .cpu_cen    (             ),
     .int_n      ( int_n       ),
     .nmi_n      ( nmi_n       ),
@@ -195,8 +223,8 @@ jt51 u_jt51(
     .a0         ( A[0]      ),
     .din        ( dout      ), // data in
     .dout       ( fm_dout   ), // data out
-    .ct1        ( pcm_rstn  ),
-    .ct2        ( pcm_irqn  ),
+    .ct1        (           ),
+    .ct2        (           ),
     .irq_n      ( int_n     ),  // I do not synchronize this signal
     // Low resolution output (same as real chip)
     .sample     ( sample    ), // marks new output sample
@@ -211,21 +239,22 @@ jt51 u_jt51(
 );
 
 jt7759 u_pcm(
-    .rst        ( rst       ), // reset
+    .rst        ( pcm_rst   ), // reset
     .clk        ( clk       ), // main clock
-    input                  cen,  // 640kHz
-    input                  stn,  // STart (active low)
-    input                  cs,
-    input                  mdn,  // MODE: 1 for stand alone mode, 0 for slave mode
-    output                 busyn,
+    .cen        ( cen_pcm   ),  // 640kHz
+    .stn        ( 1'b1      ),  // STart (active low)
+    .cs         ( pcm_cs    ),
+    .mdn        ( pcm_mdn   ),  // MODE: 1 for stand alone mode, 0 for slave mode
+    .busyn      ( pcm_busyn ),
     // CPU interface
-    input                  wrn,  // for slave mode only
-    input         [ 7:0]   din,
+    .wrn        ( wr_n      ),  // for slave mode only
+    .din        ( cpu_dout  ),
+    .drq        ( nmi_n     ),
     // ROM interface
-    output                 rom_cs,      // equivalent to DRQn in original chip
-    output        [16:0]   rom_addr,
-    input         [ 7:0]   rom_data,
-    input                  rom_ok,
+    .rom_cs     (           ),      // equivalent to DRQn in original chip
+    .rom_addr   (           ),
+    .rom_data   (           ),
+    .rom_ok     ( 1'b0      ),
     // Sound output
     .sound      ( pcm_raw   )
 );
