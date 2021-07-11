@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SYSNAME=s16b
-GAME=altbeast5
+GAME=altbest5
 SCENE=
 OTHER=
 HEXDUMP=-nohex
@@ -80,7 +80,7 @@ jtsim_sdram -header 32 -dumpbin fd1094.bin 0x182000 8192
 
 jtsim -mist -sysname $SYSNAME $SIMULATOR \
 	-videow 320 -videoh 224 \
-    -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER || exit $?
+    -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER || exit $?
 
 if [[ ! -z "$SCENE" && -e frame_1.jpg ]]; then
 	eom frame_1.jpg 2> /dev/null

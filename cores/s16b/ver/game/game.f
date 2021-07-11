@@ -18,6 +18,7 @@ s16a/jts16_fd1094_dec.v
 
 ../../hdl/jts16b_main.v
 ../../hdl/jts16b_snd.v
+../../hdl/jts16b_mapper.v
 
 
 $JTFRAME/hdl/jtframe_sh.v

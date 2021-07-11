@@ -44,10 +44,11 @@ module jts16b_mapper(
     // M68000 interface
     input      [23:1] addr,
     input      [15:0] cpu_dout,
-    input      [ 1:0] dswn,
-    input      [ 2:0] fc,
+    input      [ 1:0] cpu_dswn,
+    output     [ 2:0] cpu_ipln,
     output            cpu_haltn,
     output            cpu_rstn,
+    output            cpu_vpan,
 
     // Bus sharing
     output            cpu_berrn,
@@ -84,6 +85,12 @@ wire      none = active==0;
 wire      bus_rq = 0;
 wire      mcu_cen;
 
+// unused for now
+assign cpu_haltn = 1;
+assign cpu_rstn  = 1;
+assign addr_out  = 0;
+assign bus_din   = 0;
+
 assign cpu_berrn = 1;
 assign sndmap_dout = mmr[3];
 integer aux;
@@ -111,7 +118,7 @@ end
 // select between CPU or MCU access to registers
 wire [4:0] asel = none ? addr[5:1] : mcu_addr[4:0];
 wire [7:0] din  = none ? cpu_dout[7:0] : mcu_dout;
-wire       wren = none ? ~dswn[0] : mcu_wr;
+wire       wren = none ? ~cpu_dswn[0] : mcu_wr;
 
 integer aux2;
 
@@ -135,6 +142,9 @@ end
 reg        irqn; // VBLANK
 wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
 reg        last_vint;
+
+assign cpu_vpan = inta_n;
+assign cpu_ipln = { inta_n, 2'b11 };
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin

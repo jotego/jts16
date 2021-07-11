@@ -23,13 +23,14 @@ module jts16_cen(
     output             pxl_cen,   // pixel clock enable
     output             cpu_cen,     // 10
     output             cpu_cenb,
+    output             snd_cen,     // 5
     output             fm_cen,      // 4
     output             fm2_cen,     // 2
     output             pcm_cen,
     output             pcm_cenb
 );
 
-wire nc, ncb, nc2, ncb2;
+wire nc, ncb, nc2, ncb2, nc3;
 
 jtframe_frac_cen #(2) u_pxlcen(
     .clk    ( clk       ),
@@ -56,7 +57,7 @@ assign cpu_cen = fastx;
 assign cpu_cenb = ~fastx;
 `endif
 
-jtframe_frac_cen u_sndcen(
+jtframe_frac_cen u_fmcen(
     .clk    ( clk       ),
     .n      ( 10'd63    ),
     .m      ( 10'd793   ),
@@ -64,12 +65,31 @@ jtframe_frac_cen u_sndcen(
     .cenb   (           )
 );
 
-jtframe_frac_cen u_pcmcen(
+jtframe_frac_cen #(.WC(14)) u_sndcen(
     .clk    ( clk       ),
-    .n      ( 10'd120   ),
-    .m      ( 10'd1007  ),
-    .cen    ( { nc2, pcm_cen  } ),
-    .cenb   ( { ncb2, pcm_cenb} )
+    .n      ( 14'd1373  ),
+    .m      ( 14'd13826 ),
+    .cen    ( { nc3, snd_cen } ),
+    .cenb   (           )
 );
+
+`ifndef S16B
+    jtframe_frac_cen u_pcmcen(
+        .clk    ( clk       ),
+        .n      ( 10'd120   ),
+        .m      ( 10'd1007  ),
+        .cen    ( { nc2, pcm_cen  } ),
+        .cenb   ( { ncb2, pcm_cenb} )
+    );
+`else
+    // 640 kHz
+    jtframe_frac_cen  #(.WC(16)) u_pcmcen(
+        .clk    ( clk       ),
+        .n      ( 16'd654   ),
+        .m      ( 16'd51451 ),
+        .cen    ( { nc2, pcm_cen  } ),
+        .cenb   ( { ncb2, pcm_cenb} )
+    );
+`endif
 
 endmodule

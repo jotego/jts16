@@ -47,11 +47,7 @@ module jts16b_main(
     output             LDSWn,
     output             RnW,
     output      [12:1] cpu_addr,
-    // Sound control
-    output      [ 7:0] snd_latch,
-    output             snd_irqn,
-    output             sound_en,
-    input              snd_ack,
+
     // cabinet I/O
     input       [ 7:0] joystick1,
     input       [ 7:0] joystick2,
@@ -138,6 +134,8 @@ assign rom_addr = A[18:1]; //  18:0 = 512kB
 wire [ 7:0] active, mcu_din, mcu_dout;
 wire [15:0] mcu_addr;
 wire [ 1:0] mcu_intn;
+wire [ 2:0] cpu_ipln;
+wire        DTACKn, cpu_vpan;
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -145,12 +143,14 @@ jts16b_mapper u_mapper(
     .cpu_cen    ( cpu_cen        ),
     .vint       ( vint           ),
 
-
     .addr       ( A              ),
     .cpu_dout   ( cpu_dout       ),
-    .dswn       ( {UDSWn, LDSWn} ),
+    .cpu_dswn   ( {UDSWn, LDSWn} ),
 
     // Bus sharing
+    .bus_dout   ( 16'hffff       ),
+
+    // M68000 control
     .cpu_berrn  ( BERRn          ),
     .cpu_brn    ( BRn            ),
     .cpu_bgn    ( BGn            ),
@@ -158,6 +158,8 @@ jts16b_mapper u_mapper(
     .cpu_dtackn ( DTACKn         ),
     .cpu_asn    ( ASn            ),
     .cpu_fc     ( FC             ),
+    .cpu_ipln   ( cpu_ipln       ),
+    .cpu_vpan   ( cpu_vpan       ),
 
     // Sound CPU
     .sndmap_rd  ( sndmap_rd      ),
@@ -266,7 +268,6 @@ function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
 endfunction
 
-assign sound_en = 1;
 assign video_en = 1;
 
 always @(*) begin
@@ -321,7 +322,6 @@ always @(posedge clk) begin
     end
 end
 
-wire DTACKn;
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs;
 wire bus_busy  = |{ rom_cs & ~ok_dly, (ram_cs | vram_cs) & ~ram_ok };
 wire bus_legit = 0;
@@ -379,7 +379,7 @@ jtframe_m68k u_cpu(
     .LDSn       ( LDSn        ),
     .UDSn       ( UDSn        ),
     .ASn        ( ASn         ),
-    .VPAn       ( inta_n      ),
+    .VPAn       ( cpu_vpan    ),
     .FC         ( FC          ),
 
     .BERRn      ( BERRn       ),
@@ -390,7 +390,7 @@ jtframe_m68k u_cpu(
     .BGn        ( BGn         ),
 
     .DTACKn     ( DTACKn      ),
-    .IPLn       ( { irqn, 2'b11 } ) // VBLANK
+    .IPLn       ( cpu_ipln    ) // VBLANK
 );
 
 // Debug
@@ -405,8 +405,8 @@ jts16_shadow u_shadow(
     .addr       ( A[14:1]   ),
     .char_cs    ( char_cs   ),    //  4k
     .vram_cs    ( vram_cs   ),    // 32k
-    .pal_cs     ( pal_cs    ),     //  4k
-    .objram_cs  ( objram_cs ),  //  2k
+    .pal_cs     ( pal_cs    ),    //  4k
+    .objram_cs  ( objram_cs ),    //  2k
     .din        ( cpu_dout  ),
     .dswn       ( {UDSWn, LDSWn} ),  // write mask -active low
 

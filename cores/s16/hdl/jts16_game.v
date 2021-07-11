@@ -107,7 +107,7 @@ module jts16_game(
 
 // clock enable signals
 wire    cpu_cen, cpu_cenb,
-        cen_fm,  cen_fm2,
+        cen_fm,  cen_fm2, cen_snd,
         cen_pcm, cen_pcmb;
 
 // video signals
@@ -160,6 +160,7 @@ wire        n7751_prom;
 // Protection
 wire        key_we, fd1089_we;
 wire        dec_en, dec_type;
+wire        mcu_we = 0; // not implemented yet
 
 wire [ 7:0] snd_latch;
 wire        snd_irqn, snd_ack;
@@ -182,6 +183,7 @@ jts16_cen u_cen(
     .cpu_cenb   (           ),
     .fm2_cen    ( cen_fm2   ),
     .fm_cen     ( cen_fm    ),
+    .snd_cen    ( cen_snd   ),
     .pcm_cen    ( cen_pcm   ),
     .pcm_cenb   ( cen_pcmb  )
 );
@@ -226,8 +228,8 @@ jts16_cen u_cen(
     .joystick4   ( joystick4  ),
     .joyana1     ( joyana1    ),
     .joyana2     ( joyana2    ),
-    .start_button(start_button),
-    .coin_input  ( coin_input ),
+    .start_button(start_button[1:0]),
+    .coin_input  (  coin_input[1:0]),
     .service     ( service    ),
     // ROM access
     .rom_cs      ( main_cs    ),
@@ -246,6 +248,7 @@ jts16_cen u_cen(
     .snd_ack     ( snd_ack    ),
     .sound_en    ( sound_en   ),
 `else
+    .mcu_we      ( mcu_we     ),
     .sndmap_rd   ( sndmap_rd  ),
     .sndmap_wr   ( sndmap_wr  ),
     .sndmap_din  ( sndmap_din ),
@@ -291,6 +294,7 @@ jts16_cen u_cen(
 
 `ifdef S16B
     // System 16B
+    .cen_snd    ( cen_snd   ),  // 5MHz
     .mapper_rd  ( sndmap_rd ),
     .mapper_wr  ( sndmap_wr ),
     .mapper_din ( sndmap_din),
@@ -410,7 +414,7 @@ jts16_video u_video(
     .st_dout    ( st_dout   )
 );
 
-jts16_sdram u_sdram(
+jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .rst        ( rst       ),
     .clk        ( clk       ),
 

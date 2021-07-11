@@ -203,7 +203,7 @@ jtframe_dwnld #(
 jtframe_ram_4slots #(
     // VRAM/RAM
     .SLOT0_DW(16),
-    .SLOT0_AW(15),  // 32 kB + 16kB
+    .SLOT0_AW(VRAMW-1),  // 32 kB + 16kB, it's VRAMW-1 because bit0 is out
 
     // Game ROM
     .SLOT1_DW(16),
