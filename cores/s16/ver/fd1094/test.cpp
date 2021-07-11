@@ -35,6 +35,7 @@ int main() {
         DUT dut;
         dut.dec_en = 1;
         dut.op_n = 0;
+        dut.rom_ok = 1;
         dut.rst=1;
         clock_dut( dut, 4 );
         dut.rst=0;
@@ -46,7 +47,7 @@ int main() {
             clock_dut( dut, 2 );
         }
         dut.fd1094_we = 0;
-        for( int k=0; k<400000; k++ ) {
+        for( int k=0; k<4000000; k++ ) {
             //printf("------------- %d -----------\n",k);
             int addr  = rand()&0xff'ffff;
             int enc   = rand()&0xffff;
