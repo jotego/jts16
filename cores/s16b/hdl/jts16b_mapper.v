@@ -25,7 +25,17 @@
 //  Region 6 - Color RAM
 //  Region 7 - I/O area
 
-module jts16b_mem_map(
+// Quick count from die photo by Furrtek
+// 11 x 4-bit counters -> what for?
+// 36 x 4-bit latches
+
+// base address = 8x2 x 4-bit = 16 x 4-bit
+// control      =                8 x 4-bit
+
+// write address = 3x8 = 6 x 4 -> 5 x 4 ?
+// read  address = 3x8 = 6 x 4 -> 5 x 4 ?
+
+module jts16b_mapper(
     input             rst,
     input             clk,
     input             cpu_cen,
@@ -46,18 +56,18 @@ module jts16b_mem_map(
     output            cpu_bgackn,
     input             cpu_dtackn,
     input             cpu_asn,
+    input      [ 2:0] cpu_fc,
 
     // Z80 interface
     input             sndmap_rd,
     input             sndmap_wr,
     input      [ 7:0] sndmap_din,
     output     [ 7:0] sndmap_dout,
-    output            sndmap_obf, // pbf signal == buffer full ?
+    output reg        sndmap_obf, // pbf signal == buffer full ?
 
     // MCU side
     input      [ 7:0] mcu_dout,
     output     [ 7:0] mcu_din,
-    output            mcu_intn,
     input      [15:0] mcu_addr,
     input             mcu_wr,
     output reg [ 1:0] mcu_intn,
@@ -71,20 +81,20 @@ module jts16b_mem_map(
 
 reg [7:0] mmr[0:31];
 wire      none = active==0;
-reg       bus_rq;
+wire      bus_rq = 0;
 wire      mcu_cen;
 
 assign cpu_berrn = 1;
-
+assign sndmap_dout = mmr[3];
 integer aux;
 
 always @(*) begin
     for( aux=0; aux<8; aux=aux+1 ) begin
-        case( size[aux] )
-            0: active[aux] = addr[23:16] == mmr[ {1'b1, aux[2:0], 1'b0 } ];      //   64 kB
-            1: active[aux] = addr[23:17] == mmr[ {1'b1, aux[2:0], 1'b0 } ][7:1]; //  128 kB
-            2: active[aux] = addr[23:19] == mmr[ {1'b1, aux[2:0], 1'b0 } ][7:3]; //  512 kB
-            3: active[aux] = addr[23:21] == mmr[ {1'b1, aux[2:0], 1'b0 } ][7:5]; // 2048 kB
+        case( mmr[ {1'b1, aux[2:0], 1'b0 } ] )
+            0: active[aux] = addr[23:16] == mmr[ {1'b1, aux[2:0], 1'b1 } ];      //   64 kB
+            1: active[aux] = addr[23:17] == mmr[ {1'b1, aux[2:0], 1'b1 } ][7:1]; //  128 kB
+            2: active[aux] = addr[23:19] == mmr[ {1'b1, aux[2:0], 1'b1 } ][7:3]; //  512 kB
+            3: active[aux] = addr[23:21] == mmr[ {1'b1, aux[2:0], 1'b1 } ][7:5]; // 2048 kB
         endcase
     end
     // no more than one signal can be set
@@ -97,26 +107,32 @@ always @(*) begin
     if( active[6] ) active[7]   = 0;
 end
 
+// select between CPU or MCU access to registers
+wire [4:0] asel = none ? addr[5:1] : mcu_addr[4:0];
+wire [7:0] din  = none ? cpu_dout[7:0] : mcu_dout;
+wire       wren = none ? ~dswn[0] : mcu_wr;
+
 integer aux2;
 
 always @(posedge clk, posedge rst ) begin
     if( rst ) begin
         for( aux2=0; aux2<32; aux2=aux2+1 )
             mmr[aux2] <= 0;
+        sndmap_obf <= 0;
     end else begin
-        if( none ) begin
-            if( !dswn[0] )
-                mmr[ addr[5:1] ] <= cpu_dout[7:0];
+        if( wren ) begin
+            mmr[ asel ] <= din;
+            if( asel == 3 )
+                sndmap_obf <= 1;
         end
-        if( mcu_wr ) begin
-            mmr[ mcu_addr[4:0] ] <= mcu_dout;
-        end
+        if( sndmap_rd )
+            sndmap_obf <= 0;
     end
 end
 
 // interrupt generation
 reg        irqn; // VBLANK
-wire       inta_n = ~&{ FC[2], FC[1], FC[0], ~ASn }; // interrupt ack.
+wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
 reg        last_vint;
 
 always @(posedge clk, posedge rst) begin

@@ -103,7 +103,7 @@ module jts16_game(
 
     wire [7:0] sndmap_din, sndmap_dout;
     wire       sndmap_rd, sndmap_wr, sndmap_obf;
-``endif
+`endif
 
 // clock enable signals
 wire    cpu_cen, cpu_cenb,

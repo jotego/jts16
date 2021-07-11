@@ -139,7 +139,7 @@ wire [ 7:0] active, mcu_din, mcu_dout;
 wire [15:0] mcu_addr;
 wire [ 1:0] mcu_intn;
 
-jts16b_mem_map u_memmap(
+jts16b_mapper u_mapper(
     .rst        ( rst            ),
     .clk        ( clk            ),
     .cpu_cen    ( cpu_cen        ),
@@ -157,6 +157,7 @@ jts16b_mem_map u_memmap(
     .cpu_bgackn ( BGACKn         ),
     .cpu_dtackn ( DTACKn         ),
     .cpu_asn    ( ASn            ),
+    .cpu_fc     ( FC             ),
 
     // Sound CPU
     .sndmap_rd  ( sndmap_rd      ),
@@ -171,41 +172,45 @@ jts16b_mem_map u_memmap(
     .mcu_intn   ( mcu_intn       ),
     .mcu_addr   ( mcu_addr       ),
     .mcu_wr     ( mcu_wr         ),
-    .mcu_intn   ( mcu_intn       ),
 
     .active     ( active         )
 );
 
-jtframe_8751mcu u_mcu(
-    .rst        ( rst           ),
-    .clk        ( clk           ),
-    .cen        ( cen_mcu       ),
+`ifndef NOMCU
+    jtframe_8751mcu u_mcu(
+        .rst        ( rst           ),
+        .clk        ( clk           ),
+        .cen        ( cen_mcu       ),
 
-    .int0n      ( mcu_intn[0]   ),
-    .int1n      ( mcu_intn[1]   ),
+        .int0n      ( mcu_intn[0]   ),
+        .int1n      ( mcu_intn[1]   ),
 
-    .p0_i       ( mcu_din       ),
-    .p1_i       ( 8'hff         ),
-    .p2_i       ( 8'hff         ),
-    input  [ 7:0] p3_i,
+        .p0_i       ( mcu_din       ),
+        .p1_i       ( 8'hff         ),
+        .p2_i       ( 8'hff         ),
+        .p3_i       (               ),
 
-    .p0_o       ( mcu_dout      ),
-    .p1_o       (               ),
-    .p2_o       (               ),
-    .p3_o       (               ),
+        .p0_o       ( mcu_dout      ),
+        .p1_o       (               ),
+        .p2_o       (               ),
+        .p3_o       (               ),
 
-    // external memory
-    .x_din      ( mcu_din       ),
-    .x_dout     ( mcu_dout      ),
-    .x_addr     ( mcu_addr      ),
-    .x_wr       ( mcu_wr        ),
+        // external memory
+        .x_din      ( mcu_din       ),
+        .x_dout     ( mcu_dout      ),
+        .x_addr     ( mcu_addr      ),
+        .x_wr       ( mcu_wr        ),
 
-    // ROM programming
-    .clk_rom    ( clk           ),
-    .prog_addr  ( prog_addr[11:0] ),
-    .prom_din   ( prog_data     ),
-    .prom_we    ( mcu_we        )
-);
+        // ROM programming
+        .clk_rom    ( clk           ),
+        .prog_addr  ( prog_addr[11:0] ),
+        .prom_din   ( prog_data     ),
+        .prom_we    ( mcu_we        )
+    );
+`else
+    assign mcu_wr   = 0;
+    assign mcu_dout = 0;
+`endif
 
 // System 16B memory map
 always @(posedge clk, posedge rst) begin

@@ -1,8 +1,9 @@
 include ../../s16/hdl/jts16.def
 
 [all]
-S16B=1
+S16B
 FD1094
+NOMCU
 
 # instance names
 JTS16_MAIN=jts16b_main
