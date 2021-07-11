@@ -74,7 +74,7 @@ module jts16b_mapper(
     output reg [ 1:0] mcu_intn,
 
     // Bus interface
-    output reg [23:1] addr_out,
+    output     [23:1] addr_out,
     input      [15:0] bus_dout,
     output     [15:0] bus_din,
     output reg [ 7:0] active
