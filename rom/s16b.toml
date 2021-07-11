@@ -36,8 +36,9 @@ fill=0
 dev = [
     { byte=0x10, dev="fd1089a", value=1 },
     { byte=0x10, dev="fd1089b", value=2 },
-    { byte=0x11, dev="mc8123",  value=1 },
-    { byte=0x12, dev="i8751",   value=1 }
+    { byte=0x11, dev="fd1094",  value=1 },
+    { byte=0x12, dev="mc8123",  value=1 },
+    { byte=0x13, dev="i8751",   value=1 }
 ]
 
 # Sample header data
