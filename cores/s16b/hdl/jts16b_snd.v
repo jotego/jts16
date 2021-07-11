@@ -109,6 +109,7 @@ end
 always @(*) begin
     bank_cs = !mreq_n && (A[15:12]>=8 && A[15:12]<4'he);
     // Port Map
+    { fm_cs, misc_cs, pcm_cs, mapper_cs } = 0;
     if( !iorq_n ) begin
         case( A[7:6] )
             0: fm_cs     = 1;

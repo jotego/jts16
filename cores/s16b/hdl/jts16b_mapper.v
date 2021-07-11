@@ -89,6 +89,7 @@ assign sndmap_dout = mmr[3];
 integer aux;
 
 always @(*) begin
+    active = 0;
     for( aux=0; aux<8; aux=aux+1 ) begin
         case( mmr[ {1'b1, aux[2:0], 1'b0 } ] )
             0: active[aux] = addr[23:16] == mmr[ {1'b1, aux[2:0], 1'b1 } ];      //   64 kB
