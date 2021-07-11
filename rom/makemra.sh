@@ -50,5 +50,8 @@ s16a_mra aceattac  "Ace Attacker" "None" "ff,ff" "Sports" "Sports/Volleyball" "S
 s16a_mra passsht   "Passing Shot" "Flat,Slice,Lob,Top Spin" "ff,ff" "Sports" "Sports/Tennis" "Sega S16A"
 s16a_mra timescan  "Time Scanner" "L. Flipper/Ball Start,R. Flipper/Lane Shift,-" "ff,ff" "Pinball" "Arcade/Pinball" "Sega S16A"
 
+# System 16B
+mame2mra -def $CORES/s16b/hdl/jts16b.def -toml s16b.toml -outdir mra $*
+
 # echo "Enter MiSTer's root password"
 # scp -r mra/* root@MiSTer.home:/media/fat/_S16

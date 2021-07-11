@@ -1,0 +1,70 @@
+<!--          FPGA compatible core for bootleg (ISG) arcade hardware by Jotego
+
+              This core is available for hardware compatible with MiST and MiSTer
+              Other FPGA systems may be supported by the time you read this.
+              This work is not mantained by the MiSTer project. Please contact the
+              core author for issues and updates.
+
+              (c) Jose Tejada, 2021. Please support the author
+              Patreon: https://patreon.com/topapate
+              Paypal:  https://paypal.me/topapate
+
+              The author does not endorse or participate in illegal distribution
+              of copyrighted material. This work can be used with legally
+              obtained ROM dumps or with compatible homebrew software.
+
+              This file license is GNU GPLv2.
+              You can read the whole license file in
+              https://opensource.org/licenses/gpl-2.0.php
+
+-->
+
+<misterromdescription>
+    <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
+    <name>ISG Selection Master Type 2006 BIOS</name>
+    <setname>isgsm</setname>
+    <rbf>jts16b</rbf>
+    <mameversion>0232</mameversion>
+    <year>2006</year>
+    <manufacturer>bootleg (ISG)</manufacturer>
+    <players>2</players>
+    <joystick>8</joystick>
+    <rotation>horizontal</rotation>
+    <region>World</region>
+    <mraauthor>jotego,atrac17</mraauthor>
+    <rom index="0" zip="isgsm.zip" md5="None">
+        <part>
+            00 00 00 00 00 00 00 00
+            00 00 00 00 00 00 00 00
+            00 00 00 00 00 00 00 00
+            00 00 00 00 00 00 00 00
+        </part>
+        <!-- maincpu - starts at 0x0 -->
+        <part repeat="0x80000"> FF</part>
+        <!-- soundcpu - starts at 0x80000 -->
+        <part repeat="0xC0000"> FF</part>
+        <!-- gfx1 - starts at 0x140000 -->
+        <part repeat="0x100000"> FF</part>
+        <!-- sprites - starts at 0x240000 -->
+        <part repeat="0x200000"> FF</part>
+        <!-- mcu - starts at 0x440000 -->
+        <part repeat="0x1000"> FF</part>
+        <part repeat="0x1000"> FF</part>
+        <!-- maincpu:key - starts at 0x442000 -->
+        <part repeat="0x2000"> FF</part>
+        <part repeat="0x4000"> FF</part>
+        <!-- soundcpu:key - starts at 0x448000 -->
+        <part repeat="0x2000"> FF</part>
+        <!-- bios - starts at 0x44A000 -->
+        <part name="ism2006v00.u1" crc="2292585c"/>
+        <!-- Total 0x46A000 bytes - 4520 kBytes -->
+    </rom>
+    <rom index="16" zip="jtbeta.zip|beta.zip" md5="None">
+        <part name="beta.bin"/>
+    </rom>
+    <rom index="1">
+        <part>00</part>
+    </rom>
+    <switches base="16" default="ff"/>
+    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+</misterromdescription>
