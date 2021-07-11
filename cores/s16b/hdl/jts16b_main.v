@@ -66,7 +66,6 @@ module jts16b_main(
 
     // Decoder configuration
     input              dec_en,
-    input              dec_type,
     input       [12:0] prog_addr,
     input              key_we,
     input       [ 7:0] prog_data,

@@ -238,10 +238,10 @@ jts16_cen u_cen(
     .rom_ok      ( main_ok    ),
     // Decoder configuration
     .dec_en      ( dec_en     ),
-    .dec_type    ( dec_type   ),
     .key_we      ( key_we     ),
 `ifndef S16B
     .fd1089_we   ( fd1089_we  ),
+    .dec_type    ( dec_type   ),
     // Sound communication
     .snd_latch   ( snd_latch  ),
     .snd_irqn    ( snd_irqn   ),

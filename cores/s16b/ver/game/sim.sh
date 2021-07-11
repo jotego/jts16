@@ -72,14 +72,11 @@ rm -f sdram_bank?.*
 jtsim_sdram $HEXDUMP -header 32 \
     -banks $BA1_START $BA2_START $BA3_START \
     -stop $MCU_START \
-    -dumpbin 317-5021.key $MAINKEY_START 0x2000 \
-    -dumpbin fd1089.bin   $FD1089_START  0x0100 \
+    -dumpbin fd1094.bin $MAINKEY_START 0x2000 \
     $SDRAM_SNAP || exit $?
 
-jtsim_sdram -header 32 -dumpbin fd1094.bin 0x182000 8192
-
 jtsim -mist -sysname $SYSNAME $SIMULATOR \
-	-videow 320 -videoh 224 \
+	-videow 320 -videoh 224 -d JTFRAME_DWNLD_PROM_ONLY \
     -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER || exit $?
 
 if [[ ! -z "$SCENE" && -e frame_1.jpg ]]; then

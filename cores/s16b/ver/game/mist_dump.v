@@ -55,7 +55,7 @@ module mist_dump(
                 $shm_probe(UUT.u_game.u_sound.u_pcm,"AS");
             `endif
             `ifndef NOMAIN
-            //$shm_probe(UUT.u_game,"AS");
+            $shm_probe(UUT.u_game,"AS");
             $shm_probe(UUT.u_game.u_main,"A");
             $shm_probe(UUT.u_game.u_main.u_cpu,"A");
             `endif

@@ -85,6 +85,26 @@ wire      none = active==0;
 wire      bus_rq = 0;
 wire      mcu_cen;
 
+`ifdef SIMULATION
+wire [7:0] base0 = mmr[ {1'b1, 3'd0, 1'b1 }];
+wire [7:0] base1 = mmr[ {1'b1, 3'd1, 1'b1 }];
+wire [7:0] base2 = mmr[ {1'b1, 3'd2, 1'b1 }];
+wire [7:0] base3 = mmr[ {1'b1, 3'd3, 1'b1 }];
+wire [7:0] base4 = mmr[ {1'b1, 3'd4, 1'b1 }];
+wire [7:0] base5 = mmr[ {1'b1, 3'd5, 1'b1 }];
+wire [7:0] base6 = mmr[ {1'b1, 3'd6, 1'b1 }];
+wire [7:0] base7 = mmr[ {1'b1, 3'd7, 1'b1 }];
+
+wire [1:0] size0 = mmr[ {1'b1, 3'd0, 1'b0 }];
+wire [1:0] size1 = mmr[ {1'b1, 3'd1, 1'b0 }];
+wire [1:0] size2 = mmr[ {1'b1, 3'd2, 1'b0 }];
+wire [1:0] size3 = mmr[ {1'b1, 3'd3, 1'b0 }];
+wire [1:0] size4 = mmr[ {1'b1, 3'd4, 1'b0 }];
+wire [1:0] size5 = mmr[ {1'b1, 3'd5, 1'b0 }];
+wire [1:0] size6 = mmr[ {1'b1, 3'd6, 1'b0 }];
+wire [1:0] size7 = mmr[ {1'b1, 3'd7, 1'b0 }];
+`endif
+
 // unused for now
 assign cpu_haltn = 1;
 assign cpu_rstn  = 1;
@@ -98,7 +118,7 @@ integer aux;
 always @(*) begin
     active = 0;
     for( aux=0; aux<8; aux=aux+1 ) begin
-        case( mmr[ {1'b1, aux[2:0], 1'b0 } ] )
+        case( mmr[ {1'b1, aux[2:0], 1'b0 } ][1:0] )
             0: active[aux] = addr[23:16] == mmr[ {1'b1, aux[2:0], 1'b1 } ];      //   64 kB
             1: active[aux] = addr[23:17] == mmr[ {1'b1, aux[2:0], 1'b1 } ][7:1]; //  128 kB
             2: active[aux] = addr[23:19] == mmr[ {1'b1, aux[2:0], 1'b1 } ][7:3]; //  512 kB
