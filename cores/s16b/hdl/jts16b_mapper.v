@@ -164,7 +164,7 @@ wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
 reg        last_vint;
 
 assign cpu_vpan = inta_n;
-assign cpu_ipln = { inta_n, 2'b11 };
+assign cpu_ipln = { irqn, 2'b11 };
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
