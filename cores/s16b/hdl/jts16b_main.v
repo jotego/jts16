@@ -100,8 +100,8 @@ localparam [7:0] GAME_SDI=1, GAME_PASSSHT=2;
 //  Region 6 - Color RAM
 //  Region 7 - I/O area
 localparam [2:0] REG_RAM  = 3,
-                 REG_VRAM = 4,
-                 REG_ORAM = 5,
+                 REG_ORAM = 4,
+                 REG_VRAM = 5,
                  REG_PAL  = 6,
                  REG_IO   = 7;
 
