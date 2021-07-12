@@ -138,7 +138,7 @@ end
 // select between CPU or MCU access to registers
 wire [4:0] asel = none ? addr[5:1] : mcu_addr[4:0];
 wire [7:0] din  = none ? cpu_dout[7:0] : mcu_dout;
-wire       wren = none ? ~cpu_dswn[0] : mcu_wr;
+wire       wren = none ? (~cpu_asn & ~cpu_dswn[0]) : mcu_wr;
 
 integer aux2;
 
