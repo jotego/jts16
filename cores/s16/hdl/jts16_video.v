@@ -98,6 +98,7 @@ localparam MODEL = `ifdef S16B 1; `else 0; `endif
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;
+wire        rowscr1_en, rowscr2_en;
 
 // Scroll
 wire [ 8:0] rowscr1, rowscr2;
@@ -126,6 +127,11 @@ parameter [8:0] HB_END = 9'h0bf;
 
 assign vint = vdump==223;
 
+`ifndef S16B
+    assign rowscr1_en = rowscr_en;
+    assign rowscr2_en = rowscr_en;
+`endif
+
 jtframe_vtimer #(
     .HB_START  ( 9'h1ff ),
     .HB_END    ( HB_END ),
@@ -153,7 +159,7 @@ jtframe_vtimer #(
     .vrender1  ( vrender1 )
 );
 
-jts16_mmr u_mmr(
+jts16_mmr #(.MODEL(MODEL)) u_mmr(
     .rst       ( rst            ),
     .clk       ( clk            ),
 
@@ -171,6 +177,9 @@ jts16_mmr u_mmr(
     .scr1_vpos  ( scr1_vpos     ),
     .scr2_hpos  ( scr2_hpos     ),
     .scr2_vpos  ( scr2_vpos     ),
+
+    .rowscr1_en ( rowscr1_en    ),
+    .rowscr2_en ( rowscr2_en    ),
 
     .st_addr    ( st_addr       ),
     .st_dout    ( st_dout       )
@@ -218,7 +227,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
     .pages     ( scr1_pages     ),
     .hscr      ( scr1_hpos      ),
     .vscr      ( scr1_vpos      ),
-    .rowscr_en ( rowscr_en      ),
+    .rowscr_en ( rowscr1_en     ),
     .rowscr    ( rowscr1        ),
 
     // SDRAM interface
@@ -249,7 +258,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .pages     ( scr2_pages     ),
     .hscr      ( scr2_hpos      ),
     .vscr      ( scr2_vpos      ),
-    .rowscr_en ( rowscr_en      ),
+    .rowscr_en ( rowscr2_en     ),
     .rowscr    ( rowscr2        ),
 
     // SDRAM interface

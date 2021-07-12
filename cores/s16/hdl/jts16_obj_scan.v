@@ -133,13 +133,13 @@ always @(posedge clk, posedge rst) begin
             end
             5: begin
                 if (MODEL) begin
-                    pal  <= tbl_dout[13:8];
-                    bank <= {1'b0, tbl_dout[6:4] };
-                    prio <= tbl_dout[1:0];
-                end else begin
                     pal  <= tbl_dout[5:0];
                     bank <= tbl_dout[11:8];
                     prio <= tbl_dout[7:6];
+                end else begin
+                    pal  <= tbl_dout[13:8];
+                    bank <= {1'b0, tbl_dout[6:4] };
+                    prio <= tbl_dout[1:0];
                 end
             end
             6: begin
