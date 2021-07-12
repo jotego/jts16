@@ -28,6 +28,7 @@ module jts16_obj_draw(
     input      [ 3:0]  bank,
     input      [ 1:0]  prio,
     input      [ 5:0]  pal,
+    input              hflipb,
 
     // SDRAM interface
     input              obj_ok,
@@ -53,7 +54,7 @@ assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[15:12];
 assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[11: 8];
 assign obj_addr = { bank[1:0], bank[2], cur[14:0] };
 assign bf_data  = { prio, pal, cur_pxl };
-assign hflip    = cur[15];
+assign hflip    = MODEL ? hflipb : cur[15];
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin

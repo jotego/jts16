@@ -62,6 +62,7 @@ wire [15:0] dr_offset;  // MSB is also used as the flip bit
 wire [ 3:0] dr_bank;
 wire [ 1:0] dr_prio;
 wire [ 5:0] dr_pal;
+wire        dr_hflipb;
 
 // Line buffer
 wire [11:0] buf_data;
@@ -102,6 +103,7 @@ jts16_obj_scan #(.PXL_DLY(0),.MODEL(MODEL)) u_scan(
     .dr_bank   ( dr_bank        ),
     .dr_prio   ( dr_prio        ),
     .dr_pal    ( dr_pal         ),
+    .dr_hflipb ( dr_hflipb      ),
 
     // Video signal
     .flip      ( flip           ),
@@ -122,6 +124,7 @@ jts16_obj_draw #(.MODEL(MODEL)) u_draw(
     .bank      ( dr_bank        ),
     .prio      ( dr_prio        ),
     .pal       ( dr_pal         ),
+    .hflipb    ( dr_hflipb      ),
 
     // SDRAM interface
     .obj_ok    ( obj_ok         ),

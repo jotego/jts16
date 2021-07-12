@@ -34,6 +34,7 @@ module jts16_obj_scan(
     output reg [ 3:0]  dr_bank,
     output reg [ 1:0]  dr_prio,
     output reg [ 5:0]  dr_pal,
+    output reg         dr_hflipb,
 
     // Video signal
     input              flip,
@@ -57,6 +58,7 @@ reg        [15:0] offset; // MSB is also used as the flip bit
 reg        [ 3:0] bank;
 reg        [ 1:0] prio;
 reg        [ 5:0] pal;
+reg               hflipb; // H flip bit for S16B
 wire       [15:0] next_offset;
 wire       [ 8:0] vrf = flip ? 9'd223-vrender : vrender;
 
@@ -126,6 +128,7 @@ always @(posedge clk, posedge rst) begin
                     stop <= 1;
                 end else */begin
                     pitch <= MODEL ? { {8{tbl_dout[7]}}, tbl_dout[7:0]} : tbl_dout;
+                    hflipb<= tbl_dout[8];
                 end
             end
             4: begin
@@ -155,6 +158,7 @@ always @(posedge clk, posedge rst) begin
                     dr_prio   <= prio;
                     dr_bank   <= bank;
                     dr_start  <= 1;
+                    dr_hflipb <= hflipb;
                     // next
                     if( &cur_obj )
                         st <= 0; // Done
