@@ -31,7 +31,7 @@ module jts16_obj_scan(
     input              dr_busy,
     output reg [ 8:0]  dr_xpos,
     output reg [15:0]  dr_offset,  // MSB is also used as the flip bit
-    output reg [ 2:0]  dr_bank,
+    output reg [ 3:0]  dr_bank,
     output reg [ 1:0]  dr_prio,
     output reg [ 5:0]  dr_pal,
 
@@ -42,6 +42,7 @@ module jts16_obj_scan(
 );
 
 parameter [8:0] PXL_DLY=8;
+parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 
 reg  [6:0] cur_obj;  // current object
 reg  [2:0] idx;
@@ -53,7 +54,7 @@ reg        first, stop;
 reg        [ 8:0] xpos;
 reg signed [15:0] pitch;
 reg        [15:0] offset; // MSB is also used as the flip bit
-reg        [ 2:0] bank;
+reg        [ 3:0] bank;
 reg        [ 1:0] prio;
 reg        [ 5:0] pal;
 wire       [15:0] next_offset;
@@ -124,16 +125,22 @@ always @(posedge clk, posedge rst) begin
                     st   <= 1;
                     stop <= 1;
                 end else */begin
-                    pitch <= tbl_dout;
+                    pitch <= MODEL ? { {8{tbl_dout[7]}}, tbl_dout[7:0]} : tbl_dout;
                 end
             end
             4: begin
                 offset  <= tbl_dout; // flip/offset
             end
             5: begin
-                pal  <= tbl_dout[13:8];
-                bank <= tbl_dout[6:4];
-                prio <= tbl_dout[1:0];
+                if (MODEL) begin
+                    pal  <= tbl_dout[13:8];
+                    bank <= {1'b0, tbl_dout[6:4] };
+                    prio <= tbl_dout[1:0];
+                end else begin
+                    pal  <= tbl_dout[5:0];
+                    bank <= tbl_dout[11:8];
+                    prio <= tbl_dout[7:6];
+                end
             end
             6: begin
                 offset <= next_offset;

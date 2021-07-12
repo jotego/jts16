@@ -127,7 +127,7 @@ wire [12:0] char_addr;
 wire [31:0] char_data;
 
 wire        map1_ok, map2_ok;
-wire [13:0] map1_addr, map2_addr; // 3 pages + 11 addr = 14 (32 kB)
+wire [14:0] map1_addr, map2_addr; // 3(+1 S16B) pages + 11 addr = 14 (32 kB)
 wire [15:0] map1_data, map2_data;
 
 wire        scr1_ok, scr2_ok;

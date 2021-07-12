@@ -46,6 +46,7 @@ module jts16_obj(
 
 /* verilator lint_off WIDTH */
 parameter [8:0] PXL_DLY=8;
+parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 /* verilator lint_on WIDTH */
 
 // Object scan
@@ -58,7 +59,7 @@ wire        dr_start;
 wire        dr_busy;
 wire [ 8:0] dr_xpos;
 wire [15:0] dr_offset;  // MSB is also used as the flip bit
-wire [ 2:0] dr_bank;
+wire [ 3:0] dr_bank;
 wire [ 1:0] dr_prio;
 wire [ 5:0] dr_pal;
 
@@ -83,7 +84,7 @@ jts16_obj_ram u_ram(
     .tbl_din   ( tbl_din        )
 );
 
-jts16_obj_scan #(.PXL_DLY(0)) u_scan(
+jts16_obj_scan #(.PXL_DLY(0),.MODEL(MODEL)) u_scan(
     .rst       ( rst            ),
     .clk       ( clk            ),
 
@@ -108,7 +109,7 @@ jts16_obj_scan #(.PXL_DLY(0)) u_scan(
     .vrender   ( vrender        )
 );
 
-jts16_obj_draw u_draw(
+jts16_obj_draw #(.MODEL(MODEL)) u_draw(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .hstart    ( hstart         ),

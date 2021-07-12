@@ -25,7 +25,7 @@ module jts16_obj_draw(
     output reg         busy,
     input      [ 8:0]  xpos,
     input      [15:0]  offset,  // MSB is also used as the flip bit
-    input      [ 2:0]  bank,
+    input      [ 3:0]  bank,
     input      [ 1:0]  prio,
     input      [ 5:0]  pal,
 
@@ -40,6 +40,8 @@ module jts16_obj_draw(
     output reg         bf_we,
     output reg [ 8:0]  bf_addr
 );
+
+parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 
 reg  [15:0] pxl_data, cur;
 reg  [ 3:0] cnt;

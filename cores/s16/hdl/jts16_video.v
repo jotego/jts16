@@ -49,7 +49,7 @@ module jts16_video(
     input      [31:0]  char_data,
 
     input              map1_ok,
-    output     [13:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output     [14:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
     input      [15:0]  map1_data,
 
     input              scr1_ok,
@@ -57,7 +57,7 @@ module jts16_video(
     input      [31:0]  scr1_data,
 
     input              map2_ok,
-    output     [13:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output     [14:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
     input      [15:0]  map2_data,
 
     input              scr2_ok,
@@ -93,6 +93,8 @@ module jts16_video(
 );
 
 localparam [9:0] SCR_DLY=17; // 15
+
+localparam MODEL = `ifdef S16B 1; `else 0; `endif
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;
@@ -174,7 +176,7 @@ jts16_mmr u_mmr(
     .st_dout    ( st_dout       )
 );
 
-jts16_char u_char(
+jts16_char #(.MODEL(MODEL)) u_char(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
@@ -205,7 +207,7 @@ jts16_char u_char(
     .debug_bus ( debug_bus      )
 );
 
-jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
+jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
@@ -236,7 +238,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END)) u_scr1(
     .debug_bus ( debug_bus      )
 );
 
-jts16_scr #(.PXL_DLY(SCR_DLY[8:0])) u_scr2(
+jts16_scr #(.PXL_DLY(SCR_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
@@ -267,7 +269,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY[8:0])) u_scr2(
     .debug_bus ( debug_bus      )
 );
 
-jts16_obj #(.PXL_DLY(SCR_DLY)) u_obj(
+jts16_obj #(.PXL_DLY(SCR_DLY),.MODEL(MODEL)) u_obj(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl_cen   ( pxl_cen        ),

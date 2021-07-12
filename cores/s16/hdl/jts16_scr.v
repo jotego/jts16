@@ -33,7 +33,7 @@ module jts16_scr(
 
     // SDRAM interface
     input              map_ok,
-    output reg [13:0]  map_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output reg [14:0]  map_addr, // 3(+1 S16B) pages + 11 addr = 14 (32 kB)
     input      [15:0]  map_data,
 
     input              scr_ok,
@@ -52,6 +52,7 @@ module jts16_scr(
 parameter [9:0] PXL_DLY=0;
 parameter [8:0] HB_END=9'h70, HSCAN0 = HB_END-9'd8-PXL_DLY[8:0];
 /* verilator lint_on WIDTH */
+parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
@@ -63,7 +64,7 @@ reg  [8:0] hscan, vscan;
 // Map reader
 reg  [8:0] hpos;
 reg  [7:0] vpos;
-reg  [2:0] page;
+reg  [3:0] page;
 reg        hov, vov; // overflow bits
 
 reg        done, draw;
@@ -83,11 +84,12 @@ always @(*) begin
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( { vov, hov } )
-        2'b10: page = pages[14:12]; // upper left
-        2'b11: page = pages[10: 8]; // upper right
-        2'b00: page = pages[ 6: 4]; // lower left
-        2'b01: page = pages[ 2: 0]; // lower right
+        2'b10: page = pages[15:12]; // upper left
+        2'b11: page = pages[11: 8]; // upper right
+        2'b00: page = pages[ 7: 4]; // lower left
+        2'b01: page = pages[ 3: 0]; // lower right
     endcase
+    if( MODEL==0 ) page[3]=0; // Only 3-bit pages for System 16A
     hdly = flip ? 9'hb0 -hdump : hdump;
 end
 
@@ -96,7 +98,7 @@ reg       last_LHBL;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        map_addr <= 14'd0;
+        map_addr <= 0;
         draw     <= 0;
     end else if(!done) begin
         map_st <= map_st+1'd1;

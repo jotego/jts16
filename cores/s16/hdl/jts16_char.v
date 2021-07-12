@@ -47,6 +47,8 @@ module jts16_char(
     input      [ 7:0]  debug_bus
 );
 
+parameter       MODEL=0;  // 0 = S16A, 1 = S16B
+
 wire [15:0] scan;
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
@@ -140,9 +142,9 @@ always @(posedge clk, posedge rst) begin
     end else begin
         if( pxl_cen ) begin
             if( hdump[2:0]==7 ) begin
-                code     <= {1'b0,scan[7:0]};
+                code     <= MODEL ? scan[8:0] : {1'b0,scan[7:0]};
                 pxl_data <= char_data[23:0];
-                attr0    <= scan[11:8];
+                attr0    <= MODEL ? {scan[15],scan[11:9]} : scan[11:8];
                 attr     <= attr0;
             end else begin
                 pxl_data[23:16] <= shift( pxl_data[23:16], flip );

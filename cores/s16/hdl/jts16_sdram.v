@@ -67,7 +67,7 @@ module jts16_sdram #(
 
     // Scroll 1
     output           map1_ok,
-    input    [13:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
+    input    [14:0]  map1_addr, // 3(+1) pages + 11 addr = 14 (32 kB)
     output   [15:0]  map1_data,
 
     output           scr1_ok,
@@ -76,7 +76,7 @@ module jts16_sdram #(
 
     // Scroll 1
     output           map2_ok,
-    input    [13:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
+    input    [14:0]  map2_addr, // 3(+1) pages + 11 addr = 14 (32 kB)
     output   [15:0]  map2_data,
 
     output           scr2_ok,
@@ -211,11 +211,11 @@ jtframe_ram_4slots #(
 
     // VRAM access by SCR1
     .SLOT2_DW(16),
-    .SLOT2_AW(14),
+    .SLOT2_AW(15), // only 14 used by S16A
 
     // VRAM access by SCR2
     .SLOT3_DW(16),
-    .SLOT3_AW(14)
+    .SLOT3_AW(15)
 ) u_bank0(
     .rst        ( rst       ),
     .clk        ( clk       ),
