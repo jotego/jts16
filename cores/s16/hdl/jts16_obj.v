@@ -31,7 +31,7 @@ module jts16_obj(
     // SDRAM interface
     input              obj_ok,
     output             obj_cs,
-    output     [17:0]  obj_addr, // 3 bank + 15 offset = 18
+    output     [19:0]  obj_addr, // 3(+1) bank + 15 offset = 18
     input      [15:0]  obj_data,
 
     // Video signal
@@ -110,6 +110,41 @@ jts16_obj_scan #(.PXL_DLY(0),.MODEL(MODEL)) u_scan(
     .hstart    ( hstart         ),
     .vrender   ( vrender        )
 );
+/*
+reg [3:0] bank_aux;
+
+always @(*) begin
+    case( debug_bus[4:0] )
+        0: bank_aux = { dr_bank[3], dr_bank[2], dr_bank[1], dr_bank[0] };
+        1: bank_aux = { dr_bank[3], dr_bank[2], dr_bank[0], dr_bank[1] };
+        2: bank_aux = { dr_bank[3], dr_bank[1], dr_bank[0], dr_bank[2] };
+        3: bank_aux = { dr_bank[3], dr_bank[1], dr_bank[2], dr_bank[0] };
+        4: bank_aux = { dr_bank[3], dr_bank[0], dr_bank[1], dr_bank[2] };
+        5: bank_aux = { dr_bank[3], dr_bank[0], dr_bank[2], dr_bank[1] };
+
+        6: bank_aux = { dr_bank[2], dr_bank[3], dr_bank[1], dr_bank[0] };
+        7: bank_aux = { dr_bank[2], dr_bank[3], dr_bank[0], dr_bank[1] };
+        8: bank_aux = { dr_bank[2], dr_bank[1], dr_bank[0], dr_bank[3] };
+        9: bank_aux = { dr_bank[2], dr_bank[1], dr_bank[3], dr_bank[0] };
+        10: bank_aux = { dr_bank[2], dr_bank[0], dr_bank[1], dr_bank[3] };
+        11: bank_aux = { dr_bank[2], dr_bank[0], dr_bank[3], dr_bank[1] };
+
+        12: bank_aux = { dr_bank[1], dr_bank[2], dr_bank[3], dr_bank[0] };
+        13: bank_aux = { dr_bank[1], dr_bank[2], dr_bank[0], dr_bank[3] };
+        14: bank_aux = { dr_bank[1], dr_bank[3], dr_bank[0], dr_bank[2] };
+        15: bank_aux = { dr_bank[1], dr_bank[3], dr_bank[2], dr_bank[0] };
+        16: bank_aux = { dr_bank[1], dr_bank[0], dr_bank[3], dr_bank[2] };
+        17: bank_aux = { dr_bank[1], dr_bank[0], dr_bank[2], dr_bank[3] };
+
+        18: bank_aux = { dr_bank[0], dr_bank[2], dr_bank[1], dr_bank[3] };
+        19: bank_aux = { dr_bank[0], dr_bank[2], dr_bank[3], dr_bank[1] };
+        20: bank_aux = { dr_bank[0], dr_bank[1], dr_bank[3], dr_bank[2] };
+        21: bank_aux = { dr_bank[0], dr_bank[1], dr_bank[2], dr_bank[3] };
+        22: bank_aux = { dr_bank[0], dr_bank[3], dr_bank[1], dr_bank[2] };
+        23: bank_aux = { dr_bank[0], dr_bank[3], dr_bank[2], dr_bank[1] };
+    endcase
+end
+*/
 
 jts16_obj_draw #(.MODEL(MODEL)) u_draw(
     .rst       ( rst            ),
@@ -121,6 +156,7 @@ jts16_obj_draw #(.MODEL(MODEL)) u_draw(
     .busy      ( dr_busy        ),
     .xpos      ( dr_xpos        ),
     .offset    ( dr_offset      ),
+    //.bank      ( bank_aux       ),
     .bank      ( dr_bank        ),
     .prio      ( dr_prio        ),
     .pal       ( dr_pal         ),
@@ -143,7 +179,7 @@ localparam [8:0] HOBJ_START = 9'haa-PXL_DLY; //a6
 localparam [8:0] FLIP_START = 9'hc0-HOBJ_START;
 
 always @(posedge clk) begin
-    if( !LHBL ) hobj <= (flip ? (9'h1ff+FLIP_START) : HOBJ_START) + {debug_bus[7], debug_bus};
+    if( !LHBL ) hobj <= (flip ? (9'h1ff+FLIP_START) : HOBJ_START);// + {debug_bus[7], debug_bus};
     else if(pxl_cen) hobj<= flip ? hobj-1'd1 : hobj+1'd1;
 end
 

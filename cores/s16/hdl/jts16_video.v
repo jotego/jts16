@@ -66,7 +66,7 @@ module jts16_video(
 
     input              obj_ok,
     output             obj_cs,
-    output     [17:0]  obj_addr,
+    output     [19:0]  obj_addr,
     input      [15:0]  obj_data,
 
     // Video signal

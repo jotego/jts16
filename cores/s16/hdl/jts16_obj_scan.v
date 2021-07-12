@@ -118,18 +118,8 @@ always @(posedge clk, posedge rst) begin
             end
             2: xpos <= tbl_dout[8:0];
             3: begin
-                /*if( tbl_dout[15] )
-                    st <= 0; // Done
-                else if( tbl_dout[14] ) begin
-                    // Next object
-                    cur_obj <= cur_obj + 1;
-                    idx  <= 0;
-                    st   <= 1;
-                    stop <= 1;
-                end else */begin
-                    pitch <= MODEL ? { {8{tbl_dout[7]}}, tbl_dout[7:0]} : tbl_dout;
-                    hflipb<= tbl_dout[8];
-                end
+                pitch <= MODEL ? { {8{tbl_dout[7]}}, tbl_dout[7:0]} : tbl_dout;
+                hflipb<= tbl_dout[8];
             end
             4: begin
                 offset  <= tbl_dout; // flip/offset

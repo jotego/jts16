@@ -54,6 +54,7 @@ always @(*) begin
         5'b1000_?: dout = char_dout;
         5'b1001_?: dout = pal_dout;
         5'b1010_0: dout = objram_dout;
+        default:   dout = 16'hffff;
     endcase
 end
 

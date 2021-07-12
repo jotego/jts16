@@ -33,7 +33,7 @@ module jts16_obj_draw(
     // SDRAM interface
     input              obj_ok,
     output reg         obj_cs,
-    output     [17:0]  obj_addr, // 3 bank + 15 offset = 18
+    output     [19:0]  obj_addr, // 3 bank + 15 offset = 18
     input      [15:0]  obj_data,
 
     // Buffer
@@ -52,7 +52,8 @@ wire        hflip;
 
 assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[15:12];
 assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[11: 8];
-assign obj_addr = { bank[1:0], bank[2], cur[14:0] };
+assign obj_addr = MODEL ? { bank[2:1], bank[3], bank[0], cur[15:0] } :
+                          { 2'b0, bank[1:0], bank[2], cur[14:0] };
 assign bf_data  = { prio, pal, cur_pxl };
 assign hflip    = MODEL ? hflipb : cur[15];
 

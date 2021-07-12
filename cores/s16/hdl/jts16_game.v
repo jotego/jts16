@@ -135,7 +135,7 @@ wire [16:0] scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) 
 wire [31:0] scr1_data, scr2_data;
 
 wire        obj_ok, obj_cs;
-wire [17:0] obj_addr;
+wire [19:0] obj_addr;
 wire [15:0] obj_data;
 
 // CPU interface
