@@ -92,6 +92,7 @@ always @(*) begin
             4'b001?: rom_addr[17:16] = 1; // A9
             4'b0001: rom_addr[17:16] = 0; // A8
         endcase
+        rom_addr = rom_addr + 19'h10000;
     end
 end
 
