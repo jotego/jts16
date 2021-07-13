@@ -1,9 +1,8 @@
-name: S16A MiST
+
+name: s16b for mist
 
 on:
   push:
-    branches:
-      - build
 
 jobs:
 
@@ -12,21 +11,24 @@ jobs:
     env:
       FTPUSER: ${{ secrets.FTPUSER }}
       FTPPASS: ${{ secrets.FTPPASS }}
-  
+
     runs-on: ubuntu-latest
-    
+
     container:
       image: jotego/jtcore13
       credentials:
         username: jotego
         password: ${{ secrets.DOCKER_LOGIN }}
-    
+
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
       - name: check out
         uses: actions/checkout@v2
         with:
           submodules: true
           repository: ${{ github.repository }}
-      - name: compilation
-        run: /docked_build.sh s16
-
+      - name: compile for mist
+        run: /docked_build.sh s16b -mist  
