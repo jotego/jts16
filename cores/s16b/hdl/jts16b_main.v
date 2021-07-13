@@ -33,7 +33,7 @@ module jts16b_main(
     input       [15:0] pal_dout,
     input       [15:0] obj_dout,
     output reg         flip,
-    output             video_en,
+    output reg         video_en,
     output             colscr_en,
     output             rowscr_en,
     // RAM access
@@ -267,8 +267,6 @@ function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
 endfunction
 
-assign video_en = 1;
-
 always @(*) begin
     sort1 = sort_joy( joystick1 );
     sort2 = sort_joy( joystick2 );
@@ -278,13 +276,14 @@ always @(posedge clk, posedge rst) begin
     if( rst ) begin
         cab_dout  <= 8'hff;
         flip      <= 0;
+        video_en  <= 1;
     end else  begin
         last_iocs <= io_cs;
         cab_dout <= 8'hff;
         if(io_cs) case( A[13:12] )
             0: if( !LDSWn ) begin
-                flip    <= cpu_dout[6];
-                //video_en <= cpu_dout[5];
+                flip     <= cpu_dout[6];
+                video_en <= cpu_dout[5];
             end
             1:
                 case( A[2:1] )
