@@ -3,6 +3,8 @@ name: s16 for mist
 
 on:
   push:
+    branches:
+      - build
 
 jobs:
 
