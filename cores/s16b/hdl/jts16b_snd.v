@@ -138,10 +138,12 @@ end
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         rom_msb <= 0;
+        pcm_mdn <= 1;
+        pcm_rst <= 1;
     end else if(misc_cs) begin
         rom_msb <= cpu_dout[5:0];
         pcm_rst <= ~cpu_dout[6];
-        pcm_mdn <= cpu_dout[7];
+        pcm_mdn <= ~cpu_dout[7];
     end
 end
 

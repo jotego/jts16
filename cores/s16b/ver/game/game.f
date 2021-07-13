@@ -33,6 +33,7 @@ $JTFRAME/hdl/ram/jtframe_dual_ram.v
 $JTFRAME/hdl/ram/jtframe_dual_ram16.v
 $JTFRAME/hdl/ram/jtframe_obj_buffer.v
 $JTFRAME/hdl/sound/jtframe_mixer.v
+$JTFRAME/hdl/sound/jtframe_pole.v
 $JTFRAME/hdl/sdram/jtframe_dwnld.v
 -F $JTFRAME/hdl/sdram/jtframe_sdram64.f
 

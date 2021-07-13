@@ -55,7 +55,7 @@ module mist_dump(
                 $shm_probe(UUT.u_game.u_sound.u_pcm,"AS");
             `endif
             `ifndef NOMAIN
-            $shm_probe(UUT.u_game,"AS");
+            $shm_probe(UUT.u_game,"A");
             $shm_probe(UUT.u_game.u_main,"A");
             $shm_probe(UUT.u_game.u_main.u_mapper,"A");
             //$shm_probe(UUT.u_game.u_main.u_cpu,"A");
@@ -63,7 +63,8 @@ module mist_dump(
             //`ifdef FD1094
             //    $shm_probe(UUT.u_game.u_main.u_dec,"AS");
             //`endif
-            //$shm_probe(UUT.u_game.u_sound,"A");
+            $shm_probe(UUT.u_game.u_sound,"A");
+            $shm_probe(UUT.u_game.u_sound.u_pcm,"AS");
             //$shm_probe(UUT.u_game.u_main.u_dtack,"A");
             //$shm_probe(UUT.u_game.u_video,"A");
             `ifdef LOADROM

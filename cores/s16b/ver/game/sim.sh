@@ -75,6 +75,9 @@ jtsim_sdram $HEXDUMP -header 32 \
     -dumpbin fd1094.bin $MAINKEY_START 0x2000 \
     $SDRAM_SNAP || exit $?
 
+export YM2151=1
+export Z80=1
+
 jtsim -mist -sysname $SYSNAME $SIMULATOR \
 	-videow 320 -videoh 224 -d JTFRAME_DWNLD_PROM_ONLY \
     -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER || exit $?
