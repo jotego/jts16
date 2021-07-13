@@ -10,6 +10,19 @@ Some of the features needed for the rest of the games are already implemented bu
 
 Encrypted games don't work on the J68 CPU.
 
+## Missing Features
+
+This is the remaining to-do list
+
+**System 16A**
+-Column scroll
+-Video/audio disable bits
+
+**System 16B**
+-Row and column scroll
+-Alternate scroll layers (registers and tile/char info)
+-Sprite scaling
+
 ## System 16A
 
 Game           |  System            | Status

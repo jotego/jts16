@@ -47,7 +47,7 @@ module jts16_char(
     input      [ 7:0]  debug_bus
 );
 
-parameter       MODEL=0;  // 0 = S16A, 1 = S16B
+parameter MODEL=0;  // 0 = S16A, 1 = S16B
 
 wire [15:0] scan;
 reg  [10:0] scan_addr;
