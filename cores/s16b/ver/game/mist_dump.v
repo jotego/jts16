@@ -64,6 +64,7 @@ module mist_dump(
             //    $shm_probe(UUT.u_game.u_main.u_dec,"AS");
             //`endif
             $shm_probe(UUT.u_game.u_sound,"A");
+            //$shm_probe(UUT.u_game.u_sound.u_cpu,"AS");
             $shm_probe(UUT.u_game.u_sound.u_pcm,"AS");
             //$shm_probe(UUT.u_game.u_main.u_dtack,"A");
             //$shm_probe(UUT.u_game.u_video,"A");
