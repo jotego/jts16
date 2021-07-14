@@ -131,7 +131,7 @@ always @(posedge clk) begin
     cpu_din  <= rom_cs    ? rom_data : (
                 ram_cs    ? ram_dout : (
                 fm_cs     ? fm_dout  : (
-                pcm_cs    ? { pcm_busyn, 7'd0 } : (
+                pcm_cs    ? { pcm_busyn, ~7'd0 } : (
                 mapper_cs ? mapper_dout : (
                     8'hff )))));
 end
@@ -141,7 +141,7 @@ always @(posedge clk, posedge rst) begin
         rom_msb <= 0;
         pcm_mdn <= 1;
         pcm_rst <= 1;
-    end else if(misc_cs) begin
+    end else if(misc_cs & ~wr_n) begin
         rom_msb <= cpu_dout[5:0];
         pcm_rst <= ~cpu_dout[6];
         pcm_mdn <= ~cpu_dout[7];
