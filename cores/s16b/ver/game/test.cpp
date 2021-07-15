@@ -1,12 +1,12 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
-#include "Vjts16_game.h"
+#include "Vjts16b_game.h"
 #include "verilated_vcd_c.h"
 
 using namespace std;
 
-typedef Vjts16_game DUT;
+typedef Vjts16b_game DUT;
 
 class SDRAM {
     DUT& dut;
@@ -46,8 +46,8 @@ public:
         return (finish_time>0 ? frame_cnt > finish_frame : true) &&
                 simtime/1000'000'000 >= finish_time;
     };
-    Vjts16_game& game;
-    JTSim( Vjts16_game& g, int argc, char *argv[] );
+    DUT& game;
+    JTSim( DUT& g, int argc, char *argv[] );
     ~JTSim();
     void clock(int n);
 };
@@ -55,7 +55,7 @@ public:
 int main(int argc, char *argv[]) {
     Verilated::commandArgs(argc, argv);
 
-    Vjts16_game game;
+    DUT game;
     JTSim sim(game, argc, argv);
 
     while( !sim.done() ) {
@@ -156,7 +156,7 @@ SDRAM::~SDRAM() {
     }
 }
 
-JTSim::JTSim( Vjts16_game& g, int argc, char *argv[]) : game(g), sdram(g) {
+JTSim::JTSim( DUT& g, int argc, char *argv[]) : game(g), sdram(g) {
     simtime=0;
     frame_cnt=0;
     last_VS = 0;

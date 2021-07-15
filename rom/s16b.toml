@@ -7,6 +7,7 @@ mraauthor=["jotego","atrac17"]
 beta = true
 # qsound=true
 # cheat=true
+# nvram = 43008
 
 [parse]
 sourcefile="segas16b.cpp"

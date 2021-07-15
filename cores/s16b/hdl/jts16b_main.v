@@ -143,11 +143,13 @@ jts16b_mapper u_mapper(
     .vint       ( vint           ),
 
     .addr       ( A              ),
+    .addr_out   (                ),
     .cpu_dout   ( cpu_dout       ),
     .cpu_dswn   ( {UDSWn, LDSWn} ),
 
     // Bus sharing
     .bus_dout   ( 16'hffff       ),
+    .bus_din    (                ),
 
     // M68000 control
     .cpu_berrn  ( BERRn          ),
@@ -159,6 +161,8 @@ jts16b_mapper u_mapper(
     .cpu_fc     ( FC             ),
     .cpu_ipln   ( cpu_ipln       ),
     .cpu_vpan   ( cpu_vpan       ),
+    .cpu_haltn  (                ),
+    .cpu_rstn   (                ),
 
     // Sound CPU
     .sndmap_rd  ( sndmap_rd      ),

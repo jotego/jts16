@@ -16,7 +16,11 @@
     Version: 1.0
     Date: 6-3-2021 */
 
+`ifndef S16B
 module jts16_game(
+`else
+module jts16b_game(
+`endif
     input           rst,
     input           clk,
     output          pxl2_cen,   // 12   MHz
@@ -113,7 +117,7 @@ wire    cpu_cen, cpu_cenb,
 // video signals
 wire        HB, VB, LVBL;
 wire [ 8:0] vrender;
-wire        hstart;
+wire        hstart, vint;
 wire        colscr_en, rowscr_en;
 
 // SDRAM interface

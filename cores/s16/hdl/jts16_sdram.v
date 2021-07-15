@@ -86,7 +86,7 @@ module jts16_sdram #(
     // Obj
     output           obj_ok,
     input            obj_cs,
-    input    [18:0]  obj_addr,
+    input    [19:0]  obj_addr,
     output   [15:0]  obj_data,
 
     // Bank 0: allows R/W
