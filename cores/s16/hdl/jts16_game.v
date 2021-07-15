@@ -16,11 +16,7 @@
     Version: 1.0
     Date: 6-3-2021 */
 
-`ifndef S16B
-module jts16_game(
-`else
-module jts16b_game(
-`endif
+module `GAMETOP(
     input           rst,
     input           clk,
     output          pxl2_cen,   // 12   MHz
@@ -268,7 +264,7 @@ jts16_cen u_cen(
     .dipsw_b     ( dipsw_b    ),
     // NVRAM dump
     .ioctl_din   ( ioctl_data2sd    ),
-    .ioctl_addr  ( ioctl_addr[15:0] )
+    .ioctl_addr  ( ioctl_addr[16:0] )
 );
 `else
     assign flip      = 0;

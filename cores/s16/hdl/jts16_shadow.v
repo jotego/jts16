@@ -16,7 +16,7 @@
     Version: 1.0
     Date: 30-6-2021 */
 
-module jts16_shadow(
+module jts16_shadow #(parameter VRAMW=14) (
     input             clk,
     input             clk_rom,
 
@@ -30,7 +30,7 @@ module jts16_shadow(
     input      [ 1:0] dswn,  // write mask -active low
 
     // Let data be dumped via NVRAM interface
-    input      [15:0] ioctl_addr,
+    input      [16:0] ioctl_addr,
     output     [ 7:0] ioctl_din
 );
 
@@ -49,13 +49,17 @@ wire [ 1:0] objram_we = objram_cs ? ~dswn : 2'b0;
 assign ioctl_din = ~ioctl_addr[0] ? dout_latch[15:8] : dout_latch[7:0];
 
 always @(*) begin
-    casez( ioctl_addr[15:11] )
-        5'b0???_?: dout = vram_dout;
-        5'b1000_?: dout = char_dout;
-        5'b1001_?: dout = pal_dout;
-        5'b1010_0: dout = objram_dout;
-        default:   dout = 16'hffff;
-    endcase
+    if( VRAMW==15 && !ioctl_addr[16] ) begin
+        dout = vram_dout;
+    end else begin
+        casez( ioctl_addr[15:11] )
+            5'b0???_?: dout = vram_dout;
+            5'b1000_?: dout = char_dout;
+            5'b1001_?: dout = pal_dout;
+            5'b1010_0: dout = objram_dout;
+            default:   dout = 16'hffff;
+        endcase
+    end
 end
 
 always @(posedge clk_rom) begin
@@ -63,7 +67,7 @@ always @(posedge clk_rom) begin
         dout_latch <= dout;
 end
 
-jtframe_dual_ram16 #(.aw(14)) u_vram(
+jtframe_dual_ram16 #(.aw(VRAMW)) u_vram(
     .clk0       ( clk       ),
     .clk1       ( clk_rom   ),
     // CPU writes
@@ -73,7 +77,7 @@ jtframe_dual_ram16 #(.aw(14)) u_vram(
     .q0         (           ),
     // hps_io reads
     .data1      (           ),
-    .addr1      ( ioctl_addr[14:1] ),
+    .addr1      ( ioctl_addr[VRAMW:1] ),
     .we1        ( 2'b0      ),
     .q1         ( vram_dout )
 );

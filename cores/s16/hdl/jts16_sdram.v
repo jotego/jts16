@@ -67,7 +67,7 @@ module jts16_sdram #(
 
     // Scroll 1
     output           map1_ok,
-    input    [14:0]  map1_addr, // 3(+1) pages + 11 addr = 14 (32 kB)
+    input    [14:0]  map1_addr, // 3(+1) pages + 11 addr = 14/15 (32/64 kB)
     output   [15:0]  map1_data,
 
     output           scr1_ok,
@@ -76,7 +76,7 @@ module jts16_sdram #(
 
     // Scroll 1
     output           map2_ok,
-    input    [14:0]  map2_addr, // 3(+1) pages + 11 addr = 14 (32 kB)
+    input    [14:0]  map2_addr, // 3(+1) pages + 11 addr = 14/15 (32/64 kB)
     output   [15:0]  map2_data,
 
     output           scr2_ok,

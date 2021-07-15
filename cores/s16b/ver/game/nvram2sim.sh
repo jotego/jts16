@@ -1,7 +1,7 @@
 #!/bin/bash
 # Use this script to convert NVRAM dumps to simulation input files
 # Data order
-# VRAM   32kB - part of SDRAM: bank0 at 0x10'0000
+# VRAM   64kB - part of SDRAM: bank0 at 0x10'0000
 # CHAR    4kB - split 16-bit bin dump
 # PAL     4kB - split 16-bit bin dump
 # OBJRAM  2kB - split 16-bit bin dump
@@ -10,9 +10,9 @@ FILE="$1"
 SCENE=$2
 
 SCR_START=0
-CHAR_START=32
-PAL_START=36
-OBJRAM_START=40
+CHAR_START=64
+PAL_START=$((CHAR_START+4))
+OBJRAM_START=$((PAL_START+4))
 
 if [ $(basename `pwd`) = game ]; then
     echo "Call this script from the simulation scene folder"
@@ -34,7 +34,7 @@ function dump {
 
 }
 
-dump scr  $SCR_START 32 || exit $?
+dump scr  $SCR_START 64 || exit $?
 dump char $CHAR_START  4 || exit $?
 dump pal  $PAL_START  4 || exit $?
 dump obj  $OBJRAM_START  2 || exit $?

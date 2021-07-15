@@ -34,6 +34,7 @@ module jts16_obj_scan(
     output reg [ 3:0]  dr_bank,
     output reg [ 1:0]  dr_prio,
     output reg [ 5:0]  dr_pal,
+    output reg [ 9:0]  dr_zoom,
     output reg         dr_hflipb,
 
     // Video signal
@@ -45,9 +46,15 @@ module jts16_obj_scan(
 parameter [8:0] PXL_DLY=8;
 parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 
+localparam LAST_IDX = MODEL ? 5 : 4;
+localparam STW = MODEL ? 4 : 3;
+localparam ST_SCRATCH = MODEL ? 7 : 6,
+           ST_DRAW    = MODEL ? 8 : 7;
+
 reg  [6:0] cur_obj;  // current object
 reg  [2:0] idx;
-reg  [2:0] st;
+reg  [STW-1:0] st;
+reg  [9:0] zoom;
 reg        first, stop;
 
 // Object data
@@ -71,6 +78,11 @@ wire [7:0] top    = tbl_dout[ 7:0],
 wire       inzone = vrf[7:0]>=top && bottom>vrf[7:0];
 wire       badobj = top >= bottom;
 
+`ifndef S16B
+    initial zoom = 0;
+`endif
+
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         cur_obj   <= 0;
@@ -85,9 +97,9 @@ always @(posedge clk, posedge rst) begin
         dr_prio   <= 0;
         dr_pal    <= 0;
     end else begin
-        if( idx<7 ) idx <= idx==4 ? 7 : (idx + 3'd1); // 7 is the scratch location
+        if( idx<7 ) idx <= idx==LAST_IDX ? 7 : (idx + 3'd1); // 7 is the scratch location
         if( !stop ) begin
-            st <= st+3'd1;
+            st <= st+1'd1;
         end
         stop      <= 0;
         dr_start  <= 0;
@@ -135,11 +147,16 @@ always @(posedge clk, posedge rst) begin
                     prio <= tbl_dout[1:0];
                 end
             end
+            `ifdef S16B
             6: begin
-                offset <= next_offset;
-                tbl_we  <= 1;
+                zoom <= tbl_dout[9:0];
             end
-            7: begin
+            `endif
+            ST_SCRATCH: begin
+                offset <= next_offset;
+                tbl_we <= 1;
+            end
+            ST_DRAW: begin
                 tbl_we  <= 0;
                 if( !dr_busy ) begin
                     dr_xpos   <= xpos; //+PXL_DLY;
@@ -149,6 +166,7 @@ always @(posedge clk, posedge rst) begin
                     dr_bank   <= bank;
                     dr_start  <= 1;
                     dr_hflipb <= hflipb;
+                    dr_zoom   <= zoom;
                     // next
                     if( &cur_obj )
                         st <= 0; // Done
@@ -159,7 +177,7 @@ always @(posedge clk, posedge rst) begin
                         stop    <= 1;
                     end
                 end else begin
-                    if(!hstart) st <= 7;
+                    if(!hstart) st <= ST_DRAW;
                 end
             end
         endcase

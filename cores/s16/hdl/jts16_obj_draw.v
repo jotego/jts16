@@ -28,6 +28,7 @@ module jts16_obj_draw(
     input      [ 3:0]  bank,
     input      [ 1:0]  prio,
     input      [ 5:0]  pal,
+    input      [ 9:0]  zoom,
     input              hflipb,
 
     // SDRAM interface
@@ -49,6 +50,10 @@ reg  [ 3:0] cnt;
 reg         draw, stop;
 wire [ 3:0] cur_pxl, nxt_pxl;
 wire        hflip;
+wire [ 4:0] vzoom, hzoom;
+reg  [ 6:0] hzcnt;
+wire [ 7:0] hzsum;
+wire        hzov;
 
 assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[15:12];
 assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[11: 8];
@@ -56,6 +61,11 @@ assign obj_addr = MODEL ? { bank[2:1], bank[3], bank[0], cur[15:0] } :
                           { 2'b0,    bank[1:0], bank[2], cur[14:0] };
 assign bf_data  = { prio, pal, cur_pxl };
 assign hflip    = MODEL ? hflipb : cur[15];
+
+// Sprite scaling
+assign { vzoom, hzoom } = zoom;
+assign hzsum = {1'b0, hzcnt} + {3'd0, hzoom};
+assign hzov  = hzsum[7];
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -77,22 +87,24 @@ always @(posedge clk, posedge rst) begin
             bf_we    <= 0;
             stop     <= 1;
             bf_addr  <= xpos;
+            hzcnt    <= { hzoom, 2'd0 };
         end else begin
             bf_we <= 0;
             if(obj_ok) stop <= 0;
             if( busy ) begin
                 if( draw ) begin
                     cnt <= { cnt[2:0], 1'b1 };
+                    hzcnt <= hzsum[6:0];
                     if(cnt[3]) begin
                         draw  <= 0;
                         bf_we <= 0;
                         if( &cur_pxl )
                             busy <= 0;  // done
                     end else begin
-                        bf_we    <= ~&nxt_pxl;
+                        bf_we    <= ~hzov & ~&nxt_pxl;
                     end
                     pxl_data <= hflip ? pxl_data>>4 : pxl_data<<4;
-                    bf_addr  <= bf_addr+1'd1;
+                    if( !hzov ) bf_addr <= bf_addr+1'd1;
                 end else if(!stop) begin
                     if( obj_cs && obj_ok ) begin
                         // Draw pixels

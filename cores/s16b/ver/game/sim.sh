@@ -57,6 +57,7 @@ if [ ! -z "$SCENE" ]; then
     if [[ ! "$*" =~ -time ]]; then
         OTHER="$OTHER -time 16"
     fi
+    # VRAM snap goes to 20'0000h (bytes) = 10'0000h (words)
     SDRAM_SNAP="-snap scr.bin 0 0x200000"
 else
     export YM2151=1

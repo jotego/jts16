@@ -87,7 +87,7 @@ module jts16b_main(
     output             sndmap_obf, // pbf signal == buffer full ?
 
     // NVRAM - debug
-    input       [15:0] ioctl_addr,
+    input       [16:0] ioctl_addr,
     output      [ 7:0] ioctl_din
 );
 
@@ -399,14 +399,14 @@ jtframe_m68k u_cpu(
 `ifdef MISTER
 `ifndef JTFRAME_RELEASE
 `ifndef BETA
-jts16_shadow u_shadow(
+jts16_shadow #(.VRAMW(15)) u_shadow(
     .clk        ( clk       ),
     .clk_rom    ( clk_rom   ),
 
     // Capture SDRAM bank 0 inputs
-    .addr       ( A[14:1]   ),
+    .addr       ( A[15:1]   ),
     .char_cs    ( char_cs   ),    //  4k
-    .vram_cs    ( vram_cs   ),    // 32k
+    .vram_cs    ( vram_cs   ),    // 64k
     .pal_cs     ( pal_cs    ),    //  4k
     .objram_cs  ( objram_cs ),    //  2k
     .din        ( cpu_dout  ),
