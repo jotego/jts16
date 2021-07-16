@@ -74,7 +74,7 @@ wire       [ 8:0] vrf = flip ? 9'd223-vrender : vrender;
 
 assign tbl_addr    = { cur_obj, idx };
 assign next_offset = (first ? offset : tbl_dout) + ( pitch << (MODEL[0] & zoom[15]) );
-assign vzoom       = { 1'b0, tbl_dout[14:10] } + { 1'b0, tbl_dout[9:5] };
+assign vzoom       = { 1'b0, first ? 5'd0 : tbl_dout[14:10] } + { 1'b0, tbl_dout[9:5] };
 assign next_zoom   = { vzoom, tbl_dout[9:0] };
 assign tbl_din     = zoom_sel ? {1'b0, zoom[14:0] } : offset;
 
