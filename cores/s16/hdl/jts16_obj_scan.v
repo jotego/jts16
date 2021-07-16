@@ -55,7 +55,7 @@ localparam ST_SCRATCH = MODEL ? 7 : 6,
 reg  [6:0] cur_obj;  // current object
 reg  [2:0] idx;
 reg  [STW-1:0] st;
-reg [14:0] zoom;
+reg [15:0] zoom;
 reg        first, stop;
 
 // Object data
@@ -68,10 +68,14 @@ reg        [ 1:0] prio;
 reg        [ 5:0] pal;
 reg               zoom_sel, hflipb; // H flip bit for S16B
 wire       [15:0] next_offset;
+wire       [15:0] next_zoom;
+wire       [ 5:0] vzoom;
 wire       [ 8:0] vrf = flip ? 9'd223-vrender : vrender;
 
 assign tbl_addr    = { cur_obj, idx };
 assign next_offset = (first ? offset : tbl_dout) + pitch;
+assign vzoom       = { 1'b0, tbl_dout[14:10] } + { 1'b0, tbl_dout[9:5] };
+assign next_zoom   = { vzoom, tbl_dout[9:0] };
 assign tbl_din     = zoom_sel ? {1'b0, zoom } : offset;
 
 wire [7:0] top    = tbl_dout[ 7:0],
@@ -151,7 +155,7 @@ always @(posedge clk, posedge rst) begin
             end
         `ifdef S16B
             6: begin
-                zoom <= tbl_dout[14:0];
+                zoom <= next_zoom;
             end
         `endif
             ST_SCRATCH: begin
