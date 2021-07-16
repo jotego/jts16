@@ -34,7 +34,7 @@ module jts16_obj_scan(
     output reg [ 3:0]  dr_bank,
     output reg [ 1:0]  dr_prio,
     output reg [ 5:0]  dr_pal,
-    output reg [ 9:0]  dr_zoom,
+    output reg [ 9:0]  dr_hzoom,
     output reg         dr_hflipb,
 
     // Video signal
@@ -166,7 +166,7 @@ always @(posedge clk, posedge rst) begin
                     dr_bank   <= bank;
                     dr_start  <= 1;
                     dr_hflipb <= hflipb;
-                    dr_zoom   <= zoom;
+                    dr_hzoom  <= zoom[4:0];
                     // next
                     if( &cur_obj )
                         st <= 0; // Done

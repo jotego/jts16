@@ -28,7 +28,7 @@ module jts16_obj_draw(
     input      [ 3:0]  bank,
     input      [ 1:0]  prio,
     input      [ 5:0]  pal,
-    input      [ 9:0]  zoom,
+    input      [ 4:0]  hzoom,
     input              hflipb,
 
     // SDRAM interface
@@ -50,7 +50,6 @@ reg  [ 3:0] cnt;
 reg         draw, stop;
 wire [ 3:0] cur_pxl, nxt_pxl;
 wire        hflip;
-wire [ 4:0] vzoom, hzoom;
 reg  [ 6:0] hzcnt;
 wire [ 7:0] hzsum;
 wire        hzov;
@@ -63,7 +62,6 @@ assign bf_data  = { prio, pal, cur_pxl };
 assign hflip    = MODEL ? hflipb : cur[15];
 
 // Sprite scaling
-assign { vzoom, hzoom } = zoom;
 assign hzsum = {1'b0, hzcnt} + {3'd0, hzoom};
 assign hzov  = hzsum[7];
 
