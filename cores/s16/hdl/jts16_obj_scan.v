@@ -49,12 +49,13 @@ parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 localparam LAST_IDX = MODEL ? 5 : 4;
 localparam STW = MODEL ? 4 : 3;
 localparam ST_SCRATCH = MODEL ? 7 : 6,
-           ST_DRAW    = MODEL ? 8 : 7;
+           ST_ZOOM    = 8,
+           ST_DRAW    = MODEL ? 9 : 7;
 
 reg  [6:0] cur_obj;  // current object
 reg  [2:0] idx;
 reg  [STW-1:0] st;
-reg  [9:0] zoom;
+reg [14:0] zoom;
 reg        first, stop;
 
 // Object data
@@ -65,13 +66,13 @@ reg        [15:0] offset; // MSB is also used as the flip bit
 reg        [ 3:0] bank;
 reg        [ 1:0] prio;
 reg        [ 5:0] pal;
-reg               hflipb; // H flip bit for S16B
+reg               zoom_sel, hflipb; // H flip bit for S16B
 wire       [15:0] next_offset;
 wire       [ 8:0] vrf = flip ? 9'd223-vrender : vrender;
 
 assign tbl_addr    = { cur_obj, idx };
 assign next_offset = (first ? offset : tbl_dout) + pitch;
-assign tbl_din     = offset;
+assign tbl_din     = zoom_sel ? {1'b0, zoom } : offset;
 
 wire [7:0] top    = tbl_dout[ 7:0],
            bottom = tbl_dout[15:8];
@@ -101,8 +102,9 @@ always @(posedge clk, posedge rst) begin
         if( !stop ) begin
             st <= st+1'd1;
         end
-        stop      <= 0;
-        dr_start  <= 0;
+        stop     <= 0;
+        dr_start <= 0;
+        tbl_we   <= 0;
         case( st )
             0: begin
                 cur_obj  <= 0;
@@ -147,17 +149,24 @@ always @(posedge clk, posedge rst) begin
                     prio <= tbl_dout[1:0];
                 end
             end
-            `ifdef S16B
+        `ifdef S16B
             6: begin
-                zoom <= tbl_dout[9:0];
+                zoom <= tbl_dout[14:0];
             end
-            `endif
+        `endif
             ST_SCRATCH: begin
-                offset <= next_offset;
-                tbl_we <= 1;
+                offset   <= next_offset;
+                tbl_we   <= 1;
+                zoom_sel <= 0;
             end
+        `ifdef S16B
+            ST_ZOOM: begin
+                tbl_we  <= 1;
+                zoom_sel<= 1;
+                idx     <= 5;
+            end
+        `endif
             ST_DRAW: begin
-                tbl_we  <= 0;
                 if( !dr_busy ) begin
                     dr_xpos   <= xpos; //+PXL_DLY;
                     dr_offset <= offset;
