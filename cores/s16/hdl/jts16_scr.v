@@ -54,6 +54,8 @@ parameter [8:0] HB_END=9'h70, HSCAN0 = HB_END-9'd8-PXL_DLY[8:0];
 /* verilator lint_on WIDTH */
 parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 
+localparam [8:0] PAGE_ADJ = 9'h1ff;
+
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
 reg  [12:0] code;
@@ -62,7 +64,7 @@ wire [ 8:0] vrf;
 reg  [8:0] hscan, vscan;
 
 // Map reader
-reg  [8:0] hpos;
+reg  [8:0] hpos, ncpos;
 reg  [7:0] vpos;
 reg  [3:0] page;
 reg        hov, vov; // overflow bits
@@ -71,7 +73,7 @@ reg        done, draw;
 reg  [7:0] busy;
 reg        hsel;
 
-reg  [9:0] eff_scr;
+reg  [8:0] eff_scr;
 reg  [8:0] hdly;
 
 assign scr_addr = { code, vpos[2:0], 1'b0 };
@@ -79,9 +81,13 @@ assign vrf      = flip ? 9'd223-vrender : vrender;
 //assign hdly     = hdump - PXL_DLY;
 
 always @(*) begin
-    eff_scr  = rowscr_en ? rowscr : hscr[9:0];
-    if( MODEL==0 ) eff_scr[9] = 0;
-    {hov, hpos } = { MODEL ? hscan[8] : 1'b0, hscan } - eff_scr + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
+    eff_scr  = rowscr_en ? rowscr : hscr[8:0];
+    if( MODEL==0 ) begin
+        {hov, hpos } = {1'b0, hscan} - {1'b0, eff_scr} + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
+    end else begin
+        {hov, ncpos} = {1'b0, hscan} - {1'b0, eff_scr} + PXL_DLY + {1'b0,PAGE_ADJ};
+        hpos = hscan - eff_scr + PXL_DLY;
+    end
     {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( { vov, hov } )

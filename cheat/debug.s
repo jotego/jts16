@@ -1,7 +1,6 @@
 ; use "cheatzip" script to assemble and send to MiSTer
 
-; The LED will blink if the cheat bits 7:0 are enabled
-; CPSx work RAM offset = 30'0000h
+; Shows the scroll settings and the debug bus
 
 ; Register use
 ; SA = frame counter

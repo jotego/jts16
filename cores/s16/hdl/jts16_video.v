@@ -92,9 +92,11 @@ module jts16_video(
     output     [ 7:0]  st_dout
 );
 
-localparam [9:0] SCR_DLY=17; // 15
-
 localparam MODEL = `ifdef S16B 1; `else 0; `endif
+
+localparam [9:0] SCR2_DLY= MODEL ? 9 : 17;
+localparam [9:0] SCR1_DLY= SCR2_DLY;
+localparam [9:0] OBJ_DLY = MODEL ? 22 : 17;
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;
@@ -216,7 +218,7 @@ jts16_char #(.MODEL(MODEL)) u_char(
     .debug_bus ( debug_bus      )
 );
 
-jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
+jts16_scr #(.PXL_DLY(SCR1_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
@@ -247,7 +249,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
     .debug_bus ( debug_bus      )
 );
 
-jts16_scr #(.PXL_DLY(SCR_DLY[8:0]),.MODEL(MODEL)) u_scr2(
+jts16_scr #(.PXL_DLY(SCR2_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
@@ -278,7 +280,7 @@ jts16_scr #(.PXL_DLY(SCR_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .debug_bus ( debug_bus      )
 );
 
-jts16_obj #(.PXL_DLY(SCR_DLY),.MODEL(MODEL)) u_obj(
+jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl_cen   ( pxl_cen        ),
