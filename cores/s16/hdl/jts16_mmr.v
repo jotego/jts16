@@ -122,10 +122,10 @@ end
 `ifdef JTFRAME_CHEAT
 always @(posedge clk) begin
     case( st_addr )
-        0:  st_dout <= scr1_pages_nofl[ 7:0];
-        1:  st_dout <= scr1_pages_nofl[15:8];
-        2:  st_dout <= scr2_pages_nofl[ 7:0];
-        3:  st_dout <= scr2_pages_nofl[15:8];
+        0:  st_dout <= MODEL ? scr1_pages[7:0]  : scr1_pages_nofl[ 7:0];
+        1:  st_dout <= MODEL ? scr1_pages[15:8] : scr1_pages_nofl[15:8];
+        2:  st_dout <= MODEL ? scr2_pages[7:0]  : scr2_pages_nofl[ 7:0];
+        3:  st_dout <= MODEL ? scr2_pages[15:8] : scr2_pages_nofl[15:8];
         4:  st_dout <= scr1_vpos[ 7:0];
         5:  st_dout <= scr1_vpos[15:8];
         6:  st_dout <= scr2_vpos[ 7:0];
