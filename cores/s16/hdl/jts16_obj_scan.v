@@ -73,10 +73,10 @@ wire       [ 5:0] vzoom;
 wire       [ 8:0] vrf = flip ? 9'd223-vrender : vrender;
 
 assign tbl_addr    = { cur_obj, idx };
-assign next_offset = (first ? offset : tbl_dout) + pitch;
+assign next_offset = (first ? offset : tbl_dout) + ( pitch << (MODEL[0] & zoom[15]) );
 assign vzoom       = { 1'b0, tbl_dout[14:10] } + { 1'b0, tbl_dout[9:5] };
 assign next_zoom   = { vzoom, tbl_dout[9:0] };
-assign tbl_din     = zoom_sel ? {1'b0, zoom } : offset;
+assign tbl_din     = zoom_sel ? {1'b0, zoom[14:0] } : offset;
 
 wire [7:0] top    = tbl_dout[ 7:0],
            bottom = tbl_dout[15:8];
@@ -102,7 +102,7 @@ always @(posedge clk, posedge rst) begin
         dr_prio   <= 0;
         dr_pal    <= 0;
     end else begin
-        if( idx<7 ) idx <= idx==LAST_IDX ? 7 : (idx + 3'd1); // 7 is the scratch location
+        idx <= idx>=LAST_IDX ? 7 : (idx + 3'd1); // 7 is the scratch location
         if( !stop ) begin
             st <= st+1'd1;
         end
