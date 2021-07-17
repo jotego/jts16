@@ -56,13 +56,13 @@
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
             <part name="opr-13862.a14" crc="a47354b6" map="0001"/>
-            <part name="opr-13877.b14" crc="d38424b5" map="0010"/>
-            <part name="opr-13863.a15" crc="8c990026" map="0100"/>
-            <part name="opr-13863.a15" crc="8c990026" map="1000"/>
+            <part name="opr-13863.a15" crc="8c990026" map="0010"/>
+            <part name="opr-13864.a16" crc="d2b175bf" map="0100"/>
+            <part name="opr-13864.a16" crc="d2b175bf" map="1000"/>
         </interleave>
         <interleave output="32">
-            <part name="opr-13878.b15" crc="21c15b8a" map="0001"/>
-            <part name="opr-13864.a16" crc="d2b175bf" map="0010"/>
+            <part name="opr-13877.b14" crc="d38424b5" map="0001"/>
+            <part name="opr-13878.b15" crc="21c15b8a" map="0010"/>
             <part name="opr-13879.b16" crc="b9d62531" map="0100"/>
             <part name="opr-13879.b16" crc="b9d62531" map="1000"/>
         </interleave>

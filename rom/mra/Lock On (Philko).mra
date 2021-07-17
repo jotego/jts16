@@ -53,10 +53,10 @@
         <part repeat="0x70000"> FF</part>
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
-            <part name="b10" crc="d3a8bd15" map="0001"/>
-            <part name="b7" crc="787c382e" map="0010"/>
-            <part name="b9" crc="aae2cef1" map="0100"/>
-            <part name="b8" crc="cd30abe0" map="1000"/>
+            <part name="b8" crc="cd30abe0" map="0001"/>
+            <part name="b9" crc="aae2cef1" map="0010"/>
+            <part name="b7" crc="787c382e" map="0100"/>
+            <part name="b10" crc="d3a8bd15" map="1000"/>
         </interleave>
         <part repeat="0x80000"> FF</part>
         <!-- sprites - starts at 0x240000 -->

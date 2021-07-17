@@ -37,7 +37,7 @@ module jts16_scr(
     input      [15:0]  map_data,
 
     input              scr_ok,
-    output     [16:0]  scr_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output     [16:0]  scr_addr, // 1 bank + 12 addr + 3 vertical + 1'b0 = 17 bits => 512kB
     input      [31:0]  scr_data,
 
     // Video signal

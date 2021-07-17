@@ -54,13 +54,13 @@
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
             <part name="mpr-11241.a14" crc="fc586a86" map="0001"/>
-            <part name="mpr-11166.b14" crc="aeaaa9d8" map="0010"/>
-            <part name="mpr-11242.a15" crc="7715a742" map="0100"/>
-            <part name="mpr-11242.a15" crc="7715a742" map="1000"/>
+            <part name="mpr-11242.a15" crc="7715a742" map="0010"/>
+            <part name="mpr-11243.a16" crc="f30cd5fd" map="0100"/>
+            <part name="mpr-11243.a16" crc="f30cd5fd" map="1000"/>
         </interleave>
         <interleave output="32">
-            <part name="mpr-11167.b15" crc="63a82afa" map="0001"/>
-            <part name="mpr-11243.a16" crc="f30cd5fd" map="0010"/>
+            <part name="mpr-11166.b14" crc="aeaaa9d8" map="0001"/>
+            <part name="mpr-11167.b15" crc="63a82afa" map="0010"/>
             <part name="mpr-11168.b16" crc="5b8494a8" map="0100"/>
             <part name="mpr-11168.b16" crc="5b8494a8" map="1000"/>
         </interleave>

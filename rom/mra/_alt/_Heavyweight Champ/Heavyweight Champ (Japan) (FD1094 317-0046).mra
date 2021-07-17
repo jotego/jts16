@@ -54,13 +54,13 @@
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
             <part name="epr-11202.a14" crc="7c94ede3" map="0001"/>
-            <part name="epr-11213.b14" crc="aeaaa9d8" map="0010"/>
-            <part name="epr-11203.a15" crc="327754f7" map="0100"/>
-            <part name="epr-11203.a15" crc="327754f7" map="1000"/>
+            <part name="epr-11203.a15" crc="327754f7" map="0010"/>
+            <part name="epr-11204.a16" crc="dfc4cd33" map="0100"/>
+            <part name="epr-11204.a16" crc="dfc4cd33" map="1000"/>
         </interleave>
         <interleave output="32">
-            <part name="epr-11214.b15" crc="63a82afa" map="0001"/>
-            <part name="epr-11204.a16" crc="dfc4cd33" map="0010"/>
+            <part name="epr-11213.b14" crc="aeaaa9d8" map="0001"/>
+            <part name="epr-11214.b15" crc="63a82afa" map="0010"/>
             <part name="epr-11215.b16" crc="5b8494a8" map="0100"/>
             <part name="epr-11215.b16" crc="5b8494a8" map="1000"/>
         </interleave>

@@ -56,16 +56,16 @@
         <part repeat="0x70000"> FF</part>
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
-            <part name="9.f16" crc="b2a49d12" map="0001"/>
-            <part name="10.f17" crc="7d9e8397" map="0010"/>
+            <part name="5.f12" crc="9d00656d" map="0001"/>
+            <part name="6.f13" crc="37b7bf90" map="0010"/>
             <part name="7.f14" crc="549af682" map="0100"/>
             <part name="7.f14" crc="549af682" map="1000"/>
         </interleave>
         <interleave output="32">
             <part name="8.f15" crc="625c118d" map="0001"/>
-            <part name="5.f12" crc="9d00656d" map="0010"/>
-            <part name="6.f13" crc="37b7bf90" map="0100"/>
-            <part name="6.f13" crc="37b7bf90" map="1000"/>
+            <part name="9.f16" crc="b2a49d12" map="0010"/>
+            <part name="10.f17" crc="7d9e8397" map="0100"/>
+            <part name="10.f17" crc="7d9e8397" map="1000"/>
         </interleave>
         <!-- sprites - starts at 0x240000 -->
         <interleave output="16">
