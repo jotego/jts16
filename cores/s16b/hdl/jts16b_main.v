@@ -23,8 +23,10 @@ module jts16b_main(
     output             cpu_cen,
     output             cpu_cenb,
     input  [7:0]       game_id,
+
     // Video
     input              vint,
+
     // Video circuitry
     output reg         char_cs,
     output reg         pal_cs,
@@ -36,6 +38,8 @@ module jts16b_main(
     output reg         video_en,
     output             colscr_en,
     output             rowscr_en,
+    output reg  [ 2:0] tile_bank,
+
     // RAM access
     output reg         ram_cs,
     output reg         vram_cs,
@@ -118,7 +122,7 @@ wire        ASn, UDSn, LDSn, BUSn;
 wire        ok_dly;
 wire [15:0] rom_dec;
 
-reg         io_cs, wdog_cs;
+reg         io_cs, wdog_cs, tbank_cs;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -229,14 +233,16 @@ always @(posedge clk, posedge rst) begin
 
             vram_cs   <= 0; // 32kB
             ram_cs    <= 0;
+            tbank_cs  <= 0;
     end else begin
         if( !ASn && BGACKn ) begin
-            rom_cs    <= |active[2:0];
+            rom_cs    <= |active[2:0] && RnW;
             char_cs   <= active[REG_VRAM] && A[16];
 
             objram_cs <= active[REG_ORAM];
             pal_cs    <= active[REG_PAL];
             io_cs     <= active[REG_IO];
+            tbank_cs  <= active[2] && !RnW;
 
             // jtframe_ramrq requires cs to toggle to
             // process a new request. BUSn will toggle for
@@ -250,8 +256,9 @@ always @(posedge clk, posedge rst) begin
             pal_cs    <= 0;
             io_cs     <= 0;
             wdog_cs   <= 0;
-            vram_cs <= 0;
-            ram_cs  <= 0;
+            vram_cs   <= 0;
+            ram_cs    <= 0;
+            tbank_cs  <= 0;
         end
     end
 end
@@ -274,6 +281,15 @@ endfunction
 always @(*) begin
     sort1 = sort_joy( joystick1 );
     sort2 = sort_joy( joystick2 );
+end
+
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        tile_bank <= 0;
+    end else begin
+        if( tbank_cs && !LDSWn )
+            tile_bank <= cpu_dout[2:0];
+    end
 end
 
 always @(posedge clk, posedge rst) begin

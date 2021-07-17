@@ -115,6 +115,7 @@ wire        HB, VB, LVBL;
 wire [ 8:0] vrender;
 wire        hstart, vint;
 wire        colscr_en, rowscr_en;
+wire [ 2:0] tile_bank;
 
 // SDRAM interface
 wire        main_cs, vram_cs, ram_cs;
@@ -254,6 +255,7 @@ jts16_cen u_cen(
     .sndmap_din  ( sndmap_din ),
     .sndmap_dout (sndmap_dout ),
     .sndmap_obf  ( sndmap_obf ),
+    .tile_bank   ( tile_bank  ),
 `endif
     .prog_addr   ( prog_addr[12:0] ),
     .prog_data   ( prog_data[ 7:0] ),
@@ -340,6 +342,8 @@ assign snd_addr=0;
 `ifdef S16B
 assign pcm_cs   = 0;
 assign pcm_addr = 0;
+`else
+assign tile_bank = 0;
 `endif
 
 jts16_video u_video(
@@ -421,11 +425,14 @@ jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),
     .game_id    ( game_id   ),
+    //.tile_bank  ( tile_bank ),
+    .tile_bank  ( debug_bus[2:0] ),
 
-    .dec_en      ( dec_en   ),
-    .dec_type    ( dec_type ),
-    .key_we      ( key_we   ),
-    .fd1089_we   ( fd1089_we),
+    .dec_en     (  dec_en   ),
+    .dec_type   (  dec_type ),
+    .key_we     (  key_we   ),
+    .fd1089_we  (  fd1089_we),
+
     // Main CPU
     .main_cs    ( main_cs   ),
     .vram_cs    ( vram_cs   ),

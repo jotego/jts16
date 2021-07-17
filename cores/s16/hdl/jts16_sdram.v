@@ -25,6 +25,7 @@ module jts16_sdram #(
     input            LVBL,
     input      [8:0] vrender,
     output reg [7:0] game_id,
+    input      [2:0] tile_bank, // always 0 for S16A
 
     // Encryption
     output           key_we,
@@ -271,17 +272,17 @@ jtframe_rom_3slots #(
     .SLOT0_AW(13),
 
     .SLOT1_DW(32),
-    .SLOT1_AW(17),
+    .SLOT1_AW(20),
 
     .SLOT2_DW(32),
-    .SLOT2_AW(17)
+    .SLOT2_AW(20)
 ) u_bank2(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
     .slot0_addr ( char_addr ),
-    .slot1_addr ( scr1_addr ),
-    .slot2_addr ( scr2_addr ),
+    .slot1_addr ( { tile_bank, scr1_addr } ),
+    .slot2_addr ( { tile_bank, scr2_addr } ),
 
     //  output data
     .slot0_dout ( char_data ),
