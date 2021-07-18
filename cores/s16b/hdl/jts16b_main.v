@@ -38,7 +38,7 @@ module jts16b_main(
     output reg         video_en,
     output             colscr_en,
     output             rowscr_en,
-    output reg  [ 2:0] tile_bank,
+    output reg  [ 5:0] tile_bank,
 
     // RAM access
     output reg         ram_cs,
@@ -242,7 +242,7 @@ always @(posedge clk, posedge rst) begin
             objram_cs <= active[REG_ORAM];
             pal_cs    <= active[REG_PAL];
             io_cs     <= active[REG_IO];
-            tbank_cs  <= active[2] && !RnW;
+            tbank_cs  <= active[2] && !RnW; // PCB 171-5521/5704
 
             // jtframe_ramrq requires cs to toggle to
             // process a new request. BUSn will toggle for
@@ -288,7 +288,10 @@ always @(posedge clk, posedge rst) begin
         tile_bank <= 0;
     end else begin
         if( tbank_cs && !LDSWn )
-            tile_bank <= cpu_dout[2:0];
+            if( A[1] )
+                tile_bank[5:3] <= cpu_dout[2:0];
+            else
+                tile_bank[2:0] <= cpu_dout[2:0];
     end
 end
 

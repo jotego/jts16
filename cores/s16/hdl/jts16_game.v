@@ -115,7 +115,7 @@ wire        HB, VB, LVBL;
 wire [ 8:0] vrender;
 wire        hstart, vint;
 wire        colscr_en, rowscr_en;
-wire [ 2:0] tile_bank;
+wire [ 5:0] tile_bank;
 
 // SDRAM interface
 wire        main_cs, vram_cs, ram_cs;
@@ -343,7 +343,7 @@ assign snd_addr=0;
 assign pcm_cs   = 0;
 assign pcm_addr = 0;
 `else
-assign tile_bank = 0;
+assign tile_bank = 6'b001_000;
 `endif
 
 jts16_video u_video(
@@ -425,8 +425,7 @@ jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),
     .game_id    ( game_id   ),
-    //.tile_bank  ( tile_bank ),
-    .tile_bank  ( debug_bus[2:0] ),
+    .tile_bank  ( tile_bank ),
 
     .dec_en     (  dec_en   ),
     .dec_type   (  dec_type ),

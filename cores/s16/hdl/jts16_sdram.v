@@ -25,7 +25,7 @@ module jts16_sdram #(
     input            LVBL,
     input      [8:0] vrender,
     output reg [7:0] game_id,
-    input      [2:0] tile_bank, // always 0 for S16A
+    input      [5:0] tile_bank, // always 0 for S16A
 
     // Encryption
     output           key_we,
@@ -139,6 +139,9 @@ localparam [24:0] BA1_START  = `BA1_START,
 
 localparam VRAMW = `VRAMW;
 
+// Scroll address after banking
+wire [18:0] scr1_adj, scr2_adj;
+
 reg  [VRAMW-1:1] xram_addr;  // S16A = 32 kB VRAM + 16kB RAM
                              // S16B = 64 kB VRAM + 16-256kB RAM
 wire        xram_cs;
@@ -171,6 +174,9 @@ end
         end
     end
 `endif
+
+assign scr1_adj = { scr1_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr1_addr[15:0] };
+assign scr2_adj = { scr2_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr2_addr[15:0] };
 
 // Capture the game byte
 always @(posedge clk) begin
@@ -272,17 +278,17 @@ jtframe_rom_3slots #(
     .SLOT0_AW(13),
 
     .SLOT1_DW(32),
-    .SLOT1_AW(20),
+    .SLOT1_AW(19),
 
     .SLOT2_DW(32),
-    .SLOT2_AW(20)
+    .SLOT2_AW(19)
 ) u_bank2(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
     .slot0_addr ( char_addr ),
-    .slot1_addr ( { tile_bank, scr1_addr } ),
-    .slot2_addr ( { tile_bank, scr2_addr } ),
+    .slot1_addr ( scr1_adj  ),
+    .slot2_addr ( scr2_adj  ),
 
     //  output data
     .slot0_dout ( char_data ),
