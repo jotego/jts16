@@ -138,6 +138,15 @@ always @(posedge clk, posedge rst) begin
             3: begin
                 pitch <= MODEL ? { {8{tbl_dout[7]}}, tbl_dout[7:0]} : tbl_dout;
                 hflipb<= tbl_dout[8];
+                if( MODEL && tbl_dout[15] ) begin
+                    st <= 0; // end of sprite list
+                end
+                if( MODEL && tbl_dout[14] ) begin // skip this sprite
+                    cur_obj <= cur_obj + 1'd1;
+                    idx     <= 0;
+                    st      <= 1;
+                    stop    <= 1;
+                end
             end
             4: begin
                 offset  <= tbl_dout; // flip/offset
