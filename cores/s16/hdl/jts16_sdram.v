@@ -175,8 +175,13 @@ end
     end
 `endif
 
-assign scr1_adj = { scr1_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr1_addr[15:0] };
-assign scr2_adj = { scr2_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr2_addr[15:0] };
+`ifdef S16B
+    assign scr1_adj = { scr1_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr1_addr[15:0] };
+    assign scr2_adj = { scr2_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr2_addr[15:0] };
+`else
+    assign scr1_adj = { 2'd0, scr1_addr[16:0] };
+    assign scr2_adj = { 2'd0, scr2_addr[16:0] };
+`endif
 
 // Capture the game byte
 always @(posedge clk) begin

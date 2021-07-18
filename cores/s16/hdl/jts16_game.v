@@ -343,7 +343,7 @@ assign snd_addr=0;
 assign pcm_cs   = 0;
 assign pcm_addr = 0;
 `else
-assign tile_bank = 6'b001_000;
+assign tile_bank = 0; // unused on S16A
 `endif
 
 jts16_video u_video(
