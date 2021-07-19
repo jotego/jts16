@@ -49,9 +49,7 @@ wire [ 1:0] objram_we = objram_cs ? ~dswn : 2'b0;
 assign ioctl_din = ~ioctl_addr[0] ? dout_latch[15:8] : dout_latch[7:0];
 
 always @(*) begin
-    if( VRAMW==15 && !ioctl_addr[16] ) begin
-        dout = vram_dout;
-    end else begin
+    if( VRAMW==14 ) begin
         casez( ioctl_addr[15:11] )
             5'b0???_?: dout = vram_dout;
             5'b1000_?: dout = char_dout;
@@ -59,6 +57,16 @@ always @(*) begin
             5'b1010_0: dout = objram_dout;
             default:   dout = 16'hffff;
         endcase
+    end else begin
+        dout = vram_dout;
+        if( ioctl_addr[16] ) begin
+            casez( ioctl_addr[15:12] )
+                4'b0000: dout = char_dout;    // 4kB
+                4'b0001: dout = pal_dout;     // 4kB
+                4'b0010: dout = objram_dout;  // 2kB
+                default: dout = 16'hffff;
+            endcase
+        end
     end
 end
 
