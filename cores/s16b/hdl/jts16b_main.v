@@ -321,7 +321,7 @@ always @(posedge clk, posedge rst) begin
                     end
                 endcase
             2:
-                cab_dout <= { A[1] ? dipsw_b : dipsw_a };
+                cab_dout <= { A[1] ? dipsw_a : dipsw_b };
         endcase
     end
 end
