@@ -60,9 +60,9 @@ module `GAMETOP(
 
     // RAM/ROM LOAD
     input   [24:0]  ioctl_addr,
-    input   [ 7:0]  ioctl_data,
+    input   [ 7:0]  ioctl_dout,
     input           ioctl_wr,
-    output  [ 7:0]  ioctl_data2sd,
+    output  [ 7:0]  ioctl_din,
     input           ioctl_ram, // 0 - ROM, 1 - RAM(EEPROM)
     output  [21:0]  prog_addr,
     output  [15:0]  prog_data,
@@ -265,7 +265,7 @@ jts16_cen u_cen(
     .dipsw_a     ( dipsw_a    ),
     .dipsw_b     ( dipsw_b    ),
     // NVRAM dump
-    .ioctl_din   ( ioctl_data2sd    ),
+    .ioctl_din   ( ioctl_din  ),
     .ioctl_addr  ( ioctl_addr[16:0] )
 );
 `else
@@ -510,7 +510,7 @@ jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .dwnld_busy (dwnld_busy  ),
 
     .ioctl_addr ( ioctl_addr ),
-    .ioctl_data ( ioctl_data ),
+    .ioctl_dout ( ioctl_dout ),
     .ioctl_wr   ( ioctl_wr   ),
     .prog_addr  ( prog_addr  ),
     .prog_data  ( prog_data  ),

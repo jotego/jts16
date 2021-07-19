@@ -416,8 +416,7 @@ jtframe_m68k u_cpu(
 
 // Debug
 `ifdef MISTER
-`ifndef JTFRAME_RELEASE
-`ifndef BETA
+`ifndef NOSHADOW
 jts16_shadow #(.VRAMW(15)) u_shadow(
     .clk        ( clk       ),
     .clk_rom    ( clk_rom   ),
@@ -435,7 +434,6 @@ jts16_shadow #(.VRAMW(15)) u_shadow(
     .ioctl_addr ( ioctl_addr),
     .ioctl_din  ( ioctl_din )
 );
-`endif
 `endif
 `endif
 

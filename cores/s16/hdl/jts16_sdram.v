@@ -111,7 +111,7 @@ module jts16_sdram #(
     output           dwnld_busy,
 
     input    [24:0]  ioctl_addr,
-    input    [ 7:0]  ioctl_data,
+    input    [ 7:0]  ioctl_dout,
     input            ioctl_wr,
     output   [21:0]  prog_addr,
     output   [15:0]  prog_data,
@@ -169,8 +169,8 @@ end
 `else
     always @(posedge clk) begin
         if( header && ioctl_wr && ioctl_addr[4:0]==5'h10 ) begin
-            dec_en   <= |ioctl_data[1:0];
-            dec_type <= ioctl_data[1];
+            dec_en   <= |ioctl_dout[1:0];
+            dec_type <= ioctl_dout[1];
         end
     end
 `endif
@@ -185,7 +185,7 @@ end
 
 // Capture the game byte
 always @(posedge clk) begin
-    if( header && ioctl_wr && ioctl_addr[4:0]==5'h18) game_id <= ioctl_data;
+    if( header && ioctl_wr && ioctl_addr[4:0]==5'h18) game_id <= ioctl_dout;
 end
 
 jtframe_dwnld #(
@@ -199,7 +199,7 @@ jtframe_dwnld #(
     .clk          ( clk            ),
     .downloading  ( downloading    ),
     .ioctl_addr   ( ioctl_addr     ),
-    .ioctl_data   ( ioctl_data     ),
+    .ioctl_dout   ( ioctl_dout     ),
     .ioctl_wr     ( ioctl_wr       ),
     .prog_addr    ( prog_addr      ),
     .prog_data    ( prog_data      ),
