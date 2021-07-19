@@ -56,7 +56,7 @@ reg  [6:0] cur_obj;  // current object
 reg  [2:0] idx;
 reg  [STW-1:0] st;
 reg [15:0] zoom;
-reg        first, stop;
+reg        first, stop, visible;
 
 // Object data
 //reg        [7:0] bottom, top;
@@ -121,9 +121,13 @@ always @(posedge clk, posedge rst) begin
             end
             1: begin
                 if( !stop ) begin
+                    visible <= inzone;
                     if( bottom>=8'hf0 ) begin
                         st <= 0; // Done
-                    end else if( !inzone || badobj ) begin
+                    end else if( MODEL==0 && (!inzone || badobj) ) begin
+                        // For S16A there is no end-of-table (EOT) bit, so we
+                        // can loop around here. For S16B, we need to check
+                        // tbl_dout at state 3 for the EOT bit
                         // Next object
                         cur_obj <= cur_obj + 1'd1;
                         idx     <= 0;
@@ -140,14 +144,16 @@ always @(posedge clk, posedge rst) begin
             3: begin
                 pitch <= MODEL ? { {8{tbl_dout[7]}}, tbl_dout[7:0]} : tbl_dout;
                 hflipb<= tbl_dout[8];
-                if( MODEL && tbl_dout[15] ) begin
-                    st <= 0; // end of sprite list
-                end
-                if( MODEL && tbl_dout[14] ) begin // skip this sprite
+                if( MODEL && (tbl_dout[14] || !visible) ) begin // skip this sprite
                     cur_obj <= cur_obj + 1'd1;
                     idx     <= 0;
                     st      <= 1;
                     stop    <= 1;
+                    if( &cur_obj )
+                        st <= 0; // we're done
+                end
+                if( MODEL && tbl_dout[15] ) begin
+                    st <= 0; // end of sprite list
                 end
             end
             4: begin
