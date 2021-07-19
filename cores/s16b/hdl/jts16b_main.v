@@ -64,7 +64,7 @@ module jts16b_main(
     input              service,
     // ROM access
     output reg         rom_cs,
-    output      [17:1] rom_addr,
+    output      [18:1] rom_addr,
     input       [15:0] rom_data,
     input              rom_ok,
 
@@ -130,7 +130,7 @@ assign BUSn  = ASn | (LDSn & UDSn);
 
 // No peripheral bus access for now
 assign cpu_addr = A[12:1];
-assign rom_addr = A[18:1]; //  18:0 = 512kB
+assign rom_addr = { active[1], A[17:1] }; //  18:0 = 512kB
 // assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
 //                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
 

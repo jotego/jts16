@@ -35,7 +35,7 @@ module jts16_sdram #(
     input            main_cs,
     input            vram_cs,
     input            ram_cs,
-    input     [17:1] main_addr,
+    input     [18:1] main_addr,
     output    [15:0] main_data,
     output    [15:0] ram_data,
     output           main_ok,
@@ -219,7 +219,7 @@ jtframe_ram_4slots #(
 
     // Game ROM
     .SLOT1_DW(16),
-    .SLOT1_AW(17),  // 256kB temptative value
+    .SLOT1_AW(18),  // 512kB temptative value
 
     // VRAM access by SCR1
     .SLOT2_DW(16),

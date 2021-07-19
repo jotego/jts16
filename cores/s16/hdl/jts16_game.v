@@ -119,7 +119,7 @@ wire [ 5:0] tile_bank;
 
 // SDRAM interface
 wire        main_cs, vram_cs, ram_cs;
-wire [17:1] main_addr;
+wire [18:1] main_addr;
 wire [15:0] main_data, ram_data;
 wire        main_ok, ram_ok;
 

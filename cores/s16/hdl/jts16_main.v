@@ -64,7 +64,7 @@ module jts16_main(
     input              service,
     // ROM access
     output reg         rom_cs,
-    output      [17:1] rom_addr,
+    output      [18:1] rom_addr,
     input       [15:0] rom_data,
     input              rom_ok,
 
@@ -113,7 +113,7 @@ assign BUSn  = ASn | (LDSn & UDSn);
 assign BRn   = 1;
 assign BGACKn= 1;
 assign cpu_addr = A[12:1];
-assign rom_addr = A[17:1];
+assign rom_addr = {1'b0, A[17:1]}; // only 256kB on System 16A
 assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
                               && !io_cs  && !wdog_cs && pre_vram_cs && pre_ram_cs);
 
