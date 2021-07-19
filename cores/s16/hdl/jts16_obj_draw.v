@@ -40,7 +40,8 @@ module jts16_obj_draw(
     // Buffer
     output     [11:0]  bf_data,
     output reg         bf_we,
-    output reg [ 8:0]  bf_addr
+    output reg [ 8:0]  bf_addr,
+    input      [ 7:0]  debug_bus
 );
 
 parameter       MODEL=0;  // 0 = S16A, 1 = S16B

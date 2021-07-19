@@ -129,6 +129,8 @@ always @(posedge clk, posedge rst) begin
                         idx     <= 0;
                         st      <= 1;
                         stop    <= 1;
+                        if( &cur_obj )
+                            st <= 0; // we're done
                     end else begin // draw this one
                         first <= top == vrf[7:0]; // first line
                     end
