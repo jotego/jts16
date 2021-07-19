@@ -86,7 +86,7 @@ always @(posedge clk, posedge rst) begin
             bf_we    <= 0;
             stop     <= 1;
             bf_addr  <= xpos;
-            hzacc    <= { hzoom, 2'd0 };
+            hzacc    <= { hzoom[3:0], 2'd0 };
         end else begin
             bf_we <= 0;
             if(obj_ok) stop <= 0;
