@@ -884,10 +884,12 @@
  Sprites use color entries 1024-2047, divided into 64 16-color palettes.
 
  The backdrop color is shown behind all layers in the active display area
- and is selected from palette entry #0. The remainder of the frame (meaning
+ and is selected from palette entry #0*. The remainder of the frame (meaning
  overscan, vertical retrace, and vertical blank) is always shown as black.
  If the display is turned off through bit 5 of $C40001, the affected lines
  are also shown as black.
+
+ * entry #0 of SCR2 palette (JOTEGO)
 
  Palette flicker:
 
