@@ -29,6 +29,8 @@ module jts16_shadow #(parameter VRAMW=14) (
     input      [15:0] din,
     input      [ 1:0] dswn,  // write mask -active low
 
+    input      [ 5:0] tile_bank,
+
     // Let data be dumped via NVRAM interface
     input      [16:0] ioctl_addr,
     output     [ 7:0] ioctl_din
@@ -63,7 +65,8 @@ always @(*) begin
             casez( ioctl_addr[15:12] )
                 4'b0000: dout = char_dout;    // 4kB
                 4'b0001: dout = pal_dout;     // 4kB
-                4'b0010: dout = objram_dout;  // 2kB
+                4'b0010:
+                    dout = ioctl_addr[11] ? {2'd0, tile_bank} : objram_dout;  // 2kB
                 default: dout = 16'hffff;
             endcase
         end

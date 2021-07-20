@@ -144,7 +144,7 @@ always @(posedge clk, posedge rst) begin
             3: begin
                 pitch <= MODEL ? { {8{tbl_dout[7]}}, tbl_dout[7:0]} : tbl_dout;
                 hflipb<= tbl_dout[8];
-                if( MODEL && (tbl_dout[14] || !visible) ) begin // skip this sprite
+                if( (MODEL && tbl_dout[14]) || !visible ) begin // skip this sprite
                     cur_obj <= cur_obj + 1'd1;
                     idx     <= 0;
                     st      <= 1;

@@ -283,6 +283,7 @@ always @(*) begin
     sort2 = sort_joy( joystick2 );
 end
 
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         tile_bank <= 0;
@@ -430,6 +431,7 @@ jts16_shadow #(.VRAMW(15)) u_shadow(
     .din        ( cpu_dout  ),
     .dswn       ( {UDSWn, LDSWn} ),  // write mask -active low
 
+    .tile_bank  ( tile_bank ),
     // Let data be dumped via NVRAM interface
     .ioctl_addr ( ioctl_addr),
     .ioctl_din  ( ioctl_din )

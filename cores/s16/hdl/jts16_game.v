@@ -333,10 +333,18 @@ jts16_cen u_cen(
     .peak       ( game_led  )
 );
 `else
-assign snd_cs=0;
-assign snd_addr=0;
-//assign pcm_cs=0;
-//assign pcm_addr=0;
+    assign snd_cs=0;
+    assign snd_addr=0;
+    //assign pcm_cs=0;
+    //assign pcm_addr=0;
+    `ifdef SIMULATION
+        reg [7:0] sim_def[0:0];
+
+        initial begin
+            $readmemh("tilebank.hex",sim_def);
+        end
+        assign tile_bank = sim_def[0][5:0];
+    `endif
 `endif
 
 `ifdef S16B

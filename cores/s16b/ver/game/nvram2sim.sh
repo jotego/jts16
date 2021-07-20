@@ -13,6 +13,7 @@ SCR_START=0
 CHAR_START=64
 PAL_START=$((CHAR_START+4))
 OBJRAM_START=$((PAL_START+4))
+BANK_START=$((OBJRAM_START+2))
 
 if [ $(basename `pwd`) = game ]; then
     echo "Call this script from the simulation scene folder"
@@ -38,5 +39,6 @@ dump scr  $SCR_START 64 || exit $?
 dump char $CHAR_START  4 || exit $?
 dump pal  $PAL_START  4 || exit $?
 dump obj  $OBJRAM_START  2 || exit $?
+dd if="$FILE" of=tilebank$SCENE.bin skip=$((BANK_START*1024)) count=1 bs=1
 
 # rm "$FILE"

@@ -51,6 +51,7 @@ if [ ! -z "$SCENE" ]; then
 	drop1 -l < $GAME/obj${SCENE}.bin > obj_lo.bin
 
     hexdump -v -e '/1 "%02X "' -s 0xe00 $GAME/char${SCENE}.bin > mmr.hex
+    hexdump -v -e '/1 "%02X "' $GAME/tilebank${SCENE}.bin > tilebank.hex
 
 	cp $GAME/scr${SCENE}.bin scr.bin
     OTHER="$OTHER -d NOMAIN -video -nosnd"

@@ -56,10 +56,6 @@ wire [ 1:0] obj_prio;
 reg         shadow;
 
 assign we = ~dsn & {2{pal_cs}};
-
-// assign red   = { rgb[ 3:0], rgb[12] };
-// assign green = { rgb[ 7:4], rgb[13] };
-// assign blue  = { rgb[11:8], rgb[14] };
 assign { red, green, blue } = rgb;
 
 wire [4:0] rpal, gpal, bpal;
@@ -68,7 +64,6 @@ assign rpal  = { pal[ 3:0], pal[12] };
 assign gpal  = { pal[ 7:4], pal[13] };
 assign bpal  = { pal[11:8], pal[14] };
 
-
 assign obj_prio = obj_pxl[11:10];
 
 // bit 11 = shadow bit
@@ -76,7 +71,7 @@ assign obj_prio = obj_pxl[11:10];
 //    9:4 = palette
 //    3:0 = colour index
 function [11:0] tile_or_obj( input [9:0] obj, input [9:0] tile, input tile_prio, input obj_prio );
-    tile_or_obj = obj[3:0]==0 || !obj_prio || tile_prio ?
+    tile_or_obj = obj[3:0]==0 || (( !obj_prio || tile_prio) && tile[2:0]!=0) ?
                         { 2'b0, tile } :
                    ( &obj[9:4] ? { 2'b10, tile } : { 2'b1, obj  } ); // shadow or object
 endfunction
@@ -107,9 +102,11 @@ always @(*) begin
     pal_addr = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0[10:0] : (
                (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1[10:0] : (
                 lyr2[10:0] ));
+    //pal_addr = {1'b1, obj_g[9:0] };
     shadow = lyr0[11] | lyr1[11] | lyr2[11];
 end
 
+`ifndef GRAY
 jtframe_dual_ram16 #(
     .aw        (11          ),
     .simfile_lo("pal_lo.bin"),
@@ -130,6 +127,9 @@ jtframe_dual_ram16 #(
     .we1    ( 2'b0      ),
     .q1     ( pal       )
 );
+`else
+    assign pal = {4'b0, {3{pal_addr[3:0]}} };
+`endif
 
 function [4:0] dim;
     input [4:0] a;
