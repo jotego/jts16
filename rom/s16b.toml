@@ -11,6 +11,14 @@ nvram = 75776
 
 [parse]
 sourcefile="segas16b.cpp"
+# Games with S16A parents need explicit listing
+# the description is used to make the alternate folders
+parents= [
+    {name="shinobi", description="Shinobi"},
+    {name="afighter", description="Action Fighter"},
+    {name="sdi", description="SDI"},
+    {name="tetris", description="Tetris"}
+]
 
 [parse.skip]
 descriptions = [ "16A", "Taito" ]
