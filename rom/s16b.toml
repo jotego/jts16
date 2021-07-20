@@ -13,7 +13,7 @@ nvram = 75776
 sourcefile="segas16b.cpp"
 
 [parse.skip]
-descriptions = [ "16B", "Taito" ]
+descriptions = [ "16A", "Taito" ]
 setnames = [ "lockonph" ]
 # bootlegs = true # do not process bootlegs
 
