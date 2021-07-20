@@ -38,6 +38,8 @@ module jts16_char(
     output             scr_start,
     output reg [ 8:0]  rowscr1,
     output reg [ 8:0]  rowscr2,
+    output reg         altscr1,
+    output reg         altscr2,
 
     // Video signal
     input              flip,
@@ -98,7 +100,8 @@ always @(*) begin
     // end
     // Reads row scroll during blanking
     if ( hdump[8:4] == ROWREAD ) begin
-        scan_addr = { 5'h1f, vf[7:3], hdump[3] };
+        scan_addr = MODEL ? { 5'h1f, hdump[3], vf[7:3] } :
+                            { 5'h1f, vf[7:3], hdump[3] };
     end
 end
 
@@ -108,10 +111,13 @@ always @(posedge clk, posedge rst) begin
         rowscr2 <= 0;
     end else begin
         if ( hdump[8:4] == ROWREAD ) begin
-            if( !hdump[3] )
+            if( !hdump[3] ) begin
                 rowscr1 <= scan[8:0];
-            else
+                altscr1 <= MODEL[0] & scan[15];
+            end else begin
                 rowscr2 <= scan[8:0];
+                altscr2 <= MODEL[0] & scan[15];
+            end
         end
     end
 end

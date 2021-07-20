@@ -39,6 +39,8 @@ module jts16_mmr(
 
     inout              rowscr1_en,
     inout              rowscr2_en,
+    input              altscr1_en,
+    input              altscr2_en,
     // status dump
     input      [ 7:0]  st_addr,
     output reg [ 7:0]  st_dout
@@ -51,7 +53,10 @@ reg [15:0]  scr1_pages_flip, scr2_pages_flip,
             // S16B only:
             scr1_pages_alt, scr2_pages_alt,
             scr1_vpos_alt,  scr2_vpos_alt,
-            scr1_hpos_alt,  scr2_hpos_alt;
+            scr1_hpos_alt,  scr2_hpos_alt,
+            scr1_pages_std, scr2_pages_std,
+            scr1_vpos_std,  scr2_vpos_std,
+            scr1_hpos_std,  scr2_hpos_std;
 
 generate
     if( MODEL==1 ) begin
@@ -70,6 +75,7 @@ endfunction
     initial begin
         $readmemh( "mmr.hex", sim_cfg );
 
+    `ifndef S16B
         scr1_pages_flip = sim_cfg[9'h08e];
         scr1_pages_nofl = sim_cfg[9'h09e];
         scr2_pages_flip = sim_cfg[9'h08c];
@@ -78,6 +84,20 @@ endfunction
         scr2_vpos       = sim_cfg[9'h126];
         scr1_hpos       = sim_cfg[9'h1f8];
         scr2_hpos       = sim_cfg[9'h1fa];
+    `else
+        scr1_pages_std  = sim_cfg[9'h080];
+        scr2_pages_std  = sim_cfg[9'h082];
+        scr1_pages_alt  = sim_cfg[9'h084];
+        scr2_pages_alt  = sim_cfg[9'h086];
+        scr1_vpos_std   = sim_cfg[9'h090];
+        scr2_vpos_std   = sim_cfg[9'h092];
+        scr1_vpos_alt   = sim_cfg[9'h094];
+        scr2_vpos_alt   = sim_cfg[9'h096];
+        scr1_hpos_std   = sim_cfg[9'h098];
+        scr2_hpos_std   = sim_cfg[9'h09a];
+        scr1_hpos_alt   = sim_cfg[9'h09c];
+        scr2_hpos_alt   = sim_cfg[9'h09e];
+    `endif
     end
 `endif
 
@@ -85,6 +105,13 @@ always @(posedge clk) begin
     if( MODEL==0 ) begin
         scr1_pages <= flip ? scr1_pages_flip : scr1_pages_nofl;
         scr2_pages <= flip ? scr2_pages_flip : scr2_pages_nofl;
+    end else begin
+        scr1_pages <= altscr1_en ? scr1_pages_alt : scr1_pages_std;
+        scr2_pages <= altscr2_en ? scr2_pages_alt : scr2_pages_std;
+        scr1_vpos  <= altscr1_en ? scr1_vpos_alt : scr1_vpos_std;
+        scr2_vpos  <= altscr2_en ? scr2_vpos_alt : scr2_vpos_std;
+        scr1_hpos  <= altscr1_en ? scr1_hpos_alt : scr1_hpos_std;
+        scr2_hpos  <= altscr2_en ? scr2_hpos_alt : scr2_hpos_std;
     end
     if( char_cs && cpu_addr[11:9]==3'b111 && dsn!=2'b11) begin
         if( MODEL==0 ) begin
@@ -101,16 +128,16 @@ always @(posedge clk) begin
             endcase
         end else begin // System 16B
             case( {cpu_addr[8:1], 1'b0} )
-                9'h080: scr1_pages      <= bytemux( scr1_pages      );
-                9'h082: scr2_pages      <= bytemux( scr2_pages      );
+                9'h080: scr1_pages_std  <= bytemux( scr1_pages      );
+                9'h082: scr2_pages_std  <= bytemux( scr2_pages      );
                 9'h084: scr1_pages_alt  <= bytemux( scr1_pages_alt  );
                 9'h086: scr2_pages_alt  <= bytemux( scr2_pages_alt  );
-                9'h090: scr1_vpos       <= bytemux( scr1_vpos       );
-                9'h092: scr2_vpos       <= bytemux( scr2_vpos       );
+                9'h090: scr1_vpos_std   <= bytemux( scr1_vpos       );
+                9'h092: scr2_vpos_std   <= bytemux( scr2_vpos       );
                 9'h094: scr1_vpos_alt   <= bytemux( scr1_vpos_alt   );
                 9'h096: scr2_vpos_alt   <= bytemux( scr2_vpos_alt   );
-                9'h098: scr1_hpos       <= bytemux( scr1_hpos       );
-                9'h09a: scr2_hpos       <= bytemux( scr2_hpos       );
+                9'h098: scr1_hpos_std   <= bytemux( scr1_hpos       );
+                9'h09a: scr2_hpos_std   <= bytemux( scr2_hpos       );
                 9'h09c: scr1_hpos_alt   <= bytemux( scr1_hpos_alt   );
                 9'h09e: scr2_hpos_alt   <= bytemux( scr2_hpos_alt   );
                 default:;

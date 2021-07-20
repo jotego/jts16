@@ -426,6 +426,7 @@ jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .LVBL       ( LVBL      ),
     .game_id    ( game_id   ),
     .tile_bank  ( tile_bank ),
+    //.tile_bank  ( debug_bus[5:0] ),
 
     .dec_en     (  dec_en   ),
     .dec_type   (  dec_type ),

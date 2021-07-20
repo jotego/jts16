@@ -100,7 +100,8 @@ localparam [9:0] OBJ_DLY = MODEL ? 22 : 17;
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;
-wire        rowscr1_en, rowscr2_en;
+wire        rowscr1_en, rowscr2_en,
+            altscr1_en, altscr2_en;
 
 // Scroll
 wire [ 8:0] rowscr1, rowscr2;
@@ -182,6 +183,8 @@ jts16_mmr #(.MODEL(MODEL)) u_mmr(
 
     .rowscr1_en ( rowscr1_en    ),
     .rowscr2_en ( rowscr2_en    ),
+    .altscr1_en ( altscr1_en    ),
+    .altscr2_en ( altscr2_en    ),
 
     .st_addr    ( st_addr       ),
     .st_dout    ( st_dout       )
@@ -209,6 +212,8 @@ jts16_char #(.MODEL(MODEL)) u_char(
     .scr_start ( scr_start      ),
     .rowscr1   ( rowscr1        ),
     .rowscr2   ( rowscr2        ),
+    .altscr1   ( altscr1_en     ),
+    .altscr2   ( altscr2_en     ),
 
     // Video signal
     .flip      ( flipx          ),
