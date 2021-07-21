@@ -37,7 +37,7 @@
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 01 00 00 00 00
-            00 00 00 00 00 00 00 00
+            04 00 00 00 00 00 00 00
         </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
@@ -63,18 +63,32 @@
         <part repeat="0x80000"> FF</part>
         <!-- sprites - starts at 0x240000 -->
         <interleave output="16">
-            <part name="mpr-12378.b1" crc="119e5a82" map="01"/>
-            <part name="mpr-12379.b5" crc="1a0e8c57" map="10"/>
+            <part name="mpr-12378.b1" crc="119e5a82" map="01" length="0x20000"/>
+            <part name="mpr-12379.b5" crc="1a0e8c57" map="10" length="0x20000"/>
         </interleave>
         <interleave output="16">
-            <part name="mpr-12380.b2" crc="bb2c0853" map="01"/>
-            <part name="mpr-12381.b6" crc="81ba6ecc" map="10"/>
+            <part name="mpr-12380.b2" crc="bb2c0853" map="01" length="0x20000"/>
+            <part name="mpr-12381.b6" crc="81ba6ecc" map="10" length="0x20000"/>
         </interleave>
         <interleave output="16">
-            <part name="mpr-12382.b3" crc="81601c6f" map="01"/>
-            <part name="mpr-12383.b7" crc="5dbacf7a" map="10"/>
+            <part name="mpr-12382.b3" crc="81601c6f" map="01" length="0x20000"/>
+            <part name="mpr-12383.b7" crc="5dbacf7a" map="10" length="0x20000"/>
         </interleave>
-        <part repeat="0x80000"> FF</part>
+        <part repeat="0x40000"> FF</part>
+        <!-- ROM split at 340000 (100000) -->
+        <interleave output="16">
+            <part name="mpr-12378.b1" crc="119e5a82" map="01" length="0x20000" offset="0x20000"/>
+            <part name="mpr-12379.b5" crc="1a0e8c57" map="10" length="0x20000" offset="0x20000"/>
+        </interleave>
+        <interleave output="16">
+            <part name="mpr-12380.b2" crc="bb2c0853" map="01" length="0x20000" offset="0x20000"/>
+            <part name="mpr-12381.b6" crc="81ba6ecc" map="10" length="0x20000" offset="0x20000"/>
+        </interleave>
+        <interleave output="16">
+            <part name="mpr-12382.b3" crc="81601c6f" map="01" length="0x20000" offset="0x20000"/>
+            <part name="mpr-12383.b7" crc="5dbacf7a" map="10" length="0x20000" offset="0x20000"/>
+        </interleave>
+        <part repeat="0x40000"> FF</part>
         <!-- mcu - starts at 0x440000 -->
         <part name="317-0112.c2" crc="bda31044"/>
         <part repeat="0x1000"> FF</part>

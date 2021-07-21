@@ -50,6 +50,11 @@ dev = [
     { byte=0x12, dev="mc8123",  value=1 },
     { byte=0x13, dev="i8751",   value=1 }
 ]
+machine = [
+    { machine="riotcity", byte=0x18, value=4 },
+    { machine="goldnaxe", byte=0x18, value=4 },
+    { machine="eswat",    byte=0x18, value=4 }
+]
 
 # Sample header data
 # data=[
@@ -76,4 +81,14 @@ regions = [
 order = [
     "maincpu", "soundcpu", "gfx1",
     "sprites", "mcu", "maincpu:key", "soundcpu:key"
+]
+splits = [
+    { machine="riotcity", region="sprites", offset=0x100000 },
+    { machine="goldnaxe", region="sprites", offset=0x100000 },
+    { setname="eswat",    region="sprites", offset=0x100000 },
+    { setname="mvp",      region="sprites", offset=0x100000 },
+    { machine="ultracin", region="sprites", offset=0x100000 },
+    # Do not split
+    { setname="eswatj1", offset=0  },
+    { setname="eswatj1d", offset=0 }
 ]
