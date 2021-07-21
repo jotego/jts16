@@ -97,5 +97,5 @@
         <dip name="Demo Sounds" bits="9" ids="On,Off"/>
         <dip name="Difficulty" bits="10,13" ids="Special,Easiest,Easier,Hardest,Harder,Easy,Hard,Normal"/>
     </switches>
-    <buttons names="Slay,Jump,Magic,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
+    <buttons names="Attack,Jump,Magic,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>

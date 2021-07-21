@@ -109,5 +109,5 @@
         <dip name="Demo Sounds" bits="14" ids="On,Off"/>
         <dip name="Bonus Energy" bits="15" ids="2,1"/>
     </switches>
-    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="Punch,Kick,Jump,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>

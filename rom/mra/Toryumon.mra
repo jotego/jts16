@@ -101,5 +101,5 @@
         <dip name="VS Play Mode" bits="12" ids="3 Set,1 Set"/>
         <dip name="Difficulty" bits="13,15" ids="Hard+5,Hard+4,Hard+3,Hard+2,Hard+1,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="Block Turn,-,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="1"/>
 </misterromdescription>

@@ -109,5 +109,5 @@
         <dip name="Lives" bits="2,3" ids="240 ,4,2,3"/>
         <dip name="Difficulty" bits="6,7" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="Shot,Bomb,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>

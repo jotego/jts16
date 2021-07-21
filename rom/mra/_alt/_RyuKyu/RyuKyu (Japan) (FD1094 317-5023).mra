@@ -97,5 +97,5 @@
         <dip name="Omikuji Difficulty" bits="12,13" ids="Hardest,Hard,Easy,Normal"/>
         <dip name="Difficulty" bits="14,15" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="Cancel,Decide,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>

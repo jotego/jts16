@@ -139,5 +139,5 @@
         <dip name="CPU Starts With +6 Pts." bits="14" ids="On,Off"/>
         <dip name="Allow Continue" bits="15" ids="On,Off"/>
     </switches>
-    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="Shot,Pass,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>

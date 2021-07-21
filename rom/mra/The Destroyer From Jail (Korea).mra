@@ -126,5 +126,5 @@
         <dip name="Demo Sounds" bits="10" ids="On,Off"/>
         <dip name="Flip Screen" bits="11" ids="On,Off"/>
     </switches>
-    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="Assault Rifle,Jump,R.P.G,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>

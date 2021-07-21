@@ -110,5 +110,5 @@
         <dip name="Bonus Life" bits="13,14" ids="80k,50k,30k,40k"/>
         <dip name="Cabinet" bits="15" ids="Upright,Cocktail"/>
     </switches>
-    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="Shot,Super Shot,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>
