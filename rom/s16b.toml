@@ -27,11 +27,48 @@ setnames = [ "lockonph" ]
 # bootlegs = true # do not process bootlegs
 
 [buttons]
+#Sega System 16B
+#Sega System 16B - Charon
+#Sega System 16C
+#Sega System 16B - Korean
 core=4 # max number of buttons supported by the core
 names = [
-    { machine="goldnaxe", names="Slay,Jump,Magic" },
-    { machine="shinobi", names="Shuriken,Jump,Magic" },
-    { machine="altbeast", names="Punch,Kick,Magic" }
+    { machine="aceattac", names="none" },
+    { machine="afighter", names="Shot,Special Weapon" },
+    { machine="aliensyn", names="Shot" },
+    { machine="altbeast", names="Punch,Kick,Jump" },
+    { machine="aurail",   names="Rapid Shot,Kite/Turn,Shield" },
+    { machine="bayroute", names="Shot,Jump,Select" },
+    { machine="bullet",   names="Shot (Up),Shot (Right),Shot (Behind),Shot (Left)" },
+    { machine="cotton",   names="Shoot/Magic,Bomb/Nymphs" },
+    { machine="ddux",     names="Shot,Jump" },
+    { machine="dunkshot", names="Shot,Pass" },
+    { machine="eswat",    names="Shot,Jump,Special Weapons" },
+    { machine="exctleag", names="Change,Select,Chase" },
+    { machine="fpoint",   names="Rotate,Rotate,Rotate" },
+    { machine="goldnaxe", names="Attack,Jump,Magic" },
+    { machine="hwchamp",  names="none" },
+    { machine="mvp",      names="Change,Select,Chase" },
+    { machine="passsht",  names="Flat,Slice,Lob,Top Spin" },
+    { machine="riotcity", names="Attack,Jump" },
+    { machine="ryukyu",   names="Cancel,Decide" },
+    { machine="sdi",      names="Shot" },
+    { machine="sonicbom", names="Shot,Super Shot" },
+    { machine="shinobi",  names="Shuriken,Jump,Magic" },
+    { machine="sjryuko",  names="none" },
+    { machine="suprleag", names="Change,Select,Chase" },
+    { machine="tetris",   names="Rotate,Rotate,Rotate" },
+    { machine="timescan", names="L. Flipper/Ball Start,R. Flipper/Lane Shift" },
+    { machine="toryumon", names="Block Turn" },
+    { machine="tturf",    names="Punch,Kick,Jump" },
+    { machine="ultracin", names="Attack" },
+    { machine="wb3",      names="Shot,Jump" },
+    { machine="wrestwar", names="Punch,Kick" },
+    { machine="fantzn2x", names="Shot,Bomb" },
+    { machine="atomicp",  names="Rotate" },
+    { machine="snapper",  names="Left,Right,Shot" },
+    { machine="lockonph", names="Shot,Bomb" },
+    { machine="dfjail",   names="Assault Rifle,Jump,R.P.G" }
 ]
 
 [rbf]
