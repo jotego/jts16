@@ -11,7 +11,7 @@ beta = true
 
 [parse]
 sourcefile="segas16a.cpp"
-# Games with S16A parents need explicit listing
+# Games with S16B parents need explicit listing
 # the description is used to make the alternate folders
 parents= [
     {name="aliensyn", description="Alien Syndrome"},
@@ -19,7 +19,7 @@ parents= [
     {name="passsht",  description="Passing Shot"},
     {name="sjryuko",  description="Sukeban Jansi Ryuko"},
     {name="timescan", description="Time Scanner"},
-    {name="wb3", description="Wonder Boy III"}
+    {name="wb3",      description="Wonder Boy III"}
 ]
 
 [parse.skip]

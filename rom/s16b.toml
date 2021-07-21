@@ -70,7 +70,7 @@ regions = [
     { name="maincpu",       width=16, reverse=true },
     { name="mcu",           start=$MCU_START, len=0x1000 },
     { name="soundcpu",      start=$BA1_START },
-    { name="gfx1",          start=$BA2_START, frac={ bytes=1, parts=4}, sort_byext=true },
+    { name="gfx1",          start=$BA2_START, frac={ bytes=1, parts=4}, sort_byext=true, len=0x100000 },
     { name="sprites",       start=$BA3_START, width=16, reverse=true },
     { name="maincpu:key",   start=$MAINKEY_START, len=0x2000 },
     { name="soundcpu:key",  start=$SNDKEY_START, len=0x2000 },
