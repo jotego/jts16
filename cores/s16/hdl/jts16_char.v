@@ -36,8 +36,8 @@ module jts16_char(
 
     // In-RAM data
     output             scr_start,
-    output reg [ 8:0]  rowscr1,
-    output reg [ 8:0]  rowscr2,
+    output reg [ 9:0]  rowscr1,
+    output reg [ 9:0]  rowscr2,
     output reg         altscr1,
     output reg         altscr2,
 
@@ -112,10 +112,10 @@ always @(posedge clk, posedge rst) begin
     end else begin
         if ( hdump[8:4] == ROWREAD ) begin
             if( !hdump[3] ) begin
-                rowscr1 <= scan[8:0];
+                rowscr1 <= scan[9:0];
                 altscr1 <= MODEL[0] & scan[15];
             end else begin
-                rowscr2 <= scan[8:0];
+                rowscr2 <= scan[9:0];
                 altscr2 <= MODEL[0] & scan[15];
             end
         end

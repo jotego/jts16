@@ -28,7 +28,7 @@ module jts16_scr(
     input      [15:0]  pages,
     input      [15:0]  hscr,
     input      [15:0]  vscr,
-    input      [ 8:0]  rowscr,
+    input      [ 9:0]  rowscr,
     input              rowscr_en,
 
     // SDRAM interface
@@ -73,22 +73,21 @@ reg        done, draw;
 reg  [7:0] busy;
 reg        hsel;
 
-reg  [8:0] eff_scr;
+reg  [9:0] eff_scr;
 reg  [8:0] hdly;
 
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 assign vrf      = flip ? 9'd223-vrender : vrender;
-//assign hdly     = hdump - PXL_DLY;
 
 always @(*) begin
-    eff_scr  = rowscr_en ? rowscr : hscr[8:0];
+    eff_scr  = rowscr_en ? rowscr : hscr[9:0];
     if( MODEL==0 ) begin
-        {hov, hpos } = {1'b0, hscan} - {1'b0, eff_scr} + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
+        {hov, hpos } = {1'b0, hscan} - {1'b0, eff_scr[8:0]} + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
         {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     end else begin
-        {hov, ncpos } = {1'b0, hscan} - {1'b0, eff_scr} + PXL_DLY + {1'b0,PAGE_ADJ};
+        {hov, ncpos } = {1'b0, hscan} - {1'b0, eff_scr[8:0]} + PXL_DLY + {1'b0,PAGE_ADJ};
         {vov, vpos  } = vscan + vscr[8:0]; // + { debug_bus[7], debug_bus};
-        hpos = hscan - eff_scr + PXL_DLY[8:0];
+        hpos = hscan - eff_scr[8:0] + PXL_DLY[8:0];
     end
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( { vov, hov } )

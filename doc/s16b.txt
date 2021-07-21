@@ -1026,7 +1026,7 @@
  Vertical scroll / column scroll enable registers:
 
  MSB          LSB
- e??????yyyyyyyyy
+ e???-???y-yyyy-yyyy
 
  e : 1= Enable column-based scroll, 0= Enable whole screen vertical scroll
  y : Scroll value for whole screen vertical scroll
@@ -1035,7 +1035,7 @@
  Horizontal scroll / row scroll enable registers:
 
  MSB          LSB
- e?????xxxxxxxxxx
+ e???-??xx-xxxx-xxxx
 
  e : 1= Enable row-based horizontal scroll, 0= Enable whole screen horizontal
      scroll

@@ -104,7 +104,7 @@ wire        rowscr1_en, rowscr2_en,
             altscr1_en, altscr2_en;
 
 // Scroll
-wire [ 8:0] rowscr1, rowscr2;
+wire [ 9:0] rowscr1, rowscr2;
 wire        scr_start;
 
 // video layers
