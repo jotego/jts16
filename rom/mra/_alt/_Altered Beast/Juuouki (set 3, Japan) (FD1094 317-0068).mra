@@ -130,5 +130,5 @@
         <dip name="Player Meter" bits="12,13" ids="5,4,2,3"/>
         <dip name="Difficulty" bits="14,15" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="Punch,Kick,Magic,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>

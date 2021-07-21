@@ -28,6 +28,11 @@ setnames = [ "lockonph" ]
 
 [buttons]
 core=4 # max number of buttons supported by the core
+names = [
+    { machine="goldnaxe", names="Slay,Jump,Magic" },
+    { machine="shinobi", names="Shuriken,Jump,Magic" },
+    { machine="altbeast", names="Punch,Kick,Magic" }
+]
 
 [rbf]
 name="jts16b"
