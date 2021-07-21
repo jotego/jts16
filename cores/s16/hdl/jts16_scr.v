@@ -84,11 +84,12 @@ always @(*) begin
     eff_scr  = rowscr_en ? rowscr : hscr[8:0];
     if( MODEL==0 ) begin
         {hov, hpos } = {1'b0, hscan} - {1'b0, eff_scr} + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
+        {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     end else begin
-        {hov, ncpos} = {1'b0, hscan} - {1'b0, eff_scr} + PXL_DLY + {1'b0,PAGE_ADJ};
+        {hov, ncpos } = {1'b0, hscan} - {1'b0, eff_scr} + PXL_DLY + {1'b0,PAGE_ADJ};
+        {vov, vpos  } = vscan + vscr[8:0]; // + { debug_bus[7], debug_bus};
         hpos = hscan - eff_scr + PXL_DLY[8:0];
     end
-    {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( { vov, hov } )
         2'b10: page = pages[15:12]; // upper left
