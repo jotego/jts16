@@ -114,6 +114,18 @@ always @(*) begin
     shadow = lyr0[11] | lyr1[11] | lyr2[11] | lyr3[11];
 end
 
+`ifdef SIMULATION
+reg [4:0] active;
+
+always @(*) begin
+    active   = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? 5'b1000 : (
+               (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? 5'b0100 : (
+               (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? 5'b0010 : (
+                5'b0 )));
+    if( pal_addr[10] ) active=5'b10000;
+end
+`endif
+
 jtframe_dual_ram16 #(
     .aw        (11          ),
     .simfile_lo("pal_lo.bin"),

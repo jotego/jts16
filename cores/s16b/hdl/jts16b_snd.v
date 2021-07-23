@@ -85,13 +85,15 @@ always @(*) begin
     rom_addr = { 6'd0, A[14:0] };
     if( bank_cs ) begin
         // For board type 171-5358
-        rom_addr[15:14] = rom_msb[1:0];
-        casez( rom_msb[5:2] ) // A11-A8 refer to the ROM label in the PCB:
-            4'b1???: rom_addr[17:16] = 3; // A11 at top
-            4'b01??: rom_addr[17:16] = 2; // A10
-            4'b001?: rom_addr[17:16] = 1; // A9
-            4'b0001: rom_addr[17:16] = 0; // A8
-        endcase
+        //rom_addr[15:14] = rom_msb[1:0];
+        //casez( rom_msb[5:2] ) // A11-A8 refer to the ROM label in the PCB:
+        //    4'b1???: rom_addr[17:16] = 3; // A11 at top
+        //    4'b01??: rom_addr[17:16] = 2; // A10
+        //    4'b001?: rom_addr[17:16] = 1; // A9
+        //    4'b0001: rom_addr[17:16] = 0; // A8
+        //endcase
+        // For board type 171-5521
+        rom_addr[17:14] = rom_msb[3:0];
         rom_addr = rom_addr + 19'h10000;
     end
 end
