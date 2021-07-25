@@ -279,6 +279,30 @@ jts16_cen u_cen(
     assign main_dout = 0;
     assign video_en  = 1;
     assign sound_en  = 0; // active low (?)
+    `ifdef S16B
+        reg aux_obf = 0;
+        reg [7:0] aux_dout=0;
+        assign sndmap_dout = aux_dout;
+        assign sndmap_obf  = aux_obf;
+        integer framecnt=0, last_fcnt=0;
+
+        always @(negedge LVBL) begin
+            framecnt <= framecnt+1;
+        end
+        always @(negedge LHBL_dly) begin
+            last_fcnt <= framecnt;
+            aux_obf <= last_fcnt != framecnt && (framecnt==10
+                || framecnt==12
+                // || framecnt==32
+                // || framecnt==72
+                // || framecnt==112
+            );
+            if( framecnt == 11 ) aux_dout <= 8'h4b; //8'h48 Ok; 4c
+            //if( framecnt == 31 ) aux_dout <= 8'h42;
+            //if( framecnt == 71 ) aux_dout <= 8'h41;
+            //if( framecnt ==111 ) aux_dout <= 8'h40;
+        end
+    `endif
 `endif
 
 `ifndef NOSOUND
