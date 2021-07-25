@@ -63,7 +63,7 @@ reg         rom_ok2;
 wire        rom_good, cmd_cs;
 wire [ 7:0] cpu_dout, fm_dout, ram_dout;
 wire        nmi_n, pcm_busyn,
-            wr_n, rd_n;
+            wr_n, rd_n, m1_n;
 reg         pcm_mdn, pcm_rst;
 reg  [ 5:0] rom_msb;
 
@@ -105,7 +105,7 @@ always @(*) begin
 
     // Port Map
     { fm_cs, misc_cs, pcm_cs, mapper_cs } = 0;
-    if( !iorq_n ) begin
+    if( !iorq_n && m1_n ) begin
         case( A[7:6] )
             0: fm_cs     = 1;
             1: misc_cs   = 1;
@@ -178,7 +178,7 @@ jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
     .int_n      ( int_n       ),
     .nmi_n      ( nmi_n       ),
     .busrq_n    ( 1'b1        ),
-    .m1_n       (             ),
+    .m1_n       ( m1_n        ),
     .mreq_n     ( mreq_n      ),
     .iorq_n     ( iorq_n      ),
     .rd_n       ( rd_n        ),
