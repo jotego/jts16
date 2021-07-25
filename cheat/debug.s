@@ -76,6 +76,16 @@ SCREEN:
     input  s1,f ; debug bus
     call WRITE_HEX
 
+    ; Sound latch
+    add s0,2
+    load s3,16
+    call  write_st8
+
+    ; Tile bank
+    add s0,2
+    load s3,17
+    call  write_st8
+
 CLOSE_FRAME:
     output sb,6     ; LED
     ; Frame counter
@@ -97,6 +107,18 @@ write_st16:
     input s1,d
     call WRITE_HEX
     sub s3,1
+    output s3,c
+    add s3,0   ; nop
+    add s3,0   ; nop
+    input s1,d
+    call WRITE_HEX
+    return
+
+    ; writes 16-bit status data
+    ; s3 sets st_addr
+    ; s2 is modified
+    ; s0 is updated to point to the next column
+write_st8:
     output s3,c
     add s3,0   ; nop
     add s3,0   ; nop

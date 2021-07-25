@@ -93,7 +93,7 @@ module `GAMETOP(
     input   [7:0]   debug_bus,
     // status dump
     input   [ 7:0]  st_addr,
-    output  [ 7:0]  st_dout
+    output reg [ 7:0]  st_dout
 );
 
 `ifndef S16B
@@ -378,6 +378,15 @@ assign pcm_addr = 0;
 assign tile_bank = 0; // unused on S16A
 `endif
 
+wire [7:0] st_video;
+always @(posedge clk) begin
+    case( st_addr )
+        16: st_dout <= sndmap_dout;
+        17: st_dout <= tile_bank;
+        default: st_dout <= st_video;
+    endcase
+end
+
 jts16_video u_video(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -447,7 +456,7 @@ jts16_video u_video(
     // debug
     .debug_bus  ( debug_bus ),
     .st_addr    ( st_addr   ),
-    .st_dout    ( st_dout   )
+    .st_dout    ( st_video  )
 );
 
 jts16_sdram #(.SNDW(SNDW)) u_sdram(
