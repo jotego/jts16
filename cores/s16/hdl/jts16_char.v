@@ -43,7 +43,7 @@ module jts16_char(
 
     // Video signal
     input              flip,
-    input      [ 8:0]  vdump,
+    input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
     output     [ 6:0]  pxl,       // 1 priority + 3 palette + 3 colour = 7
     input      [ 7:0]  debug_bus
@@ -87,7 +87,7 @@ assign scr_start = hdump[8:4]==ROWREAD+1;
 
 // Flip
 always @(posedge clk) begin
-    vf <= flip ? 9'd223-vdump : vdump;
+    vf <= flip ? 9'd223-vrender : vrender;
     hf <= flip ? FLIPOFFSET-hdump : hdump;
 end
 

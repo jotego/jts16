@@ -382,7 +382,7 @@ wire [7:0] st_video;
 always @(posedge clk) begin
     case( st_addr )
         16: st_dout <= sndmap_dout;
-        17: st_dout <= tile_bank;
+        17: st_dout <= {2'd0, tile_bank};
         default: st_dout <= st_video;
     endcase
 end

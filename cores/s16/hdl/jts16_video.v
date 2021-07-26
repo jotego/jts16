@@ -217,7 +217,7 @@ jts16_char #(.MODEL(MODEL)) u_char(
 
     // Video signal
     .flip      ( flipx          ),
-    .vdump     ( vdump          ),
+    .vrender   ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( char_pxl       ),
     .debug_bus ( debug_bus      )
