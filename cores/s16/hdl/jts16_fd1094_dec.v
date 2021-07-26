@@ -52,7 +52,8 @@ reg  [12:0] key_addr;
 reg         key_F, mask_en;
 reg  [15:0] val, masked;
 
-assign dec = op_n ? enc : masked;
+// only decode if dec_en is high and it is an OP code
+assign dec = (dec_en & ~op_n) ? masked : enc;
 
 assign xor_mask1 = { st[2], st[4], st[3], st[6],
                      st[5], st[0], st[4], st[1]};

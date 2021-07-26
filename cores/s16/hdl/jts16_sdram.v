@@ -166,12 +166,14 @@ always @(*) begin
 end
 
 always @(posedge clk) begin
-    if( header && ioctl_wr && ioctl_addr[4:0]==5'h10 ) begin
-        fd1089_en <= |ioctl_dout[1:0];
-        dec_type  <= ioctl_dout[1];
-    end
-    if( header && ioctl_wr && ioctl_addr[4:0]==5'h11 ) begin
-        fd1094_en <= ioctl_dout[0];
+    if( header && ioctl_wr ) begin
+        if( ioctl_addr[4:0]==5'h10 ) begin
+            fd1089_en <= |ioctl_dout[1:0];
+            dec_type  <= ioctl_dout[1];
+        end
+        if( ioctl_addr[4:0]==5'h11 ) begin
+            fd1094_en <= ioctl_dout[0];
+        end
     end
     dec_en <= fd1089_en | fd1094_en;
 end
