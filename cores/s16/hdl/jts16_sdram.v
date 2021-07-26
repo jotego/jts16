@@ -148,6 +148,7 @@ wire        xram_cs;
 wire        prom_we, header;
 
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
+reg         fd1089_en, fd1094_en;
 
 assign xram_cs    = ram_cs | vram_cs;
 
@@ -164,16 +165,16 @@ always @(*) begin
 `endif
 end
 
-`ifdef FD1094
-    initial dec_en = 1;
-`else
-    always @(posedge clk) begin
-        if( header && ioctl_wr && ioctl_addr[4:0]==5'h10 ) begin
-            dec_en   <= |ioctl_dout[1:0];
-            dec_type <= ioctl_dout[1];
-        end
+always @(posedge clk) begin
+    if( header && ioctl_wr && ioctl_addr[4:0]==5'h10 ) begin
+        fd1089_en <= |ioctl_dout[1:0];
+        dec_type  <= ioctl_dout[1];
     end
-`endif
+    if( header && ioctl_wr && ioctl_addr[4:0]==5'h11 ) begin
+        fd1094_en <= ioctl_dout[0];
+    end
+    dec_en <= fd1089_en | fd1094_en;
+end
 
 `ifdef S16B
     assign scr1_adj = { scr1_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr1_addr[15:0] };

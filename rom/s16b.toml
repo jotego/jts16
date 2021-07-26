@@ -73,10 +73,11 @@ names = [
 
 [rbf]
 name="jts16b"
-# dev = [
-#     { dev="fd1094", rbf="jts16a2" },
-#     { dev="8751", rbf="jts16a1"}
-# ]
+dev = [
+    { dev="fd1089a", rbf="jts16b2" },
+    { dev="fd1089b", rbf="jts16b2" },
+    { dev="8751",    rbf="jts16b3" }
+]
 
 [dipsw]
 delete = [ "Unused", "Unknown" ]

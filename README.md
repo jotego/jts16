@@ -109,7 +109,9 @@ System                   |  Core
 16A no protection/FD1089 | jts16
 16A with MCU support     | jts16a1
 16A FD1094 protection    | jts16a2
-16B                      | jts16b
+16B FD1094               | jts16b
+16B FD1089               | jts16b1
+16B i8751                | jts16b2
 
 # PCB Check List
 
