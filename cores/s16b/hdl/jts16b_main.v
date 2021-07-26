@@ -64,7 +64,7 @@ module jts16b_main(
     input              service,
     // ROM access
     output reg         rom_cs,
-    output      [18:1] rom_addr,
+    output reg  [18:1] rom_addr,
     input       [15:0] rom_data,
     input              rom_ok,
 
@@ -130,7 +130,6 @@ assign BUSn  = ASn | (LDSn & UDSn);
 
 // No peripheral bus access for now
 assign cpu_addr = A[12:1];
-assign rom_addr = { active[1], A[17:1] }; //  18:0 = 512kB
 // assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
 //                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
 
@@ -139,6 +138,30 @@ wire [15:0] mcu_addr;
 wire [ 1:0] mcu_intn;
 wire [ 2:0] cpu_ipln;
 wire        DTACKn, cpu_vpan;
+reg  [ 1:0] act_enc;
+
+always @(*) begin
+    case( active[2:0] ) begin
+        3'b000: act_enc = 0;
+        3'b001: act_enc = 1;
+        3'b010: act_enc = 2;
+        3'b100: act_enc = 3;
+        default: act_enc = 0;
+    end
+    casez( game_id[7:4] )
+        5'b001?_?: // 5797
+            rom_addr = A[18:1];
+        5'b0001_?: // 5358
+            if( game==8'h10 || game==8'h1a ) // 5358 large
+                rom_addr = { act_enc, A[16:1] };
+            else // 5358 small
+                rom_addr = { 1'b0, act_enc, A[15:1] };
+        5'b0000_1: // Korean
+            rom_addr = {1'b0, A[17:1]};
+        default: // 5521 & 5704
+            rom_addr = { active[1], A[17:1] }; //  18:0 = 512kB
+    endcase
+end
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),

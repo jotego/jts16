@@ -326,6 +326,7 @@ jts16_cen u_cen(
     .mapper_din ( sndmap_din),
     .mapper_dout(sndmap_dout),
     .mapper_obf ( sndmap_obf),
+    .game_id    ( game_id   ),
 `else
     // System 16A
     .cen_pcmb   ( cen_pcmb  ),   // 6MHz
