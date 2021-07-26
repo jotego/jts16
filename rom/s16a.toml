@@ -49,7 +49,7 @@ dev = [
     { byte=0x10, dev="fd1089b", value=2 },
     { byte=0x11, dev="fd1094",  value=1 }
 ]
-machine = [
+machines = [
     { byte=0x18, machine="sdi",      value=1 },  # enable trackball
     { byte=0x18, machine="passsht",  value=2 },  # enable four players
     { byte=0x18, setname="quartet",  value=4 },  # enable four players

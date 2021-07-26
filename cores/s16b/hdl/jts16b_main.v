@@ -70,8 +70,10 @@ module jts16b_main(
 
     // Decoder configuration
     input              dec_en,
+    input              dec_type,
     input       [12:0] prog_addr,
     input              key_we,
+    input              fd1089_we,
     input       [ 7:0] prog_data,
 
     // DIP switches
@@ -142,13 +144,12 @@ reg  [ 1:0] act_enc;
 
 always @(*) begin
     case( active[2:0] )
-        3'b000: act_enc = 0;
-        3'b001: act_enc = 1;
-        3'b010: act_enc = 2;
-        3'b100: act_enc = 3;
+        3'b001: act_enc = 0;
+        3'b010: act_enc = 1;
+        3'b100: act_enc = 2;
         default: act_enc = 0;
     endcase
-    casez( game_id[7:4] )
+    casez( game_id[7:3] )
         5'b001?_?: // 5797
             rom_addr = A[18:1];
         5'b0001_?: // 5358
@@ -159,7 +160,7 @@ always @(*) begin
         5'b0000_1: // Korean
             rom_addr = {1'b0, A[17:1]};
         default: // 5521 & 5704
-            rom_addr = { active[1], A[17:1] }; //  18:0 = 512kB
+            rom_addr = { act_enc[0], A[17:1] }; //  18:0 = 512kB
     endcase
 end
 
@@ -385,28 +386,52 @@ jtframe_68kdtack #(.W(8)) u_dtack(
     .DTACKn     ( DTACKn    )
 );
 
-jts16_fd1094 u_dec(
-    .rst        ( rst       ),
-    .clk        ( clk       ),
+`ifdef FD1094
+    jts16_fd1094 u_dec(
+        .rst        ( rst       ),
+        .clk        ( clk       ),
 
-    // Configuration
-    .prog_addr  ( prog_addr ),
-    .fd1094_we  ( key_we    ),
-    .prog_data  ( prog_data ),
+        // Configuration
+        .prog_addr  ( prog_addr ),
+        .fd1094_we  ( key_we    ),
+        .prog_data  ( prog_data ),
 
-    // Operation
-    .dec_en     ( dec_en    ),
-    .FC         ( FC        ),
-    .ASn        ( ASn       ),
+        // Operation
+        .dec_en     ( dec_en    ),
+        .FC         ( FC        ),
+        .ASn        ( ASn       ),
 
-    .addr       ( A         ),
-    .enc        ( rom_data  ),
-    .dec        ( rom_dec   ),
+        .addr       ( A         ),
+        .enc        ( rom_data  ),
+        .dec        ( rom_dec   ),
 
-    .dtackn     ( DTACKn    ),
-    .rom_ok     ( rom_ok    ),
-    .ok_dly     ( ok_dly    )
-);
+        .dtackn     ( DTACKn    ),
+        .rom_ok     ( rom_ok    ),
+        .ok_dly     ( ok_dly    )
+    );
+`else
+    jts16_fd1089 u_dec(
+        .rst        ( rst       ),
+        .clk        ( clk       ),
+
+        // Configuration
+        .prog_addr  ( prog_addr ),
+        .key_we     ( key_we    ),
+        .fd1089_we  ( fd1089_we ),
+        .prog_data  ( prog_data ),
+
+        // Operation
+        .dec_type   ( dec_type  ), // 0=a, 1=b
+        .dec_en     ( dec_en    ),
+        .rom_ok     ( rom_ok    ),
+        .ok_dly     ( ok_dly    ),
+
+        .op_n       ( op_n      ),     // OP (0) or data (1)
+        .addr       ( A         ),
+        .enc        ( rom_data  ),
+        .dec        ( rom_dec   )
+    );
+`endif
 
 jtframe_m68k u_cpu(
     .clk        ( clk         ),

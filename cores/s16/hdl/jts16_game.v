@@ -240,9 +240,9 @@ jts16_cen u_cen(
     // Decoder configuration
     .dec_en      ( dec_en     ),
     .key_we      ( key_we     ),
-`ifndef S16B
     .fd1089_we   ( fd1089_we  ),
     .dec_type    ( dec_type   ),
+`ifndef S16B
     // Sound communication
     .snd_latch   ( snd_latch  ),
     .snd_irqn    ( snd_irqn   ),
@@ -382,8 +382,9 @@ assign tile_bank = 0; // unused on S16A
 wire [7:0] st_video;
 always @(posedge clk) begin
     case( st_addr )
-        16: st_dout <= sndmap_dout;
-        17: st_dout <= {2'd0, tile_bank};
+        8'h10: st_dout <= sndmap_dout;
+        8'h11: st_dout <= {2'd0, tile_bank};
+        8'h12: st_dout <= game_id;
         default: st_dout <= st_video;
     endcase
 end

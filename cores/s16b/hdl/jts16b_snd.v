@@ -85,7 +85,7 @@ assign mapper_din  = cpu_dout;
 always @(*) begin
     rom_addr = { 6'd0, A[14:0] };
     if( bank_cs ) begin
-        casez( game_id[7:4] )
+        casez( game_id[7:3] )
             5'b001?_?: // 5797
                 rom_addr[18:14] = { rom_msb[3], rom_msb[4], rom_msb[2:0] };
             5'b0001_?: begin // 5358

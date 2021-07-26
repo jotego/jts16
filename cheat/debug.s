@@ -86,6 +86,11 @@ SCREEN:
     load s3,11
     call  write_st8
 
+    ; Game ID
+    add s0,2
+    load s3,12
+    call  write_st8
+
 CLOSE_FRAME:
     output sb,6     ; LED
     ; Frame counter

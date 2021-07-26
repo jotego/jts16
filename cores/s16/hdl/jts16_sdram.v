@@ -174,6 +174,7 @@ always @(posedge clk) begin
         if( ioctl_addr[4:0]==5'h11 ) begin
             fd1094_en <= ioctl_dout[0];
         end
+        if( ioctl_addr[4:0]==5'h18) game_id <= ioctl_dout;
     end
     dec_en <= fd1089_en | fd1094_en;
 end
@@ -185,11 +186,6 @@ end
     assign scr1_adj = { 2'd0, scr1_addr[16:0] };
     assign scr2_adj = { 2'd0, scr2_addr[16:0] };
 `endif
-
-// Capture the game byte
-always @(posedge clk) begin
-    if( header && ioctl_wr && ioctl_addr[4:0]==5'h18) game_id <= ioctl_dout;
-end
 
 jtframe_dwnld #(
     .HEADER    ( 32        ),
