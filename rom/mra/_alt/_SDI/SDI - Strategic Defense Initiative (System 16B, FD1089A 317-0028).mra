@@ -23,7 +23,7 @@
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
     <name>SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)</name>
     <setname>sdib</setname>
-    <rbf>jts16b2</rbf>
+    <rbf>jts16b1</rbf>
     <mameversion>0232</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>

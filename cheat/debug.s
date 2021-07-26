@@ -40,7 +40,7 @@ ISR:
 SCREEN:
     ; Show scroll data
     ; Scroll 1 pages
-    load  s0,6
+    load  s0,5
     output s0,9 ; row
     load  s0,2
     load  s3,1
@@ -55,7 +55,7 @@ SCREEN:
     call  write_st16
 
     ; Scroll 2 pages
-    load  s0,0x7
+    load  s0,6
     output s0,9 ; row
     load  s0,2
     load  s3,3
@@ -70,7 +70,7 @@ SCREEN:
     call  write_st16
 
     ; Debug byte
-    load s0,8
+    load s0,7
     output s0,9 ; row
     load s0,2
     input  s1,f ; debug bus
