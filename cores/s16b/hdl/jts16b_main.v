@@ -141,18 +141,18 @@ wire        DTACKn, cpu_vpan;
 reg  [ 1:0] act_enc;
 
 always @(*) begin
-    case( active[2:0] ) begin
+    case( active[2:0] )
         3'b000: act_enc = 0;
         3'b001: act_enc = 1;
         3'b010: act_enc = 2;
         3'b100: act_enc = 3;
         default: act_enc = 0;
-    end
+    endcase
     casez( game_id[7:4] )
         5'b001?_?: // 5797
             rom_addr = A[18:1];
         5'b0001_?: // 5358
-            if( game==8'h10 || game==8'h1a ) // 5358 large
+            if( game_id==8'h10 || game_id==8'h1a ) // 5358 large
                 rom_addr = { act_enc, A[16:1] };
             else // 5358 small
                 rom_addr = { 1'b0, act_enc, A[15:1] };

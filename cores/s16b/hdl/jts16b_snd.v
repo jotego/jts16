@@ -88,7 +88,7 @@ always @(*) begin
         casez( game_id[7:4] )
             5'b001?_?: // 5797
                 rom_addr[18:14] = { rom_msb[3], rom_msb[4], rom_msb[2:0] };
-            5'b0001_?: // 5358
+            5'b0001_?: begin // 5358
                 rom_addr[15:14] = rom_msb[1:0];
                 casez( rom_msb[5:2] ) // A11-A8 refer to the ROM label in the PCB:
                     4'b1???: rom_addr[17:16] = 3; // A11 at top
@@ -96,6 +96,7 @@ always @(*) begin
                     4'b001?: rom_addr[17:16] = 1; // A9
                     4'b0001: rom_addr[17:16] = 0; // A8
                 endcase
+            end
             default: // 5521 & 5704
                 rom_addr[17:14] = rom_msb[3:0];
         endcase
