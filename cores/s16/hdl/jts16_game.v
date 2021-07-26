@@ -98,6 +98,7 @@ module `GAMETOP(
 
 `ifndef S16B
     localparam SNDW=15;
+    wire [7:0] sndmap_dout=0;
 `else
     localparam SNDW=19;
 
