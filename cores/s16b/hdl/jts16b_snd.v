@@ -100,8 +100,8 @@ always @(*) begin
             default: // 5521 & 5704
                 rom_addr[17:14] = rom_msb[3:0];
         endcase
+        rom_addr = rom_addr + 19'h10000;
     end
-    rom_addr = rom_addr + 19'h10000;
 end
 
 always @(*) begin
