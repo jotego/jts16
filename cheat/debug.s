@@ -78,12 +78,12 @@ SCREEN:
 
     ; Sound latch
     add s0,2
-    load s3,16
+    load s3,10
     call  write_st8
 
     ; Tile bank
     add s0,2
-    load s3,17
+    load s3,11
     call  write_st8
 
 CLOSE_FRAME:

@@ -92,10 +92,168 @@ dev = [
     { byte=0x12, dev="mc8123",  value=1 },
     { byte=0x13, dev="i8751",   value=1 }
 ]
+# init_generic_5521 = 0
+# init_hwchamp_5521 = 1
+# init_altbeasj_5521 = 2
+# init_altbeas4_5521 = 3
+# init_shinobi4_5521 = 4
+# init_generic_korean = 8
+# init_snapper = 9
+# init_lockonph = 0xa
+# init_generic_5358 = 0x10
+# init_generic_5358_small = 0x11
+# init_sdi_5358_small = 0x12
+# init_passshtj_5358  = 0x13
+# init_dunkshot_5358_small = 0x14
+# init_exctleag_5358 = 0x15
+# init_aliensyn7_5358_small = 0x16
+# init_aceattac_5358 = 0x17
+# init_cencourt_5358 = 0x18
+# init_defense_5358_small = 0x19
+# init_shinobi3_5358 = 0x1a
+# init_sjryuko_5358_small = 0x1b
+# init_timescan_5358_small = 0x1c
+# init_generic_5797 = 0x20
+# init_generic_5704 = 0x40
+# init_tturf_5704 = 0x41
+# init_wb3_5704 = 0x42
+# init_generic_bootleg = 0x80
 machine = [
-    { machine="riotcity", byte=0x18, value=4 },
-    { machine="goldnaxe", byte=0x18, value=4 },
-    { machine="eswat",    byte=0x18, value=4 }
+    { machine="aceattac", byte=0x18, value=0x17 },
+    { machine="aliensyn", byte=0x18, value=0x11 },
+    { machine="aliensyn7", byte=0x18, value=0x16 },
+    { machine="aliensyn3", byte=0x18, value=0x11 },
+    { machine="aliensynj", byte=0x18, value=0x11 },
+    { machine="afightere", byte=0x18, value=0x11 },
+    { machine="afighterf", byte=0x18, value=0x11 },
+    { machine="afighterg", byte=0x18, value=0x11 },
+    { machine="afighterh", byte=0x18, value=0x11 },
+    { machine="altbeast", byte=0x18, value=0 },
+    { machine="altbeastj", byte=0x18, value=2 },
+    { machine="altbeast6", byte=0x18, value=0 },
+    { machine="altbeast5", byte=0x18, value=0 },
+    { machine="altbeast4", byte=0x18, value=3 },
+    { machine="altbeastj3", byte=0x18, value=0 },
+    { machine="altbeast2", byte=0x18, value=3 },
+    { machine="altbeastj1", byte=0x18, value=0 },
+    { machine="aurail", byte=0x18, value=0x40 },
+    { machine="aurail1", byte=0x18, value=0x40 },
+    { machine="aurailj", byte=0x18, value=0x40 },
+    { machine="bayroute", byte=0x18, value=0x40 },
+    { machine="bayroutej", byte=0x18, value=0x40 },
+    { machine="bayroute1", byte=0x18, value=0x10 },
+    { machine="bullet", byte=0x18, value=0x11 },
+    { machine="cotton", byte=0x18, value=0x40 },
+    { machine="cottonu", byte=0x18, value=0x40 },
+    { machine="cottonj", byte=0x18, value=0x40 },
+    { machine="cottonja", byte=0x18, value=0x40 },
+    { machine="ddux", byte=0x18, value=0 },
+    { machine="dduxj", byte=0x18, value=0 },
+    { machine="ddux1", byte=0x18, value=0x40 },
+    { machine="dunkshot", byte=0x18, value=0x14 },
+    { machine="dunkshota", byte=0x18, value=0x14 },
+    { machine="dunkshoto", byte=0x18, value=0x14 },
+    { machine="eswat", byte=0x18, value=0x20 },
+    { machine="eswatu", byte=0x18, value=0x20 },
+    { machine="eswatj", byte=0x18, value=0x20 },
+    { machine="eswatj1", byte=0x18, value=0x40 },
+    { machine="exctleag", byte=0x18, value=0x15 },
+    { machine="fpoint", byte=0x18, value=0x10 },
+    { machine="fpoint1", byte=0x18, value=0x40 },
+    { machine="goldnaxe", byte=0x18, value=0x20 },
+    { machine="goldnaxeu", byte=0x18, value=0x20 },
+    { machine="goldnaxej", byte=0x18, value=0x40 },
+    { machine="goldnaxe3", byte=0x18, value=0x40 },
+    { machine="goldnaxe2", byte=0x18, value=0x40 },
+    { machine="goldnaxe1", byte=0x18, value=0x20 },
+    { machine="hwchamp", byte=0x18, value=1 },
+    { machine="hwchampj", byte=0x18, value=1 },
+    { machine="mvp", byte=0x18, value=0x20 },
+    { machine="mvpj", byte=0x18, value=0x40 },
+    { machine="passsht", byte=0x18, value=0x10 },
+    { machine="passshta", byte=0x18, value=0x13 },
+    { machine="passshtj", byte=0x18, value=0x13 },
+    { machine="cencourt", byte=0x18, value=0x18 },
+    { machine="riotcity", byte=0x18, value=0x40 },
+    { machine="ryukyu", byte=0x18, value=0x40 },
+    { machine="ryukyua", byte=0x18, value=0x40 },
+    { machine="defense", byte=0x18, value=0x19 },
+    { machine="sdib", byte=0x18, value=0x19 },
+    { machine="sdibl", byte=0x18, value=0x12 },
+    { machine="shinobi6", byte=0x18, value=0 },
+    { machine="shinobi5", byte=0x18, value=0x10 },
+    { machine="shinobi4", byte=0x18, value=4 },
+    { machine="shinobi3", byte=0x18, value=0x1a },
+    { machine="shinobi2", byte=0x18, value=0x10 },
+    { machine="sonicbom", byte=0x18, value=0x10 },
+    { machine="sjryuko", byte=0x18, value=0x1b },
+    { machine="suprleag", byte=0x18, value=0x15 },
+    { machine="tetris2", byte=0x18, value=0x40 },
+    { machine="tetris1", byte=0x18, value=0x11 },
+    { machine="timescan", byte=0x18, value=0x1c },
+    { machine="toryumon", byte=0x18, value=0x20 },
+    { machine="tturf", byte=0x18, value=0x41 },
+    { machine="tturfu", byte=0x18, value=0x10 },
+    { machine="ultracin", byte=0x18, value=0x20 },
+    { machine="wb3", byte=0x18, value=0x42 },
+    { machine="wb34", byte=0x18, value=0x40 },
+    { machine="wb33", byte=0x18, value=0x40 },
+    { machine="wb32", byte=0x18, value=0x10 },
+    { machine="wrestwar", byte=0x18, value=0x40 },
+    { machine="wrestwar2", byte=0x18, value=0x40 },
+    { machine="wrestwar1", byte=0x18, value=0x40 },
+    { machine="fantzn2x", byte=0x18, value=0x40 },
+    { machine="fantzn2xp", byte=0x18, value=0x40 },
+    { machine="fantzoneta", byte=0x18, value=0x40 },
+    { machine="atomicp", byte=0x18, value=8 },
+    { machine="snapper", byte=0x18, value=9 },
+    { machine="lockonph", byte=0x18, value=0xa },
+    { machine="dfjail", byte=0x18, value=  8 },
+    { machine="shinobi2d", byte=0x18, value=0x10 },
+    { machine="fpointd", byte=0x18, value=0x10 },
+    { machine="fpoint1d", byte=0x18, value=0x40 },
+    { machine="tetris2d", byte=0x18, value=0x40 },
+    { machine="tetris1d", byte=0x18, value=0x11 },
+    { machine="dduxd", byte=0x18, value=0 },
+    { machine="dduxjd", byte=0x18, value=0 },
+    { machine="altbeast5d", byte=0x18, value=0 },
+    { machine="altbeastj3d", byte=0x18, value=0 },
+    { machine="aurail1d", byte=0x18, value=0x40 },
+    { machine="aurailjd", byte=0x18, value=0x40 },
+    { machine="mvpd", byte=0x18, value=0x20 },
+    { machine="mvpjd", byte=0x18, value=0x40 },
+    { machine="cottond", byte=0x18, value=0x40 },
+    { machine="cottonud", byte=0x18, value=0x40 },
+    { machine="cottonjad", byte=0x18, value=0x40 },
+    { machine="cottonjd", byte=0x18, value=0x40 },
+    { machine="bayrouted", byte=0x18, value=0x40 },
+    { machine="bayroutejd", byte=0x18, value=0x40 },
+    { machine="exctleagd", byte=0x18, value=0x15 },
+    { machine="sonicbomd", byte=0x18, value=0x10 },
+    { machine="ryukyud", byte=0x18, value=0x40 },
+    { machine="hwchampjd", byte=0x18, value=1 },
+    { machine="bulletd", byte=0x18, value=0x11 },
+    { machine="eswatd", byte=0x18, value=0x20 },
+    { machine="eswatud", byte=0x18, value=0x20 },
+    { machine="eswatjd", byte=0x18, value=0x20 },
+    { machine="eswatj1d", byte=0x18, value=0x40 },
+    { machine="goldnaxeud", byte=0x18, value=0x20 },
+    { machine="goldnaxe3d", byte=0x18, value=0x40 },
+    { machine="goldnaxe1d", byte=0x18, value=0x20 },
+    { machine="goldnaxejd", byte=0x18, value=0x40 },
+    { machine="passshtd", byte=0x18, value=0x10 },
+    { machine="passshtad", byte=0x18, value=0x13 },
+    { machine="passshtjd", byte=0x18, value=0x13 },
+    { machine="wb34d", byte=0x18, value=0x40 },
+    { machine="wb33d", byte=0x18, value=0x40 },
+    { machine="wb32d", byte=0x18, value=0x10 },
+    { machine="wrestwar2d", byte=0x18, value=0x40 },
+    { machine="wrestwar1d", byte=0x18, value=0x40 },
+    { machine="sdibl2", byte=0x18, value=0x12 },
+    { machine="sdibl3", byte=0x18, value=0x12 },
+    { machine="sdibl4", byte=0x18, value=0x12 },
+    { machine="sdibl5", byte=0x18, value=0x12 },
+    { machine="sdibl6", byte=0x18, value=0x12 }
 ]
 
 # Sample header data
