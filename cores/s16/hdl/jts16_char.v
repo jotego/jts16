@@ -21,6 +21,9 @@ module jts16_char(
     input              clk,
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
+    input      [ 7:0]  game_id,
+    output reg         alt_en,
+    output reg         alt_objbank,
 
     // CPU interface
     input              char_cs,
@@ -85,6 +88,14 @@ localparam [8:0] FLIPOFFSET = 9'ha3;
 assign char_addr = { code, vf[2:0], 1'b0 };
 assign scr_start = hdump[8:4]==ROWREAD+1;
 
+always @(posedge clk) begin
+    // Dunkshot, Sukeban and Time Scanner use a different
+    // encoding for in tile map bytes.
+    alt_en <= MODEL && (game_id==8'h1b || game_id==8'h1c || game_id==8'h14);
+    alt_objbank <= MODEL && game_id[4];
+end
+
+
 // Flip
 always @(posedge clk) begin
     vf <= flip ? 9'd223-vrender : vrender;
@@ -148,9 +159,13 @@ always @(posedge clk, posedge rst) begin
     end else begin
         if( pxl_cen ) begin
             if( hdump[2:0]==7 ) begin
-                code     <= MODEL ? scan[8:0] : {1'b0,scan[7:0]};
+                code     <= MODEL && alt_en ? scan[8:0] : {1'b0,scan[7:0]};
                 pxl_data <= char_data[23:0];
-                attr0    <= MODEL ? {scan[15],scan[11:9]} : scan[11:8];
+                attr0    <= MODEL ?
+                    ( alt_en ?
+                        {scan[15],scan[10:8]}
+                      : {scan[15],scan[11:9]}   // Most of S16B games
+                    ) : scan[11:8];             // S16A
                 attr     <= attr0;
             end else begin
                 pxl_data[23:16] <= shift( pxl_data[23:16], flip );

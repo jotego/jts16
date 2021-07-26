@@ -397,6 +397,7 @@ jts16_video u_video(
     .gfx_en     ( gfx_en    ),
 
     .video_en   ( video_en  ),
+    .game_id    ( game_id   ),
     // CPU interface
     .cpu_addr   ( cpu_addr  ),
     .char_cs    ( char_cs   ),

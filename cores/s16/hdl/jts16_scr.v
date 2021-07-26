@@ -23,6 +23,7 @@ module jts16_scr(
     input              pxl_cen,   // pixel clock enable
 
     input              LHBL,
+    input              alt_en,
 
     // MMR
     input      [15:0]  pages,
@@ -165,7 +166,11 @@ always @(posedge clk, posedge rst) begin
 
         if( draw && !done ) begin
             code     <= MODEL ? map_data[12:0] : { bank, map_data[11:0] };
-            attr     <= MODEL ? { map_data[15], map_data[12:6] } : map_data[12:5];
+            attr     <= MODEL ? (
+                        alt_en ?
+                            { map_data[15], map_data[11:5] } // Just for three games
+                          : { map_data[15], map_data[12:6] } // most S16B titles
+                        ) : map_data[12:5]; // S16A
             busy     <= ~8'd0;
             scr_good <= 2'd0;
         end else if( busy!=0 && &scr_good && pxl2_cen) begin // This could work

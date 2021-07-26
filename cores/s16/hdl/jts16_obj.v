@@ -21,6 +21,7 @@ module jts16_obj(
     input              clk,
     input              pxl_cen,   // pixel clock enable
 
+    input              alt_bank,
     // CPU interface
     input              cpu_obj_cs,
     input      [10:1]  cpu_addr,
@@ -89,6 +90,7 @@ jts16_obj_ram u_ram(
 jts16_obj_scan #(.PXL_DLY(0),.MODEL(MODEL)) u_scan(
     .rst       ( rst            ),
     .clk       ( clk            ),
+    .alt_bank  ( alt_bank       ),
 
     // Obj table
     .tbl_addr  ( tbl_addr       ),

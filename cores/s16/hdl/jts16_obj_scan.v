@@ -20,6 +20,8 @@ module jts16_obj_scan(
     input              rst,
     input              clk,
 
+    input              alt_bank,
+
     // Obj table
     output     [10:1]  tbl_addr,
     input      [15:0]  tbl_dout,
@@ -193,10 +195,20 @@ always @(posedge clk, posedge rst) begin
                     dr_offset <= offset;
                     dr_pal    <= pal;
                     dr_prio   <= prio;
-                    dr_bank   <= bank;
                     dr_start  <= 1;
                     dr_hflipb <= hflipb;
                     dr_hzoom  <= zoom[4:0];
+                    if( alt_bank ) begin
+                        case( bank )
+                            0:  dr_bank <= 0;
+                            7:  dr_bank <= 3;
+                            11: dr_bank <= 2;
+                            13: dr_bank <= 1;
+                            14: dr_bank <= 0;
+                            default: dr_bank <= 15;
+                        endcase
+                    end else
+                        dr_bank <= bank;
                     // next
                     if( &cur_obj )
                         st <= 0; // Done

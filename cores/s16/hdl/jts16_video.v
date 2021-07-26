@@ -23,6 +23,7 @@ module jts16_video(
     input              pxl_cen,   // pixel clock enable
 
     input              video_en,
+    input [7:0]        game_id,
 
     // CPU interface
     input              char_cs,
@@ -100,6 +101,7 @@ localparam [9:0] OBJ_DLY = MODEL ? 22 : 17;
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;
+wire        alt_en, alt_objbank; // 171-5358 boards have a different GFX layout
 wire        rowscr1_en, rowscr2_en,
             altscr1_en, altscr2_en;
 
@@ -196,6 +198,9 @@ jts16_char #(.MODEL(MODEL)) u_char(
     .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
 
+    .game_id   ( game_id        ),
+    .alt_en    ( alt_en         ),
+    .alt_objbank(alt_objbank    ),
     // CPU interface
     .char_cs   ( char_cs        ),
     .cpu_addr  ( cpu_addr[11:1] ),
@@ -230,6 +235,7 @@ jts16_scr #(.PXL_DLY(SCR1_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
     .pxl_cen   ( pxl_cen        ),
     //.LHBL      ( LHBL           ),
     .LHBL      ( ~scr_start     ),
+    .alt_en    ( alt_en         ),
 
     .pages     ( scr1_pages     ),
     .hscr      ( scr1_hpos      ),
@@ -261,6 +267,7 @@ jts16_scr #(.PXL_DLY(SCR2_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .pxl_cen   ( pxl_cen        ),
     //.LHBL      ( LHBL           ),
     .LHBL      ( ~scr_start     ),
+    .alt_en    ( alt_en         ),
 
     .pages     ( scr2_pages     ),
     .hscr      ( scr2_hpos      ),
@@ -289,6 +296,7 @@ jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl_cen   ( pxl_cen        ),
+    .alt_bank  ( alt_objbank    ),
 
     // CPU interface
     .cpu_obj_cs( objram_cs      ),
