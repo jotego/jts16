@@ -35,6 +35,16 @@
 // write address = 3x8 = 6 x 4 -> 5 x 4 ?
 // read  address = 3x8 = 6 x 4 -> 5 x 4 ?
 
+// DTACK cycles
+// Programmed with bits [3:2] of size registers
+// D[3:2] | DTACK (# cycles)
+// -------|--------
+//  11    | use EDACK pin
+//  10    | 3
+//  01    | 2
+//  00    | 1
+
+
 module jts16b_mapper(
     input             rst,
     input             clk,
@@ -49,6 +59,7 @@ module jts16b_mapper(
     output            cpu_haltn,
     output            cpu_rstn,
     output            cpu_vpan,
+    output reg [ 1:0] dtack_cyc,    // number of DTACK cycles
 
     // Bus sharing
     output            cpu_berrn,
@@ -95,14 +106,23 @@ wire [7:0] base5 = mmr[ {1'b1, 3'd5, 1'b1 }];
 wire [7:0] base6 = mmr[ {1'b1, 3'd6, 1'b1 }];
 wire [7:0] base7 = mmr[ {1'b1, 3'd7, 1'b1 }];
 
-wire [1:0] size0 = mmr[ {1'b1, 3'd0, 1'b0 }];
-wire [1:0] size1 = mmr[ {1'b1, 3'd1, 1'b0 }];
-wire [1:0] size2 = mmr[ {1'b1, 3'd2, 1'b0 }];
-wire [1:0] size3 = mmr[ {1'b1, 3'd3, 1'b0 }];
-wire [1:0] size4 = mmr[ {1'b1, 3'd4, 1'b0 }];
-wire [1:0] size5 = mmr[ {1'b1, 3'd5, 1'b0 }];
-wire [1:0] size6 = mmr[ {1'b1, 3'd6, 1'b0 }];
-wire [1:0] size7 = mmr[ {1'b1, 3'd7, 1'b0 }];
+wire [1:0] size0, dtack0,
+           size1, dtack1,
+           size2, dtack2,
+           size3, dtack3,
+           size4, dtack4,
+           size5, dtack5,
+           size6, dtack6,
+           size7, dtack7;
+
+assign {dtack0, size0 } = mmr[ {1'b1, 3'd0, 1'b0 }];
+assign {dtack1, size1 } = mmr[ {1'b1, 3'd1, 1'b0 }];
+assign {dtack2, size2 } = mmr[ {1'b1, 3'd2, 1'b0 }];
+assign {dtack3, size3 } = mmr[ {1'b1, 3'd3, 1'b0 }];
+assign {dtack4, size4 } = mmr[ {1'b1, 3'd4, 1'b0 }];
+assign {dtack5, size5 } = mmr[ {1'b1, 3'd5, 1'b0 }];
+assign {dtack6, size6 } = mmr[ {1'b1, 3'd6, 1'b0 }];
+assign {dtack7, size7 } = mmr[ {1'b1, 3'd7, 1'b0 }];
 `endif
 
 // unused for now
@@ -133,6 +153,17 @@ always @(*) begin
     if( active[4] ) active[7:5] = 0;
     if( active[5] ) active[7:6] = 0;
     if( active[6] ) active[7]   = 0;
+    case( active )
+        8'h01: dtack_cyc = mmr[ {1'b1,3'd0,1'b0}][3:2];
+        8'h02: dtack_cyc = mmr[ {1'b1,3'd1,1'b0}][3:2];
+        8'h04: dtack_cyc = mmr[ {1'b1,3'd2,1'b0}][3:2];
+        8'h08: dtack_cyc = mmr[ {1'b1,3'd3,1'b0}][3:2];
+        8'h10: dtack_cyc = mmr[ {1'b1,3'd4,1'b0}][3:2];
+        8'h20: dtack_cyc = mmr[ {1'b1,3'd5,1'b0}][3:2];
+        8'h40: dtack_cyc = mmr[ {1'b1,3'd6,1'b0}][3:2];
+        8'h80: dtack_cyc = mmr[ {1'b1,3'd7,1'b0}][3:2];
+        default: dtack_cyc = 0;
+    endcase
 end
 
 // select between CPU or MCU access to registers

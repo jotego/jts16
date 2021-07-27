@@ -141,6 +141,7 @@ wire [ 1:0] mcu_intn;
 wire [ 2:0] cpu_ipln;
 wire        DTACKn, cpu_vpan;
 reg  [ 1:0] act_enc;
+wire [ 1:0] dtack_cyc;
 
 always @(*) begin
     case( active[2:0] )
@@ -174,6 +175,7 @@ jts16b_mapper u_mapper(
     .addr_out   (                ),
     .cpu_dout   ( cpu_dout       ),
     .cpu_dswn   ( {UDSWn, LDSWn} ),
+    .dtack_cyc  ( dtack_cyc      ),
 
     // Bus sharing
     .bus_dout   ( 16'hffff       ),
@@ -371,6 +373,12 @@ end
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs;
 wire bus_busy  = |{ rom_cs & ~ok_dly, (ram_cs | vram_cs) & ~ram_ok };
 wire bus_legit = 0;
+reg  dtackn2, dtackn3;
+wire dtackn1;
+
+// sets the number of delay clock cycles for DTACKn depending on the
+// mapper configuration
+assign DTACKn = dtack_cyc==2 ? dtackn3 : (dtack_cyc==1 ? dtackn2 : dtackn1);
 
 jtframe_68kdtack #(.W(8)) u_dtack(
     .rst        ( rst       ),
@@ -383,8 +391,13 @@ jtframe_68kdtack #(.W(8)) u_dtack(
     .BUSn       ( BUSn      ),   // BUSn = ASn | (LDSn & UDSn)
     .num        ( 8'd29     ),  // numerator
     .den        ( 8'd146    ),  // denominator
-    .DTACKn     ( DTACKn    )
+    .DTACKn     ( dtackn1   )
 );
+
+always @(posedge clk) if( cpu_cen) begin
+    dtackn2 <= dtackn1;
+    dtackn3 <= dtackn2;
+end
 
 `ifdef FD1094
     jts16_fd1094 u_dec(
