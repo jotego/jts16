@@ -190,10 +190,10 @@ function [7:0] sdi_joy( input [15:0] joyana );
 endfunction
 
 
-//assign { flip, sound_en, video_en } = { ppib_dout[7], ~ppib_dout[5], ppib_dout[4] };
-assign flip = ppib_dout[7];
-assign sound_en = 1;
-assign video_en = 1;
+assign { flip, sound_en, video_en } = { ppib_dout[7], ~ppib_dout[5], ppib_dout[4] };
+//assign flip = ppib_dout[7];
+//assign sound_en = 1;
+//assign video_en = 1;
 
 always @(*) begin
     sort1 = sort_joy( joystick1 );
