@@ -86,7 +86,8 @@ always @(*) begin
         {hov, hpos } = {1'b0, hscan} - {1'b0, eff_scr[8:0]} + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
         {vov, vpos } = vscan + {1'b0, vscr[7:0]};
     end else begin
-        {hov, ncpos } = {1'b0, hscan} - {1'b0, eff_scr[8:0]} + PXL_DLY + {1'b0,PAGE_ADJ};
+        //{hov, ncpos } = {1'b0, hscan} - {1'b0, eff_scr[8:0]};// + PXL_DLY + {1'b0,PAGE_ADJ};
+        {hov, ncpos } = {1'b1, hscan} - eff_scr[9:0] + PXL_DLY[9:0]; //{2'b0,debug_bus};//+ {1'b0,PAGE_ADJ};// + PXL_DLY ;
         {vov, vpos  } = vscan + vscr[8:0]; // + { debug_bus[7], debug_bus};
         hpos = hscan - eff_scr[8:0] + PXL_DLY[8:0];
     end
@@ -99,6 +100,7 @@ always @(*) begin
     endcase
     if( MODEL==0 ) page[3]=0; // Only 3-bit pages for System 16A
     hdly = flip ? 9'hb0 -hdump : hdump;
+    //if( debug_bus!=0 ) page=debug_bus[3:0];
 end
 
 reg [1:0] map_st;
@@ -108,6 +110,7 @@ always @(posedge clk, posedge rst) begin
     if( rst ) begin
         map_addr <= 0;
         draw     <= 0;
+        map_st   <= 0;
     end else if(!done) begin
         map_st <= map_st+1'd1;
         draw   <= 0;
@@ -125,7 +128,6 @@ always @(posedge clk, posedge rst) begin
         draw   <= 0;
     end
 end
-
 
 // SDRAM runs at pxl_cen x 8, so new data from SDRAM takes about a
 // pxl_cen time to arrive. Data has information for four pixels
