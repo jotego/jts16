@@ -159,7 +159,7 @@ always @(posedge clk, posedge rst) begin
     end else begin
         if( pxl_cen ) begin
             if( hdump[2:0]==7 ) begin
-                code     <= MODEL && alt_en ? scan[8:0] : {1'b0,scan[7:0]};
+                code     <= MODEL && !alt_en ? scan[8:0] : {1'b0,scan[7:0]};
                 pxl_data <= char_data[23:0];
                 attr0    <= MODEL ?
                     ( alt_en ?
