@@ -86,6 +86,7 @@ void SDRAM::update() {
     if( dut.rst ) {
         *ba_ack = 0;
         *ba_rdy = 0;
+        *ba_dst = 0;
         for( int k=0; k<4; k++ ) {
             //last_rd[k] = 0;
             dly[k] = -1;
@@ -96,30 +97,26 @@ void SDRAM::update() {
     bool dout=false;
     *ba_dst = 0;
     *ba_rdy = 0;
+    *ba_ack = 0;
     for( int k=0; k<4; k++) {
-        // Data output at dly==1 and dly==0
-        if( dly[k] == 1 && !dout) {
+        // Accept one request
+        if( (ba_rd & (1<<k))!=0
+          && dly[0]==-1 && dly[1]==-1 && dly[2]==-1 && dly[3]==-1 ) {
+            dly[k]=0;
+            *ba_ack = 1<<k;
+            break;
+        }
+        if( dly[k]==0 ) {
             dut.data_read = read_bank( banks[k], ba_add[k] );
-            *ba_dst |= 1<<k;
-            dout=true;
+            *ba_dst = 1<<k;
+            dly[k]++;
+            break;
         }
-        if( dly[k] == 0 && !dout) {
+        if( dly[k]==1 ) {
             dut.data_read = read_bank( banks[k], ba_add[k]+1 );
-            *ba_rdy |= 1<<k;
-            dly[k] = -1;
-            dout=true;
-            continue;
-        }
-
-        if( (ba_rd &(1<<k)) && dly[k]<0) {
-            dly[k]    = 8;
-            unsigned aux = *ba_rdy & ~(1<<k);
-            *ba_rdy = aux;
-            aux = *ba_ack | (1<<k);
-            *ba_ack = aux;
-        } else {
-            if( dly[k]==7) *ba_ack = 0;
-            if( dly[k]>0 ) --dly[k];
+            *ba_rdy = 1<<k;
+            dly[k]=-1;
+            break;
         }
     }
 }
