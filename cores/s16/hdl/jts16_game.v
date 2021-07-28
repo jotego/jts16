@@ -466,6 +466,7 @@ jts16_video u_video(
 jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .rst        ( rst       ),
     .clk        ( clk       ),
+    .ioctl_ram  ( ioctl_ram ),
 
     .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),

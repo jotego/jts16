@@ -22,6 +22,7 @@ module jts16_sdram #(
     input            rst,
     input            clk,
 
+    input            ioctl_ram,
     input            LVBL,
     input      [8:0] vrender,
     output reg [7:0] game_id,
@@ -180,9 +181,20 @@ always @(posedge clk) begin
 end
 
 `ifdef S16B
+    reg single_bank;
+    always @(posedge clk) begin
+        single_bank <= game_id[4];
+                        //game_id==8'h10 || // shinobi2/5
+                       //game_id==8'h1A || // shinobi3
+                       //game_id==8'h11 || // afighterh/g/f
+                       //game_id==8'h16 || // aliensyn7
+                       //game_id==8'h19 || // defense
+    end
     assign char_adj = { tile_bank[2:0], 3'd0, char_addr };
-    assign scr1_adj = { scr1_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr1_addr[15:0] };
-    assign scr2_adj = { scr2_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr2_addr[15:0] };
+    assign scr1_adj = { single_bank ? {2'b0, scr1_addr[16] } :
+                      scr1_addr[16] ? tile_bank[5:3] : tile_bank[2:0], scr1_addr[15:0] };
+    assign scr2_adj = { single_bank ? {2'b0, scr2_addr[16] } :
+                      scr2_addr[16] ? tile_bank[5:3] : tile_bank[2:0], scr2_addr[15:0] };
 `else
     assign char_adj = { 6'd0, char_addr };
     assign scr1_adj = { 2'd0, scr1_addr[16:0] };
