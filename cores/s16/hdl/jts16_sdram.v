@@ -140,7 +140,7 @@ localparam [24:0] BA1_START  = `BA1_START,
 localparam VRAMW = `VRAMW;
 
 // Scroll address after banking
-wire [18:0] scr1_adj, scr2_adj;
+wire [18:0] char_adj, scr1_adj, scr2_adj;
 
 reg  [VRAMW-1:1] xram_addr;  // S16A = 32 kB VRAM + 16kB RAM
                              // S16B = 64 kB VRAM + 16-256kB RAM
@@ -180,9 +180,11 @@ always @(posedge clk) begin
 end
 
 `ifdef S16B
+    assign char_adj = { tile_bank[2:0], 3'd0, char_addr };
     assign scr1_adj = { scr1_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr1_addr[15:0] };
     assign scr2_adj = { scr2_addr[16]  ? tile_bank[5:3] : tile_bank[2:0], scr2_addr[15:0] };
 `else
+    assign char_adj = { 6'd0, char_addr };
     assign scr1_adj = { 2'd0, scr1_addr[16:0] };
     assign scr2_adj = { 2'd0, scr2_addr[16:0] };
 `endif
@@ -279,7 +281,7 @@ jtframe_ram_4slots #(
 
 jtframe_rom_3slots #(
     .SLOT0_DW(32),
-    .SLOT0_AW(13),
+    .SLOT0_AW(19),
 
     .SLOT1_DW(32),
     .SLOT1_AW(19),
@@ -290,7 +292,7 @@ jtframe_rom_3slots #(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
-    .slot0_addr ( char_addr ),
+    .slot0_addr ( char_adj  ),
     .slot1_addr ( scr1_adj  ),
     .slot2_addr ( scr2_adj  ),
 
