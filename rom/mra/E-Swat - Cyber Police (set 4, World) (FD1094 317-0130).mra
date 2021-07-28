@@ -58,18 +58,32 @@
         </interleave>
         <!-- sprites - starts at 0x240000 -->
         <interleave output="16">
-            <part name="mpr-12618.b1" crc="0d1530bf" map="01"/>
-            <part name="mpr-12621.b4" crc="18ff0799" map="10"/>
+            <part name="mpr-12618.b1" crc="0d1530bf" map="01" length="0x20000"/>
+            <part name="mpr-12621.b4" crc="18ff0799" map="10" length="0x20000"/>
         </interleave>
         <interleave output="16">
-            <part name="mpr-12619.b2" crc="32069246" map="01"/>
-            <part name="mpr-12622.b5" crc="a3dfe436" map="10"/>
+            <part name="mpr-12619.b2" crc="32069246" map="01" length="0x20000"/>
+            <part name="mpr-12622.b5" crc="a3dfe436" map="10" length="0x20000"/>
         </interleave>
         <interleave output="16">
-            <part name="mpr-12620.b3" crc="f6b096e0" map="01"/>
-            <part name="mpr-12623.b6" crc="6773fef6" map="10"/>
+            <part name="mpr-12620.b3" crc="f6b096e0" map="01" length="0x20000"/>
+            <part name="mpr-12623.b6" crc="6773fef6" map="10" length="0x20000"/>
         </interleave>
-        <part repeat="0x80000"> FF</part>
+        <part repeat="0x40000"> FF</part>
+        <!-- ROM split at 340000 (100000) -->
+        <interleave output="16">
+            <part name="mpr-12618.b1" crc="0d1530bf" map="01" length="0x20000" offset="0x20000"/>
+            <part name="mpr-12621.b4" crc="18ff0799" map="10" length="0x20000" offset="0x20000"/>
+        </interleave>
+        <interleave output="16">
+            <part name="mpr-12619.b2" crc="32069246" map="01" length="0x20000" offset="0x20000"/>
+            <part name="mpr-12622.b5" crc="a3dfe436" map="10" length="0x20000" offset="0x20000"/>
+        </interleave>
+        <interleave output="16">
+            <part name="mpr-12620.b3" crc="f6b096e0" map="01" length="0x20000" offset="0x20000"/>
+            <part name="mpr-12623.b6" crc="6773fef6" map="10" length="0x20000" offset="0x20000"/>
+        </interleave>
+        <part repeat="0x40000"> FF</part>
         <!-- mcu - starts at 0x440000 -->
         <part repeat="0x1000"> FF</part>
         <part repeat="0x1000"> FF</part>
