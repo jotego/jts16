@@ -18,7 +18,7 @@
 
 module jts16_video(
     input              rst,
-    input              clk,       //
+    input              clk,
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
 
