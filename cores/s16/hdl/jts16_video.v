@@ -223,6 +223,7 @@ jts16_char #(.MODEL(MODEL)) u_char(
     // Video signal
     .flip      ( flipx          ),
     .vrender   ( vrender        ),
+    .vdump     ( vdump          ),
     .hdump     ( hdump          ),
     .pxl       ( char_pxl       ),
     .debug_bus ( debug_bus      )
@@ -315,7 +316,7 @@ jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
     .hstart    ( hstart         ),
     .LHBL      ( ~HS            ),
     .flip      ( flipx          ),
-    .vrender   ( vdump          ),
+    .vrender   ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( obj_pxl        ),
     .debug_bus ( debug_bus      )

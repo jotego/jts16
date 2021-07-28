@@ -47,6 +47,7 @@ module jts16_char(
     // Video signal
     input              flip,
     input      [ 8:0]  vrender,
+    input      [ 8:0]  vdump,
     input      [ 8:0]  hdump,
     output     [ 6:0]  pxl,       // 1 priority + 3 palette + 3 colour = 7
     input      [ 7:0]  debug_bus
@@ -57,7 +58,7 @@ parameter MODEL=0;  // 0 = S16A, 1 = S16B
 wire [15:0] scan;
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
-reg  [ 8:0] code, vf, hf;
+reg  [ 8:0] code, vf, vfr, hf;
 
 assign we = ~dsn & {2{char_cs}};
 
@@ -98,8 +99,9 @@ end
 
 // Flip
 always @(posedge clk) begin
-    vf <= flip ? 9'd223-vrender : vrender;
-    hf <= flip ? FLIPOFFSET-hdump : hdump;
+    vf  <= flip ? 9'd223-vdump : vdump;
+    vfr <= flip ? 9'd223-vrender : vrender; // row scroll must be read sync'ed with scroll layers
+    hf  <= flip ? FLIPOFFSET-hdump : hdump;
 end
 
 // Row scroll
@@ -111,8 +113,8 @@ always @(*) begin
     // end
     // Reads row scroll during blanking
     if ( hdump[8:4] == ROWREAD ) begin
-        scan_addr = MODEL ? { 5'h1f, hdump[3], vf[7:3] } :
-                            { 5'h1f, vf[7:3], hdump[3] };
+        scan_addr = MODEL ? { 5'h1f, hdump[3], vfr[7:3] } :
+                            { 5'h1f, vfr[7:3], hdump[3] };
     end
 end
 
