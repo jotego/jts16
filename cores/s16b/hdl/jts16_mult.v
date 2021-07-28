@@ -23,7 +23,7 @@ module jts16_mult(
     input      [ 1:0]  addr,
     input      [ 1:0]  wdsn,    // write data select
     input      [15:0]  din,
-    output     [15:0]  dout
+    output reg [15:0]  dout
 );
 
 reg  [15:0] a, b;
