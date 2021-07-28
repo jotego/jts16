@@ -40,23 +40,24 @@ reg [15:0] stcode;
 
 assign st = irqmode ? gkey0 : state;
 
-reg  [1:0] last_addr;
-wire       addr_change = addr[2:1] != last_addr;
-wire       stadv = addr_change && !dtackn && sup_prog && stchange!=0;
+reg  [6:1] next_addr;
+wire       addr_good = addr[6:1] == next_addr;
+wire       stadv = addr_good && !dtackn && sup_prog && stchange!=0;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         state     <= 0;
         stchange  <= 0;
-        last_addr <= 0;
+        next_addr <= 0;
         irqmode   <= 0;
     end else begin
-        if( !op_n && !dtackn && sup_prog )
-            last_addr <= addr[2:1];
+        // if( !op_n && !dtackn && sup_prog )
+        //     next_addr <= addr[2:1];
         if( !op_n && !dtackn && sup_prog && stchange==0 ) begin
             // cmpi.l #data
             if( dec[15:8]==8'h0c && dec[7:6]==2'b10 ) begin
                 stchange <= 2'b01;
+                next_addr <= addr[6:1]+1'd1;
             end
             // rte
             if( dec == 16'h4e73 ) irqmode <= 0;
@@ -64,8 +65,10 @@ always @(posedge clk, posedge rst) begin
         if( !inta_n ) irqmode <= 1;
         if( stadv ) begin
             stchange <= stchange << 1;
-            if( stchange[0] )
-                stcode   <= dec;
+            if( stchange[0] ) begin
+                stcode    <= dec;
+                next_addr <= addr[6:1]+1'd1;
+            end
             if( stchange[1] && dec==16'hffff ) begin
                 case( stcode[9:8])
                     0: state <= stcode[7:0];
