@@ -31,7 +31,6 @@ timescan1
 # 210729
 # new games
 altbeast5
-altbeast6
 altbeastj1
 altbeastj3
 ryukyu
