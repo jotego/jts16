@@ -59,6 +59,8 @@ module jts16_main(
     input       [ 7:0] joystick4,
     input       [15:0] joyana1,
     input       [15:0] joyana2,
+    input       [15:0] joyana3,
+    input       [15:0] joyana4,
     input       [ 3:0] start_button,
     input       [ 1:0] coin_input,
     input              service,

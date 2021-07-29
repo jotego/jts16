@@ -59,6 +59,8 @@ module jts16b_main(
     input       [ 7:0] joystick4,
     input       [15:0] joyana1,
     input       [15:0] joyana2,
+    input       [15:0] joyana3,
+    input       [15:0] joyana4,
     input       [ 3:0] start_button,
     input       [ 1:0] coin_input,
     input              service,
@@ -322,6 +324,13 @@ always @(posedge clk, posedge rst) begin
     end
 end
 
+wire [8:0] joyana_sum = {joyana1[15], joyana1[15:8]} + {joyana2[15], joyana2[15:8]};
+reg  [7:0] ana_in;
+
+function [7:0] pass_joy( input [7:0] joy_in );
+    pass_joy = { joy_in[7:4], joy_in[1:0], joy_in[3:2] };
+endfunction
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         cab_dout  <= 8'hff;
@@ -349,6 +358,47 @@ always @(posedge clk, posedge rst) begin
                 endcase
             2:
                 cab_dout <= { A[1] ? dipsw_a : dipsw_b };
+            3: begin // custom inputs
+                case( game_id )
+                    1: begin // Heavy Champion
+                        if( A[9:8]== 2'b10 ) begin
+                            if (!LDSWn || !UDSWn) begin
+                                case( A[2:1])
+                                    0: ana_in <= joyana_sum[8:1];
+                                    1: ana_in <= joyana1[15:8];
+                                    2: ana_in <= joyana2[15:8];
+                                    3: ana_in <= 8'hff;
+                                endcase
+                            end else if(!last_iocs) begin // read value
+                                ana_in <= ana_in << 1;
+                                cab_dout <= { 7'd0, ana_in[7] };
+                            end
+                        end
+                    end
+                    8'h13: begin // Passing Shot (J)
+                        if( A[9:8]== 2'b10 ) begin
+                            case( A[2:1] )
+                                0: cab_dout <= pass_joy( joystick1 );
+                                1: cab_dout <= pass_joy( joystick2 );
+                                2: cab_dout <= pass_joy( joystick3 );
+                                3: cab_dout <= pass_joy( joystick4 );
+                            endcase
+                        end
+                    end
+                    8'h12,8'h19: begin // SDI / Defense
+                        if( A[9:8]== 2'b10 ) begin
+                            case( A[2:1] )
+                                // 1P
+                                0: cab_dout <= joyana1[15:8];
+                                1: cab_dout <= joyana2[15:8];
+                                // 2P
+                                2: cab_dout <= joyana3[15:8];
+                                3: cab_dout <= joyana4[15:8];
+                            endcase
+                        end
+                    end
+                endcase
+            end
         endcase
     end
 end
