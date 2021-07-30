@@ -1,0 +1,5 @@
+include ../../s16b/hdl/jts16b.def
+
+[all]
+CORENAME=JTS16B1
+-FD1094
