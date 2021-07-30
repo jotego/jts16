@@ -1,7 +1,7 @@
  \B System 16\W core by \RJotego\W
   http://patreon.com/topapate
 
-     Beta 4 -- 2-July-21
+     Beta 5 -- 30-July-21
 Supervised by the \RJTAlpha team\W
 
 Special thanks to Blackwine
@@ -11,10 +11,8 @@ CPU bus cycle problem
 Known issues:
 -Body Slam:
     -Missing some graphics
--Speed may not be accurate
--Sprites may not be properly
- displayed at the top and bottom
- lines of the screen
+-Bus cycle accuracy may
+ not be perfect yet
 
         \BHardware\W
 
@@ -26,57 +24,60 @@ Known issues:
 
       \RDirectors\W
 
-Atrac17          amoore2600
-AnotherJoe       A. Villena
-Bender           Boogermann
-Chris Gelatt     DJ Hard Rich
-Filip Kindt      Frederic Mahe
-JPS (RetroFPGA)  James D
-Jeffrey Pierce   John Biscevic
-Kevin finisterre L. Martinez
-Martin Birkeldh  Michael Yount
+AnotherJoe      Antonio Villena
+Bender          Boogermann
+Chris Gelatt    DJ Hard Rich
+Filip Kindt     Frederic Mahe
+JPS (RetroFPGA) James D
+Jeffrey Pierce  John Biscevic
+Kevin finisterre Louis Martinez
+Martin Birkeldh Michael Yount
 Porkchop Express Purple Tinker
-Rysha            S. Henderson
-Suv              TT_Hipster1941
+Rysha           Shawn Henderson
+TT_Hipster1941  amoore2600
+Atrac17         Suv
 
        \RThanks to\W
 
 Arcade Express Brian Sallee
 Cohge          Daniel Bauza
 Jo Tomiyori    Phillip McMahon
+      Eduard Rozenberg
 
 ARCADEAGES      Adam Davis
 Anders Rensberg Andreas Wester
 Andrew Francomb Andy Palmer
 Andyways        Arjan de
 Bob Gallardo    Chi Wai
-Chris Brown     Chris Doyle
-Chris Harvey    Chris Jardine
-Christian       Connor Glynn
-D.J. Estreito   DMG
-Darren Chell    David Agudo
-David Ashby     David Mills
-David Moylan    Dean Winger
-Don Gafford     Ed Balan
-Eduardo Javier  Edward Rana
-Epixjava        Gladius
-Gus Douboulidis Gwaland
-H. Osterholz    Henrik Nordstrom
-Ian Court       Ivo
-James Baker     James Trautner
-James Williams  Jason Nagy
-Jeffrey Haas    Jim Weinhart
+Chris Doyle     Chris Harvey
+Chris Jardine   Christian
+Connor Glynn    D.J. Estreito
+DMG             Darren Chell
+David Agudo     David Ashby
+David Mills     David Moylan
+Dean Winger     Don Gafford
+Ed Balan        Eduardo Javier
+Edward Rana     Epixjava
+Gladius         Gus Douboulidis
+Gwaland         H. Osterholz
+Henrik Nordstrom Ian Court
+Ivo             James Baker
+James Trautner  James Williams
+Jason Nagy      Jeffrey Haas
+Jim Weinhart    Joe Tassone
 Joeri van       John Casey
 Jorge Slowfret  Jose Pulgar
 Joseph Hsieh    Juan Francisco
 Krycek7o2       Leslie Law
 Lionel LENOBLE  MakeshiftMoney
-Marcus Hogue    Marcus Sid
-Martin DiPalma  Matt Postema
-Matthew Young   MoonZ
+Marcelo C.      Marcus Hogue
+Marcus Sid      Martin DiPalma
+Matt Postema    Matthew Young
+MiSTerFPGA.co.uk    MoonZ
 Oliver Jaksch   Oliver Wndmth
 Oscar Laguna    Per Sweden
 Peter Bray      PsyFX
+ReTr0~g!GGles   RetroGameBro
 RetroPrez       Retroludo
 Richard MS      Robert MacLean
 Robert Mullings Roman Buser
@@ -89,8 +90,8 @@ Ulf Skutnabba   Ultrarobotninja
 Victor Gomariz  Vitor Duarte
 Xzarian         Younghoon Gong
 Zachary Muske   asdfgasfhsn
-elrobertocarlos hyp36rmax
-nullobject
+birdybro        elrobertocarlos
+hyp36rmax       nullobject
 
          Beta version
      \RDo not distribute\W

@@ -444,7 +444,7 @@ jtframe_68kdtack #(.W(8)) u_dtack(
     .DTACKn     ( dtackn1   )
 );
 
-always @(posedge clk) if( cpu_cen) begin
+always @(posedge clk) if(cpu_cen) begin
     dtackn2 <= dtackn1;
     dtackn3 <= dtackn2;
 end
