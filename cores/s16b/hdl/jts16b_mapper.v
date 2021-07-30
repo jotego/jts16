@@ -153,7 +153,6 @@ always @(*) begin
     if( active[4] ) active[7:5] = 0;
     if( active[5] ) active[7:6] = 0;
     if( active[6] ) active[7]   = 0;
-    if( cpu_asn ) active=0;
     case( active )
         8'h01: dtack_cyc = mmr[ {1'b1,3'd0,1'b0}][3:2];
         8'h02: dtack_cyc = mmr[ {1'b1,3'd1,1'b0}][3:2];
