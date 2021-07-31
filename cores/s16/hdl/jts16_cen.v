@@ -18,7 +18,8 @@
 
 module jts16_cen(
     input              rst,
-    input              clk,       //
+    input              clk,       // main CPU & video
+    input              clk24,     // sound subsystem (25.1748 MHz)
     output             pxl2_cen,  // pixel clock enable (2x)
     output             pxl_cen,   // pixel clock enable
     output             cpu_cen,     // 10
@@ -57,36 +58,38 @@ assign cpu_cen = fastx;
 assign cpu_cenb = ~fastx;
 `endif
 
-jtframe_frac_cen u_fmcen(
-    .clk    ( clk       ),
-    .n      ( 10'd63    ),
-    .m      ( 10'd793   ),
+// Sound subsystem uses clk24 = 25.1748 MHz
+
+jtframe_frac_cen u_fmcen(   // 4MHz
+    .clk    ( clk24     ),
+    .n      ( 10'd143   ),
+    .m      ( 10'd900   ),
     .cen    ( { fm2_cen, fm_cen } ),
     .cenb   (           )
 );
 
-jtframe_frac_cen #(.WC(14)) u_sndcen(
-    .clk    ( clk       ),
+jtframe_frac_cen #(.WC(14)) u_sndcen( // 5 MHz
+    .clk    ( clk24     ),
     .n      ( 14'd1373  ),
-    .m      ( 14'd13826 ),
+    .m      ( 14'd6913  ),
     .cen    ( { nc3, snd_cen } ),
     .cenb   (           )
 );
 
 `ifndef S16B
-    jtframe_frac_cen u_pcmcen(
-        .clk    ( clk       ),
-        .n      ( 10'd120   ),
-        .m      ( 10'd1007  ),
+    jtframe_frac_cen #(.WC(14)) u_pcmcen(  // 6 MHz
+        .clk    ( clk24     ),
+        .n      ( 14'd1619  ),
+        .m      ( 14'd6793  ),
         .cen    ( { nc2, pcm_cen  } ),
         .cenb   ( { ncb2, pcm_cenb} )
     );
 `else
     // 640 kHz
     jtframe_frac_cen  #(.WC(16)) u_pcmcen(
-        .clk    ( clk       ),
-        .n      ( 16'd654   ),
-        .m      ( 16'd51451 ),
+        .clk    ( clk24     ),
+        .n      ( 16'd873   ),
+        .m      ( 16'd34340 ),
         .cen    ( { nc2, pcm_cen  } ),
         .cenb   ( { ncb2, pcm_cenb} )
     );

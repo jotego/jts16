@@ -19,6 +19,7 @@
 module `GAMETOP(
     input           rst,
     input           clk,
+    input           clk24,
     output          pxl2_cen,   // 12   MHz
     output          pxl_cen,    //  6   MHz
     output   [4:0]  red,
@@ -180,11 +181,14 @@ assign dsn = { UDSWn, LDSWn };
 
 jts16_cen u_cen(
     .rst        ( rst       ),
+
     .clk        ( clk       ),
     .pxl2_cen   ( pxl2_cen  ),
     .pxl_cen    ( pxl_cen   ),
     .cpu_cen    (           ),
     .cpu_cenb   (           ),
+
+    .clk24      ( clk24     ),
     .fm2_cen    ( cen_fm2   ),
     .fm_cen     ( cen_fm    ),
     .snd_cen    ( cen_snd   ),
@@ -313,7 +317,7 @@ jts16_cen u_cen(
 `ifndef NOSOUND
 `JTS16_SND u_sound(
     .rst        ( rst       ),
-    .clk        ( clk       ),
+    .clk        ( clk24     ),
 
     .cen_fm     ( cen_fm    ),   // 4MHz or 5MHz
     .cen_fm2    ( cen_fm2   ),   // 2MHz

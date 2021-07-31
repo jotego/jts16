@@ -13,6 +13,9 @@ JTFRAME_VERTICAL
 JTFRAME_4PLAYERS
 JTFRAME_ANALOG
 
+# For audio section
+JTFRAME_CLK24
+
 # instance names
 JTS16_MAIN=jts16_main
 JTS16_SND=jts16_snd
