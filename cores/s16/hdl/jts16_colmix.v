@@ -107,11 +107,11 @@ always @(posedge clk) if( pxl_cen ) begin
 end
 
 always @(*) begin
-    pal_addr = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0[10:0] : (
-               (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1[10:0] : (
-               (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? lyr2[10:0] : (
-                lyr3[10:0] )));
-    shadow = lyr0[11] | lyr1[11] | lyr2[11] | lyr3[11];
+    { shadow, pal_addr } =
+               (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0 : (
+               (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1 : (
+               (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? lyr2 : (
+                lyr3 )));
 end
 
 `ifdef SIMULATION
