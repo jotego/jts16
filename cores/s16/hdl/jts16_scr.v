@@ -32,6 +32,11 @@ module jts16_scr(
     input      [ 9:0]  rowscr,
     input              rowscr_en,
 
+    // Column scroll
+    output reg [ 8:0]  hscan,
+    input      [ 8:0]  colscr,
+    input              colscr_en,
+
     // SDRAM interface
     input              map_ok,
     output reg [14:0]  map_addr, // 3(+1 S16B) pages + 11 addr = 14 (32 kB)
@@ -60,7 +65,7 @@ wire [ 1:0] we;
 reg  [12:0] code;
 wire [ 8:0] vrf;
 
-reg  [8:0] hscan, vscan;
+reg  [8:0]  vscan;
 
 // Map reader
 reg  [8:0] hpos;
@@ -72,20 +77,22 @@ reg        done, draw;
 reg  [7:0] busy;
 reg        hsel;
 
-reg  [9:0] eff_scr;
+reg  [9:0] eff_hscr;
+reg  [8:0] eff_vscr;
 reg  [8:0] hdly;
 
 assign scr_addr = { code, vpos[2:0], 1'b0 };
 assign vrf      = flip ? 9'd223-vrender : vrender;
 
 always @(*) begin
-    eff_scr  = rowscr_en ? rowscr : hscr[9:0];
+    eff_hscr = rowscr_en ? rowscr : hscr[9:0];
+    eff_vscr = colscr_en ? colscr : vscr[8:0];
     if( MODEL==0 ) begin
-        {hov, hpos } = {1'b0, hscan} - {1'b0, eff_scr[8:0]} + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
-        {vov, vpos } = vscan + {1'b0, vscr[7:0]};
+        {hov, hpos } = {1'b0, hscan} - {1'b0, eff_hscr[8:0]} + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
+        {vov, vpos } = vscan + {1'b0, eff_vscr[7:0]};
     end else begin
-        {hov, hpos } = {1'b1, hscan} - eff_scr[9:0] + PXL_DLY[9:0];
-        {vov, vpos  } = vscan + vscr[8:0];
+        {hov, hpos } = {1'b1, hscan} - eff_hscr[9:0] + PXL_DLY[9:0];
+        {vov, vpos } = vscan + eff_vscr[8:0];
     end
     scan_addr = { vpos[7:3], hpos[8:3] };
     case( { vov, hov } )

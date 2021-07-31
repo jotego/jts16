@@ -44,6 +44,11 @@ module jts16_char(
     output reg         altscr1,
     output reg         altscr2,
 
+    input      [ 8:0]  scr1_hscan,
+    input      [ 8:0]  scr2_hscan,
+    output reg [ 8:0]  colscr1,
+    output reg [ 8:0]  colscr2,
+
     // Video signal
     input              flip,
     input      [ 8:0]  vrender,
@@ -105,16 +110,20 @@ always @(posedge clk) begin
 end
 
 // Row scroll
+reg [8:0] hscan_mux;
+
 always @(*) begin
     scan_addr = { vf[7:3], hf[8:3]+6'd2 };
-    // Reads column scroll during blanking
-    // if( hdump[2:0]==0 ) begin
-    //     scan_addr = { 5'h1f, vf[7:3], hdump[4] };
-    // end
     // Reads row scroll during blanking
-    if ( hdump[8:4] == ROWREAD ) begin
+    if ( hdump[8:4] == ROWREAD && hdump>=6 ) begin
         scan_addr = MODEL ? { 5'h1f, hdump[3], vfr[7:3] } :
                             { 5'h1f, vfr[7:3], hdump[3] };
+    end
+    // Reads column scroll while hdump < 6
+    if( hdump < 6 ) begin
+        hscan_mux = hdump[0] ? scr2_hscan : scr1_hscan;
+        scan_addr = MODEL ? { 5'h1e, hdump[0], hscan_mux[8:4] } :
+                            { 5'h1e, hscan_mux[8:4], hdump[0] };
     end
 end
 
@@ -122,8 +131,10 @@ always @(posedge clk, posedge rst) begin
     if( rst ) begin
         rowscr1 <= 0;
         rowscr2 <= 0;
+        colscr1 <= 0;
+        colscr2 <= 0;
     end else begin
-        if ( hdump[8:4] == ROWREAD ) begin
+        if ( hdump[8:4] == ROWREAD && hdump>=6 ) begin
             if( !hdump[3] ) begin
                 rowscr1 <= scan[9:0];
                 altscr1 <= MODEL[0] & scan[15];
@@ -131,6 +142,10 @@ always @(posedge clk, posedge rst) begin
                 rowscr2 <= scan[9:0];
                 altscr2 <= MODEL[0] & scan[15];
             end
+        end
+        if( hdump < 6 ) begin
+            if( !hdump[0] ) colscr1 <= scan[8:0];
+            if(  hdump[0] ) colscr2 <= scan[8:0];
         end
     end
 end

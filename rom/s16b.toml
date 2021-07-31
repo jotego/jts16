@@ -4,11 +4,11 @@ mraauthor=["jotego","atrac17"]
 
 [features]
 # ddr = true
-beta = true
+# beta = true
 # qsound=true
 # NVRAM = 64kB+10kB+1 byte
-# debug=true
-# nvram = 75777
+debug=true
+nvram = 75777
 
 [parse]
 sourcefile="segas16b.cpp"

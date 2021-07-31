@@ -37,8 +37,12 @@ module jts16_mmr(
     output reg [15:0]  scr2_hpos,
     output reg [15:0]  scr2_vpos,
 
+    // Row/col scroll are set here for S16B
     inout              rowscr1_en,
     inout              rowscr2_en,
+    inout              colscr1_en,
+    inout              colscr2_en,
+
     input              altscr1_en,
     input              altscr2_en,
     // status dump
@@ -62,6 +66,8 @@ generate
     if( MODEL==1 ) begin
         assign rowscr1_en = scr1_hpos[15];
         assign rowscr2_en = scr2_hpos[15];
+        assign colscr1_en = scr1_vpos[15];
+        assign colscr2_en = scr2_vpos[15];
     end
 endgenerate
 

@@ -103,10 +103,13 @@ wire [ 8:0] hdump, vrender1;
 wire        LHBL;
 wire        alt_en, alt_objbank; // 171-5358 boards have a different GFX layout
 wire        rowscr1_en, rowscr2_en,
+            colscr1_en, colscr2_en,
             altscr1_en, altscr2_en;
+wire [ 8:0] scr1_hscan, scr2_hscan;
 
 // Scroll
 wire [ 9:0] rowscr1, rowscr2;
+wire [ 8:0] colscr1, colscr2;
 wire        scr_start;
 
 // video layers
@@ -135,6 +138,8 @@ assign vint = vdump==223;
 `ifndef S16B
     assign rowscr1_en = rowscr_en;
     assign rowscr2_en = rowscr_en;
+    assign colscr1_en = colscr_en;
+    assign colscr2_en = colscr_en;
 `endif
 
 jtframe_vtimer #(
@@ -185,6 +190,8 @@ jts16_mmr #(.MODEL(MODEL)) u_mmr(
 
     .rowscr1_en ( rowscr1_en    ),
     .rowscr2_en ( rowscr2_en    ),
+    .colscr1_en ( colscr1_en    ),
+    .colscr2_en ( colscr2_en    ),
     .altscr1_en ( altscr1_en    ),
     .altscr2_en ( altscr2_en    ),
 
@@ -220,6 +227,11 @@ jts16_char #(.MODEL(MODEL)) u_char(
     .altscr1   ( altscr1_en     ),
     .altscr2   ( altscr2_en     ),
 
+    .scr1_hscan( scr1_hscan     ),
+    .scr2_hscan( scr2_hscan     ),
+    .colscr1   ( colscr1        ),
+    .colscr2   ( colscr2        ),
+
     // Video signal
     .flip      ( flipx          ),
     .vrender   ( vrender        ),
@@ -243,6 +255,10 @@ jts16_scr #(.PXL_DLY(SCR1_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
     .vscr      ( scr1_vpos      ),
     .rowscr_en ( rowscr1_en     ),
     .rowscr    ( rowscr1        ),
+
+    .hscan     ( scr1_hscan     ),
+    .colscr_en ( colscr1_en     ),
+    .colscr    ( colscr1        ),
 
     // SDRAM interface
     .map_ok    ( map1_ok        ),
@@ -275,6 +291,10 @@ jts16_scr #(.PXL_DLY(SCR2_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .vscr      ( scr2_vpos      ),
     .rowscr_en ( rowscr2_en     ),
     .rowscr    ( rowscr2        ),
+
+    .hscan     ( scr2_hscan     ),
+    .colscr_en ( colscr2_en     ),
+    .colscr    ( colscr2        ),
 
     // SDRAM interface
     .map_ok    ( map2_ok        ),
