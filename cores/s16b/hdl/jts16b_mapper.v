@@ -99,6 +99,7 @@ reg       cpu_sel;
 reg       irqn; // VBLANK
 
 assign mcu_intn = { 1'b1, irqn };
+assign mcu_din  = mcu_dout;
 
 `ifdef SIMULATION
 wire [7:0] base0 = mmr[ {1'b1, 3'd0, 1'b1 }];
