@@ -165,8 +165,9 @@ always @(posedge clk) begin
         7:  st_dout <= scr2_vpos[15:8];
         8:  st_dout <= scr1_hpos[ 7:0];
         9:  st_dout <= scr1_hpos[15:8];
-        10: st_dout <= scr2_hpos[ 7:0];
-        11: st_dout <= scr2_hpos[15:8];
+        8'ha: st_dout <= scr2_hpos[ 7:0];
+        8'hb: st_dout <= scr2_hpos[15:8];
+        8'hc: st_dout <= { 2'd0, colscr2_en, rowscr2_en, 2'd0, colscr1_en, rowscr1_en };
         default: st_dout <= 0;
     endcase
 end
