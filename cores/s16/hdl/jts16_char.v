@@ -121,6 +121,7 @@ reg       row_rd, row_rdl,
 always @(*) begin
     scan_addr = { vf[7:3], hf[8:3]+6'd2 };
     hscan_mux = hdump[0] ? scr2_hscan : scr1_hscan;
+    hscan_mux = hscan_mux + 1'd1;
     row_rd = hdump[8:4] == ROWREAD && hdump[2:0]>=6;
     col_rd = hdump[2:0] < 6;
     // Reads row scroll during blanking

@@ -124,7 +124,7 @@ always @(posedge clk, posedge rst) begin
         draw   <= 0;
         case( map_st )
             1: begin
-                if( colscr_en && hscan[2:0]==0 && !col_busyl)
+                if( colscr_en && ((hscan[2:0]==0 && !col_busyl) || busy!=0 ))
                     map_st <= 1;
                 else
                     map_addr <= { page, scan_addr };
