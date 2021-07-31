@@ -36,6 +36,7 @@ module jts16_scr(
     output reg [ 8:0]  hscan,
     input      [ 8:0]  colscr,
     input              colscr_en,
+    input              col_busy,
 
     // SDRAM interface
     input              map_ok,
@@ -107,7 +108,11 @@ always @(*) begin
 end
 
 reg [1:0] map_st;
-reg       last_LHBL;
+reg       last_LHBL, col_busyl;
+
+always @(posedge clk) begin
+    col_busyl <= col_busy;
+end
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -118,7 +123,12 @@ always @(posedge clk, posedge rst) begin
         map_st <= map_st+1'd1;
         draw   <= 0;
         case( map_st )
-            0: map_addr <= { page, scan_addr };
+            1: begin
+                if( colscr_en && hscan[2:0]==0 && !col_busyl)
+                    map_st <= 1;
+                else
+                    map_addr <= { page, scan_addr };
+            end
             3:
                 if( !map_ok || busy!=0 || !scr_ok)
                     map_st <= 3;

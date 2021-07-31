@@ -49,6 +49,9 @@ module jts16_char(
     output reg [ 8:0]  colscr1,
     output reg [ 8:0]  colscr2,
 
+    output reg         col_busy1,
+    output reg         col_busy2,
+
     // Video signal
     input              flip,
     input      [ 8:0]  vrender,
@@ -111,21 +114,27 @@ end
 
 // Row scroll
 reg [8:0] hscan_mux;
+reg       row_rd, row_rdl,
+          col_rd, col_rdl,
+          hdump0l;
 
 always @(*) begin
     scan_addr = { vf[7:3], hf[8:3]+6'd2 };
+    hscan_mux = hdump[0] ? scr2_hscan : scr1_hscan;
+    row_rd = hdump[8:4] == ROWREAD && hdump[2:0]>=6;
+    col_rd = hdump[2:0] < 6;
     // Reads row scroll during blanking
-    if ( hdump[8:4] == ROWREAD && hdump>=6 ) begin
+    if ( row_rd ) begin
         scan_addr = MODEL ? { 5'h1f, hdump[3], vfr[7:3] } :
                             { 5'h1f, vfr[7:3], hdump[3] };
     end
     // Reads column scroll while hdump < 6
-    if( hdump < 6 ) begin
-        hscan_mux = hdump[0] ? scr2_hscan : scr1_hscan;
+    if( col_rd ) begin
         scan_addr = MODEL ? { 5'h1e, hdump[0], hscan_mux[8:4] } :
                             { 5'h1e, hscan_mux[8:4], hdump[0] };
     end
 end
+
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -133,8 +142,15 @@ always @(posedge clk, posedge rst) begin
         rowscr2 <= 0;
         colscr1 <= 0;
         colscr2 <= 0;
+        col_busy1 <= 0;
+        col_busy2 <= 0;
     end else begin
-        if ( hdump[8:4] == ROWREAD && hdump>=6 ) begin
+        col_busy1 <= col_rdl && !hdump0l;
+        col_busy2 <= col_rdl &&  hdump0l;
+        row_rdl <= row_rd;
+        col_rdl <= col_rd;
+        hdump0l <= hdump[0];
+        if ( row_rdl ) begin
             if( !hdump[3] ) begin
                 rowscr1 <= scan[9:0];
                 altscr1 <= MODEL[0] & scan[15];
@@ -143,9 +159,9 @@ always @(posedge clk, posedge rst) begin
                 altscr2 <= MODEL[0] & scan[15];
             end
         end
-        if( hdump < 6 ) begin
-            if( !hdump[0] ) colscr1 <= scan[8:0];
-            if(  hdump[0] ) colscr2 <= scan[8:0];
+        if( col_rdl ) begin
+            if( !hdump0l ) colscr1 <= scan[8:0];
+            if(  hdump0l ) colscr2 <= scan[8:0];
         end
     end
 end

@@ -111,6 +111,7 @@ wire [ 8:0] scr1_hscan, scr2_hscan;
 wire [ 9:0] rowscr1, rowscr2;
 wire [ 8:0] colscr1, colscr2;
 wire        scr_start;
+wire        col_busy1, col_busy2;
 
 // video layers
 wire [ 6:0] char_pxl;
@@ -232,6 +233,9 @@ jts16_char #(.MODEL(MODEL)) u_char(
     .colscr1   ( colscr1        ),
     .colscr2   ( colscr2        ),
 
+    .col_busy1 ( col_busy1      ),
+    .col_busy2 ( col_busy2      ),
+
     // Video signal
     .flip      ( flipx          ),
     .vrender   ( vrender        ),
@@ -259,6 +263,7 @@ jts16_scr #(.PXL_DLY(SCR1_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
     .hscan     ( scr1_hscan     ),
     .colscr_en ( colscr1_en     ),
     .colscr    ( colscr1        ),
+    .col_busy  ( col_busy1      ),
 
     // SDRAM interface
     .map_ok    ( map1_ok        ),
@@ -295,6 +300,7 @@ jts16_scr #(.PXL_DLY(SCR2_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .hscan     ( scr2_hscan     ),
     .colscr_en ( colscr2_en     ),
     .colscr    ( colscr2        ),
+    .col_busy  ( col_busy2      ),
 
     // SDRAM interface
     .map_ok    ( map2_ok        ),
