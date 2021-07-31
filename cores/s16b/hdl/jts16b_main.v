@@ -19,8 +19,10 @@
 module jts16b_main(
     input              rst,
     input              clk,
+    input              clk24,       // required to ease MCU synthesis
     input              clk_rom,
     output             cpu_cen,
+    output             mcu_cen,
     output             cpu_cenb,
     input  [7:0]       game_id,
 
@@ -84,8 +86,9 @@ module jts16b_main(
     input    [7:0]     dipsw_a,
     input    [7:0]     dipsw_b,
 
-    // MCU ROM programming
-    input              mcu_we,
+    // MCU enable and ROM programming
+    input              mcu_en,
+    input              mcu_prog_we,
 
     // Sound - Mapper interface
     input              sndmap_rd,
@@ -138,6 +141,7 @@ assign cpu_addr = A[12:1];
 //                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
 
 wire [ 7:0] active, mcu_din, mcu_dout;
+wire        mcu_wr;
 wire [15:0] mcu_addr;
 wire [ 1:0] mcu_intn;
 wire [ 2:0] cpu_ipln;
@@ -214,10 +218,16 @@ jts16b_mapper u_mapper(
 );
 
 `ifndef NOMCU
+    reg mcu_rst;
+
+    always @(posedge clk24) begin
+        mcu_rst <= rst | ~mcu_en;
+    end
+
     jtframe_8751mcu u_mcu(
-        .rst        ( rst           ),
-        .clk        ( clk           ),
-        .cen        ( cen_mcu       ),
+        .rst        ( mcu_rst       ),
+        .clk        ( clk24         ),
+        .cen        ( mcu_cen       ),
 
         .int0n      ( mcu_intn[0]   ),
         .int1n      ( mcu_intn[1]   ),
@@ -227,7 +237,7 @@ jts16b_mapper u_mapper(
         .p2_i       ( 8'hff         ),
         .p3_i       (               ),
 
-        .p0_o       ( mcu_dout      ),
+        .p0_o       (               ),
         .p1_o       (               ),
         .p2_o       (               ),
         .p3_o       (               ),
@@ -242,7 +252,7 @@ jts16b_mapper u_mapper(
         .clk_rom    ( clk           ),
         .prog_addr  ( prog_addr[11:0] ),
         .prom_din   ( prog_data     ),
-        .prom_we    ( mcu_we        )
+        .prom_we    ( mcu_prog_we   )
     );
 `else
     assign mcu_wr   = 0;

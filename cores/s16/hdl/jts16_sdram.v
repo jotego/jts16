@@ -53,6 +53,8 @@ module jts16_sdram #(
 
     // PROM
     output           n7751_prom,
+    output           mcu_we,
+    output  reg      mcu_en,
 
     // ADPCM ROM
     output  reg      dec_en,
@@ -157,6 +159,7 @@ assign dwnld_busy = downloading | prom_we; // prom_we is really just for sims
 assign n7751_prom = prom_we && prog_addr[21:10]==N7751_PROM[21:10];
 assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM  [21:13];
 assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM   [21: 8];
+assign mcu_we     = prom_we && prog_addr[21:12]==MCU_PROM  [21:12];
 
 always @(*) begin
     xram_addr = { ram_cs, main_addr[VRAMW-2:1] }; // RAM is mapped up
@@ -172,10 +175,9 @@ always @(posedge clk) begin
             fd1089_en <= |ioctl_dout[1:0];
             dec_type  <= ioctl_dout[1];
         end
-        if( ioctl_addr[4:0]==5'h11 ) begin
-            fd1094_en <= ioctl_dout[0];
-        end
-        if( ioctl_addr[4:0]==5'h18) game_id <= ioctl_dout;
+        if( ioctl_addr[4:0]==5'h11 ) fd1094_en <= ioctl_dout[0];
+        if( ioctl_addr[4:0]==5'h13 ) mcu_en    <= ioctl_dout[0];
+        if( ioctl_addr[4:0]==5'h18 ) game_id   <= ioctl_dout;
     end
     dec_en <= fd1089_en | fd1094_en;
 end

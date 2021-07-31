@@ -165,7 +165,7 @@ wire        n7751_prom;
 // Protection
 wire        key_we, fd1089_we;
 wire        dec_en, dec_type;
-wire        mcu_we = 0; // not implemented yet
+wire        mcu_en, mcu_we, mcu_cen;
 
 wire [ 7:0] snd_latch;
 wire        snd_irqn, snd_ack;
@@ -189,6 +189,7 @@ jts16_cen u_cen(
     .cpu_cenb   (           ),
 
     .clk24      ( clk24     ),
+    .mcu_cen    ( mcu_cen   ),
     .fm2_cen    ( cen_fm2   ),
     .fm_cen     ( cen_fm    ),
     .snd_cen    ( cen_snd   ),
@@ -200,9 +201,11 @@ jts16_cen u_cen(
 `JTS16_MAIN u_main(
     .rst        ( rst       ),
     .clk        ( clk       ),
+    .clk24      ( clk24     ),  // To ease MCU compilation
     .clk_rom    ( clk       ),  // same clock - at least for now
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
+    .mcu_cen    ( mcu_cen   ),
     .game_id    ( game_id   ),
     // Video
     .vint       ( vint      ),
@@ -258,7 +261,8 @@ jts16_cen u_cen(
     .snd_ack     ( snd_ack    ),
     .sound_en    ( sound_en   ),
 `else
-    .mcu_we      ( mcu_we     ),
+    .mcu_en      ( mcu_en     ),
+    .mcu_prog_we ( mcu_we     ),
     .sndmap_rd   ( sndmap_rd  ),
     .sndmap_wr   ( sndmap_wr  ),
     .sndmap_din  ( sndmap_din ),
@@ -482,10 +486,14 @@ jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .tile_bank  ( tile_bank ),
     //.tile_bank  ( debug_bus[5:0] ),
 
-    .dec_en     (  dec_en   ),
-    .dec_type   (  dec_type ),
-    .key_we     (  key_we   ),
-    .fd1089_we  (  fd1089_we),
+    .dec_en     ( dec_en    ),
+    .dec_type   ( dec_type  ),
+    .key_we     ( key_we    ),
+    .fd1089_we  ( fd1089_we ),
+
+    // i8751 MCU
+    .mcu_we     ( mcu_we    ),
+    .mcu_en     ( mcu_en    ),
 
     // Main CPU
     .main_cs    ( main_cs   ),

@@ -82,7 +82,7 @@ module jts16b_mapper(
     output     [ 7:0] mcu_din,
     input      [15:0] mcu_addr,
     input             mcu_wr,
-    output reg [ 1:0] mcu_intn,
+    output     [ 1:0] mcu_intn,
 
     // Bus interface
     output     [23:1] addr_out,
@@ -95,6 +95,10 @@ reg [7:0] mmr[0:31];
 wire      none = active==0;
 wire      bus_rq = 0;
 wire      mcu_cen;
+reg       cpu_sel;
+reg       irqn; // VBLANK
+
+assign mcu_intn = { 1'b1, irqn };
 
 `ifdef SIMULATION
 wire [7:0] base0 = mmr[ {1'b1, 3'd0, 1'b1 }];
@@ -168,9 +172,9 @@ always @(*) begin
 end
 
 // select between CPU or MCU access to registers
-wire [4:0] asel = none ? addr[5:1] : mcu_addr[4:0];
-wire [7:0] din  = none ? cpu_dout[7:0] : mcu_dout;
-wire       wren = none ? (~cpu_asn & ~cpu_dswn[0]) : mcu_wr;
+wire [4:0] asel = cpu_sel ? addr[5:1] : mcu_addr[4:0];
+wire [7:0] din  = cpu_sel ? cpu_dout[7:0] : mcu_dout;
+wire       wren = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr;
 
 integer aux2;
 
@@ -179,7 +183,9 @@ always @(posedge clk, posedge rst ) begin
         for( aux2=0; aux2<32; aux2=aux2+1 )
             mmr[aux2] <= 0;
         sndmap_obf <= 0;
+        cpu_sel    <= 1;
     end else begin
+        if( mcu_wr ) cpu_sel <= 0; // once cleared, it stays like that until reset
         if( wren ) begin
             mmr[ asel ] <= din;
             if( asel == 3 )
@@ -191,7 +197,6 @@ always @(posedge clk, posedge rst ) begin
 end
 
 // interrupt generation
-reg        irqn; // VBLANK
 wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
 reg        last_vint;
 
