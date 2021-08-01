@@ -19,6 +19,7 @@
 module jts16_main(
     input              rst,
     input              clk,
+    input              clk24,       // unused
     input              clk_rom,
     output             cpu_cen,
     output             cpu_cenb,
