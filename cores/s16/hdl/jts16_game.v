@@ -201,11 +201,9 @@ jts16_cen u_cen(
 `JTS16_MAIN u_main(
     .rst        ( rst       ),
     .clk        ( clk       ),
-    .clk24      ( clk24     ),  // To ease MCU compilation
     .clk_rom    ( clk       ),  // same clock - at least for now
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
-    .mcu_cen    ( mcu_cen   ),
     .game_id    ( game_id   ),
     // Video
     .vint       ( vint      ),
@@ -261,6 +259,8 @@ jts16_cen u_cen(
     .snd_ack     ( snd_ack    ),
     .sound_en    ( sound_en   ),
 `else
+    .clk24       ( clk24      ),  // To ease MCU compilation
+    .mcu_cen     ( mcu_cen    ),
     .mcu_en      ( mcu_en     ),
     .mcu_prog_we ( mcu_we     ),
     .sndmap_rd   ( sndmap_rd  ),
