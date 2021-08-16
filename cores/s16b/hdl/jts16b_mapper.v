@@ -48,25 +48,28 @@
 module jts16b_mapper(
     input             rst,
     input             clk,
-    input             cpu_cen,
+    output            cpu_cen,
+    output            cpu_cenb,
+    input             bus_cs,
+    input             bus_busy,
     input             vint,
 
     // M68000 interface
     input      [23:1] addr,
     input      [15:0] cpu_dout,
     input      [ 1:0] cpu_dswn,
+    input      [ 1:0] cpu_dsn,
     output     [ 2:0] cpu_ipln,
     output            cpu_haltn,
     output            cpu_rstn,
     output            cpu_vpan,
-    output reg [ 1:0] dtack_cyc,    // number of DTACK cycles
 
     // Bus sharing
     output            cpu_berrn,
     output            cpu_brn,
     input             cpu_bgn,
     output            cpu_bgackn,
-    input             cpu_dtackn,
+    output            cpu_dtackn,
     input             cpu_asn,
     input      [ 2:0] cpu_fc,
 
@@ -91,6 +94,7 @@ module jts16b_mapper(
     output reg [ 7:0] active
 );
 
+reg [1:0] dtack_cyc;    // number of DTACK cycles
 reg [7:0] mmr[0:31];
 wire      none = active==0;
 wire      bus_rq = 0;
@@ -170,6 +174,39 @@ always @(*) begin
         8'h80: dtack_cyc = mmr[ {1'b1,3'd7,1'b0}][3:2];
         default: dtack_cyc = 0;
     endcase
+end
+
+// DTACK generation
+wire dtackn1;
+reg  dtackn2, dtackn3;
+wire BUSn = cpu_asn | (&cpu_dsn);
+
+jtframe_68kdtack #(.W(8)) u_dtack(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .cpu_cen    ( cpu_cen   ),
+    .cpu_cenb   ( cpu_cenb  ),
+    .bus_cs     ( bus_cs    ),
+    .bus_busy   ( bus_busy  ),
+    .bus_legit  ( 1'b0      ),
+    .BUSn       ( BUSn      ),   // BUSn = ASn | (LDSn & UDSn)
+    .num        ( 8'd29     ),  // numerator
+    .den        ( 8'd146    ),  // denominator
+    .DTACKn     ( dtackn1   )
+);
+
+// sets the number of delay clock cycles for DTACKn depending on the
+// mapper configuration
+assign cpu_dtackn = dtack_cyc==3 ? dtackn3 : (dtack_cyc==2 ? dtackn2 : dtackn1);
+
+always @(posedge clk) begin
+    if( cpu_asn ) begin
+        dtackn2 <= 1;
+        dtackn3 <= 1;
+    end else if(cpu_cen) begin
+        dtackn2 <= dtackn1;
+        dtackn3 <= dtackn2;
+    end
 end
 
 // select between CPU or MCU access to registers
