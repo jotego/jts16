@@ -240,7 +240,7 @@ jts16_cen u_cen(
     .joyana3     ( joyana3    ),
     .joyana4     ( joyana4    ),
     .start_button(start_button),
-    .coin_input  (coin_input[1:0]),
+    .coin_input  ( coin_input ),
     .service     ( service    ),
     // ROM access
     .rom_cs      ( main_cs    ),

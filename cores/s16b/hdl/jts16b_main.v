@@ -64,7 +64,7 @@ module jts16b_main(
     input       [15:0] joyana3,
     input       [15:0] joyana4,
     input       [ 3:0] start_button,
-    input       [ 1:0] coin_input,
+    input       [ 3:0] coin_input,
     input              service,
     // ROM access
     output reg         rom_cs,
@@ -102,7 +102,12 @@ module jts16b_main(
     output      [ 7:0] ioctl_din
 );
 
-localparam [7:0] GAME_SDI=1, GAME_PASSSHT=2;
+localparam [7:0] GAME_SDI=1,
+                 GAME_PASSSHT=2,
+                 GAME_BULLET=8'h11,
+                 GAME_PASSSHT2='h13,
+                 GAME_PASSSHT3='h18;
+
 
 //  Region 0 - Program ROM
 //  Region 3 - 68000 work RAM
@@ -115,6 +120,8 @@ localparam [2:0] REG_RAM  = 3,
                  REG_VRAM = 5,
                  REG_PAL  = 6,
                  REG_IO   = 7;
+
+reg         game_passsht;
 
 wire [23:1] A;
 wire        BERRn;
@@ -169,6 +176,10 @@ always @(*) begin
         default: // 5521 & 5704
             rom_addr = { act_enc[0], A[17:1] }; //  18:0 = 512kB
     endcase
+end
+
+always @(posedge clk) begin
+    game_passsht <= game_id==GAME_PASSSHT2 || game_id==GAME_PASSSHT3 || game_id==GAME_PASSSHT;
 end
 
 jts16b_mapper u_mapper(
@@ -302,15 +313,19 @@ always @(posedge clk, posedge rst) begin
 end
 
 // cabinet input
-reg [ 7:0] cab_dout, sort1, sort2;
+reg [ 7:0] cab_dout, sort1, sort2, sort3;
 reg        last_iocs;
 
 wire       op_n; // low for CPU OP requests
+wire [7:0] sort1_bullet, sort2_bullet, sort3_bullet;
 
 assign op_n        = FC[1:0]!=2'b10;
 assign snd_irqn    = 1;
 assign colscr_en   = 0;
 assign rowscr_en   = 0;
+assign sort1_bullet = { sort1[3:0], sort1[7:4] };
+assign sort2_bullet = { sort2[3:0], sort2[7:4] };
+assign sort3_bullet = { sort3[3:0], sort3[7:4] };
 
 function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
@@ -319,6 +334,7 @@ endfunction
 always @(*) begin
     sort1 = sort_joy( joystick1 );
     sort2 = sort_joy( joystick2 );
+    sort3 = sort_joy( joystick3 );
 end
 
 
@@ -348,7 +364,7 @@ always @(posedge clk, posedge rst) begin
         video_en  <= 1;
     end else  begin
         last_iocs <= io_cs;
-        cab_dout <= 8'hff;
+        cab_dout  <= 8'hff;
         if(io_cs) case( A[13:12] )
             0: if( !LDSWn ) begin
                 flip     <= cpu_dout[6];
@@ -357,13 +373,23 @@ always @(posedge clk, posedge rst) begin
             1:
                 case( A[2:1] )
                     0: begin
-                        cab_dout <= { 2'b11, start_button[1:0], service, dip_test, coin_input };
+                        cab_dout <= { 2'b11, start_button[1:0], service, dip_test, coin_input[1:0] };
+                        if( game_id == GAME_BULLET ) begin
+                            cab_dout[7] <= coin_input[2];
+                            cab_dout[6] <= start_button[2];
+                        end
+                        if( game_passsht )  begin
+                            cab_dout[7:6] <= start_button[3:2];
+                        end
                     end
                     1: begin
-                        cab_dout <= sort1;
+                        cab_dout <= game_id == GAME_BULLET ? sort1_bullet : sort1;
+                    end
+                    2: begin
+                        if ( game_id == GAME_BULLET ) cab_dout <= sort3_bullet;
                     end
                     3: begin
-                        cab_dout <= sort2;
+                        cab_dout <= game_id == GAME_BULLET ? sort2_bullet : sort2;
                     end
                 endcase
             2:
