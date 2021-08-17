@@ -167,7 +167,7 @@ always @(*) begin
     if( ram_cs ) xram_addr[VRAMW-2:14]=0; // only 16kB for RAM
 `else
     // Mask RAM for System16B too, but no for System16C
-    if( game_id != 8'h40 ) xram_addr[VRAMW-2:14]=0; // only 16kB for RAM
+    if( ram_cs && game_id != 8'h40 ) xram_addr[VRAMW-2:14]=0; // only 16kB for RAM
 `endif
 end
 
