@@ -21,7 +21,7 @@ module jts16_shadow #(parameter VRAMW=14) (
     input             clk_rom,
 
     // Capture SDRAM bank 0 inputs
-    input      [14:1] addr,
+    input   [VRAMW:1] addr,
     input             char_cs,    //  4k
     input             vram_cs,    // 32k
     input             pal_cs,     //  4k
