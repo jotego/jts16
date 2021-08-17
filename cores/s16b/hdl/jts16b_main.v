@@ -342,7 +342,6 @@ always @(*) begin
     sort3 = sort_joy( joystick3 );
 end
 
-
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         tile_bank <= 0;

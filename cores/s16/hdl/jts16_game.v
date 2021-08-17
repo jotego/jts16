@@ -376,10 +376,11 @@ jts16_cen u_cen(
     //assign pcm_cs=0;
     //assign pcm_addr=0;
     `ifdef SIMULATION
-        reg [7:0] sim_def[0:0];
+        reg [7:0] sim_def[0:1];
 
         initial begin
             $readmemh("tilebank.hex",sim_def);
+            $display("Tile bank set to %X",sim_def[0]);
         end
         assign tile_bank = sim_def[0][5:0];
     `endif
