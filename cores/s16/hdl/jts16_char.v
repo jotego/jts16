@@ -151,7 +151,7 @@ always @(posedge clk, posedge rst) begin
         row_rdl <= row_rd;
         col_rdl <= col_rd;
         hdump0l <= hdump[0];
-        if ( row_rdl ) begin
+        if ( row_rdl && row_rd ) begin
             if( !hdump[3] ) begin
                 rowscr1 <= scan[9:0];
                 altscr1 <= MODEL[0] & scan[15];
@@ -160,7 +160,7 @@ always @(posedge clk, posedge rst) begin
                 altscr2 <= MODEL[0] & scan[15];
             end
         end
-        if( col_rdl ) begin
+        if( col_rdl && col_rd ) begin
             if( !hdump0l ) colscr1 <= scan[8:0];
             if(  hdump0l ) colscr2 <= scan[8:0];
         end
