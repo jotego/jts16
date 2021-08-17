@@ -176,6 +176,9 @@ wire        flip, video_en, sound_en;
 wire [ 7:0] dipsw_a, dipsw_b;
 wire [ 7:0] game_id;
 
+// Status report
+wire [7:0] st_video, st_main;
+
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn = { UDSWn, LDSWn };
 
@@ -277,6 +280,9 @@ jts16_cen u_cen(
     .dip_test    ( dip_test   ),
     .dipsw_a     ( dipsw_a    ),
     .dipsw_b     ( dipsw_b    ),
+    // Status report
+    .st_addr     ( st_addr    ),
+    .st_dout     ( st_main    ),
     // NVRAM dump
     .ioctl_din   ( ioctl_din  ),
     .ioctl_addr  ( ioctl_addr[16:0] )
@@ -393,13 +399,16 @@ assign pcm_addr = 0;
 assign tile_bank = 0; // unused on S16A
 `endif
 
-wire [7:0] st_video;
 always @(posedge clk) begin
-    case( st_addr )
-        8'h10: st_dout <= sndmap_dout;
-        8'h11: st_dout <= {2'd0, tile_bank};
-        8'h12: st_dout <= game_id;
-        default: st_dout <= st_video;
+    st_dout <= 0;
+    case( st_addr[7:4] )
+        0: st_dout <= st_video;
+        1: case( st_addr[3:0] )
+                0: st_dout <= sndmap_dout;
+                1: st_dout <= {2'd0, tile_bank};
+                2: st_dout <= game_id;
+            endcase
+        2: st_dout <= st_main;
     endcase
 end
 

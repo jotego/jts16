@@ -91,7 +91,10 @@ module jts16b_mapper(
     output     [23:1] addr_out,
     input      [15:0] bus_dout,
     output     [15:0] bus_din,
-    output reg [ 7:0] active
+    output reg [ 7:0] active,
+    // status dump
+    input      [ 7:0]  st_addr,
+    output reg [ 7:0]  st_dout
 );
 
 reg [1:0] dtack_cyc;    // number of DTACK cycles
@@ -174,6 +177,12 @@ always @(*) begin
         8'h80: dtack_cyc = mmr[ {1'b1,3'd7,1'b0}][3:2];
         default: dtack_cyc = 0;
     endcase
+end
+
+always @(posedge clk) begin
+    // 0-7 base registers
+    // 8-F size registers
+    st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];
 end
 
 // DTACK generation

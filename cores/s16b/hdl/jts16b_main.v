@@ -99,7 +99,11 @@ module jts16b_main(
 
     // NVRAM - debug
     input       [16:0] ioctl_addr,
-    output      [ 7:0] ioctl_din
+    output      [ 7:0] ioctl_din,
+
+    // status dump
+    input       [ 7:0] st_addr,
+    output      [ 7:0] st_dout
 );
 
 localparam [7:0] GAME_SDI=1,
@@ -230,7 +234,9 @@ jts16b_mapper u_mapper(
     .mcu_addr   ( mcu_addr       ),
     .mcu_wr     ( mcu_wr         ),
 
-    .active     ( active         )
+    .active     ( active         ),
+    .st_addr    ( st_addr        ),
+    .st_dout    ( st_dout        )
 );
 
 `ifndef NOMCU
