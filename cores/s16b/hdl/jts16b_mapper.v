@@ -184,18 +184,13 @@ always @(addr,cpu_fc,mmr) begin
     endcase
 end
 
-always @(posedge clk) begin
-    // 0-7 base registers
-    // 8-F size registers
-    st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];
-end
-
 // DTACK generation
 wire dtackn1;
 reg  dtackn2, dtackn3;
 wire BUSn = cpu_asn | (&cpu_dsn);
+wire [15:0] fave;
 
-jtframe_68kdtack #(.W(8)) u_dtack(
+jtframe_68kdtack #(.W(8),.RECOVERY(0),.MFREQ(50_349)) u_dtack(
     .rst        ( rst       ),
     .clk        ( clk       ),
     .cpu_cen    ( cpu_cen   ),
@@ -203,10 +198,11 @@ jtframe_68kdtack #(.W(8)) u_dtack(
     .bus_cs     ( bus_cs    ),
     .bus_busy   ( bus_busy  ),
     .bus_legit  ( 1'b0      ),
-    .BUSn       ( BUSn      ),   // BUSn = ASn | (LDSn & UDSn)
+    .BUSn       ( BUSn      ),  // BUSn = ASn | (LDSn & UDSn)
     .num        ( 8'd29     ),  // numerator
     .den        ( 8'd146    ),  // denominator
-    .DTACKn     ( dtackn1   )
+    .DTACKn     ( dtackn1   ),
+    .fave       ( fave      )
 );
 
 // sets the number of delay clock cycles for DTACKn depending on the
@@ -286,5 +282,16 @@ jtframe_68kdma u_dma(
     .cpu_DTACKn ( cpu_dtackn),
     .dev_br     ( bus_rq    )      // high to signal a bus request from a device
 );
+
+// Debug
+always @(posedge clk) begin
+    // 0-7 base registers
+    // 8-F size registers
+    // 10-11, average frequency
+    if( st_addr[4] )
+        st_dout <= st_addr[0] ? fave[15:8] : fave[7:0];
+    else
+        st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];
+end
 
 endmodule

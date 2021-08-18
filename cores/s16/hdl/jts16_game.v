@@ -408,7 +408,7 @@ always @(posedge clk) begin
                 1: st_dout <= {2'd0, tile_bank};
                 2: st_dout <= game_id;
             endcase
-        2: st_dout <= st_main;
+        2,3: st_dout <= st_main;
     endcase
 end
 
