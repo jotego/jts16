@@ -93,8 +93,8 @@ module jts16b_mapper(
     output     [15:0] bus_din,
     output reg [ 7:0] active,
     // status dump
-    input      [ 7:0]  st_addr,
-    output reg [ 7:0]  st_dout
+    input      [ 7:0] st_addr,
+    output reg [ 7:0] st_dout
 );
 
 reg [1:0] dtack_cyc;    // number of DTACK cycles
@@ -190,7 +190,7 @@ reg  dtackn2, dtackn3;
 wire BUSn = cpu_asn | (&cpu_dsn);
 wire [15:0] fave;
 
-jtframe_68kdtack #(.W(8),.RECOVERY(0),.MFREQ(50_349)) u_dtack(
+jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .rst        ( rst       ),
     .clk        ( clk       ),
     .cpu_cen    ( cpu_cen   ),
