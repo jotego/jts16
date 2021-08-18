@@ -101,28 +101,28 @@ SCREEN:
     output s0,9 ; row
     load s0,2
 
-    load s3,21
-    call  write_st8
-    add s0,1
-    load s3,23
-    call  write_st8
-    add s0,1
-    load s3,25
-    call  write_st8
-    add s0,1
-    load s3,27
+    load s3,28
     call  write_st8
     add s0,1
     load s3,29
     call  write_st8
     add s0,1
+    load s3,2a
+    call  write_st8
+    add s0,1
     load s3,2b
+    call  write_st8
+    add s0,1
+    load s3,2c
     call  write_st8
     add s0,1
     load s3,2d
     call  write_st8
     add s0,1
     load s3,2e
+    call  write_st8
+    add s0,1
+    load s3,2f
     call  write_st8
 
 CLOSE_FRAME:

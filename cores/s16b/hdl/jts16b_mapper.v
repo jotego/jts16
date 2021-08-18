@@ -145,18 +145,31 @@ assign bus_din   = 0;
 
 assign cpu_berrn = 1;
 assign sndmap_dout = mmr[3];
-integer aux;
+
+reg  asnl;
+
+always @(posedge clk) if( cpu_cen ) begin
+    asnl <= cpu_asn;
+end
+
+function check(input [2:0] region );
+    case( mmr[ {1'b1, region[2:0], 1'b0 } ][1:0] )
+        0: check = addr[23:16] == mmr[ {1'b1, region[2:0], 1'b1 } ];      //   64 kB
+        1: check = addr[23:17] == mmr[ {1'b1, region[2:0], 1'b1 } ][7:1]; //  128 kB
+        2: check = addr[23:19] == mmr[ {1'b1, region[2:0], 1'b1 } ][7:3]; //  512 kB
+        3: check = addr[23:21] == mmr[ {1'b1, region[2:0], 1'b1 } ][7:5]; // 2048 kB
+    endcase
+endfunction
 
 always @(*) begin
-    active = 0;
-    for( aux=0; aux<8; aux=aux+1 ) begin
-        case( mmr[ {1'b1, aux[2:0], 1'b0 } ][1:0] )
-            0: active[aux] = addr[23:16] == mmr[ {1'b1, aux[2:0], 1'b1 } ];      //   64 kB
-            1: active[aux] = addr[23:17] == mmr[ {1'b1, aux[2:0], 1'b1 } ][7:1]; //  128 kB
-            2: active[aux] = addr[23:19] == mmr[ {1'b1, aux[2:0], 1'b1 } ][7:3]; //  512 kB
-            3: active[aux] = addr[23:21] == mmr[ {1'b1, aux[2:0], 1'b1 } ][7:5]; // 2048 kB
-        endcase
-    end
+    active[0] = check(0);
+    active[1] = check(1);
+    active[2] = check(2);
+    active[3] = check(3);
+    active[4] = check(4);
+    active[5] = check(5);
+    active[6] = check(6);
+    active[7] = check(7);
     // no more than one signal can be set
     if( active[0] ) active[7:1] = 0;
     if( active[1] ) active[7:2] = 0;
@@ -165,7 +178,7 @@ always @(*) begin
     if( active[4] ) active[7:5] = 0;
     if( active[5] ) active[7:6] = 0;
     if( active[6] ) active[7]   = 0;
-    if( &cpu_fc   ) active      = 0; // irq ack.
+    if( &cpu_fc ) active = 0; // irq ack or end of bus cycle
     case( active )
         8'h01: dtack_cyc = mmr[ {1'b1,3'd0,1'b0}][3:2];
         8'h02: dtack_cyc = mmr[ {1'b1,3'd1,1'b0}][3:2];
@@ -223,12 +236,18 @@ wire [4:0] asel = cpu_sel ? addr[5:1] : mcu_addr[4:0];
 wire [7:0] din  = cpu_sel ? cpu_dout[7:0] : mcu_dout;
 wire       wren = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr;
 
-integer aux2;
-
 always @(posedge clk, posedge rst ) begin
     if( rst ) begin
-        for( aux2=0; aux2<32; aux2=aux2+1 )
-            mmr[aux2] <= 0;
+        mmr[0] <= 0; mmr[10] <= 0; mmr[20] <= 0; mmr[30] <= 0;
+        mmr[1] <= 0; mmr[11] <= 0; mmr[21] <= 0; mmr[31] <= 0;
+        mmr[2] <= 0; mmr[12] <= 0; mmr[22] <= 0;
+        mmr[3] <= 0; mmr[13] <= 0; mmr[23] <= 0;
+        mmr[4] <= 0; mmr[14] <= 0; mmr[24] <= 0;
+        mmr[5] <= 0; mmr[15] <= 0; mmr[25] <= 0;
+        mmr[6] <= 0; mmr[16] <= 0; mmr[26] <= 0;
+        mmr[7] <= 0; mmr[17] <= 0; mmr[27] <= 0;
+        mmr[8] <= 0; mmr[18] <= 0; mmr[28] <= 0;
+        mmr[9] <= 0; mmr[19] <= 0; mmr[29] <= 0;
         sndmap_obf <= 0;
         cpu_sel    <= 1;
     end else begin
