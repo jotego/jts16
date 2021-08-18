@@ -163,21 +163,13 @@ endfunction
 
 always @(*) begin
     active[0] = check(0);
-    active[1] = check(1);
-    active[2] = check(2);
-    active[3] = check(3);
-    active[4] = check(4);
-    active[5] = check(5);
-    active[6] = check(6);
-    active[7] = check(7);
-    // no more than one signal can be set
-    if( active[0] ) active[7:1] = 0;
-    if( active[1] ) active[7:2] = 0;
-    if( active[2] ) active[7:3] = 0;
-    if( active[3] ) active[7:4] = 0;
-    if( active[4] ) active[7:5] = 0;
-    if( active[5] ) active[7:6] = 0;
-    if( active[6] ) active[7]   = 0;
+    active[1] = check(1) & ~active[0];
+    active[2] = check(2) & ~active[1:0];
+    active[3] = check(3) & ~active[2:0];
+    active[4] = check(4) & ~active[3:0];
+    active[5] = check(5) & ~active[4:0];
+    active[6] = check(6) & ~active[5:0];
+    active[7] = check(7) & ~active[6:0];
     if( &cpu_fc ) active = 0; // irq ack or end of bus cycle
     case( active )
         8'h01: dtack_cyc = mmr[ {1'b1,3'd0,1'b0}][3:2];
