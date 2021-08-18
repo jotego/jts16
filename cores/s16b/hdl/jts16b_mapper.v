@@ -161,7 +161,7 @@ function check(input [2:0] region );
     endcase
 endfunction
 
-always @(*) begin
+always @(addr,cpu_fc,mmr) begin
     active[0] = check(0);
     active[1] = check(1) & ~active[0];
     active[2] = check(2) & ~active[1:0];
