@@ -114,6 +114,11 @@ SCREEN:
     call write_st8
     load s3,30
     call write_st8
+    add s0,2
+    load s3,33
+    call write_st8
+    load s3,32
+    call write_st8
 
     ; Memory map
     jump CLOSE_FRAME ; SKIPPING IT!
