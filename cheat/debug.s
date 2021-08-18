@@ -2,6 +2,17 @@
 
 ; Shows the scroll settings and the debug bus
 
+constant LED, 6
+constant FRAMECNT, 0x2c
+constant WATCHDOG, 0x40
+constant STATUS, 0x80
+constant VRAM_CTRL, 0xB
+constant VRAM_COL, 8
+constant VRAM_ROW, 9
+constant VRAM_DATA, A
+constant DEBUG_BUS, F
+constant GAMERAM, 12
+
 ; Register use
 ; SA = frame counter
 ; SB = LED
@@ -96,9 +107,17 @@ SCREEN:
     load s3,c
     call  write_st8
 
+    ; Average CPU frequency
+    outputk 6,VRAM_ROW
+    load s0,2
+    load s3,31
+    call write_st8
+    load s3,30
+    call write_st8
+
     ; Memory map
-    load s0,6
-    output s0,9 ; row
+    jump CLOSE_FRAME ; SKIPPING IT!
+    outputk 7,9 ; row
     load s0,2
 
     load s3,28
