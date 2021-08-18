@@ -102,6 +102,7 @@ module jts16b_main(
     output      [ 7:0] ioctl_din,
 
     // status dump
+    input       [ 7:0] debug_bus,
     input       [ 7:0] st_addr,
     output      [ 7:0] st_dout
 );
@@ -235,6 +236,7 @@ jts16b_mapper u_mapper(
     .mcu_wr     ( mcu_wr         ),
 
     .active     ( active         ),
+    .debug_bus  ( debug_bus      ),
     .st_addr    ( st_addr        ),
     .st_dout    ( st_dout        )
 );

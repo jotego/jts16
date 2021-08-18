@@ -93,6 +93,7 @@ module jts16b_mapper(
     output     [15:0] bus_din,
     output reg [ 7:0] active,
     // status dump
+    input      [ 7:0] debug_bus,
     input      [ 7:0] st_addr,
     output reg [ 7:0] st_dout
 );
@@ -190,6 +191,25 @@ reg  dtackn2, dtackn3;
 wire BUSn = cpu_asn | (&cpu_dsn);
 wire [15:0] fave;
 
+reg [7:0] den;
+
+`ifdef MISTER
+always @(*) begin
+    case( debug_bus[2:0] )
+        0: den=116;
+        1: den=126;
+        2: den=136;
+        3: den=146;
+        4: den=156;
+        5: den=166;
+        6: den=176;
+        7: den=186;
+    endcase
+end
+`else
+initial den = 8'd146;
+`endif
+
 jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -198,9 +218,11 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .bus_cs     ( bus_cs    ),
     .bus_busy   ( bus_busy  ),
     .bus_legit  ( 1'b0      ),
-    .BUSn       ( BUSn      ),  // BUSn = ASn | (LDSn & UDSn)
+    .ASn        ( cpu_asn   ),  // BUSn = ASn | (LDSn & UDSn)
+    .DSn        ( cpu_dsn   ),
     .num        ( 8'd29     ),  // numerator
-    .den        ( 8'd146    ),  // denominator
+    //.den        ( 8'd146    ),  // denominator
+    .den        ( den       ),  // denominator
     .DTACKn     ( dtackn1   ),
     .fave       ( fave      )
 );

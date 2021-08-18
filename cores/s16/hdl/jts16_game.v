@@ -281,6 +281,7 @@ jts16_cen u_cen(
     .dipsw_a     ( dipsw_a    ),
     .dipsw_b     ( dipsw_b    ),
     // Status report
+    .debug_bus   ( debug_bus  ),
     .st_addr     ( st_addr    ),
     .st_dout     ( st_main    ),
     // NVRAM dump
