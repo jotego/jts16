@@ -217,7 +217,7 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .ASn        ( cpu_asn   ),  // BUSn = ASn | (LDSn & UDSn)
     .DSn        ( cpu_dsn   ),
     .num        ( 8'd29     ),  // numerator
-    .den        ( 8'd126    ),  // denominator
+    .den        ( 8'd146    ),  // denominator
     .DTACKn     ( dtackn1   ),
     .fave       ( fave      ),
     .fworst     ( fworst    ),
