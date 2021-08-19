@@ -190,7 +190,7 @@ wire dtackn1;
 reg  dtackn2, dtackn3;
 wire BUSn = cpu_asn | (&cpu_dsn);
 wire [15:0] fave, fworst;
-
+/*
 reg [7:0] den;
 
 always @(*) begin
@@ -205,7 +205,7 @@ always @(*) begin
         7: den=186;
     endcase
 end
-
+*/
 jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -217,11 +217,7 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .ASn        ( cpu_asn   ),  // BUSn = ASn | (LDSn & UDSn)
     .DSn        ( cpu_dsn   ),
     .num        ( 8'd29     ),  // numerator
-`ifdef MISTER
-    .den        ( den       ),  // denominator
-`else
-    .den        ( 8'd146    ),  // denominator
-`endif
+    .den        ( 8'd126    ),  // denominator
     .DTACKn     ( dtackn1   ),
     .fave       ( fave      ),
     .fworst     ( fworst    ),
