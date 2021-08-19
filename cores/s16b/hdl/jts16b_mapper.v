@@ -193,7 +193,6 @@ wire [15:0] fave, fworst;
 
 reg [7:0] den;
 
-`ifdef MISTER
 always @(*) begin
     case( debug_bus[2:0] )
         0: den=116;
@@ -206,9 +205,6 @@ always @(*) begin
         7: den=186;
     endcase
 end
-`else
-initial den = 8'd146;
-`endif
 
 jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .rst        ( rst       ),
@@ -221,8 +217,11 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .ASn        ( cpu_asn   ),  // BUSn = ASn | (LDSn & UDSn)
     .DSn        ( cpu_dsn   ),
     .num        ( 8'd29     ),  // numerator
-    //.den        ( 8'd146    ),  // denominator
+`ifdef MISTER
     .den        ( den       ),  // denominator
+`else
+    .den        ( 8'd146    ),  // denominator
+`endif
     .DTACKn     ( dtackn1   ),
     .fave       ( fave      ),
     .fworst     ( fworst    ),
