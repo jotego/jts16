@@ -5,7 +5,8 @@ on:
   push:
     branches:
       - build
-      
+      - sidi
+      - build_s16a2
 
 jobs:
 

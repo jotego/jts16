@@ -5,7 +5,8 @@ on:
   push:
     branches:
       - build
-      
+      - neptuno
+      - build_s16b
 
 jobs:
 

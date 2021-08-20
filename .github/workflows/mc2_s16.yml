@@ -5,7 +5,8 @@ on:
   push:
     branches:
       - build
-      
+      - mc2
+      - build_s16
 
 jobs:
 
