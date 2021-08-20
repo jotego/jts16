@@ -59,7 +59,7 @@
         <part name="ism2006v00.u1" crc="2292585c"/>
         <!-- Total 0x46A000 bytes - 4520 kBytes -->
     </rom>
-    <rom index="16" zip="jtbeta.zip|beta.zip" md5="None">
+    <rom index="16" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>
     </rom>
     <rom index="1">

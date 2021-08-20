@@ -114,7 +114,7 @@
         </part>
         <!-- Total 0x44A100 bytes - 4392 kBytes -->
     </rom>
-    <rom index="16" zip="jtbeta.zip|beta.zip" md5="None">
+    <rom index="16" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>
     </rom>
     <!-- Vertical game -->
