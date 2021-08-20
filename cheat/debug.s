@@ -12,6 +12,7 @@ constant VRAM_ROW, 9
 constant VRAM_DATA, A
 constant DEBUG_BUS, F
 constant GAMERAM, 12
+constant KEYS, 30
 
 ; Register use
 ; SA = frame counter
@@ -120,9 +121,23 @@ SCREEN:
     load s3,32
     call write_st8
 
+    ; Lock keys
+    jump .bypass
+    outputk 8,VRAM_ROW
+    load s0,2
+    input s1,33
+    call WRITE_HEX
+    input s1,32
+    call WRITE_HEX
+    input s1,31
+    call WRITE_HEX
+    input s1,30
+    call WRITE_HEX
+.bypass:
+
     ; Memory map
     jump CLOSE_FRAME ; SKIPPING IT!
-    outputk 7,9 ; row
+    outputk 7,VRAM_ROW
     load s0,2
 
     load s3,28

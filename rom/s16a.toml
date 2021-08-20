@@ -7,7 +7,7 @@ mraauthor=["jotego","atrac17"]
 beta = true
 # cheat=true
 nvram = 43008
-# debug = true
+debug = true
 # qsound=true
 
 [parse]
