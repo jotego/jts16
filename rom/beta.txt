@@ -50,3 +50,14 @@ shinobi5
 shinobi6
 afighterh
 afighterg
+# 210820
+aurail
+aurail1
+aurailj
+bullet
+fpoint
+fpoint1
+ddux
+ddux1
+dduxj
+#leave this line

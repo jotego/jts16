@@ -1,7 +1,7 @@
  \B System 16\W core by \RJotego\W
   http://patreon.com/topapate
 
-     Beta 5 -- 30-July-21
+     Beta 6 -- 20-August-21
 Supervised by the \RJTAlpha team\W
 
 Special thanks to Blackwine
@@ -11,8 +11,8 @@ CPU bus cycle problem
 Known issues:
 -Body Slam:
     -Missing some graphics
--Bus cycle accuracy may
- not be perfect yet
+-Bus cycle accuracy is
+ not perfect yet
 
         \BHardware\W
 
@@ -48,20 +48,21 @@ ARCADEAGES      Adam Davis
 Anders Rensberg Andreas Wester
 Andrew Francomb Andy Palmer
 Andyways        Arjan de
-Bob Gallardo    Chi Wai
-Chris Doyle     Chris Harvey
-Chris Jardine   Christian
-Connor Glynn    D.J. Estreito
-DMG             Darren Chell
-David Agudo     David Ashby
-David Mills     David Moylan
-Dean Winger     Don Gafford
-Ed Balan        Eduardo Javier
-Edward Rana     Epixjava
-Gladius         Gus Douboulidis
-Gwaland         H. Osterholz
-Henrik Nordstrom Ian Court
-Ivo             James Baker
+BeardMonsterGames Bob Gallardo
+Chi Wai         Chris Doyle
+Chris Harvey    Chris Jardine
+Christian       Connor Glynn
+D.J. Estreito   DMG
+Darren Chell    David Agudo
+David Ashby     David Mills
+David Moylan    Dean Winger
+Don Gafford     Ed Balan
+Eduardo Javier  Edward Rana
+Emperor Storky  Gladius
+Gus Douboulidis Gwaland
+H. Osterholz    H. Nordstrom
+Ian Court       Ivo
+JPS (RetroFPGA) James Baker
 James Trautner  James Williams
 Jason Nagy      Jeffrey Haas
 Jim Weinhart    Joe Tassone
@@ -73,7 +74,7 @@ Lionel LENOBLE  MakeshiftMoney
 Marcelo C.      Marcus Hogue
 Marcus Sid      Martin DiPalma
 Matt Postema    Matthew Young
-MiSTerFPGA.co.uk    MoonZ
+MiSTerFPGA.co.uk MoonZ
 Oliver Jaksch   Oliver Wndmth
 Oscar Laguna    Per Sweden
 Peter Bray      PsyFX

@@ -86,7 +86,12 @@ module jts16_main(
 
     // NVRAM - debug
     input       [15:0] ioctl_addr,
-    output      [ 7:0] ioctl_din
+    output      [ 7:0] ioctl_din,
+
+    // status dump - debug
+    input       [ 7:0] debug_bus,
+    input       [ 7:0] st_addr,
+    output reg  [ 7:0] st_dout
 );
 
 localparam [7:0] GAME_SDI=1, GAME_PASSSHT=2;
@@ -106,6 +111,8 @@ wire [15:0] rom_dec;
 
 reg         io_cs, wdog_cs,
             pre_ram_cs, pre_vram_cs;
+
+wire [15:0] fave, fworst;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -337,10 +344,15 @@ jtframe_68kdtack #(.W(8)) u_dtack(
     .bus_cs     ( bus_cs    ),
     .bus_busy   ( bus_busy  ),
     .bus_legit  ( bus_legit ),
-    .BUSn       ( BUSn      ),   // BUSn = ASn | (LDSn & UDSn)
+    .ASn        ( ASn       ),
+    .DSn        ({UDSn,LDSn}),
     .num        ( 8'd29     ),  // numerator
     .den        ( 8'd146    ),  // denominator
-    .DTACKn     ( DTACKn    )
+    .DTACKn     ( DTACKn    ),
+    // Frequency report
+    .fave       ( fave      ),
+    .fworst     ( fworst    ),
+    .frst       ( rst       )
 );
 
 `ifdef FD1094
@@ -441,6 +453,19 @@ jts16_shadow u_shadow(
     .ioctl_addr ( ioctl_addr),
     .ioctl_din  ( ioctl_din )
 );
+
+always @(posedge clk) begin
+    // 10-11, average frequency
+    if( st_addr[4] )
+        case( st_addr[1:0] )
+            0: st_dout <= fave[7:0];
+            1: st_dout <= fave[15:8];
+            2: st_dout <= fworst[7:0];
+            3: st_dout <= fworst[15:8];
+        endcase
+    else
+        st_dout <= 0;
+end
 `endif
 `endif
 `endif

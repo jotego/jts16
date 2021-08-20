@@ -81,10 +81,9 @@
         <part name="b5" crc="d6369a39"/>
         <!-- Total 0x46A000 bytes - 4520 kBytes -->
     </rom>
-    <rom index="16" zip="cheat.zip" md5="None">
-        <part name="debug.bin"/>
+    <rom index="16" zip="jtbeta.zip|beta.zip" md5="None">
+        <part name="beta.bin"/>
     </rom>
-    <nvram index="2" size="75777"/>
     <rom index="1">
         <part>00</part>
     </rom>

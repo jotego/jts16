@@ -27,7 +27,7 @@ function s16a_mra {
     ALTFOLDER="_alt/_$FOLDER"
     mkdir -p "$OUTDIR/$ALTFOLDER"
     mame2mra -def $DEF -toml s16a.toml -xml $NAME.xml \
-        -outdir $OUTDIR -altdir "$ALTFOLDER" \
+        -outdir $OUTDIR \
         -info platform="$PLATFORM" \
         -info category="$CATEGORY" \
         -info catver="$CATVER" \
