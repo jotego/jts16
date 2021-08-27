@@ -60,4 +60,15 @@ fpoint1
 ddux
 ddux1
 dduxj
+wb32
+wb33
+wb34
+aliensynj
+tetris
+# 210827
+goldnaxe3
+goldnaxej
+eswatj1
+eswatu
+eswat
 #leave this line

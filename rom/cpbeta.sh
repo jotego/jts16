@@ -19,3 +19,5 @@ while read LINE; do
     mkdir -p beta/"$DIR"
     cp mra/"$MATCH" beta/"$DIR"
 done < beta.txt
+
+echo Files copied to "'beta'" folder
