@@ -50,6 +50,7 @@ module jts16_sdram #(
     output           snd_ok,
     input [SNDW-1:0] snd_addr,
     output     [7:0] snd_data,
+    output           mc8123_we,
 
     // PROM
     output           n7751_prom,
@@ -137,6 +138,7 @@ localparam [24:0] BA1_START  = `BA1_START,
                   MCU_PROM   = `MCU_START,
                   N7751_PROM = `N7751_START,
                   KEY_PROM   = `MAINKEY_START,
+                  MC8123_PROM= `SNDKEY_START,
                   FD_PROM    = `FD1089_START;
 /* verilator lint_on WIDTH */
 
@@ -156,10 +158,11 @@ reg         fd1089_en, fd1094_en;
 assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading | prom_we; // prom_we is really just for sims
-assign n7751_prom = prom_we && prog_addr[21:10]==N7751_PROM[21:10];
-assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM  [21:13];
-assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM   [21: 8];
-assign mcu_we     = prom_we && prog_addr[21:12]==MCU_PROM  [21:12];
+assign n7751_prom = prom_we && prog_addr[21:10]==N7751_PROM [21:10];
+assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM   [21:13];
+assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM    [21: 8];
+assign mcu_we     = prom_we && prog_addr[21:12]==MCU_PROM   [21:12];
+assign mc8123_we  = prom_we && prog_addr[21:13]==MC8123_PROM[21:13];
 
 always @(*) begin
     xram_addr = { ram_cs, main_addr[VRAMW-2:1] }; // RAM is mapped up

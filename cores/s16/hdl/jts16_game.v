@@ -154,6 +154,7 @@ wire        char_cs, scr1_cs, pal_cs, objram_cs;
 wire [SNDW-1:0] snd_addr;
 wire [ 7:0] snd_data;
 wire        snd_cs, snd_ok;
+wire        mc8123_we; // only for S16B2 core
 
 // PCM
 wire [16:0] pcm_addr;
@@ -347,6 +348,10 @@ jts16_cen u_cen(
     .mapper_dout(sndmap_dout),
     .mapper_obf ( sndmap_obf),
     .game_id    ( game_id   ),
+    // MC8123 encoding
+    .mc8123_we  ( mc8123_we ),
+    .prog_addr  (prog_addr[12:0]),
+    .prog_data  ( prog_data ),
 `else
     // System 16A
     .cen_pcmb   ( cen_pcmb  ),   // 6MHz
@@ -527,6 +532,7 @@ jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .snd_cs     ( snd_cs    ),
     .snd_data   ( snd_data  ),
     .snd_ok     ( snd_ok    ),
+    .mc8123_we  ( mc8123_we ),
 
     // ADPCM ROM
     .pcm_addr   ( pcm_addr  ),

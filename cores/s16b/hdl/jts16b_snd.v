@@ -46,6 +46,11 @@ module jts16b_snd(
     input         [ 7:0] rom_data,
     input                rom_ok,
 
+    // MC8123 encoding
+    input                mc8123_we,
+    input         [12:0] prog_addr,
+    input         [ 7:0] prog_data,
+
     // Sound output
     output signed [15:0] snd,
     output               sample,
@@ -62,7 +67,7 @@ wire        WRn;
 reg  [ 7:0] cpu_din, pcm_cmd, pcmgain;
 reg         rom_ok2;
 wire        rom_good, cmd_cs;
-wire [ 7:0] cpu_dout, fm_dout, ram_dout;
+wire [ 7:0] cpu_dout, fm_dout, ram_dout, dec;
 wire        nmi_n, pcm_busyn,
             wr_n, rd_n, m1_n;
 reg         pcm_mdn, pcm_rst;
@@ -73,7 +78,6 @@ wire signed [15:0] fm_left, fm_right, mixed;
 wire signed [ 8:0] pcm_raw, pcm_snd;
 wire [7:0] fmgain;
 
-assign rom_good = rom_ok2 & rom_ok;
 assign ack      = mapper_cs;
 assign fmgain   = enable_fm ? FMGAIN : 0;
 
@@ -126,7 +130,7 @@ end
 
 always @(posedge clk) begin
     rom_ok2  <= rom_ok;
-    cpu_din  <= rom_cs    ? rom_data : (
+    cpu_din  <= rom_cs    ? dec      : ( // rom_data
                 ram_cs    ? ram_dout : (
                 fm_cs     ? fm_dout  : (
                 pcm_cs    ? { pcm_busyn, ~7'd0 } : (
@@ -176,6 +180,33 @@ jtframe_mixer #(.W2(9)) u_mixer(
 );
 
 assign int_n = ~mapper_obf;
+
+// CPU encryption
+`ifdef MC8123
+    jtmc8123 u_dec(
+        .clk        ( clk       ),
+
+        // interface to Z80 CPU
+        .m1_n       ( m1_n      ),
+        .a          ( A         ),
+
+        // connect to program ROM
+        .enc        ( rom_data  ),
+        .rom_ok     ( rom_ok2   ),
+
+        // Decoded
+        .dec        ( dec       ),
+        .dec_ok     ( rom_good  ),
+
+        // Configuration
+        .mc8123_we  ( mc8123_we ),
+        .prog_addr  ( prog_addr ),
+        .prog_data  ( prog_data )
+    );
+`else
+    assign rom_good = rom_ok2 & rom_ok;
+    assign dec      = rom_data;
+`endif
 
 jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
     .rst_n      ( ~rst        ),

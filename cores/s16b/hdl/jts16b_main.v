@@ -491,7 +491,8 @@ end
         .rom_ok     ( rom_ok    ),
         .ok_dly     ( ok_dly    )
     );
-`else
+`endif
+`ifdef FD1089
     jts16_fd1089 u_dec(
         .rst        ( rst       ),
         .clk        ( clk       ),
@@ -513,6 +514,11 @@ end
         .enc        ( rom_data  ),
         .dec        ( rom_dec   )
     );
+`endif
+`ifdef MC8123
+    // No main CPU encoding when sound CPU is
+    assign rom_dec = rom_data;
+    assign ok_dly  = rom_ok;
 `endif
 
 jtframe_m68k u_cpu(
