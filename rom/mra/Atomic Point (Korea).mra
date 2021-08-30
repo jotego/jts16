@@ -49,8 +49,8 @@
         <part repeat="0xC0000"> FF</part>
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
-            <part name="ap-t4.bin" crc="332e58f4" map="0001"/>
-            <part name="ap-t3.bin" crc="dddc122c" map="0010"/>
+            <part name="ap-t3.bin" crc="dddc122c" map="0001"/>
+            <part name="ap-t4.bin" crc="332e58f4" map="0010"/>
             <part name="ap-t5.bin" crc="ef5ecd6b" map="0100"/>
             <part name="ap-t5.bin" crc="ef5ecd6b" map="1000"/>
         </interleave>

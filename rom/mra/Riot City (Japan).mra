@@ -55,13 +55,13 @@
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
             <part name="epr-14616.bin" crc="46d30368" map="0001"/>
-            <part name="epr-14625.bin" crc="abfb80fe" map="0010"/>
-            <part name="epr-14617.bin" crc="884e40f9" map="0100"/>
-            <part name="epr-14617.bin" crc="884e40f9" map="1000"/>
+            <part name="epr-14617.bin" crc="884e40f9" map="0010"/>
+            <part name="epr-14618.bin" crc="00eb260e" map="0100"/>
+            <part name="epr-14618.bin" crc="00eb260e" map="1000"/>
         </interleave>
         <interleave output="32">
-            <part name="epr-14626.bin" crc="4ef55846" map="0001"/>
-            <part name="epr-14618.bin" crc="00eb260e" map="0010"/>
+            <part name="epr-14625.bin" crc="abfb80fe" map="0001"/>
+            <part name="epr-14626.bin" crc="4ef55846" map="0010"/>
             <part name="epr-14627.bin" crc="961e5f82" map="0100"/>
             <part name="epr-14627.bin" crc="961e5f82" map="1000"/>
         </interleave>
