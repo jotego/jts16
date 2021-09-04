@@ -25,6 +25,7 @@ module jtmc8123(
     // interface to Z80 CPU
     input             m1_n,
     input      [15:0] a,
+    input             enc_en,
 
     // connect to program ROM
     input       [7:0] enc,
@@ -58,16 +59,19 @@ wire [3:0] param = {key[1]^key[6]^key[7],
 
 always @(posedge clk) begin
     dec_ok <= rom_ok;
-    case(decrypt_type)
-        0: dec <= decrypt_type_0 (enc, param, swap);
-        1: dec <= decrypt_type_0 (enc, param, swap);
-        2: dec <= decrypt_type_1a(enc, param, swap);
-        3: dec <= decrypt_type_1b(enc, param, swap);
-        4: dec <= decrypt_type_2a(enc, param, swap);
-        5: dec <= decrypt_type_2b(enc, param, swap);
-        6: dec <= decrypt_type_3a(enc, param, swap);
-        7: dec <= decrypt_type_3b(enc, param, swap);
-    endcase
+    if( !enc_en )
+        dec <= enc;
+    else
+        case(decrypt_type)
+            0: dec <= decrypt_type_0 (enc, param, swap);
+            1: dec <= decrypt_type_0 (enc, param, swap);
+            2: dec <= decrypt_type_1a(enc, param, swap);
+            3: dec <= decrypt_type_1b(enc, param, swap);
+            4: dec <= decrypt_type_2a(enc, param, swap);
+            5: dec <= decrypt_type_2b(enc, param, swap);
+            6: dec <= decrypt_type_3a(enc, param, swap);
+            7: dec <= decrypt_type_3b(enc, param, swap);
+        endcase
 end
 
 jtframe_prom #(.aw(13),.simfile("mc8123.bin")) u_lut(

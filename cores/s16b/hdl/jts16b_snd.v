@@ -189,6 +189,7 @@ assign int_n = ~mapper_obf;
         // interface to Z80 CPU
         .m1_n       ( m1_n      ),
         .a          ( A         ),
+        .enc_en     ( ~bank_cs  ),
 
         // connect to program ROM
         .enc        ( rom_data  ),
