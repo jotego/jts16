@@ -1,0 +1,3 @@
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jtmc8123.v                     ]
+set_global_assignment -name QIP_FILE     [file join $::quartus(qip_path) ../../s16b/hdl/jts16b.qip      ]
+set_global_assignment -name QIP_FILE     [file join $::quartus(qip_path) ../../../modules/jtframe/hdl/cpu/8051/mc8051.qip      ]

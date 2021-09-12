@@ -129,7 +129,7 @@ localparam [2:0] REG_RAM  = 3,
 
 reg         game_passsht;
 
-wire [23:1] A;
+wire [23:1] A,cpu_A;
 wire        BERRn;
 wire [ 2:0] FC;
 
@@ -140,7 +140,7 @@ wire [23:0] A_full = {A,1'b0};
 wire        BRn, BGACKn, BGn;
 wire        ASn, UDSn, LDSn, BUSn;
 wire        ok_dly;
-wire [15:0] rom_dec;
+wire [15:0] rom_dec, cpu_dout_raw;
 
 reg         io_cs, wdog_cs, tbank_cs;
 
@@ -189,6 +189,7 @@ end
 
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs;
 wire bus_busy  = |{ rom_cs & ~ok_dly, (ram_cs | vram_cs) & ~ram_ok };
+wire cpu_rst, cpu_haltn;
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -197,17 +198,18 @@ jts16b_mapper u_mapper(
     .cpu_cenb   ( cpu_cenb       ),
     .vint       ( vint           ),
 
-    .addr       ( A              ),
-    .addr_out   (                ),
-    .cpu_dout   ( cpu_dout       ),
+    .addr       ( cpu_A          ),
+    .cpu_dout   ( cpu_dout_raw   ),
     .cpu_dswn   ( {UDSWn, LDSWn} ),
     .cpu_dsn    ( {UDSn,  LDSn}  ),
     .bus_cs     ( bus_cs         ),
     .bus_busy   ( bus_busy       ),
+    // effective bus signals
+    .addr_out   ( A              ),
 
     // Bus sharing
     .bus_dout   ( 16'hffff       ),
-    .bus_din    (                ),
+    .bus_din    ( cpu_dout       ),
 
     // M68000 control
     .cpu_berrn  ( BERRn          ),
@@ -219,8 +221,8 @@ jts16b_mapper u_mapper(
     .cpu_fc     ( FC             ),
     .cpu_ipln   ( cpu_ipln       ),
     .cpu_vpan   ( cpu_vpan       ),
-    .cpu_haltn  (                ),
-    .cpu_rstn   (                ),
+    .cpu_haltn  ( cpu_haltn      ),
+    .cpu_rst    ( cpu_rst        ),
 
     // Sound CPU
     .sndmap_rd  ( sndmap_rd      ),
@@ -277,6 +279,7 @@ jts16b_mapper u_mapper(
     );
 `else
     assign mcu_wr   = 0;
+    assign mcu_acc  = 0;
     assign mcu_dout = 0;
 `endif
 
@@ -518,16 +521,18 @@ end
     assign ok_dly  = rom_ok;
 `endif
 
+wire all_haltn = dip_pause & cpu_haltn;
+
 jtframe_m68k u_cpu(
     .clk        ( clk         ),
-    .rst        ( rst         ),
+    .rst        ( cpu_rst     ),
     .cpu_cen    ( cpu_cen     ),
     .cpu_cenb   ( cpu_cenb    ),
 
     // Buses
-    .eab        ( A           ),
+    .eab        ( cpu_A       ),
     .iEdb       ( cpu_din     ),
-    .oEdb       ( cpu_dout    ),
+    .oEdb       ( cpu_dout_raw),
 
 
     .eRWn       ( RnW         ),
@@ -539,7 +544,7 @@ jtframe_m68k u_cpu(
 
     .BERRn      ( BERRn       ),
     // Bus arbitrion
-    .HALTn      ( dip_pause   ),
+    .HALTn      ( all_haltn   ),
     .BRn        ( BRn         ),
     .BGACKn     ( BGACKn      ),
     .BGn        ( BGn         ),

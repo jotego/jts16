@@ -50,6 +50,7 @@ module jts16b_mapper(
     input             clk,
     output            cpu_cen,
     output            cpu_cenb,
+    output reg        cpu_rst,
     input             bus_cs,
     input             bus_busy,
     input             vint,
@@ -84,6 +85,7 @@ module jts16b_mapper(
     input      [ 7:0] mcu_dout,
     output     [ 7:0] mcu_din,
     input      [15:0] mcu_addr,
+    input             mcu_acc,
     input             mcu_wr,
     output     [ 1:0] mcu_intn,
 
@@ -92,6 +94,7 @@ module jts16b_mapper(
     input      [15:0] bus_dout,
     output     [15:0] bus_din,
     output reg [ 7:0] active,
+
     // status dump
     input      [ 7:0] debug_bus,
     input      [ 7:0] st_addr,
@@ -105,9 +108,16 @@ wire      bus_rq = 0;
 wire      mcu_cen;
 reg       cpu_sel;
 reg       irqn; // VBLANK
+reg       rdmem, wrmem;
+
+wire [23:1] rdaddr, wraddr;
+wire [15:0] wrdata;
 
 assign mcu_intn = { 1'b1, irqn };
 assign mcu_din  = mcu_dout;
+assign rdaddr   = { mmr[10][6:0],mmr[11],mmr[12] };
+assign wraddr   = { mmr[ 7][6:0],mmr[ 8],mmr[ 9] };
+assign wrdata   = { mmr[0], mmr[1] };
 
 `ifdef SIMULATION
 wire [7:0] base0 = mmr[ {1'b1, 3'd0, 1'b1 }];
@@ -138,12 +148,10 @@ assign {dtack6, size6 } = mmr[ {1'b1, 3'd6, 1'b0 }];
 assign {dtack7, size7 } = mmr[ {1'b1, 3'd7, 1'b0 }];
 `endif
 
-// unused for now
-assign cpu_haltn = 1;
-assign cpu_rstn  = 1;
-assign addr_out  = 0;
-assign bus_din   = 0;
+assign addr_out  = rdmem ? rdaddr : wrmem ? wraddr : addr;
+assign bus_din   = wrmem ? wrdata : cpu_dout;
 
+assign cpu_haltn = ~mmr[2][1];
 assign cpu_berrn = 1;
 assign sndmap_dout = mmr[3];
 
@@ -153,16 +161,22 @@ always @(posedge clk) if( cpu_cen ) begin
     asnl <= cpu_asn;
 end
 
+reg rst_aux;
+
+always @(negedge clk) begin
+    { cpu_rst, rst_aux } <= { rst_aux, mmr[2][0] | rst };
+end
+
 function check(input [2:0] region );
     case( mmr[ {1'b1, region[2:0], 1'b0 } ][1:0] )
-        0: check = addr[23:16] == mmr[ {1'b1, region[2:0], 1'b1 } ];      //   64 kB
-        1: check = addr[23:17] == mmr[ {1'b1, region[2:0], 1'b1 } ][7:1]; //  128 kB
-        2: check = addr[23:19] == mmr[ {1'b1, region[2:0], 1'b1 } ][7:3]; //  512 kB
-        3: check = addr[23:21] == mmr[ {1'b1, region[2:0], 1'b1 } ][7:5]; // 2048 kB
+        0: check = addr_out[23:16] == mmr[ {1'b1, region[2:0], 1'b1 } ];      //   64 kB
+        1: check = addr_out[23:17] == mmr[ {1'b1, region[2:0], 1'b1 } ][7:1]; //  128 kB
+        2: check = addr_out[23:19] == mmr[ {1'b1, region[2:0], 1'b1 } ][7:3]; //  512 kB
+        3: check = addr_out[23:21] == mmr[ {1'b1, region[2:0], 1'b1 } ][7:5]; // 2048 kB
     endcase
 endfunction
 
-always @(addr,cpu_fc,mmr) begin
+always @(addr_out,cpu_fc,mmr) begin
     active[0] = check(0);
     active[1] = check(1) & ~active[0];
     active[2] = check(2) & ~active[1:0];
@@ -190,22 +204,7 @@ wire dtackn1;
 reg  dtackn2, dtackn3;
 wire BUSn = cpu_asn | (&cpu_dsn);
 wire [15:0] fave, fworst;
-/*
-reg [7:0] den;
 
-always @(*) begin
-    case( debug_bus[2:0] )
-        0: den=116;
-        1: den=126;
-        2: den=136;
-        3: den=146;
-        4: den=156;
-        5: den=166;
-        6: den=176;
-        7: den=186;
-    endcase
-end
-*/
 jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -239,9 +238,10 @@ always @(posedge clk) begin
 end
 
 // select between CPU or MCU access to registers
-wire [4:0] asel = cpu_sel ? addr[5:1] : mcu_addr[4:0];
-wire [7:0] din  = cpu_sel ? cpu_dout[7:0] : mcu_dout;
-wire       wren = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr;
+wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr[4:0];
+wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout;
+wire       wren   = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr;
+wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
 
 always @(posedge clk, posedge rst ) begin
     if( rst ) begin
@@ -257,24 +257,33 @@ always @(posedge clk, posedge rst ) begin
         mmr[9] <= 0; mmr[19] <= 0; mmr[29] <= 0;
         sndmap_obf <= 0;
         cpu_sel    <= 1;
+        wrmem      <= 0;
+        rdmem      <= 0;
     end else begin
+        wrmem <= 0;
+        rdmem <= 0;
         if( mcu_wr ) cpu_sel <= 0; // once cleared, it stays like that until reset
         if( wren ) begin
             mmr[ asel ] <= din;
             if( asel == 3 )
                 sndmap_obf <= 1;
+            if( asel==5 ) begin
+                wrmem <= din[1:0]==2'b01;
+                rdmem <= din[1:0]==2'b10;
+            end
         end
         if( sndmap_rd )
             sndmap_obf <= 0;
+        if( !inta_n )
+            mmr[4][2:0] <= 3'b111;
     end
 end
 
 // interrupt generation
-wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
 reg        last_vint;
 
 assign cpu_vpan = inta_n;
-assign cpu_ipln = { irqn, 2'b11 };
+assign cpu_ipln = cpu_sel ? { irqn, 2'b11 } : mmr[4][2:0];
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
