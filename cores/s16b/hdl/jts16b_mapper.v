@@ -48,6 +48,7 @@
 module jts16b_mapper(
     input             rst,
     input             clk,
+    input             pxl_cen,
     output            cpu_cen,
     output            cpu_cenb,
     output reg        cpu_rst,
@@ -62,7 +63,6 @@ module jts16b_mapper(
     input      [ 1:0] cpu_dsn,
     output     [ 2:0] cpu_ipln,
     output            cpu_haltn,
-    output            cpu_rstn,
     output            cpu_vpan,
 
     // Bus sharing
@@ -83,7 +83,7 @@ module jts16b_mapper(
 
     // MCU side
     input      [ 7:0] mcu_dout,
-    output     [ 7:0] mcu_din,
+    output reg [ 7:0] mcu_din,
     input      [15:0] mcu_addr,
     input             mcu_acc,
     input             mcu_wr,
@@ -109,12 +109,12 @@ wire      mcu_cen;
 reg       cpu_sel;
 reg       irqn; // VBLANK
 reg       rdmem, wrmem;
+reg       mcu_vintn;
 
 wire [23:1] rdaddr, wraddr;
 wire [15:0] wrdata;
 
-assign mcu_intn = { 1'b1, irqn };
-assign mcu_din  = mcu_dout;
+assign mcu_intn = { 1'b1, mcu_vintn };
 assign rdaddr   = { mmr[10][6:0],mmr[11],mmr[12] };
 assign wraddr   = { mmr[ 7][6:0],mmr[ 8],mmr[ 9] };
 assign wrdata   = { mmr[0], mmr[1] };
@@ -166,6 +166,32 @@ reg rst_aux;
 always @(negedge clk) begin
     { cpu_rst, rst_aux } <= { rst_aux, mmr[2][0] | rst };
 end
+
+wire [15:0] mcu_addr_s;
+
+jtframe_sync #(.W(16)) u_sync(
+    .clk    ( clk           ),
+    .raw    ( mcu_addr      ),
+    .sync   ( mcu_addr_s    )
+);
+
+// Interface with sound CPU
+reg [7:0] snd_latch;
+
+always @(posedge clk) begin
+    if(sndmap_wr) snd_latch <= sndmap_dout;
+end
+
+// Data to MCU
+always @(posedge clk) begin
+    case( mcu_addr_s[1:0] )
+        0: mcu_din <= mmr[0];
+        1: mcu_din <= mmr[1];
+        2: mcu_din <= { 6'b11_1111, cpu_haltn, ~cpu_rst }; // see schematics page 10
+        3: mcu_din <= snd_latch;
+    endcase
+end
+
 
 function check(input [2:0] region );
     case( mmr[ {1'b1, region[2:0], 1'b0 } ][1:0] )
@@ -238,7 +264,7 @@ always @(posedge clk) begin
 end
 
 // select between CPU or MCU access to registers
-wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr[4:0];
+wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
 wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout;
 wire       wren   = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr;
 wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
@@ -285,16 +311,24 @@ reg        last_vint;
 assign cpu_vpan = inta_n;
 assign cpu_ipln = cpu_sel ? { irqn, 2'b11 } : mmr[4][2:0];
 
+reg [7:0] mcu_cnt;
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         irqn <= 1;
+        mcu_vintn <= 1;
     end else begin
         last_vint <= vint;
+
+        if( mcu_cnt!=0 && pxl_cen ) mcu_cnt   <= mcu_cnt-1'd1;
+        if( mcu_cnt==0 ) mcu_vintn <= 1;
 
         if( !inta_n ) begin
             irqn <= 1;
         end else if( vint && !last_vint ) begin
             irqn <= 0;
+            mcu_vintn <= 0;
+            mcu_cnt  <= ~7'd0;
         end
     end
 end

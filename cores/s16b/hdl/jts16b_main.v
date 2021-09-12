@@ -21,9 +21,10 @@ module jts16b_main(
     input              clk,
     input              rst24,
     input              clk24,       // required to ease MCU synthesis
+    input              pxl_cen,
     input              clk_rom,
     output             cpu_cen,
-    output             mcu_cen,
+    input              mcu_cen,
     output             cpu_cenb,
     input  [7:0]       game_id,
 
@@ -194,6 +195,7 @@ wire cpu_rst, cpu_haltn;
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
     .clk        ( clk            ),
+    .pxl_cen    ( pxl_cen        ),
     .cpu_cen    ( cpu_cen        ),
     .cpu_cenb   ( cpu_cenb       ),
     .vint       ( vint           ),
@@ -246,10 +248,14 @@ jts16b_mapper u_mapper(
 );
 
 `ifndef NOMCU
-    jtframe_8751mcu u_mcu(
+    jtframe_8751mcu #(
+        .DIVCEN     ( 1             ),
+        .SYNC_XDATA ( 1             ),
+        .SYNC_INT   ( 1             )
+    ) u_mcu(
         .rst        ( rst24         ),
         .clk        ( clk24         ),
-        .cen        ( mcu_cen & mcu_en ),
+        .cen        ( mcu_cen       ),
 
         .int0n      ( mcu_intn[0]   ),
         .int1n      ( mcu_intn[1]   ),

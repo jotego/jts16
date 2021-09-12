@@ -268,6 +268,7 @@ jts16_cen u_cen(
     .clk24       ( clk24      ),  // To ease MCU compilation
     .mcu_cen     ( mcu_cen    ),
     .mcu_en      ( mcu_en     ),
+    .pxl_cen     ( pxl_cen    ),
     .mcu_prog_we ( mcu_we     ),
     .sndmap_rd   ( sndmap_rd  ),
     .sndmap_wr   ( sndmap_wr  ),
