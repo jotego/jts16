@@ -19,6 +19,7 @@
 module `GAMETOP(
     input           rst,
     input           clk,
+    input           rst24,
     input           clk24,
     output          pxl2_cen,   // 12   MHz
     output          pxl_cen,    //  6   MHz
@@ -263,6 +264,7 @@ jts16_cen u_cen(
     .snd_ack     ( snd_ack    ),
     .sound_en    ( sound_en   ),
 `else
+    .rst24       ( rst24      ),
     .clk24       ( clk24      ),  // To ease MCU compilation
     .mcu_cen     ( mcu_cen    ),
     .mcu_en      ( mcu_en     ),
@@ -328,7 +330,7 @@ jts16_cen u_cen(
 
 `ifndef NOSOUND
 `JTS16_SND u_sound(
-    .rst        ( rst       ),
+    .rst        ( rst24     ),
     .clk        ( clk24     ),
 
     .cen_fm     ( cen_fm    ),   // 4MHz or 5MHz

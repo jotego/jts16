@@ -19,6 +19,7 @@
 module jts16b_main(
     input              rst,
     input              clk,
+    input              rst24,
     input              clk24,       // required to ease MCU synthesis
     input              clk_rom,
     output             cpu_cen,
@@ -153,7 +154,7 @@ assign cpu_addr = A[12:1];
 //                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
 
 wire [ 7:0] active, mcu_din, mcu_dout;
-wire        mcu_wr;
+wire        mcu_wr, mcu_acc;
 wire [15:0] mcu_addr;
 wire [ 1:0] mcu_intn;
 wire [ 2:0] cpu_ipln;
@@ -234,6 +235,7 @@ jts16b_mapper u_mapper(
     .mcu_intn   ( mcu_intn       ),
     .mcu_addr   ( mcu_addr       ),
     .mcu_wr     ( mcu_wr         ),
+    .mcu_acc    ( mcu_acc        ),
 
     .active     ( active         ),
     .debug_bus  ( debug_bus      ),
@@ -242,16 +244,10 @@ jts16b_mapper u_mapper(
 );
 
 `ifndef NOMCU
-    reg mcu_rst;
-
-    always @(posedge clk24) begin
-        mcu_rst <= rst | ~mcu_en;
-    end
-
     jtframe_8751mcu u_mcu(
-        .rst        ( mcu_rst       ),
+        .rst        ( rst24         ),
         .clk        ( clk24         ),
-        .cen        ( mcu_cen       ),
+        .cen        ( mcu_cen & mcu_en ),
 
         .int0n      ( mcu_intn[0]   ),
         .int1n      ( mcu_intn[1]   ),
@@ -271,6 +267,7 @@ jts16b_mapper u_mapper(
         .x_dout     ( mcu_dout      ),
         .x_addr     ( mcu_addr      ),
         .x_wr       ( mcu_wr        ),
+        .x_acc      ( mcu_acc       ),
 
         // ROM programming
         .clk_rom    ( clk           ),
