@@ -187,7 +187,14 @@ always @(posedge clk) begin
     case( mcu_addr_s[1:0] )
         0: mcu_din <= mmr[0];
         1: mcu_din <= mmr[1];
-        2: mcu_din <= { 6'b11_1111, cpu_haltn, ~cpu_rst }; // see schematics page 10
+        2: mcu_din <= {
+            1'b1,
+            ~cpu_dtackn,
+            2'b11,
+            ~&cpu_ipln, // not sure about this one
+            cpu_berrn,
+            cpu_haltn,
+            ~cpu_rst }; // see schematics page 10
         3: mcu_din <= snd_latch;
     endcase
 end
@@ -275,7 +282,7 @@ always @(posedge clk, posedge rst ) begin
         mmr[1] <= 0; mmr[11] <= 0; mmr[21] <= 0; mmr[31] <= 0;
         mmr[2] <= 0; mmr[12] <= 0; mmr[22] <= 0;
         mmr[3] <= 0; mmr[13] <= 0; mmr[23] <= 0;
-        mmr[4] <= 0; mmr[14] <= 0; mmr[24] <= 0;
+        mmr[4] <= 7; mmr[14] <= 0; mmr[24] <= 0;
         mmr[5] <= 0; mmr[15] <= 0; mmr[25] <= 0;
         mmr[6] <= 0; mmr[16] <= 0; mmr[26] <= 0;
         mmr[7] <= 0; mmr[17] <= 0; mmr[27] <= 0;

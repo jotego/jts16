@@ -521,10 +521,12 @@ end
         .dec        ( rom_dec   )
     );
 `endif
-`ifdef MC8123
+`ifndef FD1094
+`ifndef FD1089
     // No main CPU encoding when sound CPU is
     assign rom_dec = rom_data;
     assign ok_dly  = rom_ok;
+`endif
 `endif
 
 wire all_haltn = dip_pause & cpu_haltn;
