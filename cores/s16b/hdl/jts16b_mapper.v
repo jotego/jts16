@@ -59,8 +59,9 @@ module jts16b_mapper(
     // M68000 interface
     input      [23:1] addr,
     input      [15:0] cpu_dout,
-    input      [ 1:0] cpu_dswn,
     input      [ 1:0] cpu_dsn,
+    output     [ 1:0] bus_dsn,
+    output            bus_asn,
     output     [ 2:0] cpu_ipln,
     output            cpu_haltn,
     output            cpu_vpan,
@@ -73,6 +74,8 @@ module jts16b_mapper(
     output            cpu_dtackn,
     input             cpu_asn,
     input      [ 2:0] cpu_fc,
+    input             cpu_rnw,
+    output            bus_rnw,
 
     // Z80 interface
     input             sndmap_rd,
@@ -101,23 +104,31 @@ module jts16b_mapper(
     output reg [ 7:0] st_dout
 );
 
-reg [1:0] dtack_cyc;    // number of DTACK cycles
-reg [7:0] mmr[0:31];
-wire      none = active==0;
-wire      bus_rq = 0;
-wire      mcu_cen;
-reg       cpu_sel;
-reg       irqn; // VBLANK
-reg       rdmem, wrmem;
-reg       mcu_vintn;
+reg  [ 1:0] dtack_cyc;    // number of DTACK cycles
+reg  [ 7:0] mmr[0:31];
+wire        none = active==0;
+wire        bus_rq;
+wire        mcu_cen;
+reg         cpu_sel;
+reg         irqn; // VBLANK
+reg         rdmem, wrmem;
+reg         mcu_vintn;
 
 wire [23:1] rdaddr, wraddr;
 wire [15:0] wrdata;
+wire [ 1:0] cpu_dswn;
+wire        bus_mcu;    // the MCU controls the bus
 
 assign mcu_intn = { 1'b1, mcu_vintn };
 assign rdaddr   = { mmr[10][6:0],mmr[11],mmr[12] };
 assign wraddr   = { mmr[ 7][6:0],mmr[ 8],mmr[ 9] };
 assign wrdata   = { mmr[0], mmr[1] };
+assign bus_rq   = rdmem | wrmem;
+assign bus_rnw  = ~bus_mcu ? cpu_rnw : ~wrmem;
+assign bus_dsn  = ~bus_mcu ? cpu_dsn : 2'b00;
+assign cpu_dswn = cpu_dsn & {2{cpu_rnw}};
+assign bus_asn  = ~bus_mcu ? cpu_asn : ~bus_rq;
+assign bus_mcu  = bus_rq & (~cpu_bgn | cpu_rst | ~cpu_haltn);
 
 `ifdef SIMULATION
 wire [7:0] base0 = mmr[ {1'b1, 3'd0, 1'b1 }];
@@ -189,7 +200,7 @@ always @(posedge clk) begin
         1: mcu_din <= mmr[1];
         2: mcu_din <= {
             1'b1,
-            ~cpu_dtackn,
+            bus_rq,
             2'b11,
             ~&cpu_ipln, // not sure about this one
             cpu_berrn,
@@ -275,6 +286,8 @@ wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
 wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout;
 wire       wren   = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr;
 wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
+reg  [1:0] bus_wait;
+reg        wren_l;
 
 always @(posedge clk, posedge rst ) begin
     if( rst ) begin
@@ -292,9 +305,16 @@ always @(posedge clk, posedge rst ) begin
         cpu_sel    <= 1;
         wrmem      <= 0;
         rdmem      <= 0;
+        bus_wait   <= 0;
+        wren_l     <= 0;
     end else begin
-        wrmem <= 0;
-        rdmem <= 0;
+        wren_l <= wren;
+        if( bus_wait!=0 && bus_mcu && !mcu_wr ) bus_wait <= bus_wait-1'd1;
+        if( !bus_wait && !bus_busy ) begin
+            wrmem <= 0;
+            rdmem <= 0;
+            if( rdmem ) {mmr[1], mmr[0]} <= bus_dout;
+        end
         if( mcu_wr ) cpu_sel <= 0; // once cleared, it stays like that until reset
         if( wren ) begin
             mmr[ asel ] <= din;
@@ -303,6 +323,7 @@ always @(posedge clk, posedge rst ) begin
             if( asel==5 ) begin
                 wrmem <= din[1:0]==2'b01;
                 rdmem <= din[1:0]==2'b10;
+                if( din[1]^din[0] ) bus_wait <= 2'b11;
             end
         end
         if( sndmap_rd )

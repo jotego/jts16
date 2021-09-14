@@ -190,7 +190,11 @@ end
 
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs;
 wire bus_busy  = |{ rom_cs & ~ok_dly, (ram_cs | vram_cs) & ~ram_ok };
-wire cpu_rst, cpu_haltn;
+wire cpu_rst, cpu_haltn, cpu_asn;
+wire [ 1:0] cpu_dsn;
+reg  [15:0] cpu_din;
+
+assign {UDSWn, LDSWn} = {UDSn,  LDSn} | {2{RnW}};
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -202,16 +206,19 @@ jts16b_mapper u_mapper(
 
     .addr       ( cpu_A          ),
     .cpu_dout   ( cpu_dout_raw   ),
-    .cpu_dswn   ( {UDSWn, LDSWn} ),
-    .cpu_dsn    ( {UDSn,  LDSn}  ),
+    .cpu_dsn    ( cpu_dsn        ),
+    .bus_dsn    ( {UDSn,  LDSn}  ),
     .bus_cs     ( bus_cs         ),
     .bus_busy   ( bus_busy       ),
     // effective bus signals
     .addr_out   ( A              ),
 
     // Bus sharing
-    .bus_dout   ( 16'hffff       ),
+    .bus_dout   ( cpu_din        ),
     .bus_din    ( cpu_dout       ),
+    .cpu_rnw    ( cpu_RnW        ),
+    .bus_rnw    ( RnW            ),
+    .bus_asn    ( ASn            ),
 
     // M68000 control
     .cpu_berrn  ( BERRn          ),
@@ -219,7 +226,7 @@ jts16b_mapper u_mapper(
     .cpu_bgn    ( BGn            ),
     .cpu_bgackn ( BGACKn         ),
     .cpu_dtackn ( DTACKn         ),
-    .cpu_asn    ( ASn            ),
+    .cpu_asn    ( cpu_asn        ),
     .cpu_fc     ( FC             ),
     .cpu_ipln   ( cpu_ipln       ),
     .cpu_vpan   ( cpu_vpan       ),
@@ -303,7 +310,7 @@ always @(posedge clk, posedge rst) begin
             ram_cs    <= 0;
             tbank_cs  <= 0;
     end else begin
-        if( !ASn && BGACKn ) begin
+        if( !ASn /*&& BGACKn*/ ) begin
             rom_cs    <= |active[2:0] && RnW;
             char_cs   <= active[REG_VRAM] && A[16];
 
@@ -458,8 +465,6 @@ always @(posedge clk, posedge rst) begin
 end
 
 // Data bus input
-reg  [15:0] cpu_din;
-
 always @(posedge clk) begin
     if(rst) begin
         cpu_din <= 16'hffff;
@@ -543,10 +548,10 @@ jtframe_m68k u_cpu(
     .oEdb       ( cpu_dout_raw),
 
 
-    .eRWn       ( RnW         ),
-    .LDSn       ( LDSn        ),
-    .UDSn       ( UDSn        ),
-    .ASn        ( ASn         ),
+    .eRWn       ( cpu_RnW     ),
+    .LDSn       ( cpu_dsn[0]  ),
+    .UDSn       ( cpu_dsn[1]  ),
+    .ASn        ( cpu_asn     ),
     .VPAn       ( cpu_vpan    ),
     .FC         ( FC          ),
 
