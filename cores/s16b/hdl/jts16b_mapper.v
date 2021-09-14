@@ -179,11 +179,12 @@ always @(negedge clk) begin
 end
 
 wire [15:0] mcu_addr_s;
+wire        mcu_wr_s;
 
-jtframe_sync #(.W(16)) u_sync(
-    .clk    ( clk           ),
-    .raw    ( mcu_addr      ),
-    .sync   ( mcu_addr_s    )
+jtframe_sync #(.W(1+16)) u_sync(
+    .clk    ( clk                           ),
+    .raw    ( { mcu_wr,   mcu_addr    }     ),
+    .sync   ( { mcu_wr_s, mcu_addr_s  }     )
 );
 
 // Interface with sound CPU
@@ -284,7 +285,7 @@ end
 // select between CPU or MCU access to registers
 wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
 wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout;
-wire       wren   = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr;
+wire       wren   = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr_s;
 wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
 reg  [1:0] bus_wait;
 reg        wren_l;
@@ -309,14 +310,14 @@ always @(posedge clk, posedge rst ) begin
         wren_l     <= 0;
     end else begin
         wren_l <= wren;
-        if( bus_wait!=0 && bus_mcu && !mcu_wr ) bus_wait <= bus_wait-1'd1;
+        if( bus_wait!=0 && bus_mcu ) bus_wait <= bus_wait-1'd1;
         if( !bus_wait && !bus_busy ) begin
             wrmem <= 0;
             rdmem <= 0;
             if( rdmem ) {mmr[1], mmr[0]} <= bus_dout;
         end
-        if( mcu_wr ) cpu_sel <= 0; // once cleared, it stays like that until reset
-        if( wren ) begin
+        if( mcu_wr_s ) cpu_sel <= 0; // once cleared, it stays like that until reset
+        if( wren && !wren_l ) begin
             mmr[ asel ] <= din;
             if( asel == 3 )
                 sndmap_obf <= 1;
@@ -368,7 +369,7 @@ jtframe_68kdma u_dma(
     .cpu_BRn    ( cpu_brn   ),
     .cpu_BGACKn ( cpu_bgackn),
     .cpu_BGn    ( cpu_bgn   ),
-    .cpu_ASn    ( cpu_asn   ),
+    .cpu_ASn    ( 1'b1      ),
     .cpu_DTACKn ( cpu_dtackn),
     .dev_br     ( bus_rq    )      // high to signal a bus request from a device
 );
