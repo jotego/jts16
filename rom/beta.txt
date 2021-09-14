@@ -71,4 +71,23 @@ goldnaxej
 eswatj1
 eswatu
 eswat
+# 210917
+# S16B using M8123
+shinobi3
+shinobi4
+altbeast2
+altbeast4
+aliensyn7
+# cencourt
+# S16B games using 8751
+wb3
+wrestwar
+altbeast
+tturf
+goldnaxe
+altbeast6
+altbeastj
+ddux1
+tturfu
+goldnaxe2
 #leave this line
