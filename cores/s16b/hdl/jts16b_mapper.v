@@ -128,7 +128,7 @@ assign bus_rnw  = ~bus_mcu ? cpu_rnw : ~wrmem;
 assign bus_dsn  = ~bus_mcu ? cpu_dsn : 2'b00;
 assign cpu_dswn = cpu_dsn & {2{cpu_rnw}};
 assign bus_asn  = ~bus_mcu ? cpu_asn : ~bus_rq;
-assign bus_mcu  = bus_rq & (~cpu_bgn | cpu_rst | ~cpu_haltn);
+assign bus_mcu  = bus_rq & (~cpu_bgackn | cpu_rst | ~cpu_haltn);
 
 `ifdef SIMULATION
 wire [7:0] base0 = mmr[ {1'b1, 3'd0, 1'b1 }];
@@ -369,7 +369,7 @@ jtframe_68kdma u_dma(
     .cpu_BRn    ( cpu_brn   ),
     .cpu_BGACKn ( cpu_bgackn),
     .cpu_BGn    ( cpu_bgn   ),
-    .cpu_ASn    ( 1'b1      ),
+    .cpu_ASn    ( cpu_asn   ),
     .cpu_DTACKn ( cpu_dtackn),
     .dev_br     ( bus_rq    )      // high to signal a bus request from a device
 );
