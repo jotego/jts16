@@ -216,7 +216,7 @@ always @(posedge clk) begin
             1'b0,
             bus_rq,
             2'b00,
-            ~&cpu_ipln, // not sure about this one
+            &cpu_ipln, // not sure about this one
             cpu_berrn,
             cpu_haltn,
             ~cpu_rst }; // see schematics page 10
@@ -225,12 +225,14 @@ always @(posedge clk) begin
 end
 
 `ifdef SIMULATION
-reg mcu_rd_l;
+reg       mcu_rd_l;
+reg [7:0] active_l;
 
 always @(posedge clk) begin
     mcu_rd_l <= mcu_rd_s;
+    if( rdmem ) active_l <= active;
     if( ( mcu_addr_s==0 || mcu_addr_s==1 ) && mcu_rd_s && !mcu_rd_l ) begin
-        $display("MCU reads %X from address %X",wrdata, rdaddr);
+        $display("MCU reads %X from address %X (active = %X)",wrdata, rdaddr, active_l );
     end
 end
 `endif

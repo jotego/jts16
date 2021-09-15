@@ -1,7 +1,8 @@
 #!/bin/bash
 
 SYSNAME=s16b3
-GAME=goldnaxe
+GAME=tturfu
+#GAME=goldnaxe
 SCENE=
 OTHER=
 HEXDUMP=-nohex
