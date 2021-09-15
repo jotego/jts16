@@ -194,8 +194,6 @@ wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
 
-assign {UDSWn, LDSWn} = {UDSn,  LDSn} | {2{RnW}};
-
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
     .clk        ( clk            ),
