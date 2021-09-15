@@ -120,8 +120,8 @@ wire [ 1:0] cpu_dswn;
 wire        bus_mcu;    // the MCU controls the bus
 
 assign mcu_intn = { 1'b1, mcu_vintn };
-assign rdaddr   = { mmr[10][6:0],mmr[11],mmr[12] };
-assign wraddr   = { mmr[ 7][6:0],mmr[ 8],mmr[ 9] };
+assign wraddr   = { mmr[10][6:0],mmr[11],mmr[12] };
+assign rdaddr   = { mmr[ 7][6:0],mmr[ 8],mmr[ 9] };
 assign wrdata   = { mmr[0], mmr[1] };
 assign bus_rq   = rdmem | wrmem;
 assign bus_rnw  = ~bus_mcu ? cpu_rnw : ~wrmem;
@@ -314,7 +314,7 @@ always @(posedge clk, posedge rst ) begin
         if( !bus_wait && !bus_busy ) begin
             wrmem <= 0;
             rdmem <= 0;
-            if( rdmem ) {mmr[1], mmr[0]} <= bus_dout;
+            if( rdmem ) {mmr[0], mmr[1]} <= bus_dout;
         end
         if( mcu_wr_s ) cpu_sel <= 0; // once cleared, it stays like that until reset
         if( wren && !wren_l ) begin
