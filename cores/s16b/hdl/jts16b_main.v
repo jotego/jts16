@@ -193,6 +193,7 @@ wire bus_busy  = |{ rom_cs & ~ok_dly, (ram_cs | vram_cs) & ~ram_ok };
 wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
+wire [ 7:0] sys_inputs;
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -266,7 +267,7 @@ jts16b_mapper u_mapper(
         .int1n      ( mcu_intn[1]   ),
 
         .p0_i       ( mcu_din       ),
-        .p1_i       ( 8'hff         ),
+        .p1_i       ( sys_inputs    ),
         .p2_i       ( 8'hff         ),
         .p3_i       (               ),
 
@@ -375,6 +376,7 @@ end
 
 wire [8:0] joyana_sum = {joyana1[15], joyana1[15:8]} + {joyana2[15], joyana2[15:8]};
 reg  [7:0] ana_in;
+assign sys_inputs = { 2'b11, start_button[1:0], service, dip_test, coin_input[1:0] };
 
 function [7:0] pass_joy( input [7:0] joy_in );
     pass_joy = { joy_in[7:4], joy_in[1:0], joy_in[3:2] };
@@ -396,7 +398,7 @@ always @(posedge clk, posedge rst) begin
             1:
                 case( A[2:1] )
                     0: begin
-                        cab_dout <= { 2'b11, start_button[1:0], service, dip_test, coin_input[1:0] };
+                        cab_dout <= sys_inputs;
                         if( game_id == GAME_BULLET ) begin
                             cab_dout[7] <= coin_input[2];
                             cab_dout[6] <= start_button[2];
