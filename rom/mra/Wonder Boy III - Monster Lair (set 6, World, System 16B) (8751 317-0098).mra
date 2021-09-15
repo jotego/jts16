@@ -23,7 +23,7 @@
     <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
     <name>Wonder Boy III - Monster Lair (set 6, World, System 16B) (8751 317-0098)</name>
     <setname>wb3</setname>
-    <rbf>jts16b</rbf>
+    <rbf>jts16b3</rbf>
     <mameversion>0232</mameversion>
     <year>1988</year>
     <manufacturer>Sega / Westone</manufacturer>
