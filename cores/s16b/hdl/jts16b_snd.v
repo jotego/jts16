@@ -38,7 +38,7 @@ module jts16b_snd(
     output               mapper_wr,
     output [7:0]         mapper_din,
     input  [7:0]         mapper_dout,
-    input                mapper_obf, // pbf signal == buffer full ?
+    input                mapper_pbf, // pbf signal == buffer full ?
 
     // ROM
     output    reg [18:0] rom_addr,
@@ -179,7 +179,7 @@ jtframe_mixer #(.W2(9)) u_mixer(
     .peak   ( peak      )
 );
 
-assign int_n = ~mapper_obf;
+assign int_n = ~mapper_pbf;
 
 // CPU encryption
 `ifdef MC8123

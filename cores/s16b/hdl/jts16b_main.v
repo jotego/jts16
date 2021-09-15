@@ -97,7 +97,7 @@ module jts16b_main(
     input              sndmap_wr,
     input    [7:0]     sndmap_din,
     output   [7:0]     sndmap_dout,
-    output             sndmap_obf, // pbf signal == buffer full ?
+    output             sndmap_pbf, // pbf signal == buffer full ?
 
     // NVRAM - debug
     input       [16:0] ioctl_addr,
@@ -237,7 +237,7 @@ jts16b_mapper u_mapper(
     .sndmap_wr  ( sndmap_wr      ),
     .sndmap_din ( sndmap_din     ),
     .sndmap_dout( sndmap_dout    ),
-    .sndmap_obf ( sndmap_obf     ),
+    .sndmap_pbf ( sndmap_pbf     ),
 
     // MCU side
     .mcu_dout   ( mcu_dout       ),

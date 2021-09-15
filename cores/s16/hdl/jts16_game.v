@@ -107,7 +107,7 @@ module `GAMETOP(
     localparam SNDW=19;
 
     wire [7:0] sndmap_din, sndmap_dout;
-    wire       sndmap_rd, sndmap_wr, sndmap_obf;
+    wire       sndmap_rd, sndmap_wr, sndmap_pbf;
 `endif
 
 // clock enable signals
@@ -274,7 +274,7 @@ jts16_cen u_cen(
     .sndmap_wr   ( sndmap_wr  ),
     .sndmap_din  ( sndmap_din ),
     .sndmap_dout (sndmap_dout ),
-    .sndmap_obf  ( sndmap_obf ),
+    .sndmap_pbf  ( sndmap_pbf ),
     .tile_bank   ( tile_bank  ),
 `endif
     .prog_addr   ( prog_addr[12:0] ),
@@ -307,7 +307,7 @@ jts16_cen u_cen(
         reg aux_obf = 0;
         reg [7:0] aux_dout=0;
         assign sndmap_dout = aux_dout;
-        assign sndmap_obf  = aux_obf;
+        assign sndmap_pbf  = aux_obf;
         integer framecnt=0, last_fcnt=0;
 
         always @(negedge LVBL) begin
@@ -349,7 +349,7 @@ jts16_cen u_cen(
     .mapper_wr  ( sndmap_wr ),
     .mapper_din ( sndmap_din),
     .mapper_dout(sndmap_dout),
-    .mapper_obf ( sndmap_obf),
+    .mapper_pbf ( sndmap_pbf),
     .game_id    ( game_id   ),
     // MC8123 encoding
     .mc8123_we  ( mc8123_we ),

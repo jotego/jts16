@@ -82,7 +82,7 @@ module jts16b_mapper(
     input             sndmap_wr,
     input      [ 7:0] sndmap_din,
     output     [ 7:0] sndmap_dout,
-    output reg        sndmap_obf, // pbf signal == buffer full ?
+    output reg        sndmap_pbf, // pbf signal == buffer full ?
 
     // MCU side
     input      [ 7:0] mcu_dout,
@@ -112,14 +112,14 @@ wire        mcu_cen;
 reg         cpu_sel;
 reg         irqn; // VBLANK
 reg         rdmem, wrmem;
-reg         mcu_vintn;
+reg         mcu_vintn, mcu_snd_intn;
 
 wire [23:1] rdaddr, wraddr;
 wire [15:0] wrdata;
 wire [ 1:0] cpu_dswn;
 wire        bus_mcu;    // the MCU controls the bus
 
-assign mcu_intn = { 1'b1, mcu_vintn };
+assign mcu_intn = { mcu_snd_intn, mcu_vintn };
 assign wraddr   = { mmr[10][6:0],mmr[11],mmr[12] };
 assign rdaddr   = { mmr[ 7][6:0],mmr[ 8],mmr[ 9] };
 assign wrdata   = { mmr[0], mmr[1] };
@@ -179,19 +179,32 @@ always @(negedge clk) begin
 end
 
 wire [15:0] mcu_addr_s;
-wire        mcu_wr_s;
+wire        mcu_wr_s, mcu_acc_s, mcu_rd_s;
+
+assign mcu_rd_s = mcu_acc_s & ~mcu_wr_s;
 
 jtframe_sync #(.W(1+16)) u_sync(
     .clk    ( clk                           ),
-    .raw    ( { mcu_wr,   mcu_addr    }     ),
-    .sync   ( { mcu_wr_s, mcu_addr_s  }     )
+    .raw    ( { mcu_acc, mcu_wr,   mcu_addr    }    ),
+    .sync   ( { mcu_acc_s, mcu_wr_s, mcu_addr_s  }  )
 );
 
 // Interface with sound CPU
 reg [7:0] snd_latch;
 
-always @(posedge clk) begin
-    if(sndmap_wr) snd_latch <= sndmap_dout;
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        snd_latch <= 0;
+        mcu_snd_intn <= 1;
+    end else begin
+        if(sndmap_wr) begin
+            snd_latch <= sndmap_dout;
+            mcu_snd_intn <= 0;
+        end
+        if( mcu_rd_s && mcu_addr[1:0]==2'b11 ) begin
+            mcu_snd_intn <= 1;
+        end
+    end
 end
 
 // Data to MCU
@@ -200,9 +213,9 @@ always @(posedge clk) begin
         0: mcu_din <= mmr[0];
         1: mcu_din <= mmr[1];
         2: mcu_din <= {
-            1'b1,
+            1'b0,
             bus_rq,
-            2'b11,
+            2'b00,
             ~&cpu_ipln, // not sure about this one
             cpu_berrn,
             cpu_haltn,
@@ -302,7 +315,7 @@ always @(posedge clk, posedge rst ) begin
         mmr[7] <= 0; mmr[17] <= 0; mmr[27] <= 0;
         mmr[8] <= 0; mmr[18] <= 0; mmr[28] <= 0;
         mmr[9] <= 0; mmr[19] <= 0; mmr[29] <= 0;
-        sndmap_obf <= 0;
+        sndmap_pbf <= 0;
         cpu_sel    <= 1;
         wrmem      <= 0;
         rdmem      <= 0;
@@ -320,7 +333,7 @@ always @(posedge clk, posedge rst ) begin
         if( wren && !wren_l ) begin
             mmr[ asel ] <= din;
             if( asel == 3 )
-                sndmap_obf <= 1;
+                sndmap_pbf <= 1;
             if( asel==5 ) begin
                 wrmem <= din[1:0]==2'b01;
                 rdmem <= din[1:0]==2'b10;
@@ -328,7 +341,7 @@ always @(posedge clk, posedge rst ) begin
             end
         end
         if( sndmap_rd )
-            sndmap_obf <= 0;
+            sndmap_pbf <= 0;
         if( !inta_n )
             mmr[4][2:0] <= 3'b111;
     end
