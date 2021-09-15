@@ -159,8 +159,8 @@ assign {dtack6, size6 } = mmr[ {1'b1, 3'd6, 1'b0 }];
 assign {dtack7, size7 } = mmr[ {1'b1, 3'd7, 1'b0 }];
 `endif
 
-assign addr_out  = rdmem ? rdaddr : wrmem ? wraddr : addr;
-assign bus_din   = wrmem ? wrdata : cpu_dout;
+assign addr_out  = bus_mcu ? (rdmem ? rdaddr : wraddr ) : addr;
+assign bus_din   = bus_mcu ? wrdata : cpu_dout;
 
 assign cpu_haltn = ~mmr[2][1];
 assign cpu_berrn = 1;
