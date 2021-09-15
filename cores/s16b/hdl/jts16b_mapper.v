@@ -183,9 +183,9 @@ wire        mcu_wr_s, mcu_acc_s, mcu_rd_s;
 
 assign mcu_rd_s = mcu_acc_s & ~mcu_wr_s;
 
-jtframe_sync #(.W(1+16)) u_sync(
-    .clk    ( clk                           ),
-    .raw    ( { mcu_acc, mcu_wr,   mcu_addr    }    ),
+jtframe_sync #(.W(2+16)) u_sync(
+    .clk    (   clk                                 ),
+    .raw    ( { mcu_acc,   mcu_wr,   mcu_addr    }  ),
     .sync   ( { mcu_acc_s, mcu_wr_s, mcu_addr_s  }  )
 );
 
@@ -223,6 +223,17 @@ always @(posedge clk) begin
         3: mcu_din <= snd_latch;
     endcase
 end
+
+`ifdef SIMULATION
+reg mcu_rd_l;
+
+always @(posedge clk) begin
+    mcu_rd_l <= mcu_rd_s;
+    if( ( mcu_addr_s==0 || mcu_addr_s==1 ) && mcu_rd_s && !mcu_rd_l ) begin
+        $display("MCU reads %X from address %X",wrdata, rdaddr);
+    end
+end
+`endif
 
 
 function check(input [2:0] region );
@@ -301,7 +312,7 @@ wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout;
 wire       wren   = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr_s;
 wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
 reg  [1:0] bus_wait;
-reg        wren_l;
+reg        wren_l, bus_busy_l;
 
 always @(posedge clk, posedge rst ) begin
     if( rst ) begin
@@ -321,10 +332,12 @@ always @(posedge clk, posedge rst ) begin
         rdmem      <= 0;
         bus_wait   <= 0;
         wren_l     <= 0;
+        bus_busy_l <= 0;
     end else begin
         wren_l <= wren;
+        bus_busy_l <= bus_busy;
         if( bus_wait!=0 && bus_mcu ) bus_wait <= bus_wait-1'd1;
-        if( !bus_wait && !bus_busy ) begin
+        if( !bus_wait && !bus_busy && !bus_busy_l ) begin
             wrmem <= 0;
             rdmem <= 0;
             if( rdmem ) {mmr[0], mmr[1]} <= bus_dout;
