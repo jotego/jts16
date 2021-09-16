@@ -1,6 +1,7 @@
 [global]
 # info = [ {tag="mameversion", value="0229"} ]
 mraauthor=["jotego","atrac17"]
+zip = { alt="s16mcu_alt.zip" }
 
 [features]
 # ddr = true

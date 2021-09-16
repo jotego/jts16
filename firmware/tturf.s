@@ -7,7 +7,7 @@
     RETI
 
 INIT:
-    MOV IE,#5
+    MOV IE,#0x85
     SJMP INIT
 
 READVAL:
@@ -82,6 +82,13 @@ VBLANK:
     MOV R3,#0xE8
     ACALL WRVAL
 NOSND:
+    ; Read the inputs
+    MOV R4,P1       ; System inputs via port 1
+    MOV R5,#0xFF
+    MOV R1,#0
+    MOV R2,#0
+    MOV R3,#0xF3
+    ACALL WRVAL
 
     ; Set the vertical interrupt
     MOV R0,#4
