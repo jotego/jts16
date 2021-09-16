@@ -7,8 +7,13 @@
     RETI
 
 INIT:
+    MOV R7,#20      ; power-up time for main CPU, 20 frames
     MOV IE,#0x85
-    SJMP INIT
+PUP:
+    MOV A,R7
+    JNZ PUP
+IDLE:
+    SJMP IDLE
 
 READVAL:
     MOV R0,#7
@@ -65,8 +70,15 @@ WRWAIT:
 
 VBLANK:
     MOV IE,#0
+    ; Count down frames for power up
+    MOV A,R7
+    JZ VBLANK_MAIN
+    DEC R7
+    MOV IE,#0x85
+    RETI
+VBLANK_MAIN:
     ; Read sound data
-    MOV R1,#0
+    MOV R1,#0x10
     MOV R2,#0
     MOV R3,#0xE8
     ACALL READVAL
@@ -77,7 +89,7 @@ VBLANK:
     MOVX @R0,A  ; update sound register
     ; Signal that the command was processed
     MOV R4,#0
-    MOV R1,#0
+    MOV R1,#0x10
     MOV R2,#0
     MOV R3,#0xE8
     ACALL WRVAL
@@ -85,7 +97,7 @@ NOSND:
     ; Read the inputs
     MOV R4,P1       ; System inputs via port 1
     MOV R5,#0xFF
-    MOV R1,#0
+    MOV R1,#0x10
     MOV R2,#0
     MOV R3,#0xF3
     ACALL WRVAL
@@ -95,5 +107,5 @@ NOSND:
     MOV A,#0xB
     MOVX @R0,A
     MOV R1,#4
-    MOV IE,#5
+    MOV IE,#0x85
     RETI

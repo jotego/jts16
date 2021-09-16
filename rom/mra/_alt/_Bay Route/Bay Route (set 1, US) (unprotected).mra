@@ -54,12 +54,12 @@
         </interleave>
         <part repeat="0x20000"> FF</part>
         <!-- soundcpu - starts at 0x80000 -->
-        <part name="sound.a7" crc=""/>
+        <part name="sound.a7"/>
         <part repeat="0x8000"> FF</part>
-        <part name="sound.a8" crc=""/>
-        <part name="sound.a9" crc=""/>
-        <part name="sound.a10" crc=""/>
-        <part name="sound.a11" crc=""/>
+        <part name="sound.a8"/>
+        <part name="sound.a9"/>
+        <part name="sound.a10"/>
+        <part name="sound.a11"/>
         <part repeat="0x70000"> FF</part>
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
