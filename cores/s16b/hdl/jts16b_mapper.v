@@ -372,7 +372,7 @@ reg        last_vint;
 assign cpu_vpan = inta_n;
 assign cpu_ipln = cpu_sel ? { irqn, 2'b11 } : mmr[4][2:0];
 
-reg [7:0] mcu_cnt;
+reg [6:0] mcu_cnt; // If it is too long, the MCU will enter twice the IRQ service
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -389,7 +389,7 @@ always @(posedge clk, posedge rst) begin
         end else if( vint && !last_vint ) begin
             irqn <= 0;
             mcu_vintn <= 0;
-            mcu_cnt  <= ~7'd0;
+            mcu_cnt  <= ~6'd0;
         end
     end
 end
