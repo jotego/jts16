@@ -79,7 +79,7 @@ wire signed [ 8:0] pcm_raw, pcm_snd;
 wire [7:0] fmgain;
 
 assign ack      = mapper_cs;
-assign fmgain   = enable_fm ? FMGAIN : 0;
+assign fmgain   = enable_fm ? FMGAIN : 8'h0;
 
 assign mapper_rd   = mapper_cs && !rd_n;
 assign mapper_wr   = mapper_cs && !wr_n;
@@ -87,7 +87,7 @@ assign mapper_din  = cpu_dout;
 
 // ROM bank address
 always @(*) begin
-    rom_addr = { 6'd0, A[14:0] };
+    rom_addr = { 4'd0, A[14:0] };
     if( bank_cs ) begin
         casez( game_id[7:3] )
             5'b001?_?: // 5797

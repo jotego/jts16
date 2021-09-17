@@ -247,13 +247,13 @@ endfunction
 
 always @(addr_out,cpu_fc,mmr) begin
     active[0] = check(0);
-    active[1] = check(1) & ~active[0];
-    active[2] = check(2) & ~active[1:0];
-    active[3] = check(3) & ~active[2:0];
-    active[4] = check(4) & ~active[3:0];
-    active[5] = check(5) & ~active[4:0];
-    active[6] = check(6) & ~active[5:0];
-    active[7] = check(7) & ~active[6:0];
+    active[1] = check(1) && active[0]==0;
+    active[2] = check(2) && active[1:0]==0;
+    active[3] = check(3) && active[2:0]==0;
+    active[4] = check(4) && active[3:0]==0;
+    active[5] = check(5) && active[4:0]==0;
+    active[6] = check(6) && active[5:0]==0;
+    active[7] = check(7) && active[6:0]==0;
     if( &cpu_fc ) active = 0; // irq ack or end of bus cycle
     case( active )
         8'h01: dtack_cyc = mmr[ {1'b1,3'd0,1'b0}][3:2];
@@ -271,7 +271,7 @@ end
 // DTACK generation
 wire dtackn1;
 reg  dtackn2, dtackn3;
-wire BUSn = cpu_asn | (&cpu_dsn);
+// wire BUSn = cpu_asn | (&cpu_dsn);
 wire [15:0] fave, fworst;
 
 jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(

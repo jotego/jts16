@@ -270,7 +270,7 @@ jts16b_mapper u_mapper(
         .p0_i       ( mcu_din       ),
         .p1_i       ( sys_inputs    ),
         .p2_i       ( 8'hff         ),
-        .p3_i       (               ),
+        .p3_i       ( 8'hff          ),
 
         .p0_o       (               ),
         .p1_o       (               ),
@@ -346,7 +346,6 @@ wire       op_n; // low for CPU OP requests
 wire [7:0] sort1_bullet, sort2_bullet, sort3_bullet;
 
 assign op_n        = FC[1:0]!=2'b10;
-assign snd_irqn    = 1;
 assign colscr_en   = 0;
 assign rowscr_en   = 0;
 assign sort1_bullet = { sort1[3:0], sort1[7:4] };

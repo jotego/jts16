@@ -3,17 +3,26 @@
 
     LJMP INIT
     LJMP VBLANK
+.ORG 0XB
+    RETI
 .ORG 0X13
     RETI
+.ORG 0X1B
+    RETI
+.ORG 0X23
+    RETI
+.ORG 0X2B
+    RETI
 
+.ORG 0X100
 INIT:
+    MOV TCON,#0x45  ; Disable timers, set EXT0 edge trigger
+    MOV IE,#0x81
     MOV R7,#20      ; power-up time for main CPU, 20 frames
 PUP:
-    MOV IE,#0x85
     MOV A,R7
     JNZ PUP
 IDLE:
-    MOV IE,#0x85
     SJMP IDLE
 
 READVAL:
@@ -32,7 +41,7 @@ READVAL:
     MOV R0,#2
 RDWAIT:
     MOVX A,@R0
-    ANL A,#40h
+    ANL A,#0x40h
     JNZ RDWAIT
     MOV R0,#0
     MOVX A,@R0
@@ -65,11 +74,13 @@ WRVAL:
     MOV R0,#2
 WRWAIT:
     MOVX A,@R0
-    ANL A,#40h
+    ANL A,#0x40h
     JNZ WRWAIT
     RET
 
+.ORG 0x200
 VBLANK:
+    RETI
     MOV IE,#0
     ; Count down frames for power up
     MOV A,R7
@@ -81,9 +92,10 @@ VBLANK:
     NOP
     NOP
     NOP
-    MOV IE,#0x85
+    MOV IE,#0x81
     RETI
 VBLANK_MAIN:
+    AJMP NOSND
     ; Read sound data
     MOV R1,#0x10
     MOV R2,#0
@@ -101,6 +113,7 @@ VBLANK_MAIN:
     MOV R3,#0xE8
     ACALL WRVAL
 NOSND:
+    ;AJMP SETVI
     ; Read the inputs
     MOV R4,P1       ; System inputs via port 1
     MOV R5,#0xFF
@@ -108,6 +121,7 @@ NOSND:
     MOV R2,#0
     MOV R3,#0xF3
     ACALL WRVAL
+
 
     ; Read 1P inputs (write on R4)
     MOV R1,#0X30
@@ -133,10 +147,12 @@ NOSND:
     MOV R3,#0XF5
     ACALL WRVAL
 
+SETVI:
+
     ; Set the vertical interrupt
     MOV R0,#4
     MOV A,#0xB
     MOVX @R0,A
     MOV R1,#4
-    MOV IE,#0x85
+    MOV IE,#0x81
     RETI
