@@ -4,3 +4,5 @@ include ../../s16b/hdl/jts16b.def
 CORENAME=JTS16B3
 -FD1094
 -NOMCU
+-JTFRAME_CHEAT
+NOSHADOW

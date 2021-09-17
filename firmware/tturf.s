@@ -33,7 +33,7 @@ READVAL:
 RDWAIT:
     ANL A,#40h
     JNZ RDWAIT
-    MOV R0,0
+    MOV R0,#0
     MOVX A,@R0
     MOV R4,A
     INC R0
@@ -74,6 +74,12 @@ VBLANK:
     MOV A,R7
     JZ VBLANK_MAIN
     DEC R7
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
     MOV IE,#0x85
     RETI
 VBLANK_MAIN:
@@ -84,7 +90,7 @@ VBLANK_MAIN:
     ACALL READVAL
     MOV A,R4
     JZ NOSND
-    MOV R0,3
+    MOV R0,#3
     MOV A,R5
     MOVX @R0,A  ; update sound register
     ; Signal that the command was processed
@@ -100,6 +106,30 @@ NOSND:
     MOV R1,#0x10
     MOV R2,#0
     MOV R3,#0xF3
+    ACALL WRVAL
+
+    ; Read 1P inputs (write on R4)
+    MOV R1,#0X30
+    MOV R2,#8
+    MOV R3,#1
+    ACALL READVAL
+    MOV A,R5
+    MOV R4,A
+    MOV R1,#0X10
+    MOV R2,#0
+    MOV R3,#0XF4
+    ACALL WRVAL
+
+    ; Read 2P inputs
+    MOV R1,#0X30
+    MOV R2,#8
+    MOV R3,#3
+    ACALL READVAL
+    MOV A,R5
+    MOV R4,A
+    MOV R1,#0X10
+    MOV R2,#0
+    MOV R3,#0XF5
     ACALL WRVAL
 
     ; Set the vertical interrupt

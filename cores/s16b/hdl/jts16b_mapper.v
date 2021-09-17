@@ -113,6 +113,7 @@ reg         cpu_sel;
 reg         irqn; // VBLANK
 reg         rdmem, wrmem;
 reg         mcu_vintn, mcu_snd_intn;
+reg  [ 1:0] bus_wait;
 
 wire [23:1] rdaddr, wraddr;
 wire [15:0] wrdata;
@@ -179,14 +180,15 @@ always @(negedge clk) begin
 end
 
 wire [15:0] mcu_addr_s;
+wire [ 7:0] mcu_out_s;
 wire        mcu_wr_s, mcu_acc_s, mcu_rd_s;
 
 assign mcu_rd_s = mcu_acc_s & ~mcu_wr_s;
 
-jtframe_sync #(.W(2+16)) u_sync(
+jtframe_sync #(.W(2+16+8)) u_sync(
     .clk    (   clk                                 ),
-    .raw    ( { mcu_acc,   mcu_wr,   mcu_addr    }  ),
-    .sync   ( { mcu_acc_s, mcu_wr_s, mcu_addr_s  }  )
+    .raw    ( { mcu_acc,   mcu_wr,   mcu_addr,   mcu_dout    }  ),
+    .sync   ( { mcu_acc_s, mcu_wr_s, mcu_addr_s, mcu_dout_s  }  )
 );
 
 // Interface with sound CPU
@@ -201,7 +203,7 @@ always @(posedge clk, posedge rst) begin
             snd_latch <= sndmap_dout;
             mcu_snd_intn <= 0;
         end
-        if( mcu_rd_s && mcu_addr[1:0]==2'b11 ) begin
+        if( mcu_rd_s && mcu_addr_s[1:0]==2'b11 ) begin
             mcu_snd_intn <= 1;
         end
     end
@@ -225,18 +227,10 @@ always @(posedge clk) begin
 end
 
 `ifdef SIMULATION
-reg       mcu_rd_l, mcu_wr_l;
-reg [7:0] active_l;
 
 always @(posedge clk) begin
-    mcu_rd_l <= mcu_rd_s;
-    mcu_wr_l <= mcu_wr_s;
-    if( rdmem || wrmem ) active_l <= active;
-    if( ( mcu_addr_s==0 || mcu_addr_s==1 ) && mcu_rd_s && !mcu_rd_l ) begin
-        $display("\tMCU - %X (active %X) - %X  Rd", rdaddr, active_l, wrdata );
-    end
-    if( mcu_wr_s && !mcu_wr_l && mcu_addr_s==5 ) begin
-        $display("\tMCU - %X (active %X) - Wr  %X", wraddr, active_l, wrdata);
+    if( bus_wait==1 && wrmem ) begin
+        $display("\tMCU - %X (active %X) - Wr  %X", wraddr, active, wrdata);
     end
 end
 `endif
@@ -314,10 +308,9 @@ end
 
 // select between CPU or MCU access to registers
 wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
-wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout;
+wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout_s;
 wire       wren   = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr_s;
 wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
-reg  [1:0] bus_wait;
 reg        wren_l, bus_busy_l;
 
 always @(posedge clk, posedge rst ) begin
@@ -346,7 +339,12 @@ always @(posedge clk, posedge rst ) begin
         if( !bus_wait && !bus_busy && !bus_busy_l ) begin
             wrmem <= 0;
             rdmem <= 0;
-            if( rdmem ) {mmr[0], mmr[1]} <= bus_dout;
+            if( rdmem ) begin
+                {mmr[0], mmr[1]} <= bus_dout;
+                `ifdef SIMULATION
+                $display("\tMCU - %X (active %X) - %X  Rd", rdaddr, active, bus_dout );
+                `endif
+            end
         end
         if( mcu_wr_s ) cpu_sel <= 0; // once cleared, it stays like that until reset
         if( wren && !wren_l ) begin
@@ -372,7 +370,7 @@ reg        last_vint;
 assign cpu_vpan = inta_n;
 assign cpu_ipln = cpu_sel ? { irqn, 2'b11 } : mmr[4][2:0];
 
-reg [6:0] mcu_cnt; // If it is too long, the MCU will enter twice the IRQ service
+reg [8:0] mcu_cnt;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -389,7 +387,7 @@ always @(posedge clk, posedge rst) begin
         end else if( vint && !last_vint ) begin
             irqn <= 0;
             mcu_vintn <= 0;
-            mcu_cnt  <= ~6'd0;
+            mcu_cnt  <= ~0;
         end
     end
 end

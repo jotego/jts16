@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SYSNAME=s16b3
-GAME=tturfu
+GAME=tturf
 #GAME=goldnaxe
 SCENE=
 OTHER=
