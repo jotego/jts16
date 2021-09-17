@@ -8,11 +8,12 @@
 
 INIT:
     MOV R7,#20      ; power-up time for main CPU, 20 frames
-    MOV IE,#0x85
 PUP:
+    MOV IE,#0x85
     MOV A,R7
     JNZ PUP
 IDLE:
+    MOV IE,#0x85
     SJMP IDLE
 
 READVAL:
@@ -29,8 +30,8 @@ READVAL:
     MOV A,#2
     MOVX @R0,A  ; Read
     MOV R0,#2
-    MOVX A,@R0
 RDWAIT:
+    MOVX A,@R0
     ANL A,#40h
     JNZ RDWAIT
     MOV R0,#0
@@ -62,8 +63,8 @@ WRVAL:
     MOV A,#1
     MOVX @R0,A  ; Write
     MOV R0,#2
-    MOVX A,@R0
 WRWAIT:
+    MOVX A,@R0
     ANL A,#40h
     JNZ WRWAIT
     RET
