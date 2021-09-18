@@ -80,22 +80,14 @@ WRWAIT:
 
 .ORG 0x200
 VBLANK:
-    RETI
     MOV IE,#0
     ; Count down frames for power up
     MOV A,R7
     JZ VBLANK_MAIN
     DEC R7
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
     MOV IE,#0x81
     RETI
 VBLANK_MAIN:
-    AJMP NOSND
     ; Read sound data
     MOV R1,#0x10
     MOV R2,#0
@@ -113,7 +105,6 @@ VBLANK_MAIN:
     MOV R3,#0xE8
     ACALL WRVAL
 NOSND:
-    ;AJMP SETVI
     ; Read the inputs
     MOV R4,P1       ; System inputs via port 1
     MOV R5,#0xFF
@@ -121,7 +112,6 @@ NOSND:
     MOV R2,#0
     MOV R3,#0xF3
     ACALL WRVAL
-
 
     ; Read 1P inputs (write on R4)
     MOV R1,#0X30
@@ -148,7 +138,6 @@ NOSND:
     ACALL WRVAL
 
 SETVI:
-
     ; Set the vertical interrupt
     MOV R0,#4
     MOV A,#0xB
