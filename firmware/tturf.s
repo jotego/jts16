@@ -88,6 +88,7 @@ VBLANK:
     MOV IE,#0x81
     RETI
 VBLANK_MAIN:
+    ;AJMP NOSND
     ; Read sound data
     MOV R1,#0x10
     MOV R2,#0
@@ -112,6 +113,7 @@ NOSND:
     MOV R2,#0
     MOV R3,#0xF3
     ACALL WRVAL
+    ;AJMP SETVI
 
     ; Read 1P inputs (write on R4)
     MOV R1,#0X30
