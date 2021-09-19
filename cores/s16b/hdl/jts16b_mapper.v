@@ -180,7 +180,7 @@ always @(negedge clk) begin
 end
 
 wire [15:0] mcu_addr_s;
-wire [ 7:0] mcu_out_s;
+wire [ 7:0] mcu_dout_s;
 wire        mcu_wr_s, mcu_acc_s, mcu_rd_s;
 
 assign mcu_rd_s = mcu_acc_s & ~mcu_wr_s;
