@@ -118,7 +118,7 @@ reg  [ 1:0] bus_wait;
 wire [23:1] rdaddr, wraddr;
 wire [15:0] wrdata;
 wire [ 1:0] cpu_dswn;
-wire        bus_mcu;    // the MCU controls the bus
+wire        bus_mcu, bus_avail;    // the MCU controls the bus
 
 assign mcu_intn = { mcu_snd_intn, mcu_vintn };
 assign wraddr   = { mmr[10][6:0],mmr[11],mmr[12] };
@@ -129,7 +129,8 @@ assign bus_rnw  = ~bus_mcu ? cpu_rnw : ~wrmem;
 assign bus_dsn  = ~bus_mcu ? cpu_dsn : 2'b00;
 assign cpu_dswn = cpu_dsn & {2{cpu_rnw}};
 assign bus_asn  = ~bus_mcu ? cpu_asn : ~bus_rq;
-assign bus_mcu  = bus_rq & (~cpu_bgackn | cpu_rst | ~cpu_haltn);
+assign bus_avail= ~cpu_bgackn | cpu_rst | ~cpu_haltn;
+assign bus_mcu  = bus_rq & bus_avail;
 
 `ifdef SIMULATION
 wire [7:0] base0 = mmr[ {1'b1, 3'd0, 1'b1 }];
@@ -335,7 +336,7 @@ always @(posedge clk, posedge rst ) begin
     end else begin
         wren_l <= wren;
         bus_busy_l <= bus_busy;
-        if( bus_wait!=0 && bus_mcu ) bus_wait <= bus_wait-1'd1;
+        if( bus_wait!=0 && bus_avail ) bus_wait <= bus_wait-1'd1;
         if( !bus_wait && !bus_busy && !bus_busy_l ) begin
             wrmem <= 0;
             rdmem <= 0;
