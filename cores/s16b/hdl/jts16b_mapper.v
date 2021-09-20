@@ -107,7 +107,7 @@ module jts16b_mapper(
 reg  [ 1:0] dtack_cyc;    // number of DTACK cycles
 reg  [ 7:0] mmr[0:31];
 wire        none = active==0;
-wire        bus_rq;
+reg         bus_rq;
 wire        mcu_cen;
 reg         cpu_sel;
 reg         irqn; // VBLANK
@@ -118,19 +118,18 @@ reg  [ 1:0] bus_wait;
 wire [23:1] rdaddr, wraddr;
 wire [15:0] wrdata;
 wire [ 1:0] cpu_dswn;
-wire        bus_mcu, bus_avail;    // the MCU controls the bus
+wire        bus_avail;    // the MCU controls the bus
+reg         bus_mcu;
 
 assign mcu_intn = { mcu_snd_intn, mcu_vintn };
 assign wraddr   = { mmr[10][6:0],mmr[11],mmr[12] };
 assign rdaddr   = { mmr[ 7][6:0],mmr[ 8],mmr[ 9] };
 assign wrdata   = { mmr[0], mmr[1] };
-assign bus_rq   = rdmem | wrmem;
 assign bus_rnw  = ~bus_mcu ? cpu_rnw : ~wrmem;
 assign bus_dsn  = ~bus_mcu ? cpu_dsn : 2'b00;
 assign cpu_dswn = cpu_dsn & {2{cpu_rnw}};
 assign bus_asn  = ~bus_mcu ? cpu_asn : ~bus_rq;
 assign bus_avail= ~cpu_bgackn | cpu_rst | ~cpu_haltn;
-assign bus_mcu  = bus_rq & bus_avail;
 
 `ifdef SIMULATION
 wire [7:0] base0 = mmr[ {1'b1, 3'd0, 1'b1 }];
@@ -189,7 +188,7 @@ jtframe_sync #(.W(2+16+8)) u_sync(
 // Interface with sound CPU
 reg [7:0] snd_latch;
 
-always @(posedge clk, posedge rst) begin
+always @(posedge clk) begin
     if( rst ) begin
         snd_latch <= 0;
         mcu_snd_intn <= 1;
@@ -310,7 +309,7 @@ reg        wren_cpu_l, wren_mcu_l, bus_busy_l;
 wire       wredge_cpu = wren_cpu & ~wren_cpu_l;
 wire       wredge_mcu = wren_mcu & ~wren_mcu_l;
 
-always @(posedge clk, posedge rst ) begin
+always @(posedge clk) begin
     if( rst ) begin
         mmr[0] <= 0; mmr[10] <= 0; mmr[20] <= 0; mmr[30] <= 0;
         mmr[1] <= 0; mmr[11] <= 0; mmr[21] <= 0; mmr[31] <= 0;
@@ -330,14 +329,19 @@ always @(posedge clk, posedge rst ) begin
         wren_cpu_l <= 0;
         wren_mcu_l <= 0;
         bus_busy_l <= 0;
+        bus_rq     <= 0;
+        bus_mcu    <= 0;
     end else begin
         wren_cpu_l <= wren_cpu;
         wren_mcu_l <= wren_mcu;
         bus_busy_l <= bus_busy;
         if( bus_wait!=0 && bus_avail ) bus_wait <= bus_wait-1'd1;
+        if( bus_rq && !cpu_bgackn ) bus_mcu <= 1;
         if( !bus_wait && !bus_busy && !bus_busy_l ) begin
-            wrmem <= 0;
-            rdmem <= 0;
+            wrmem   <= 0;
+            rdmem   <= 0;
+            bus_rq  <= 0;
+            bus_mcu <= 0;
             if( rdmem ) begin
                 {mmr[0], mmr[1]} <= bus_dout;
                 `ifdef SIMULATION
@@ -350,10 +354,13 @@ always @(posedge clk, posedge rst ) begin
             mmr[ asel ] <= din;
             if( asel == 3 )
                 sndmap_pbf <= 1;
-            if( asel==5 ) begin
+            if( asel==5 && !bus_rq ) begin
                 wrmem <= din[1:0]==2'b01;
                 rdmem <= din[1:0]==2'b10;
-                if( din[1:0]==2'b01 || din[1:0]==2'b10 ) bus_wait <= 2'b11;
+                if( din[1:0]==2'b01 || din[1:0]==2'b10 ) begin
+                    bus_wait <= 2'b11;
+                    bus_rq   <= 1;
+                end
             end
         end
         if( sndmap_rd )
@@ -371,7 +378,7 @@ assign cpu_ipln = cpu_sel ? { irqn, 2'b11 } : mmr[4][2:0];
 
 reg [8:0] mcu_cnt;
 
-always @(posedge clk, posedge rst) begin
+always @(posedge clk) begin
     if( rst ) begin
         irqn <= 1;
         mcu_vintn <= 1;
