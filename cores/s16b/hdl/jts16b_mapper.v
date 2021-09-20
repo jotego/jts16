@@ -168,12 +168,6 @@ assign cpu_haltn = ~mmr[2][1];
 assign cpu_berrn = 1;
 assign sndmap_dout = mmr[3];
 
-reg  asnl;
-
-always @(posedge clk) if( cpu_cen ) begin
-    asnl <= cpu_asn;
-end
-
 reg rst_aux;
 
 always @(negedge clk) begin
@@ -272,7 +266,6 @@ end
 // DTACK generation
 wire dtackn1;
 reg  dtackn2, dtackn3;
-// wire BUSn = cpu_asn | (&cpu_dsn);
 wire [15:0] fave, fworst;
 
 jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
@@ -310,9 +303,12 @@ end
 // select between CPU or MCU access to registers
 wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
 wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout_s;
-wire       wren   = cpu_sel ? (~cpu_asn & ~cpu_dswn[0] & none) : mcu_wr_s;
+wire       wren_cpu = ~cpu_asn & ~cpu_dswn[0] & none;
+wire       wren_mcu = mcu_wr_s;
 wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
-reg        wren_l, bus_busy_l;
+reg        wren_cpu_l, wren_mcu_l, bus_busy_l;
+wire       wredge_cpu = wren_cpu & ~wren_cpu_l;
+wire       wredge_mcu = wren_mcu & ~wren_mcu_l;
 
 always @(posedge clk, posedge rst ) begin
     if( rst ) begin
@@ -331,10 +327,12 @@ always @(posedge clk, posedge rst ) begin
         wrmem      <= 0;
         rdmem      <= 0;
         bus_wait   <= 0;
-        wren_l     <= 0;
+        wren_cpu_l <= 0;
+        wren_mcu_l <= 0;
         bus_busy_l <= 0;
     end else begin
-        wren_l <= wren;
+        wren_cpu_l <= wren_cpu;
+        wren_mcu_l <= wren_mcu;
         bus_busy_l <= bus_busy;
         if( bus_wait!=0 && bus_avail ) bus_wait <= bus_wait-1'd1;
         if( !bus_wait && !bus_busy && !bus_busy_l ) begin
@@ -348,14 +346,14 @@ always @(posedge clk, posedge rst ) begin
             end
         end
         if( mcu_wr_s ) cpu_sel <= 0; // once cleared, it stays like that until reset
-        if( wren && !wren_l ) begin
+        if( wredge_mcu || (wredge_cpu && cpu_sel) ) begin
             mmr[ asel ] <= din;
             if( asel == 3 )
                 sndmap_pbf <= 1;
             if( asel==5 ) begin
                 wrmem <= din[1:0]==2'b01;
                 rdmem <= din[1:0]==2'b10;
-                if( din[1]^din[0] ) bus_wait <= 2'b11;
+                if( din[1:0]==2'b01 || din[1:0]==2'b10 ) bus_wait <= 2'b11;
             end
         end
         if( sndmap_rd )
