@@ -113,13 +113,13 @@ reg         cpu_sel;
 reg         irqn; // VBLANK
 reg         rdmem, wrmem;
 reg         mcu_vintn, mcu_snd_intn;
-reg  [ 1:0] bus_wait;
+reg  [ 2:0] bus_wait;
 
 wire [23:1] rdaddr, wraddr;
 wire [15:0] wrdata;
 wire [ 1:0] cpu_dswn;
 wire        bus_avail;    // the MCU controls the bus
-reg         bus_mcu;
+reg         bus_mcu, mcu_asn;
 
 assign mcu_intn = { mcu_snd_intn, mcu_vintn };
 assign wraddr   = { mmr[10][6:0],mmr[11],mmr[12] };
@@ -128,7 +128,7 @@ assign wrdata   = { mmr[0], mmr[1] };
 assign bus_rnw  = ~bus_mcu ? cpu_rnw : ~wrmem;
 assign bus_dsn  = ~bus_mcu ? cpu_dsn : 2'b00;
 assign cpu_dswn = cpu_dsn & {2{cpu_rnw}};
-assign bus_asn  = ~bus_mcu ? cpu_asn : ~bus_rq;
+assign bus_asn  = ~bus_mcu ? cpu_asn : mcu_asn;
 assign bus_avail= ~cpu_bgackn | cpu_rst | ~cpu_haltn;
 
 `ifdef SIMULATION
@@ -277,7 +277,7 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .bus_legit  ( 1'b0      ),
     .ASn        ( cpu_asn   ),  // BUSn = ASn | (LDSn & UDSn)
     .DSn        ( cpu_dsn   ),
-    .num        ( 8'd29     ),  // numerator
+    .num        ( 7'd29     ),  // numerator
     .den        ( 8'd146    ),  // denominator
     .DTACKn     ( dtackn1   ),
     .fave       ( fave      ),
@@ -331,22 +331,26 @@ always @(posedge clk) begin
         bus_busy_l <= 0;
         bus_rq     <= 0;
         bus_mcu    <= 0;
+        mcu_asn    <= 1;
     end else begin
         wren_cpu_l <= wren_cpu;
         wren_mcu_l <= wren_mcu;
         bus_busy_l <= bus_busy;
         if( bus_wait!=0 && bus_avail ) bus_wait <= bus_wait-1'd1;
         if( bus_rq && !cpu_bgackn ) bus_mcu <= 1;
-        if( !bus_wait && !bus_busy && !bus_busy_l ) begin
-            wrmem   <= 0;
-            rdmem   <= 0;
-            bus_rq  <= 0;
-            bus_mcu <= 0;
-            if( rdmem ) begin
-                {mmr[0], mmr[1]} <= bus_dout;
-                `ifdef SIMULATION
-                $display("\tMCU - %X (active %X) - %X  Rd", rdaddr, active, bus_dout );
-                `endif
+        if( !bus_wait && !bus_busy ) begin
+            mcu_asn <= 1;
+            if( !bus_busy_l ) begin
+                wrmem   <= 0;
+                rdmem   <= 0;
+                bus_rq  <= 0;
+                bus_mcu <= 0;
+                if( rdmem ) begin
+                    {mmr[0], mmr[1]} <= bus_dout;
+                    `ifdef SIMULATION
+                    $display("\tMCU - %X (active %X) - %X  Rd", rdaddr, active, bus_dout );
+                    `endif
+                end
             end
         end
         if( mcu_wr_s ) cpu_sel <= 0; // once cleared, it stays like that until reset
@@ -358,8 +362,9 @@ always @(posedge clk) begin
                 wrmem <= din[1:0]==2'b01;
                 rdmem <= din[1:0]==2'b10;
                 if( din[1:0]==2'b01 || din[1:0]==2'b10 ) begin
-                    bus_wait <= 2'b11;
+                    bus_wait <= 3'b111;
                     bus_rq   <= 1;
+                    mcu_asn  <= 0;
                 end
             end
         end
