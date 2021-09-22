@@ -213,7 +213,7 @@ jts16b_mapper u_mapper(
     .addr_out   ( A              ),
 
     // Bus sharing
-    .bus_dout   ( { 8'hff, sort1}         ),
+    .bus_dout   ( cpu_din        ),
     .bus_din    ( cpu_dout       ),
     .cpu_rnw    ( cpu_RnW        ),
     .bus_rnw    ( RnW            ),
