@@ -254,13 +254,34 @@ jts16b_mapper u_mapper(
 );
 
 `ifndef NOMCU
+    reg mcu_rst;
+    reg [1:0] mcu_aux;
+    reg vintl;
+
+    always @(posedge clk24) vintl <= vint;
+
+    always @(posedge clk24, posedge rst24) begin
+        if( rst24 )
+            mcu_aux <= 0;
+        else if( vint && !vintl )
+            mcu_aux <= { mcu_aux[0], 1'b1 };
+    end
+
+    always @(negedge clk24, posedge rst24) begin
+        if( rst24 )
+            mcu_rst <= 1;
+        else if(mcu_aux==2'b11)
+            mcu_rst <= 0;
+    end
+
+
     jtframe_8751mcu #(
         .DIVCEN     ( 1             ),
         .SYNC_XDATA ( 1             ),
         .SYNC_P1    ( 1             ),
         .SYNC_INT   ( 1             )
     ) u_mcu(
-        .rst        ( rst24         ),
+        .rst        ( mcu_rst       ),
         .clk        ( clk24         ),
         .cen        ( mcu_cen       ),
 

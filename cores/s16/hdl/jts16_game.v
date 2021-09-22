@@ -327,6 +327,15 @@ jts16_cen u_cen(
             //if( framecnt ==111 ) aux_dout <= 8'h40;
         end
     `endif
+    `ifdef SIMULATION
+        reg [7:0] sim_def[0:1];
+
+        initial begin
+            $readmemh("tilebank.hex",sim_def);
+            $display("Tile bank set to %X",sim_def[0]);
+        end
+        assign tile_bank = sim_def[0][5:0];
+    `endif
 `endif
 
 `ifndef NOSOUND
@@ -390,15 +399,6 @@ jts16_cen u_cen(
     assign snd_addr=0;
     //assign pcm_cs=0;
     //assign pcm_addr=0;
-    `ifdef SIMULATION
-        reg [7:0] sim_def[0:1];
-
-        initial begin
-            $readmemh("tilebank.hex",sim_def);
-            $display("Tile bank set to %X",sim_def[0]);
-        end
-        assign tile_bank = sim_def[0][5:0];
-    `endif
 `endif
 
 `ifdef S16B
