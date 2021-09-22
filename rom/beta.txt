@@ -82,9 +82,9 @@ aliensyn7
 # S16B games using 8751
 wb3
 wrestwar
-altbeast
+#altbeast
 tturf
-goldnaxe
+#goldnaxe
 altbeast6
 altbeastj
 ddux1
