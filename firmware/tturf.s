@@ -88,7 +88,7 @@ VBLANK:
     MOV IE,#0x81
     RETI
 VBLANK_MAIN:
-    AJMP NOSND
+    ;AJMP NOSND
     ; Read sound data
     MOV R1,#0x10
     MOV R2,#0
