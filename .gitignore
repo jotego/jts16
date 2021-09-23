@@ -8,6 +8,7 @@
 *.hex
 *.jpg
 *.cdf
+*.arc
 cheat/*.bin
 cheat/*.fmt
 history
