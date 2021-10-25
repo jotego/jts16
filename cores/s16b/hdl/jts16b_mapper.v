@@ -127,7 +127,7 @@ assign rdaddr   = { mmr[ 7][6:0],mmr[ 8],mmr[ 9] };
 assign wrdata   = { mmr[0], mmr[1] };
 assign bus_rnw  = ~bus_mcu ? cpu_rnw : ~wrmem;
 assign bus_dsn  = ~bus_mcu ? cpu_dsn : 2'b00;
-assign cpu_dswn = cpu_dsn & {2{cpu_rnw}};
+assign cpu_dswn = cpu_dsn | {2{cpu_rnw}};
 assign bus_asn  = ~bus_mcu ? cpu_asn : mcu_asn;
 assign bus_avail= ~cpu_bgackn | cpu_rst | ~cpu_haltn;
 
