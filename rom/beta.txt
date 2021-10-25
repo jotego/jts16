@@ -90,4 +90,59 @@ altbeastj
 ddux1
 tturfu
 goldnaxe2
+# Missing titles
+# aceattac
+# aceattaca
+# afighterb
+# afighterd
+# afightere
+# afighterf
+# aliensyn
+# altbeast
+# atomicp
+# bayroute
+# bayroute1
+# bayroutej
+# cencourt
+# cotton
+# cottonj
+# cottonja
+# cottonu
+# defense
+# dfjail
+# dunkshot
+# dunkshota
+# dunkshoto
+# eswatj
+# exctleag
+# fantzn2x
+# fantzn2xp
+# goldnaxe
+# goldnaxe1
+# goldnaxeu
+# hwchamp
+# hwchampa
+# hwchampj
+# isgsm
+# lockonph
+# mjleague
+# mvp
+# mvpj
+# passshta
+# passshtj
+# quartet
+# quartet2
+# quartet2a
+# quarteta
+# riotcity
+# sdi
+# sdia
+# sdib
+# sjryuko
+# sjryuko1
+# snapper
+# sonicbom
+# suprleag
+# toryumon
+# ultracin
 #leave this line
