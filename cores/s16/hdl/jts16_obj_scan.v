@@ -127,21 +127,19 @@ always @(posedge clk, posedge rst) begin
             1: begin
                 if( !stop ) begin
                     visible <= inzone;
-                    if( MODEL==0 ) begin // System 16A only
-                        if( bottom>=8'hf0 ) begin
-                            st <= 0; // Done
-                        end else if( !inzone || badobj ) begin
-                            // For S16A there is no end-of-table (EOT) bit, so we
-                            // can loop around here. For S16B, we need to check
-                            // tbl_dout at state 3 for the EOT bit
-                            // Next object
-                            cur_obj <= cur_obj + 1'd1;
-                            idx     <= 0;
-                            st      <= 1;
-                            stop    <= 1;
-                            if( &cur_obj )
-                                st <= 0; // we're done
-                        end
+                    if( MODEL==0 && bottom>=8'hf0 ) begin
+                        st <= 0; // Done
+                    end else if( MODEL==0 && (!inzone || badobj) ) begin
+                        // For S16A there is no end-of-table (EOT) bit, so we
+                        // can loop around here. For S16B, we need to check
+                        // tbl_dout at state 3 for the EOT bit
+                        // Next object
+                        cur_obj <= cur_obj + 1'd1;
+                        idx     <= 0;
+                        st      <= 1;
+                        stop    <= 1;
+                        if( &cur_obj )
+                            st <= 0; // we're done
                     end else begin // draw this one
                         first <= top == vrf[7:0]; // first line
                     end
