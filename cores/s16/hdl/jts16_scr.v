@@ -87,6 +87,7 @@ assign vrf      = flip ? 9'd223-vrender : vrender;
 always @(*) begin
     eff_hscr = rowscr_en ? rowscr : hscr[9:0];
     eff_vscr = colscr_en ? colscr : vscr[8:0];
+    if( rowscr_en || colscr_en ) eff_hscr = eff_hscr + 9'd8; // this is needed by Cotton
     if( MODEL==0 ) begin
         {hov, hpos } = {1'b0, hscan} - {1'b0, eff_hscr[8:0]} + PXL_DLY;// + { {2{debug_bus[7]}}, debug_bus};
         {vov, vpos } = vscan + {1'b0, eff_vscr[7:0]};
