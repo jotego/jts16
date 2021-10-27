@@ -33,7 +33,7 @@ module jts16_scr(
     input              rowscr_en,
 
     // Column scroll
-    output reg [ 8:0]  hscan,
+    output reg [ 8:0]  hcolscr,
     input      [ 8:0]  colscr,
     input              colscr_en,
     input              col_busy,
@@ -62,6 +62,7 @@ parameter [8:0] HB_END=9'h70, HSCAN0 = 9'h70; //HB_END-9'd24-PXL_DLY[8:0];
 parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 
 reg  [10:0] scan_addr;
+reg  [ 8:0] hscan;
 wire [ 1:0] we;
 wire [ 8:0] vrf;
 
@@ -121,6 +122,7 @@ always @(posedge clk, posedge rst) begin
         map_st <= map_st+1'd1;
         draw   <= 0;
         case( map_st )
+            0: hcolscr <= hscan;
             1: begin
                 if( colscr_en && ((hscan[2:0]==0 && !col_busyl) || busy!=0 ))
                     map_st <= 1;
@@ -163,7 +165,7 @@ always @(posedge clk, posedge rst) begin
         hscan     <= 0;
     end else begin
         last_LHBL <= LHBL;
-        scr_good  <= { scr_good[0], scr_ok };
+        scr_good  <= { scr_good[0] & scr_ok, scr_ok };
         if( scr_good==2'b01 ) pxl_data <= scr_data[23:0];
 
         if( !LHBL && last_LHBL ) begin

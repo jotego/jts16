@@ -260,7 +260,7 @@ jts16_scr #(.PXL_DLY(SCR1_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
     .rowscr_en ( rowscr1_en     ),
     .rowscr    ( rowscr1        ),
 
-    .hscan     ( scr1_hscan     ),
+    .hcolscr   ( scr1_hscan     ),
     .colscr_en ( colscr1_en     ),
     .colscr    ( colscr1        ),
     .col_busy  ( col_busy1      ),
@@ -297,7 +297,7 @@ jts16_scr #(.PXL_DLY(SCR2_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .rowscr_en ( rowscr2_en     ),
     .rowscr    ( rowscr2        ),
 
-    .hscan     ( scr2_hscan     ),
+    .hcolscr   ( scr2_hscan     ),
     .colscr_en ( colscr2_en     ),
     .colscr    ( colscr2        ),
     .col_busy  ( col_busy2      ),
