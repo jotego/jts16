@@ -167,7 +167,7 @@ assign cpu_haltn = ~mmr[2][1];
 assign cpu_berrn = 1;
 assign sndmap_dout = mmr[3];
 
-reg rst_aux;
+reg rst_aux, status_msb;
 
 always @(negedge clk) begin
     { cpu_rst, rst_aux } <= { rst_aux, mmr[2][0] | rst };
@@ -209,9 +209,10 @@ always @(posedge clk) begin
         0: mcu_din <= mmr[0];
         1: mcu_din <= mmr[1];
         2: mcu_din <= {
-            1'b0,
+            status_msb,
             bus_rq,
-            2'b00,
+            sndmap_pbf,
+            1'b0,
             &cpu_ipln, // not sure about this one
             cpu_berrn,
             cpu_haltn,
@@ -332,6 +333,7 @@ always @(posedge clk) begin
         bus_rq     <= 0;
         bus_mcu    <= 0;
         mcu_asn    <= 1;
+        status_msb <= 0;
     end else begin
         wren_cpu_l <= wren_cpu;
         wren_mcu_l <= wren_mcu;
@@ -354,6 +356,8 @@ always @(posedge clk) begin
             end
         end
         if( mcu_wr_s ) cpu_sel <= 0; // once cleared, it stays like that until reset
+        // not really sure about status_msb
+        if( none || !bus_mcu || mmr[4][3] || &cpu_fc[2:0]) status_msb<=1;
         if( wredge_mcu || (wredge_cpu && cpu_sel) ) begin
             mmr[ asel ] <= din;
             if( asel == 3 )
@@ -367,6 +371,7 @@ always @(posedge clk) begin
                     mcu_asn  <= 0;
                 end
             end
+            if( asel==6 && din[3] ) status_msb <= 0; // should it be ~din[3] ?
         end
         if( sndmap_rd )
             sndmap_pbf <= 0;

@@ -354,6 +354,7 @@ jts16_cen u_cen(
 `ifdef S16B
     // System 16B
     .cen_snd    ( cen_snd   ),  // 5MHz
+    //.cen_snd    ( mcu_cen   ),  // 5MHz
     .mapper_rd  ( sndmap_rd ),
     .mapper_wr  ( sndmap_wr ),
     .mapper_din ( sndmap_din),

@@ -248,7 +248,8 @@ jts16b_mapper u_mapper(
     .mcu_acc    ( mcu_acc        ),
 
     .active     ( active         ),
-    .debug_bus  ( debug_bus      ),
+    //.debug_bus  ( debug_bus      ),
+    .debug_bus  ( 8'd0           ),
     .st_addr    ( st_addr        ),
     .st_dout    ( st_dout        )
 );
