@@ -44,7 +44,7 @@ module jts16_scr(
     input      [15:0]  map_data,
 
     input              scr_ok,
-    output     [16:0]  scr_addr, // 1 bank + 12 addr + 3 vertical + 1'b0 = 17 bits => 512kB
+    output reg [16:0]  scr_addr, // 1 bank + 12 addr + 3 vertical + 1'b0 = 17 bits => 512kB
     input      [31:0]  scr_data,
 
     // Video signal
@@ -63,7 +63,6 @@ parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 
 reg  [10:0] scan_addr;
 wire [ 1:0] we;
-reg  [12:0] code;
 wire [ 8:0] vrf;
 
 reg  [8:0]  vscan;
@@ -82,7 +81,6 @@ reg  [9:0] eff_hscr;
 reg  [8:0] eff_vscr;
 reg  [8:0] hdly;
 
-assign scr_addr = { code, vpos[2:0], 1'b0 };
 assign vrf      = flip ? 9'd223-vrender : vrender;
 
 always @(*) begin
@@ -156,7 +154,6 @@ assign buf_data = { attr, pxl_data[23], pxl_data[15], pxl_data[7] };
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        code     <= 0;
         attr     <= 0;
         pxl_data <= 0;
 
@@ -180,13 +177,14 @@ always @(posedge clk, posedge rst) begin
         end
 
         if( draw && !done ) begin
-            code     <= MODEL ? map_data[12:0] : { bank, map_data[11:0] };
             attr     <= MODEL ? (
                         alt_en ?
                             { map_data[15], map_data[11:5] } // Just for three games
                           : { map_data[15], map_data[12:6] } // most S16B titles
                         ) : map_data[12:5]; // S16A
             busy     <= ~8'd0;
+            scr_addr <= { MODEL ? map_data[12:0] : { bank, map_data[11:0] }, // code
+                        vpos[2:0], 1'b0 };
             scr_good <= 2'd0;
         end else if( busy!=0 && &scr_good && pxl2_cen) begin // This could work
             // without pxl2_cen, but it stresses the SDRAM too much, causing
