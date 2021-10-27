@@ -75,10 +75,10 @@ assign obj_prio = obj_pxl[11:10];
 // bit 10 = 0/tile 1/obj
 //    9:4 = palette
 //    3:0 = colour index
-function [11:0] tile_or_obj( input [9:0] obj, input [9:0] tile, input tile_prio, input obj_prio );
+function [11:0] tile_or_obj( input [9:0] obj, input [9:0] tile, input tile_prio, input oprio );
 // bit 11 = shadow
 // bit 10 = obj selected
-    tile_or_obj = obj[3:0]!=0 && obj_prio && (!tile_prio || tile[2:0]==0) ?
+    tile_or_obj = obj[3:0]!=0 && oprio && (!tile_prio || tile[2:0]==0) ?
                    ( &obj[9:4] ? { 2'b10, tile } : { 2'b1, obj  } ): // shadow or object
                    { 2'b0, tile };
 endfunction
@@ -115,14 +115,14 @@ always @(*) begin
 end
 
 `ifdef SIMULATION
-reg [4:0] active;
+reg [3:0] active;
 
 always @(*) begin
-    active   = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? 5'b1000 : (
-               (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? 5'b0100 : (
-               (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? 5'b0010 : (
-                5'b0 )));
-    if( pal_addr[10] ) active=5'b10000;
+    active   = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? 4'b001 : (
+               (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? 4'b010 : (
+               (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? 4'b100 : (
+                0 )));
+    if( pal_addr[10] ) active=4'b1000; // OBJ
 end
 `endif
 
@@ -152,14 +152,13 @@ function [4:0] dim;
     dim = a - (a>>2);
 endfunction
 
-function [14:0] apply_shadow;
-    input shadow;
-    input [15:0] pal;
-    apply_shadow = (shadow & ~pal[15]) ?
-        { dim(rpal), dim(gpal), dim(bpal) } : {rpal, gpal, bpal};
-endfunction
+reg [14:0] gated;
 
-wire [14:0] gated = video_en ? apply_shadow( shadow, pal ) : 15'd0;
+always @(*) begin
+    gated = (shadow & ~pal[15]) ? { dim(rpal), dim(gpal), dim(bpal) } :
+                                  {     rpal,      gpal,      bpal  };
+    if( !video_en ) gated = 0;
+end
 
 jtframe_blank #(.DLY(2),.DW(15)) u_blank(
     .clk        ( clk       ),

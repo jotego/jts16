@@ -63,10 +63,9 @@ wire [15:0] A;
 reg         fm_cs, mapper_cs, ram_cs, bank_cs,
             pcm_cs, misc_cs;
 wire        mreq_n, iorq_n, int_n;
-wire        WRn;
 reg  [ 7:0] cpu_din, pcm_cmd, pcmgain;
 reg         rom_ok2;
-wire        rom_good, cmd_cs;
+wire        rom_good;
 wire [ 7:0] cpu_dout, fm_dout, ram_dout, dec;
 wire        nmi_n, pcm_busyn,
             wr_n, rd_n, m1_n;

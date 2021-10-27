@@ -57,7 +57,7 @@ module jts16_scr(
 
 /* verilator lint_off WIDTH */
 parameter [9:0] PXL_DLY=0;
-parameter [8:0] HB_END=9'h70, HSCAN0 = HB_END-9'd8-PXL_DLY[8:0];
+parameter [8:0] HB_END=9'h70, HSCAN0 = 9'h70; //HB_END-9'd24-PXL_DLY[8:0];
 /* verilator lint_on WIDTH */
 parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 
