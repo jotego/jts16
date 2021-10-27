@@ -68,18 +68,9 @@
             <part name="b13" crc="62f4b64f" map="01"/>
             <part name="b11" crc="5da3dfcd" map="10"/>
         </interleave>
-        <part repeat="0x140000"> FF</part>
-        <!-- mcu - starts at 0x440000 -->
-        <part repeat="0x1000"> FF</part>
-        <part repeat="0x1000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
-        <part repeat="0x2000"> FF</part>
-        <part repeat="0x4000"> FF</part>
-        <!-- soundcpu:key - starts at 0x448000 -->
-        <part repeat="0x2000"> FF</part>
-        <!-- oki - starts at 0x44A000 -->
+        <!-- oki - starts at 0x300000 -->
         <part name="b5" crc="d6369a39"/>
-        <!-- Total 0x46A000 bytes - 4520 kBytes -->
+        <!-- Total 0x320000 bytes - 3200 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>
@@ -87,6 +78,7 @@
     <rom index="16" zip="debug.zip" md5="None">
         <part name="debug.bin"/>
     </rom>
+    <nvram index="2" size="75777"/>
     <rom index="1">
         <part>00</part>
     </rom>

@@ -6,6 +6,14 @@
 # PAL     4kB - split 16-bit bin dump
 # OBJRAM  2kB - split 16-bit bin dump
 
+if [ $# = 0 ]; then
+cat<<EOF
+usage: nvram2sim.sh <MiSTer-dump-file> <scene number>
+Call nvram2sim.sh from the simulation scene folder, not the main game folder
+EOF
+    exit 0
+fi
+
 FILE="$1"
 SCENE=$2
 

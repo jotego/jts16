@@ -39,25 +39,9 @@
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
-        <part repeat="0x80000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
-        <part repeat="0xC0000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
-        <part repeat="0x100000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
-        <part repeat="0x200000"> FF</part>
-        <!-- mcu - starts at 0x440000 -->
-        <part repeat="0x1000"> FF</part>
-        <part repeat="0x1000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
-        <part repeat="0x2000"> FF</part>
-        <part repeat="0x4000"> FF</part>
-        <!-- soundcpu:key - starts at 0x448000 -->
-        <part repeat="0x2000"> FF</part>
-        <!-- bios - starts at 0x44A000 -->
+        <!-- bios - starts at 0x0 -->
         <part name="ism2006v00.u1" crc="2292585c"/>
-        <!-- Total 0x46A000 bytes - 4520 kBytes -->
+        <!-- Total 0x20000 bytes - 128 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>
@@ -65,6 +49,7 @@
     <rom index="16" zip="debug.zip" md5="None">
         <part name="debug.bin"/>
     </rom>
+    <nvram index="2" size="75777"/>
     <rom index="1">
         <part>00</part>
     </rom>

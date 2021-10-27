@@ -44,9 +44,7 @@
             <part name="snap1.r02" crc="cd468d6a" map="01"/>
             <part name="snap2.r01" crc="9a9e4ed3" map="10"/>
         </interleave>
-        <part repeat="0x60000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
-        <part repeat="0xC0000"> FF</part>
+        <part repeat="0x120000"> FF</part>
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
             <part name="snap4.r03" crc="0f848e1e" map="0001"/>
@@ -55,17 +53,7 @@
             <part name="snap5.r05" crc="378e08eb" map="1000"/>
         </interleave>
         <part repeat="0xE0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
-        <part repeat="0x200000"> FF</part>
-        <!-- mcu - starts at 0x440000 -->
-        <part repeat="0x1000"> FF</part>
-        <part repeat="0x1000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
-        <part repeat="0x2000"> FF</part>
-        <part repeat="0x4000"> FF</part>
-        <!-- soundcpu:key - starts at 0x448000 -->
-        <part repeat="0x2000"> FF</part>
-        <!-- Total 0x44A000 bytes - 4392 kBytes -->
+        <!-- Total 0x240000 bytes - 2304 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>
@@ -73,6 +61,7 @@
     <rom index="16" zip="debug.zip" md5="None">
         <part name="debug.bin"/>
     </rom>
+    <nvram index="2" size="75777"/>
     <rom index="1">
         <part>00</part>
     </rom>
