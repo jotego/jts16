@@ -121,6 +121,7 @@ wire [ 8:0] vrender;
 wire        hstart, vint;
 wire        colscr_en, rowscr_en;
 wire [ 5:0] tile_bank;
+wire        scr_bad;
 
 // SDRAM interface
 wire        main_cs, vram_cs, ram_cs;
@@ -156,6 +157,7 @@ wire [SNDW-1:0] snd_addr;
 wire [ 7:0] snd_data;
 wire        snd_cs, snd_ok;
 wire        mc8123_we; // only for S16B2 core
+wire        snd_clip;
 
 // PCM
 wire [16:0] pcm_addr;
@@ -183,6 +185,7 @@ wire [7:0] st_video, st_main;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn = { UDSWn, LDSWn };
+assign game_led = /*snd_clip | */ ~scr_bad;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -353,8 +356,8 @@ jts16_cen u_cen(
 
 `ifdef S16B
     // System 16B
-    .cen_snd    ( cen_snd   ),  // 5MHz
-    //.cen_snd    ( mcu_cen   ),  // 5MHz
+    //.cen_snd    ( cen_snd   ),  // 5MHz
+    .cen_snd    ( mcu_cen   ),  // 8MHz
     .mapper_rd  ( sndmap_rd ),
     .mapper_wr  ( sndmap_wr ),
     .mapper_din ( sndmap_din),
@@ -393,7 +396,7 @@ jts16_cen u_cen(
     // Sound output
     .snd        ( snd       ),
     .sample     ( sample    ),
-    .peak       ( game_led  )
+    .peak       ( snd_clip  )
 );
 `else
     assign snd_cs=0;
@@ -492,7 +495,8 @@ jts16_video u_video(
     // debug
     .debug_bus  ( debug_bus ),
     .st_addr    ( st_addr   ),
-    .st_dout    ( st_video  )
+    .st_dout    ( st_video  ),
+    .scr_bad    ( scr_bad   )
 );
 
 jts16_sdram #(.SNDW(SNDW)) u_sdram(

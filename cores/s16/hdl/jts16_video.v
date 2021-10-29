@@ -90,7 +90,8 @@ module jts16_video(
     input      [ 7:0]  debug_bus,
     // status dump
     input      [ 7:0]  st_addr,
-    output     [ 7:0]  st_dout
+    output     [ 7:0]  st_dout,
+    output             scr_bad
 );
 
 localparam MODEL = `ifdef S16B 1; `else 0; `endif
@@ -135,6 +136,7 @@ wire [15:0] scr1_pages,      scr2_pages,
 parameter [8:0] HB_END = 9'h0bf;
 
 assign vint = vdump==223;
+assign scr_bad = scr1_bad | scr2_bad;
 
 `ifndef S16B
     assign rowscr1_en = rowscr_en;
@@ -279,7 +281,8 @@ jts16_scr #(.PXL_DLY(SCR1_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
     .vrender   ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( scr1_pxl       ),
-    .debug_bus ( debug_bus      )
+    .debug_bus ( debug_bus      ),
+    .bad       ( scr1_bad       )
 );
 
 jts16_scr #(.PXL_DLY(SCR2_DLY[8:0]),.MODEL(MODEL)) u_scr2(
@@ -316,7 +319,8 @@ jts16_scr #(.PXL_DLY(SCR2_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .vrender   ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( scr2_pxl       ),
-    .debug_bus ( debug_bus      )
+    .debug_bus ( debug_bus      ),
+    .bad       ( scr2_bad       )
 );
 
 jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(

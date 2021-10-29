@@ -52,7 +52,8 @@ module jts16_scr(
     input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
     output     [10:0]  pxl,       // 1 priority + 7 palette + 3 colour = 11
-    input      [ 7:0]  debug_bus
+    input      [ 7:0]  debug_bus,
+    output reg         bad
 );
 
 /* verilator lint_off WIDTH */
@@ -164,6 +165,7 @@ always @(posedge clk, posedge rst) begin
         done      <= 0;
         busy      <= 0;
         hscan     <= 0;
+        bad       <= 0;
     end else begin
         last_LHBL <= LHBL;
         scr_good  <= { scr_good[0] & scr_ok, scr_ok };
@@ -173,10 +175,12 @@ always @(posedge clk, posedge rst) begin
             vscan <= vrf;
             done  <= 0;
             busy  <= 0;
+            bad   <= !done;
         end
 
         if( done ) begin
             hscan <= HSCAN0;
+            bad   <= 0;
         end
 
         if( draw && !done ) begin
