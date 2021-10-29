@@ -90,6 +90,9 @@ altbeastj
 ddux1
 tturfu
 goldnaxe2
+# Halloween beta
+cotton
+cottonu
 # Missing titles
 # aceattac
 # aceattaca
@@ -104,10 +107,8 @@ goldnaxe2
 # bayroute1
 # bayroutej
 # cencourt
-# cotton
 # cottonj
 # cottonja
-# cottonu
 # defense
 # dfjail
 # dunkshot
