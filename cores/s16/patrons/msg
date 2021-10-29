@@ -1,7 +1,7 @@
  \B System 16\W core by \RJotego\W
   http://patreon.com/topapate
 
-     Beta 7 -- 22-September-21
+     Beta 8 -- 29th October-21
 Supervised by the \RJTAlpha team\W
 
 Special thanks to Blackwine
@@ -13,6 +13,11 @@ Known issues:
     -Missing some graphics
 -Bus cycle accuracy is
  not perfect yet
+-Shinobi set 2 sound code 30
+ loops and breaks
+-Glitches in scroll layer
+ in Cotton title screen and
+ 2nd stage boss
 
         \BHardware\W
 
@@ -24,46 +29,46 @@ Known issues:
 
       \RDirectors\W
 
-AnotherJoe      Antonio Villena
-Bender          Boogermann
-Chris Gelatt    DJ Hard Rich
-Filip Kindt     Frederic Mahe
-JPS (RetroFPGA) James D
+       Purple Tinker
+80's spaceman   AnotherJoe
+Antonio Villena Ben Roeder
+Bender          Chris Gelatt
+DJ Hard Rich    Filip Kindt
+Frederic Mahe   James D
 Jeffrey Pierce  John Biscevic
-Kevin finisterre Louis Martinez
-Martin Birkeldh Michael Yount
-Porkchop Express Purple Tinker
+John Lange      Kevin finisterre
+Louis Martinez  Martin Birkeldh
 Rysha           Shawn Henderson
-TT_Hipster1941  amoore2600
-Atrac17         Suv
+TT_Hipster1941  Ulf Skutnabba
+atrac17         Porkchop Express
 
        \RThanks to\W
 
-Arcade Express Brian Sallee
-Cohge          Daniel Bauza
-Jo Tomiyori    Phillip McMahon
-      Eduard Rozenberg
+Arcade Express  Brian Sallee
+Daniel Bauza    Eduard Rozenberg
+Javier Rodas    Jo Tomiyori
+Phillip McMahon Rafael Vitorio
+
 
 ARCADEAGES      Adam Davis
 Anders Rensberg Andreas Wester
 Andrew Francomb Andy Palmer
 Andyways        Arjan de Lang
-BeardMonsterGames Bob Gallardo
-Chi Wai Tran    Chris Doyle
-Chris Harvey    Chris Jardine
-Christian       Connor Glynn
-D.J. Estreito   DMG
-Darren Chell    David Agudo
-David Ashby    David Mills Jr.
+Bob Gallardo    Chi Wai Tran
+Chris Doyle     Chris Harvey
+Chris Jardine   Christian
+Connor Glynn    D.J. Estreito
+DMG             Darren Chell
+David Ashby     David Mills Jr
 David Moylan    Dean Winger
 Derick2k        Don Gafford
 Ed Balan        Eduardo Javier
 Edward Rana     EmperorStorky
-Gladius        Gus Douboulidis
+Gladius         Gus Douboulidis
 Gwaland         H. Osterholz
-Henrik Nordstrom Ian Court
-Ivo            JPS (RetroFPGA)
-James Baker     James Trautner
+H. Nordstrom    I. ECHEVARRIA
+Ian Court       Ivo
+JPS (RetroFPGA) James Trautner
 James Williams  Jason Nagy
 Jeffrey Haas    Jim Weinhart
 Joe Tassone     Joeri van
@@ -71,10 +76,9 @@ John Casey      Jorge Slowfret
 Jose Pulgar     Joseph Hsieh
 Juan Francisco  Krycek7o2
 Leslie Law      Lionel LENOBLE
-MakeshiftMoney  Marcelo C.
-Marcus Hogue    Marcus Sid
-Martin DiPalma  Matt Postema
-Matthew Young MiSTerFPGA.co.uk
+Marcelo C.      Marcus Hogue
+Marcus Sid      Martin DiPalma
+Matthew Young  MiSTerFPGA.co.uk
 Michael Johnson MoonZ
 Oliver Jaksch   Oliver Wndmth
 Oscar Laguna    Per Sweden
@@ -83,14 +87,13 @@ RetroPrez       Retroludo
 Richard MS      Robert MacLean
 Robert Mullings Roman Buser
 Simon Johnstone Steven Wilson
-Technoir1986    The Collector
-Theodore Huber  Toby Boreham
-Tony Richardson Torren Beitler
-Tym Whitney     Ulf Skutnabba
+StormCrow56k    SuperCowabunga
+The Collector   Theodore Huber
+Toby Boreham    Tony Richardson
+Torren Beitler  Tym Whitney
 Ultrarobotninja Victor Gomariz
-Vitor Duarte    Xzarian
-Younghoon Gong  Zachary Muske
-asdfgasfhsn     birdybro
+Vitor Duarte    Younghoon Gong
+Zachary Muske   asdfgasfhsn
 elrobertocarlos hyp36rmax
 nullobject
 
