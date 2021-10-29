@@ -57,7 +57,7 @@ module jts16b_snd(
     output               peak
 );
 
-localparam [7:0] FMGAIN=8'h0C;
+localparam [7:0] FMGAIN=8'h08;
 
 wire [15:0] A;
 reg         fm_cs, mapper_cs, ram_cs, bank_cs,
@@ -152,10 +152,10 @@ end
 // PCM volume
 always @(posedge clk ) begin
     case( fxlevel )
-        2'd0: pcmgain <= 8'h03;
-        2'd1: pcmgain <= 8'h06;
-        2'd2: pcmgain <= 8'h0C;
-        2'd3: pcmgain <= 8'h18;
+        2'd0: pcmgain <= 8'h02;
+        2'd1: pcmgain <= 8'h04;
+        2'd2: pcmgain <= 8'h08;
+        2'd3: pcmgain <= 8'h14;
     endcase
     if( !enable_psg ) pcmgain <= 0;
 end
