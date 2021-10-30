@@ -25,6 +25,7 @@ module jts16_main(
     input  [7:0]       game_id,
     // Video
     input              vint,
+    input              LHBL,
     // Video circuitry
     output reg         char_cs,
     output reg         pal_cs,

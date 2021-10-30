@@ -213,6 +213,7 @@ jts16_cen u_cen(
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
     .game_id    ( game_id   ),
+    .LHBL       ( LHBL_dly  ),
     // Video
     .vint       ( vint      ),
     .video_en   ( video_en  ),

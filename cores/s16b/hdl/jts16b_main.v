@@ -30,6 +30,7 @@ module jts16b_main(
 
     // Video
     input              vint,
+    input              LHBL,
 
     // Video circuitry
     output reg         char_cs,
@@ -367,6 +368,7 @@ end
 jts16b_cabinet u_cabinet(
     .rst            ( rst           ),
     .clk            ( clk           ),
+    .LHBL           ( LHBL          ),
     .game_id        ( game_id       ),
 
     // CPU

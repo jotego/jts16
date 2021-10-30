@@ -19,6 +19,7 @@
 module jts16b_cabinet(
     input             rst,
     input             clk,
+    input             LHBL,
     input      [ 7:0] game_id,
 
     // CPU
@@ -97,12 +98,53 @@ function [7:0] pass_joy( input [7:0] joy_in );
     pass_joy = { joy_in[7:4], joy_in[1:0], joy_in[3:2] };
 endfunction
 
+function [7:0] dunkshot_joy( input [11:0] tb );
+    dunkshot_joy = !A[1] ? tb[7:0] : {4'd0,tb[11:8]};
+endfunction
+
+function [11:0] extjoy( input [7:0] ja );
+    extjoy = { {8{ja[7]}}, ja[6:3] };
+endfunction
+
+reg  [11:0] trackball[0:7];
+reg         LHBLl;
+reg  [ 5:0] hcnt;
+
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        hcnt <= 0;
+        trackball[0] <= 12'h10a;
+        trackball[1] <= 12'h20b;
+        trackball[2] <= 12'h30c;
+        trackball[3] <= 12'h40d;
+        trackball[4] <= 12'h50e;
+        trackball[5] <= 12'h60f;
+        trackball[6] <= 12'h701;
+        trackball[7] <= 12'h802;
+    end else begin
+        LHBLl <= LHBL;
+        if( !LHBL && LHBLl ) begin
+            hcnt<=hcnt+1;
+            if( hcnt==0 ) begin
+                trackball[0] <= trackball[0] - extjoy( joyana1[ 7:0] );
+                trackball[1] <= trackball[1] + extjoy( joyana1[15:8] );
+                trackball[2] <= trackball[2] - extjoy( joyana2[ 7:0] );
+                trackball[3] <= trackball[3] + extjoy( joyana2[15:8] );
+                trackball[4] <= trackball[4] - extjoy( joyana3[ 7:0] );
+                trackball[5] <= trackball[5] + extjoy( joyana3[15:8] );
+                trackball[6] <= trackball[6] - extjoy( joyana4[ 7:0] );
+                trackball[7] <= trackball[7] + extjoy( joyana4[15:8] );
+            end
+        end
+    end
+end
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         cab_dout  <= 8'hff;
         flip      <= 0;
         video_en  <= 1;
-    end else  begin
+    end else begin
         last_iocs <= io_cs;
         cab_dout  <= 8'hff;
         if(io_cs) case( A[13:12] )
@@ -134,8 +176,7 @@ always @(posedge clk, posedge rst) begin
                         cab_dout <= game_bullet ? sort2_bullet : sort2;
                     end
                 endcase
-            2:
-                cab_dout <= { A[1] ? dipsw_a : dipsw_b };
+            2: cab_dout <= { A[1] ? dipsw_a : dipsw_b };
             3: begin // custom inputs
                 case( game_id )
                     1: begin // Heavy Champion
@@ -162,6 +203,9 @@ always @(posedge clk, posedge rst) begin
                                 3: cab_dout <= pass_joy( joystick4 );
                             endcase
                         end
+                    end
+                    GAME_DUNKSHOT: begin
+                        cab_dout <= dunkshot_joy( trackball[A[4:2]] );
                     end
                     8'h12,8'h19: begin // SDI / Defense
                         if( A[9:8]== 2'b10 ) begin
