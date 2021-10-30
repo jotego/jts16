@@ -17,6 +17,7 @@ s16a/jts16_fd1094_ctrl.v
 s16a/jts16_fd1094_dec.v
 
 ../../hdl/jts16b_main.v
+../../hdl/jts16b_cabinet.v
 ../../hdl/jts16b_mapper.v
 ../../hdl/jts16b_snd.v
 ../../hdl/jts16_mult.v

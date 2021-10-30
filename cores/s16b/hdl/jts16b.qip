@@ -2,6 +2,7 @@ set_global_assignment -name QIP_FILE     [file join $::quartus(qip_path) ../../s
 
 # S16B exclusive
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16b_main.v      ]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16b_cabinet.v   ]
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16b_mapper.v    ]
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16b_snd.v       ]
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16b_mult.v      ]
