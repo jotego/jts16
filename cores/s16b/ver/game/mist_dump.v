@@ -54,21 +54,19 @@ module mist_dump(
                 $shm_probe(UUT.u_game.u_sound,"A");
                 $shm_probe(UUT.u_game.u_sound.u_pcm,"AS");
             `else
+                // $shm_probe(UUT.u_game.u_video,"AS");
+                // $shm_probe(UUT.u_game.u_video.u_colmix,"A");
             `endif
-                $shm_probe(UUT.u_game.u_video,"AS");
-                $shm_probe(UUT.u_game.u_video.u_colmix,"A");
-            `ifndef NOMAIN
             //$shm_probe(UUT.u_game,"A");
-            //$shm_probe(UUT.u_game.u_main,"A");
-            $shm_probe(UUT.u_game.u_main.u_mapper,"A");
-            //$shm_probe(UUT.u_game.u_main.u_cpu,"A");
+            `ifdef DUMPMAIN
+                $shm_probe(UUT.u_game.u_main,"A");
+                $shm_probe(UUT.u_game.u_main.u_cabinet,"A");
+                //$shm_probe(UUT.u_game.u_main.u_mapper,"A");
+                //$shm_probe(UUT.u_game.u_main.u_cpu,"A");
             `endif
             //`ifdef FD1094
             //    $shm_probe(UUT.u_game.u_main.u_dec,"AS");
             //`endif
-            //$shm_probe(UUT.u_game.u_sound,"A");
-            //$shm_probe(UUT.u_game.u_sound.u_cpu,"AS");
-            //$shm_probe(UUT.u_game.u_sound.u_pcm,"AS");
             `ifdef LOADROM
                 $shm_probe(UUT.u_game.u_sdram.u_dwnld,"A");
             `endif

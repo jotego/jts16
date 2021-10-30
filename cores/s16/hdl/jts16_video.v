@@ -113,6 +113,7 @@ wire [ 9:0] rowscr1, rowscr2;
 wire [ 8:0] colscr1, colscr2;
 wire        scr_start;
 wire        col_busy1, col_busy2;
+wire        scr1_bad, scr2_bad;
 
 // video layers
 wire [ 6:0] char_pxl;

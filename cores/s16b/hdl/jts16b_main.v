@@ -376,6 +376,8 @@ jts16b_cabinet u_cabinet(
     .cpu_dout       ( cpu_dout      ),
     .LDSWn          ( LDSWn         ),
     .UDSWn          ( UDSWn         ),
+    .LDSn           ( LDSn          ),
+    .UDSn           ( UDSn          ),
     .io_cs          ( io_cs         ),
 
     // DIP switches

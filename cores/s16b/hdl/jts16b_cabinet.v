@@ -27,6 +27,8 @@ module jts16b_cabinet(
     input      [15:0] cpu_dout,
     input             LDSWn,
     input             UDSWn,
+    input             LDSn,
+    input             UDSn,
     input             io_cs,
 
     // DIP switches
@@ -107,7 +109,7 @@ function [11:0] extjoy( input [7:0] ja );
 endfunction
 
 reg  [11:0] trackball[0:7];
-reg         LHBLl;
+reg         LHBLl, shift_en;
 reg  [ 5:0] hcnt;
 
 always @(posedge clk, posedge rst) begin
@@ -141,12 +143,16 @@ end
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        cab_dout  <= 8'hff;
-        flip      <= 0;
-        video_en  <= 1;
+        cab_dout <= 8'hff;
+        flip     <= 0;
+        video_en <= 1;
+        shift_en <= 0;
     end else begin
-        last_iocs <= io_cs;
         cab_dout  <= 8'hff;
+        if(!io_cs && shift_en) begin
+            ana_in   <= ana_in << 1;
+            shift_en <= 0;
+        end
         if(io_cs) case( A[13:12] )
             0: if( !LDSWn ) begin
                 flip     <= cpu_dout[6];
@@ -180,19 +186,17 @@ always @(posedge clk, posedge rst) begin
             3: begin // custom inputs
                 case( game_id )
                     1: begin // Heavy Champion
-                        if( A[9:8]==2 ) begin
-                            cab_dout <= { 7'd0, ana_in[7] };
+                        if( A[5:4]==2 && (!LDSn || !UDSn)) begin
                             if (!LDSWn || !UDSWn) begin // load value in shift reg
                                 case( A[2:1])
-                                    0: ana_in <= 8'h00; //joyana_sum[8:1];
-                                    1: ana_in <= 8'h11; //joyana1[15:8];
-                                    2: ana_in <= 8'h22; //joyana2[15:8];
-                                    3: ana_in <= 8'h33; //8'hff;
+                                    0: ana_in <= joyana_sum[8:1]; // monitor
+                                    1: ana_in <= joyana1[15:8]; // left handle
+                                    2: ana_in <= joyana1[ 7:0]; // right handle
+                                    3: ana_in <= 8'hff;
                                 endcase
                             end else begin
-                                if(!last_iocs) begin // read value
-                                    ana_in <= ana_in << 1;
-                                end
+                                cab_dout <= { 7'd0, ana_in[7] };
+                                shift_en <= 1;
                             end
                         end
                         // A[9:8]==3, bits 7:5 control the lamps, bit 4 is the bell
