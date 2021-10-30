@@ -90,9 +90,25 @@ altbeastj
 ddux1
 tturfu
 goldnaxe2
-# Halloween beta
+############ Halloween beta
 cotton
 cottonu
+############ Sports
+dunkshot
+dunkshota
+dunkshoto
+exctleag
+mjleague
+mvp
+mvpj
+passshta
+passshtj
+cencourt
+suprleag
+hwchamp
+hwchampa
+hwchampj
+###############################################################
 # Missing titles
 # aceattac
 # aceattaca
@@ -106,31 +122,18 @@ cottonu
 # bayroute
 # bayroute1
 # bayroutej
-# cencourt
 # cottonj
 # cottonja
 # defense
 # dfjail
-# dunkshot
-# dunkshota
-# dunkshoto
 # eswatj
-# exctleag
 # fantzn2x
 # fantzn2xp
 # goldnaxe
 # goldnaxe1
 # goldnaxeu
-# hwchamp
-# hwchampa
-# hwchampj
 # isgsm
 # lockonph
-# mjleague
-# mvp
-# mvpj
-# passshta
-# passshtj
 # quartet
 # quartet2
 # quartet2a
@@ -143,7 +146,6 @@ cottonu
 # sjryuko1
 # snapper
 # sonicbom
-# suprleag
 # toryumon
 # ultracin
 #leave this line

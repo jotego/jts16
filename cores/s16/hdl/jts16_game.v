@@ -591,6 +591,8 @@ jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .ba0_din     ( ba0_din       ),
     .ba0_din_m   ( ba0_din_m     ),
 
+    //.debug_bus   ( debug_bus     ),
+
     .data_read   ( data_read     ),
 
     // ROM load

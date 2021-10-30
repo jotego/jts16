@@ -113,6 +113,7 @@ localparam [7:0] GAME_SDI=1,
                  GAME_PASSSHT=2,
                  GAME_BULLET=8'h11,
                  GAME_PASSSHT2='h13,
+                 GAME_DUNKSHOT='h14,
                  GAME_PASSSHT3='h18;
 
 
@@ -128,7 +129,7 @@ localparam [2:0] REG_RAM  = 3,
                  REG_PAL  = 6,
                  REG_IO   = 7;
 
-reg         game_passsht;
+reg         game_passsht, game_dunkshot, game_bullet;
 
 wire [23:1] A,cpu_A;
 wire        BERRn;
@@ -184,8 +185,11 @@ always @(*) begin
     endcase
 end
 
+// Game ID registers
 always @(posedge clk) begin
-    game_passsht <= game_id==GAME_PASSSHT2 || game_id==GAME_PASSSHT3 || game_id==GAME_PASSSHT;
+    game_passsht  <= game_id==GAME_PASSSHT2 || game_id==GAME_PASSSHT3 || game_id==GAME_PASSSHT;
+    game_dunkshot <= game_id==GAME_DUNKSHOT;
+    game_bullet   <= game_id==GAME_BULLET;
 end
 
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs;
@@ -365,7 +369,8 @@ reg [ 7:0] cab_dout, sort1, sort2, sort3;
 reg        last_iocs;
 
 wire       op_n; // low for CPU OP requests
-wire [7:0] sort1_bullet, sort2_bullet, sort3_bullet;
+wire [7:0] sort1_bullet, sort2_bullet, sort3_bullet,
+           sort_dunkshot;
 
 assign op_n        = FC[1:0]!=2'b10;
 assign colscr_en   = 0;
@@ -373,6 +378,7 @@ assign rowscr_en   = 0;
 assign sort1_bullet = { sort1[3:0], sort1[7:4] };
 assign sort2_bullet = { sort2[3:0], sort2[7:4] };
 assign sort3_bullet = { sort3[3:0], sort3[7:4] };
+assign sort_dunkshot= { joystick4[5:4], joystick3[5:4], joystick2[5:4], joystick1[5:4] };
 
 function [7:0] sort_joy( input [7:0] joy_in );
     sort_joy = { joy_in[1:0], joy_in[3:2], joy_in[7], joy_in[5:4], joy_in[6] };
@@ -421,22 +427,24 @@ always @(posedge clk, posedge rst) begin
                 case( A[2:1] )
                     0: begin
                         cab_dout <= sys_inputs;
-                        if( game_id == GAME_BULLET ) begin
+                        if( game_bullet ) begin
                             cab_dout[7] <= coin_input[2];
                             cab_dout[6] <= start_button[2];
                         end
-                        if( game_passsht )  begin
+                        if( game_passsht | game_dunkshot )  begin
                             cab_dout[7:6] <= start_button[3:2];
                         end
                     end
                     1: begin
-                        cab_dout <= game_id == GAME_BULLET ? sort1_bullet : sort1;
+                        cab_dout <= game_bullet ? sort1_bullet :
+                            game_dunkshot ? sort_dunkshot :
+                            sort1;
                     end
                     2: begin
-                        if ( game_id == GAME_BULLET ) cab_dout <= sort3_bullet;
+                        if ( game_bullet ) cab_dout <= sort3_bullet;
                     end
                     3: begin
-                        cab_dout <= game_id == GAME_BULLET ? sort2_bullet : sort2;
+                        cab_dout <= game_bullet ? sort2_bullet : sort2;
                     end
                 endcase
             2:

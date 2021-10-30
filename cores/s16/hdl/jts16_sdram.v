@@ -125,6 +125,7 @@ module jts16_sdram #(
     output           prog_rd,
     input            prog_ack,
     input            prog_rdy
+    //, input    [ 7:0]  debug_bus
 );
 
 localparam [21:0] ZERO_OFFSET=0,
@@ -143,9 +144,11 @@ localparam [24:0] BA1_START  = `BA1_START,
 /* verilator lint_on WIDTH */
 
 localparam VRAMW = `VRAMW;
+localparam [7:0] DUNKSHOT='h14;
 
 // Scroll address after banking
 wire [18:0] char_adj, scr1_adj, scr2_adj;
+reg  [19:0] obj_addr_g;
 
 reg  [VRAMW-1:1] xram_addr;  // S16A = 32 kB VRAM + 16kB RAM
                              // S16B = 64 kB VRAM + 16-256kB RAM
@@ -154,6 +157,7 @@ wire        prom_we, header;
 
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 reg         fd1089_en, fd1094_en;
+reg         dunkshot;
 
 assign xram_cs    = ram_cs | vram_cs;
 
@@ -207,6 +211,19 @@ end
     assign scr1_adj = { 2'd0, scr1_addr[16:0] };
     assign scr2_adj = { 2'd0, scr2_addr[16:0] };
 `endif
+
+// Special needs by game:
+always @(posedge clk) begin
+    dunkshot <= game_id==DUNKSHOT;
+end
+
+always @(*) begin
+    obj_addr_g = obj_addr;
+`ifdef S16B
+    if( dunkshot ) obj_addr_g[15]=0;
+`endif
+end
+
 
 jtframe_dwnld #(
     .HEADER    ( 32        ),
@@ -345,7 +362,7 @@ jtframe_rom_1slot #(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
-    .slot0_addr ( obj_addr  ),
+    .slot0_addr ( obj_addr_g),
     .slot0_dout ( obj_data  ),
     .slot0_cs   ( obj_cs    ),
     .slot0_ok   ( obj_ok    ),
