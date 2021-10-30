@@ -180,19 +180,22 @@ always @(posedge clk, posedge rst) begin
             3: begin // custom inputs
                 case( game_id )
                     1: begin // Heavy Champion
-                        if( A[9:8]== 2'b10 ) begin
-                            if (!LDSWn || !UDSWn) begin
+                        if( A[9:8]==2 ) begin
+                            cab_dout <= { 7'd0, ana_in[7] };
+                            if (!LDSWn || !UDSWn) begin // load value in shift reg
                                 case( A[2:1])
-                                    0: ana_in <= joyana_sum[8:1];
-                                    1: ana_in <= joyana1[15:8];
-                                    2: ana_in <= joyana2[15:8];
-                                    3: ana_in <= 8'hff;
+                                    0: ana_in <= 8'h00; //joyana_sum[8:1];
+                                    1: ana_in <= 8'h11; //joyana1[15:8];
+                                    2: ana_in <= 8'h22; //joyana2[15:8];
+                                    3: ana_in <= 8'h33; //8'hff;
                                 endcase
-                            end else if(!last_iocs) begin // read value
-                                ana_in <= ana_in << 1;
-                                cab_dout <= { 7'd0, ana_in[7] };
+                            end else begin
+                                if(!last_iocs) begin // read value
+                                    ana_in <= ana_in << 1;
+                                end
                             end
                         end
+                        // A[9:8]==3, bits 7:5 control the lamps, bit 4 is the bell
                     end
                     8'h13: begin // Passing Shot (J)
                         if( A[9:8]== 2'b10 ) begin
