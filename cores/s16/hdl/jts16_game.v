@@ -41,6 +41,10 @@ module `GAMETOP(
     input   [15:0]  joyana_l2,
     input   [15:0]  joyana_l3,
     input   [15:0]  joyana_l4,
+    input   [15:0]  joyana_r1,
+    input   [15:0]  joyana_r2,
+    input   [15:0]  joyana_r3,
+    input   [15:0]  joyana_r4,
 
     // SDRAM interface
     input           downloading,
@@ -245,6 +249,7 @@ jts16_cen u_cen(
     .joystick3   ( joystick3  ),
     .joystick4   ( joystick4  ),
     .joyana1     ( joyana_l1  ),
+    .joyana1b    ( joyana_r1  ),
     .joyana2     ( joyana_l2  ),
     .joyana3     ( joyana_l3  ),
     .joyana4     ( joyana_l4  ),

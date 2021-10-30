@@ -97,6 +97,10 @@ cottonu
 dunkshot
 dunkshota
 dunkshoto
+hwchamp
+hwchampa
+hwchampj
+# to fix:
 exctleag
 mjleague
 mvp
@@ -105,9 +109,6 @@ passshta
 passshtj
 cencourt
 suprleag
-hwchamp
-hwchampa
-hwchampj
 ###############################################################
 # Missing titles
 # aceattac

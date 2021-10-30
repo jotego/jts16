@@ -42,6 +42,7 @@ module jts16b_cabinet(
     input      [ 7:0] joystick3,
     input      [ 7:0] joystick4,
     input      [15:0] joyana1,
+    input      [15:0] joyana1b, // used by Heavy Champ
     input      [15:0] joyana2,
     input      [15:0] joyana3,
     input      [15:0] joyana4,
@@ -128,8 +129,8 @@ always @(posedge clk, posedge rst) begin
         if( !LHBL && LHBLl ) begin
             hcnt<=hcnt+1;
             if( hcnt==0 ) begin
-                trackball[0] <= trackball[0] - extjoy( joyana1[ 7:0] );
-                trackball[1] <= trackball[1] + extjoy( joyana1[15:8] );
+                trackball[0] <= trackball[0] - extjoy( joyana1[ 7:0] ); // X
+                trackball[1] <= trackball[1] + extjoy( joyana1[15:8] ); // Y
                 trackball[2] <= trackball[2] - extjoy( joyana2[ 7:0] );
                 trackball[3] <= trackball[3] + extjoy( joyana2[15:8] );
                 trackball[4] <= trackball[4] - extjoy( joyana3[ 7:0] );
@@ -139,6 +140,24 @@ always @(posedge clk, posedge rst) begin
             end
         end
     end
+end
+
+// Heavy Champ
+// The handle is centred at 20h, pulling it can take it to 0
+// pushing it takes it to FFh. This means that the two regions
+// are not mapped with the same sensitivity to the analogue stick
+reg  [7:0] hwchamp_left, hwchamp_right, hwchamp_monitor;
+
+function [7:0] hwchamp_handle( input [7:0] anain );
+    hwchamp_handle = !anain[7] ? 8'h20-{ 3'd0, anain[6:2]} :
+        ~({1'b0, anain[6:0]} + {2'b0,anain[6:1]} + {3'b0,anain[6:2]});
+endfunction
+
+always @(*) begin
+    hwchamp_left  = hwchamp_handle( joyana1b[15:8] );
+    hwchamp_right = hwchamp_handle( joyana1[15:8] );
+    hwchamp_monitor = {joyana1[7],joyana1[7:1]}+{joyana1b[7],joyana1b[7:1]};
+    hwchamp_monitor[7] = ~hwchamp_monitor[7];
 end
 
 always @(posedge clk, posedge rst) begin
@@ -189,16 +208,16 @@ always @(posedge clk, posedge rst) begin
                         if( A[5:4]==2 && (!LDSn || !UDSn)) begin
                             if (!LDSWn || !UDSWn) begin // load value in shift reg
                                 case( A[2:1])
-                                    0: ana_in <= joyana_sum[8:1]; // monitor
-                                    1: ana_in <= joyana1[15:8]; // left handle
-                                    2: ana_in <= joyana1[ 7:0]; // right handle
+                                    0: ana_in <= hwchamp_monitor;
+                                    1: ana_in <= hwchamp_left;
+                                    2: ana_in <= hwchamp_right;
                                     3: ana_in <= 8'hff;
                                 endcase
                             end else begin
                                 cab_dout <= { 7'd0, ana_in[7] };
                                 shift_en <= 1;
                             end
-                        end
+                        end else cab_dout <= 8'hff;
                         // A[9:8]==3, bits 7:5 control the lamps, bit 4 is the bell
                     end
                     8'h13: begin // Passing Shot (J)
