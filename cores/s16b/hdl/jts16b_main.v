@@ -334,13 +334,15 @@ always @(posedge clk, posedge rst) begin
             objram_cs <= active[REG_ORAM];
             pal_cs    <= active[REG_PAL];
             io_cs     <= active[REG_IO];
-            if( active[2] ) begin
-                if( pcb_5797 ) begin
+            if( pcb_5797 ) begin
+                if( active[1] ) begin
                     case(A[13:12])
                         0: mul_cs <= 1;
                         2: tbank_cs <= !RnW;
                     endcase
-                end else if(!RnW) tbank_cs <= 1; // PCB 171-5521/5704
+                end
+            end else begin
+                tbank_cs <= active[2] && !RnW; // PCB 171-5521/5704
             end
             // jtframe_ramrq requires cs to toggle to
             // process a new request. BUSn will toggle for

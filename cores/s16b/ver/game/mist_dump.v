@@ -61,7 +61,7 @@ module mist_dump(
             `ifdef DUMPMAIN
                 $shm_probe(UUT.u_game.u_main,"A");
                 $shm_probe(UUT.u_game.u_main.u_cabinet,"A");
-                //$shm_probe(UUT.u_game.u_main.u_mapper,"A");
+                $shm_probe(UUT.u_game.u_main.u_mapper,"A");
                 //$shm_probe(UUT.u_game.u_main.u_cpu,"A");
             `endif
             //`ifdef FD1094
