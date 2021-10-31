@@ -158,8 +158,13 @@ wire        op_n; // low for CPU OP requests
 reg  [ 1:0] act_enc;
 
 wire pcb_5797;
+reg  pcb_5358L;
 
 assign pcb_5797 = game_id[5]; // MVP, etc.
+
+always @(posedge clk) begin
+    pcb_5358L <= game_id==8'h10 || game_id==8'h15 || game_id==8'h1a;
+end
 
 always @(*) begin
     case( active[2:0] )
@@ -172,7 +177,7 @@ always @(*) begin
         5'b001?_?: // 5797
             rom_addr = A[18:1];
         5'b0001_?: // 5358
-            if( game_id==8'h10 || game_id==8'h1a ) // 5358 large
+            if( pcb_5358L ) // 5358 large
                 rom_addr = { act_enc, A[16:1] };
             else // 5358 small
                 rom_addr = { 1'b0, act_enc, A[15:1] };
