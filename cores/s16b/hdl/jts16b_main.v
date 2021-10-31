@@ -134,9 +134,9 @@ wire [23:0] A_full = {A,1'b0};
 wire        BRn, BGACKn, BGn;
 wire        ASn, UDSn, LDSn, BUSn;
 wire        ok_dly;
-wire [15:0] rom_dec, cpu_dout_raw;
+wire [15:0] rom_dec, cpu_dout_raw, mul_dout;
 
-reg         io_cs, wdog_cs, tbank_cs;
+reg         io_cs, mul_cs, wdog_cs, tbank_cs;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -156,6 +156,10 @@ wire        DTACKn, cpu_vpan;
 wire        op_n; // low for CPU OP requests
 
 reg  [ 1:0] act_enc;
+
+wire pcb_5797;
+
+assign pcb_5797 = game_id[5]; // MVP, etc.
 
 always @(*) begin
     case( active[2:0] )
@@ -316,6 +320,7 @@ always @(posedge clk, posedge rst) begin
             objram_cs <= 0; // 2 kB
             pal_cs    <= 0; // 4 kB
             io_cs     <= 0;
+            mul_cs    <= 0;
             wdog_cs   <= 0;
 
             vram_cs   <= 0; // 32kB
@@ -329,8 +334,14 @@ always @(posedge clk, posedge rst) begin
             objram_cs <= active[REG_ORAM];
             pal_cs    <= active[REG_PAL];
             io_cs     <= active[REG_IO];
-            tbank_cs  <= active[2] && !RnW; // PCB 171-5521/5704
-
+            if( active[2] ) begin
+                if( pcb_5797 ) begin
+                    case(A[13:12])
+                        0: mul_cs <= 1;
+                        2: tbank_cs <= !RnW;
+                    endcase
+                end else if(!RnW) tbank_cs <= 1; // PCB 171-5521/5704
+            end
             // jtframe_ramrq requires cs to toggle to
             // process a new request. BUSn will toggle for
             // read-modify-writes
@@ -342,6 +353,7 @@ always @(posedge clk, posedge rst) begin
             objram_cs <= 0;
             pal_cs    <= 0;
             io_cs     <= 0;
+            mul_cs    <= 0;
             wdog_cs   <= 0;
             vram_cs   <= 0;
             ram_cs    <= 0;
@@ -365,6 +377,17 @@ always @(posedge clk, posedge rst) begin
                 tile_bank[2:0] <= cpu_dout[2:0];
     end
 end
+
+jts16b_mul u_mul(
+    .rst    ( rst       ),
+    .clk    ( clk       ),
+    .A      ( A         ),
+    .dsn    ({UDSn,LDSn}),
+    .rnw    ( RnW       ),
+    .cs     ( mul_cs    ),
+    .din    ( cpu_dout  ),
+    .dout   ( mul_dout  )
+);
 
 jts16b_cabinet u_cabinet(
     .rst            ( rst           ),
@@ -410,7 +433,7 @@ jts16b_cabinet u_cabinet(
 // Data bus input
 always @(posedge clk) begin
     if(rst) begin
-        cpu_din <= 16'hffff;
+        cpu_din <= 0;
     end else begin
         cpu_din <= (ram_cs | vram_cs ) ? ram_data  : (
                     rom_cs             ? rom_dec   : (
@@ -418,6 +441,7 @@ always @(posedge clk) begin
                     pal_cs             ? pal_dout  : (
                     objram_cs          ? obj_dout  : (
                     io_cs              ? { 8'hff, cab_dout } :
+                    mul_cs             ? mul_dout :
                                        cpu_din ))))); // no change for unmapped memory
     end
 end

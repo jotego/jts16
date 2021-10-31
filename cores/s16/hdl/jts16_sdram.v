@@ -195,11 +195,11 @@ end
     reg single_bank;
     always @(posedge clk) begin
         single_bank <= game_id[4];
-                        //game_id==8'h10 || // shinobi2/5
-                       //game_id==8'h1A || // shinobi3
-                       //game_id==8'h11 || // afighterh/g/f
-                       //game_id==8'h16 || // aliensyn7
-                       //game_id==8'h19 || // defense
+                    //game_id==8'h10 || // shinobi2/5
+                    //game_id==8'h1A || // shinobi3
+                    //game_id==8'h11 || // afighterh/g/f
+                    //game_id==8'h16 || // aliensyn7
+                    //game_id==8'h19 || // defense
     end
     assign char_adj = { tile_bank[2:0], 3'd0, char_addr };
     assign scr1_adj = { single_bank ? {2'b0, scr1_addr[16] } :

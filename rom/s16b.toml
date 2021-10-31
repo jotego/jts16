@@ -154,10 +154,10 @@ dev = [
 # init_timescan_5358_small = 0x1c
 # init_defense_5358_small  = 0x19
 # init_shinobi3_5358       = 0x1a
-# init_generic_5797 = 0x20
-# init_generic_5704 = 0x40
-# init_tturf_5704 = 0x41
-# init_wb3_5704 = 0x42
+# init_generic_5797        = 0x20
+# init_generic_5704        = 0x40
+# init_tturf_5704          = 0x41
+# init_wb3_5704            = 0x42
 # init_generic_bootleg = 0x80
 machines = [
     { setname="aceattac",   byte=0x18, value=0x17 },

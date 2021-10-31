@@ -14,41 +14,40 @@
 
     Author: Jose Tejada Gomez. Twitter: @topapate
     Version: 1.0
-    Date: 28-7-2021 */
+    Date: 31-10-2021 */
 
-module jts16_mult(
+module jts16b_mul(
     input              rst,
     input              clk,
+
+    input      [23:1]  A,
+    input      [ 1:0]  dsn,
+    input              rnw,
     input              cs,
-    input      [ 1:0]  addr,
-    input      [ 1:0]  wdsn,    // write data select
     input      [15:0]  din,
+
     output reg [15:0]  dout
 );
 
-reg  [15:0] a, b;
-reg  [31:0] product;
+reg [15:0] factors[0:1];
+reg [31:0] mul;
 
-always @(posedge clk) begin
-    product <= a * b;
-    // output
-    case( addr )
-        0: dout <= a;
-        1: dout <= b;
-        2: dout <= product[31:16];
-        3: dout <= product[15:0];
-    endcase
-end
-
-always @(posedge clk, posedge rst) begin
-    if( rst ) begin
-        a    <= 0;
-        b    <= 0;
-    end else begin
-        if( cs && !wdsn[0] && !addr[0] ) a[ 7:0] <= din[ 7:0];
-        if( cs && !wdsn[1] && !addr[0] ) a[15:8] <= din[15:8];
-        if( cs && !wdsn[0] &&  addr[0] ) b[ 7:0] <= din[ 7:0];
-        if( cs && !wdsn[1] &&  addr[0] ) b[15:8] <= din[15:8];
+always @(posedge clk or posedge rst) begin 
+    if(rst) begin
+        factors[0] <= 0;
+        factors[1] <= 0;
+    end else if(cs) begin
+        mul <= factors[0] * factors[1];
+        if( !rnw ) begin
+            if( !dsn[0] ) factors[A[1]][ 7:0] <=  din[ 7:0];
+            if( !dsn[1] ) factors[A[1]][15:8] <=  din[15:8];
+        end
+        case(A[2:1])
+            0: dout <= factors[0];
+            1: dout <= factors[1];
+            2: dout <= mul[31:16];
+            3: dout <= mul[15: 0];
+        endcase
     end
 end
 
