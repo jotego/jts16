@@ -251,6 +251,7 @@ jts16_cen u_cen(
     .joyana1     ( joyana_l1  ),
     .joyana1b    ( joyana_r1  ),
     .joyana2     ( joyana_l2  ),
+    .joyana2b    ( joyana_r2  ),
     .joyana3     ( joyana_l3  ),
     .joyana4     ( joyana_l4  ),
     .start_button(start_button),
