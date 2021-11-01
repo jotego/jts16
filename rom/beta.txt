@@ -69,8 +69,6 @@ tetris
 goldnaxe3
 goldnaxej
 eswatj1
-eswatu
-eswat
 # 210917
 # S16B using M8123
 shinobi3
@@ -97,18 +95,19 @@ cottonu
 dunkshot
 dunkshota
 dunkshoto
-hwchamp
-hwchampa
-hwchampj
-# to fix:
-exctleag
-mjleague
 mvp
 mvpj
+exctleag
+# to fix:
+mjleague
 passshta
 passshtj
 cencourt
 suprleag
+hwchamp
+hwchampa
+hwchampj
+# unsuited controls
 ###############################################################
 # Missing titles
 # aceattac
@@ -128,6 +127,8 @@ suprleag
 # defense
 # dfjail
 # eswatj
+# eswatu
+# eswat
 # fantzn2x
 # fantzn2xp
 # goldnaxe

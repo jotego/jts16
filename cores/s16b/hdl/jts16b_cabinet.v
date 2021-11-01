@@ -56,20 +56,25 @@ module jts16b_cabinet(
     output reg        video_en
 );
 
-localparam [7:0] GAME_SDI=1,
-                 GAME_PASSSHT=2,
-                 GAME_BULLET=8'h11,
-                 GAME_PASSSHT2='h13,
-                 GAME_DUNKSHOT='h14,
-                 GAME_PASSSHT3='h18;
+localparam [7:0] GAME_HWCHAMP =`GAME_HWCHAMP ,
+                 GAME_PASSSHT =`GAME_PASSSHT ,
+                 GAME_SDIBL   =`GAME_SDIBL   ,
+                 GAME_PASSSHT2=`GAME_PASSSHT2,
+                 GAME_DUNKSHOT=`GAME_DUNKSHOT,
+                 GAME_EXCTLEAG=`GAME_EXCTLEAG,
+                 GAME_BULLET  =`GAME_BULLET  ,
+                 GAME_PASSSHT3=`GAME_PASSSHT3,
+                 GAME_SDI     =`GAME_SDI     ;
 
-reg  game_passsht, game_dunkshot, game_bullet;
+reg  game_passsht, game_dunkshot, game_bullet,
+     game_exctleag;
 
 // Game ID registers
 always @(posedge clk) begin
     game_passsht  <= game_id==GAME_PASSSHT2 || game_id==GAME_PASSSHT3 || game_id==GAME_PASSSHT;
     game_dunkshot <= game_id==GAME_DUNKSHOT;
     game_bullet   <= game_id==GAME_BULLET;
+    game_exctleag <= game_id==GAME_EXCTLEAG;
 end
 
 reg [ 7:0] sort1, sort2, sort3;
@@ -179,7 +184,7 @@ always @(posedge clk, posedge rst) begin
             end
             1:
                 case( A[2:1] )
-                    0: begin
+                    0: begin  // Service
                         cab_dout <= sys_inputs;
                         if( game_bullet ) begin
                             cab_dout[7] <= coin_input[2];
@@ -189,22 +194,25 @@ always @(posedge clk, posedge rst) begin
                             cab_dout[7:6] <= start_button[3:2];
                         end
                     end
-                    1: begin
+                    1: begin  // P1
                         cab_dout <= game_bullet ? sort1_bullet :
                             game_dunkshot ? sort_dunkshot :
+                            game_exctleag ? { trackball[1][11:9], trackball[1][11:10], trackball[1][11:9] } :
                             sort1;
                     end
                     2: begin
                         if ( game_bullet ) cab_dout <= sort3_bullet;
                     end
-                    3: begin
-                        cab_dout <= game_bullet ? sort2_bullet : sort2;
+                    3: begin  // P2
+                        cab_dout <= game_bullet ? sort2_bullet :
+                            game_exctleag ? { trackball[3][11:9], trackball[3][11:10], trackball[3][11:9] } :
+                            sort2;
                     end
                 endcase
             2: cab_dout <= { A[1] ? dipsw_a : dipsw_b };
             3: begin // custom inputs
                 case( game_id )
-                    1: begin // Heavy Champion
+                    GAME_HWCHAMP: begin // Heavy Champion
                         if( A[5:4]==2 && (!LDSn || !UDSn)) begin
                             if (!LDSWn || !UDSWn) begin // load value in shift reg
                                 case( A[2:1])
@@ -220,7 +228,7 @@ always @(posedge clk, posedge rst) begin
                         end else cab_dout <= 8'hff;
                         // A[9:8]==3, bits 7:5 control the lamps, bit 4 is the bell
                     end
-                    8'h13: begin // Passing Shot (J)
+                    GAME_PASSSHT2: begin // Passing Shot (J)
                         if( A[9:8]== 2'b10 ) begin
                             case( A[2:1] )
                                 0: cab_dout <= pass_joy( joystick1 );
@@ -233,17 +241,15 @@ always @(posedge clk, posedge rst) begin
                     GAME_DUNKSHOT: begin
                         cab_dout <= dunkshot_joy( trackball[A[4:2]] );
                     end
-                    8'h12,8'h19: begin // SDI / Defense
-                        if( A[9:8]== 2'b10 ) begin
-                            case( A[2:1] )
-                                // 1P
-                                0: cab_dout <= joyana1[15:8];
-                                1: cab_dout <= joyana2[15:8];
-                                // 2P
-                                2: cab_dout <= joyana3[15:8];
-                                3: cab_dout <= joyana4[15:8];
-                            endcase
-                        end
+                    GAME_EXCTLEAG,GAME_SDI,GAME_SDIBL: begin // SDI / Defense
+                        case( A[3:2] )
+                            // 1P
+                            0: cab_dout <= joyana1[15:8];
+                            1: cab_dout <= joyana1[ 7:0];
+                            // 2P
+                            2: cab_dout <= joyana2[15:8];
+                            3: cab_dout <= joyana2[ 7:0];
+                        endcase
                     end
                 endcase
             end

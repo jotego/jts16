@@ -159,10 +159,11 @@ dev = [
 # init_tturf_5704          = 0x41
 # init_wb3_5704            = 0x42
 # init_generic_bootleg = 0x80
+# This must match the definitions in jts16b.def
 machines = [
     { setname="aceattac",   byte=0x18, value=0x17 },
     { setname="aliensyn",   byte=0x18, value=0x11 },
-    { setname="aliensyn7",  byte=0x18, value=0x16 },
+    { setname="aliensyn7",  byte=0x18, value=0x11 }, # same as the others
     { setname="aliensyn3",  byte=0x18, value=0x11 },
     { setname="aliensynj",  byte=0x18, value=0x11 },
     { setname="afightere",  byte=0x18, value=0x11 },
@@ -183,7 +184,7 @@ machines = [
     { setname="bayroute",   byte=0x18, value=0x40 },
     { setname="bayroutej",  byte=0x18, value=0x40 },
     { setname="bayroute1",  byte=0x18, value=0x10 },
-    { setname="bullet",     byte=0x18, value=0x11 },
+    { setname="bullet",     byte=0x18, value=0x16 },
     { setname="cotton",     byte=0x18, value=0x40 },
     { setname="cottonu",    byte=0x18, value=0x40 },
     { setname="cottonj",    byte=0x18, value=0x40 },
