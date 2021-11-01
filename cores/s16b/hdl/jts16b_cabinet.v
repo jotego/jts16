@@ -165,6 +165,24 @@ always @(*) begin
     hwchamp_monitor[7] = ~hwchamp_monitor[7];
 end
 
+`ifdef SIMULATION
+reg displayed=0, displ_wr=0, io_csl;
+always @(posedge clk) begin
+    io_csl <= io_cs;
+    if( (io_csl && !io_cs && !displayed)
+        || (io_cs && (!LDSWn || !UDSWn) )
+    ) begin
+        $display("io access: %6X, A[13:12]=%X, A[2:1]=%X - %s - %d%d%d",
+            A, A[13:12],A[2:1], (!LDSWn||!UDSWn) ? "wr" : "rd",
+            game_bullet, game_dunkshot, game_exctleag );
+        displayed <= 1;
+    end
+    if(!io_csl) begin
+        displayed<=0;
+    end
+end
+`endif
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         cab_dout <= 8'hff;
