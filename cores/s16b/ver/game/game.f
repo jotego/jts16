@@ -11,6 +11,7 @@ s16a/jts16_obj_draw.v
 s16a/jts16_obj_scan.v
 s16a/jts16_mmr.v
 s16a/jts16_pcm.v
+s16a/jts16_trackball.v
 s16a/jts16_fd1089.v
 s16a/jts16_fd1094.v
 s16a/jts16_fd1094_ctrl.v

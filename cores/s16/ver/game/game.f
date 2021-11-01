@@ -14,6 +14,7 @@
 ../../hdl/jts16_snd.v
 ../../hdl/jts16_pcm.v
 ../../hdl/jts16_fd1089.v
+../../hdl/jts16_trackball.v
 
 # FD1094 - only for some versions
 ../../hdl/jts16_fd1094.v

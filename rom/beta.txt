@@ -108,8 +108,14 @@ hwchamp
 hwchampa
 hwchampj
 # unsuited controls
-###############################################################
+##############################################################
 # Missing titles
+# Working
+# sdi
+# sdib
+# defense
+# Not working
+# sdia
 # aceattac
 # aceattaca
 # afighterb
@@ -124,7 +130,6 @@ hwchampj
 # bayroutej
 # cottonj
 # cottonja
-# defense
 # dfjail
 # eswatj
 # eswatu
@@ -141,9 +146,6 @@ hwchampj
 # quartet2a
 # quarteta
 # riotcity
-# sdi
-# sdia
-# sdib
 # sjryuko
 # sjryuko1
 # snapper

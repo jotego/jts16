@@ -112,45 +112,36 @@ function [7:0] dunkshot_joy( input [11:0] tb );
     dunkshot_joy = !A[1] ? tb[7:0] : {4'd0,tb[11:8]};
 endfunction
 
-function [11:0] extjoy( input [7:0] ja );
-    extjoy = { {8{ja[7]}}, ja[6:3] };
-endfunction
+wire [11:0] trackball[0:7];
+reg         shift_en;
 
-reg  [11:0] trackball[0:7];
-reg         LHBLl, shift_en;
-reg  [ 5:0] hcnt;
+jts16_trackball u_trackball(
+    .rst        ( rst           ),
+    .clk        ( clk           ),
+    .LHBL       ( LHBL          ),
 
-wire [15:0] mainstick1 = game_sdi ? joyana1b : joyana1;
-wire [15:0] mainstick2 = game_sdi ? joyana2b : joyana2;
+    .right_en   ( game_sdi      ),
 
-always @(posedge clk, posedge rst) begin
-    if( rst ) begin
-        hcnt <= 0;
-        trackball[0] <= 12'h10a;
-        trackball[1] <= 12'h20b;
-        trackball[2] <= 12'h30c;
-        trackball[3] <= 12'h40d;
-        trackball[4] <= 12'h50e;
-        trackball[5] <= 12'h60f;
-        trackball[6] <= 12'h701;
-        trackball[7] <= 12'h802;
-    end else begin
-        LHBLl <= LHBL;
-        if( !LHBL && LHBLl ) begin
-            hcnt<=hcnt+1;
-            if( hcnt==0 ) begin
-                trackball[0] <= trackball[0] - extjoy( mainstick1[ 7:0] ); // X
-                trackball[1] <= trackball[1] + extjoy( mainstick1[15:8] ); // Y
-                trackball[2] <= trackball[2] - extjoy( mainstick2[ 7:0] );
-                trackball[3] <= trackball[3] + extjoy( mainstick2[15:8] );
-                trackball[4] <= trackball[4] - extjoy( joyana3[ 7:0] );
-                trackball[5] <= trackball[5] + extjoy( joyana3[15:8] );
-                trackball[6] <= trackball[6] - extjoy( joyana4[ 7:0] );
-                trackball[7] <= trackball[7] + extjoy( joyana4[15:8] );
-            end
-        end
-    end
-end
+    .joystick1  ( joystick1     ),
+    .joystick2  ( joystick2     ),
+    .joystick3  ( joystick3     ),
+    .joystick4  ( joystick4     ),
+    .joyana1    ( joyana1       ),
+    .joyana1b   ( joyana1b      ), // used by Heavy Champ
+    .joyana2    ( joyana2       ),
+    .joyana2b   ( joyana2b      ), // used by SDI
+    .joyana3    ( joyana3       ),
+    .joyana4    ( joyana4       ),
+
+    .trackball0 ( trackball[0]  ),
+    .trackball1 ( trackball[1]  ),
+    .trackball2 ( trackball[2]  ),
+    .trackball3 ( trackball[3]  ),
+    .trackball4 ( trackball[4]  ),
+    .trackball5 ( trackball[5]  ),
+    .trackball6 ( trackball[6]  ),
+    .trackball7 ( trackball[7]  )
+);
 
 // Heavy Champ
 // The handle is centred at 20h, pulling it can take it to 0

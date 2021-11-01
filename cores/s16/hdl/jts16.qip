@@ -19,6 +19,7 @@ set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16_o
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16_obj_dtack.v ]
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16_pcm.v       ]
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16_fd1089.v    ]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) jts16_trackball.v ]
 
 # Do not replace ../../modules by ../../../modules in this file
 # somehow it produces a TCL error for jts16a2.

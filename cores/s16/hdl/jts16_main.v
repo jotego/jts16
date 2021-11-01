@@ -59,7 +59,9 @@ module jts16_main(
     input       [ 7:0] joystick3,
     input       [ 7:0] joystick4,
     input       [15:0] joyana1,
+    input       [15:0] joyana1b,
     input       [15:0] joyana2,
+    input       [15:0] joyana2b,
     input       [15:0] joyana3,
     input       [15:0] joyana4,
     input       [ 3:0] start_button,
@@ -95,8 +97,15 @@ module jts16_main(
     output reg  [ 7:0] st_dout
 );
 
-localparam [7:0] GAME_SDI=1, GAME_PASSSHT=2;
-
+localparam [7:0] GAME_HWCHAMP =`GAME_HWCHAMP ,
+                 GAME_PASSSHT =`GAME_PASSSHT ,
+                 GAME_SDIBL   =`GAME_SDIBL   ,
+                 GAME_PASSSHT2=`GAME_PASSSHT2,
+                 GAME_DUNKSHOT=`GAME_DUNKSHOT,
+                 GAME_EXCTLEAG=`GAME_EXCTLEAG,
+                 GAME_BULLET  =`GAME_BULLET  ,
+                 GAME_PASSSHT3=`GAME_PASSSHT3,
+                 GAME_SDI     =`GAME_SDI     ;
 wire [23:1] A;
 wire        BERRn;
 wire [ 2:0] FC;
@@ -196,7 +205,7 @@ endfunction
 
 
 function [7:0] sdi_joy( input [15:0] joyana );
-    sdi_joy = ppib_dout[2] ? (~joyana[15:8]+8'd1) : joyana[7:0];
+    sdi_joy = ppib_dout[2] ? ~joyana[15:8] : ~joyana[7:0];
 endfunction
 
 
@@ -209,6 +218,42 @@ always @(*) begin
     sort1 = sort_joy( joystick1 );
     sort2 = sort_joy( joystick2 );
 end
+
+reg  game_sdi, game_passsht;
+wire [11:0] trackball0, trackball1, trackball2, trackball3;
+
+always @(posedge clk) begin
+    game_sdi      <= game_id==GAME_SDI || game_id==GAME_SDIBL;
+    game_passsht  <= game_id==GAME_PASSSHT2 || game_id==GAME_PASSSHT3 || game_id==GAME_PASSSHT;
+end
+
+jts16_trackball u_trackball(
+    .rst        ( rst           ),
+    .clk        ( clk           ),
+    .LHBL       ( LHBL          ),
+
+    .right_en   ( game_sdi      ),
+
+    .joystick1  ( joystick1     ),
+    .joystick2  ( joystick2     ),
+    .joystick3  ( joystick3     ),
+    .joystick4  ( joystick4     ),
+    .joyana1    ( joyana1       ),
+    .joyana1b   ( joyana1b      ), // used by Heavy Champ
+    .joyana2    ( joyana2       ),
+    .joyana2b   ( joyana2b      ), // used by SDI
+    .joyana3    ( joyana3       ),
+    .joyana4    ( joyana4       ),
+
+    .trackball0 ( trackball0    ),
+    .trackball1 ( trackball1    ),
+    .trackball2 ( trackball2    ),
+    .trackball3 ( trackball3    ),
+    .trackball4 (               ),
+    .trackball5 (               ),
+    .trackball6 (               ),
+    .trackball7 (               )
+);
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -242,7 +287,7 @@ always @(posedge clk, posedge rst) begin
                     end
                     1: begin
                         case( game_id )
-                            GAME_SDI: cab_dout <= sdi_joy( joyana1 );
+                            GAME_SDI: cab_dout <= sdi_joy( {trackball1[10:3],trackball0[10:3]} );
                             GAME_PASSSHT: begin
                                 if( !last_iocs ) port_cnt <= port_cnt + 2'd1;
                                 case( port_cnt )
@@ -262,7 +307,7 @@ always @(posedge clk, posedge rst) begin
                     end
                     3: begin
                         if( game_id == GAME_SDI ) begin
-                            cab_dout <= sdi_joy( joyana2 );
+                            cab_dout <= sdi_joy( {trackball3[10:3],trackball2[10:3]} );
                         end else begin
                             cab_dout <= sort2;
                         end
