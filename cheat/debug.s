@@ -17,6 +17,9 @@ constant KEYS, 30
 ; Register use
 ; SA = frame counter
 ; SB = LED
+; Memory use
+; 0 = last LVBL
+; 1 => frame cnt (MSB)
 
     ; enable interrupt
     load sa,0   ; SA = frame counter, modulo 60
@@ -44,10 +47,22 @@ notblank:
     jump BEGIN
 
 ISR:
+    ; count the number of seconds elapsed
+    input s0,FRAMECNT
+    compare s0,3b   ; 59d
+    jump nz,.else
+    fetch s0,1      ; increase the second counter
+    add s0,1
+    store s0,1
+.else:
+
     compare sa,0
     jump nz,SCREEN
     ; invert LED signal
     add sb,1
+
+
+    ; count frames
 
 SCREEN:
     ; Show scroll data
@@ -65,6 +80,11 @@ SCREEN:
     add   s0,2
     load  s3,5
     call  write_st16
+
+    ; second counter
+    add s0,4
+    fetch s1,1
+    call WRITE_HEX
 
     ; Scroll 2 pages
     load  s0,4
