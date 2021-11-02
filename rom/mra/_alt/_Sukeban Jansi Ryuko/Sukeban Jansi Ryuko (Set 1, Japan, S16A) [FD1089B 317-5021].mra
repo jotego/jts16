@@ -38,7 +38,7 @@
     <rom index="0" zip="sjryuko1.zip|sjryuko.zip" md5="None">
         <part>
             04 00 04 80 08 80 10 00
-            18 00 18 20 18 40 18 61
+            00 00 18 20 18 40 18 61
             02 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
@@ -85,9 +85,7 @@
             <part name="12235-29.b4" crc="fa45d511" map="01"/>
             <part name="12239-30.b8" crc="91f70c8b" map="10"/>
         </interleave>
-        <!-- mcu - starts at 0x180000 -->
-        <part repeat="0x1000"> FF</part>
-        <part repeat="0x1000"> FF</part>
+        <part repeat="0x2000"> FF</part>
         <!-- maincpu:key - starts at 0x182000 -->
         <part name="317-5021.key" crc="8e40b2ab"/>
         <!-- n7751 - starts at 0x184000 -->

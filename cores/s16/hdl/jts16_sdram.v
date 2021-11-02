@@ -141,6 +141,8 @@ localparam [24:0] BA1_START  = `BA1_START,
                   KEY_PROM   = `MAINKEY_START,
                   MC8123_PROM= `SNDKEY_START,
                   FD_PROM    = `FD1089_START;
+
+localparam [ 7:0] GAME_FANTZN2X = `GAME_FANTZN2X;
 /* verilator lint_on WIDTH */
 
 localparam VRAMW = `VRAMW;
@@ -168,13 +170,20 @@ assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM    [21: 8];
 assign mcu_we     = prom_we && prog_addr[21:12]==MCU_PROM   [21:12];
 assign mc8123_we  = prom_we && prog_addr[21:13]==MC8123_PROM[21:13];
 
+reg  game_fantzn2x;
+
+always @(posedge clk) begin
+    game_fantzn2x <= game_id != GAME_FANTZN2X;
+end
+
 always @(*) begin
     xram_addr = { ram_cs, main_addr[VRAMW-2:1] }; // RAM is mapped up
 `ifndef S16B
     if( ram_cs ) xram_addr[VRAMW-2:14]=0; // only 16kB for RAM
 `else
     // Mask RAM for System16B too, but no for System16C
-    if( ram_cs && game_id != 8'h40 ) xram_addr[VRAMW-2:14]=0; // only 16kB for RAM
+    if( ram_cs && !game_fantzn2x ) xram_addr[VRAMW-2:14]=0; // only 16kB for RAM
+    if( vram_cs ) xram_addr[VRAMW-2:16]=0;
 `endif
 end
 
