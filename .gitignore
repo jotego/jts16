@@ -19,3 +19,13 @@ cores/s16/mister/output_*
 obj_dir
 db
 incremental_db
+cores/s*/mister/*
+cores/s*/neptuno/*
+cores/s*/sidi/*
+cores/s*/mc2
+cores/s*/mcp
+cores/s*/mist
+macros.f
+core.def
+jtsim.f
+jtsim_vhdl.f
