@@ -173,7 +173,7 @@ assign mc8123_we  = prom_we && prog_addr[21:13]==MC8123_PROM[21:13];
 reg  game_fantzn2x;
 
 always @(posedge clk) begin
-    game_fantzn2x <= game_id != GAME_FANTZN2X;
+    game_fantzn2x <= game_id == GAME_FANTZN2X;
 end
 
 always @(*) begin
