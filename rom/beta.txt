@@ -91,65 +91,64 @@ goldnaxe2
 ############ Halloween beta
 cotton
 cottonu
-############ Sports
+############ Working and not released
 dunkshot
 dunkshota
 dunkshoto
 mvp
 mvpj
 exctleag
-# to fix:
+fantzn2x
+fantzn2xp
+riotcity
+toryumon
+sonicbom
+sdi
+sdib
+defense
+altbeast
+aliensyn
+# to fix input system:
 mjleague
-passshta
-passshtj
-cencourt
 suprleag
 hwchamp
 hwchampa
 hwchampj
 # unsuited controls
-##############################################################
-# Missing titles
-# Working
-# sdi
-# sdib
-# defense
-# Not working
-# sdia
 # aceattac
 # aceattaca
+# sjryuko
+# sjryuko1
+##############################################################
+# Not working
+# cencourt
+# passshtj
+# passshta
+# sdia
 # afighterb
 # afighterd
 # afightere
 # afighterf
-# aliensyn
-# altbeast
-# atomicp
 # bayroute
 # bayroute1
 # bayroutej
 # cottonj
 # cottonja
-# dfjail
 # eswatj
 # eswatu
 # eswat
-# fantzn2x
-# fantzn2xp
 # goldnaxe
 # goldnaxe1
 # goldnaxeu
-# isgsm
-# lockonph
 # quartet
 # quartet2
 # quartet2a
 # quarteta
-# riotcity
-# sjryuko
-# sjryuko1
-# snapper
-# sonicbom
-# toryumon
 # ultracin
+##############################################################
+# Korean/Philco games
+# atomicp
+# snapper
+# lockonph
+# dfjail
 #leave this line

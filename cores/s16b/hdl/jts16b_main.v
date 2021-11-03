@@ -135,9 +135,9 @@ wire [23:0] A_full = {A,1'b0};
 wire        BRn, BGACKn, BGn;
 wire        ASn, UDSn, LDSn, BUSn;
 wire        ok_dly;
-wire [15:0] rom_dec, cpu_dout_raw, mul_dout;
+wire [15:0] rom_dec, cpu_dout_raw, mul_dout, timer_dout;
 
-reg         io_cs, mul_cs, wdog_cs, tbank_cs;
+reg         io_cs, mul_cs, cmp_cs, wdog_cs, tbank_cs;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -327,6 +327,7 @@ always @(posedge clk, posedge rst) begin
             pal_cs    <= 0; // 4 kB
             io_cs     <= 0;
             mul_cs    <= 0;
+            cmp_cs    <= 0;
             wdog_cs   <= 0;
 
             vram_cs   <= 0; // 32kB
@@ -334,16 +335,17 @@ always @(posedge clk, posedge rst) begin
             tbank_cs  <= 0;
     end else begin
         if( !ASn /*&& BGACKn*/ ) begin
-            rom_cs    <= |active[2:0] && RnW;
+            rom_cs    <= (pcb_5797 ? active[0] : |active[2:0]) && RnW;
             char_cs   <= active[REG_VRAM] && A[16];
 
             objram_cs <= active[REG_ORAM];
             pal_cs    <= active[REG_PAL];
             io_cs     <= active[REG_IO];
             if( pcb_5797 ) begin
-                if( active[1] ) begin
+                if( active[1] || active[2] ) begin
                     case(A[13:12])
                         0: mul_cs <= 1;
+                        1: cmp_cs <= 1;
                         2: tbank_cs <= !RnW;
                     endcase
                 end
@@ -395,6 +397,17 @@ jts16b_mul u_mul(
     .cs     ( mul_cs    ),
     .din    ( cpu_dout  ),
     .dout   ( mul_dout  )
+);
+
+jts16b_timer u_timer(
+    .rst    ( rst       ),
+    .clk    ( clk       ),
+    .A      ( A         ),
+    .dsn    ({UDSn,LDSn}),
+    .rnw    ( RnW       ),
+    .cs     ( timer_cs  ),
+    .din    ( cpu_dout  ),
+    .dout   ( timer_dout)
 );
 
 jts16b_cabinet u_cabinet(
@@ -450,7 +463,8 @@ always @(posedge clk) begin
                     pal_cs             ? pal_dout  : (
                     objram_cs          ? obj_dout  : (
                     io_cs              ? { 8'hff, cab_dout } :
-                    mul_cs             ? mul_dout :
+                    mul_cs             ? mul_dout   :
+                    timer_cs           ? timer_dout :
                                        cpu_din ))))); // no change for unmapped memory
     end
 end
