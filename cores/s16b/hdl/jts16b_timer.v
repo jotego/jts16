@@ -61,7 +61,7 @@ always @(posedge clk, posedge rst) begin
         sel4 <= 0;
         written <= 0;
     end else begin
-        if( cs ) dout<=mmr[ A[3:1] ];
+        if( cs ) dout <= A[4] ? 16'hffff : mmr[ A[3:1] ];
 
         // comparison
         if( value<min ) begin
@@ -75,6 +75,7 @@ always @(posedge clk, posedge rst) begin
             mmr[3] <= 16'h0000;
         end
 
+        // write to registers
         if( write ) begin
             written <= 1;
             case(A[4:1])
