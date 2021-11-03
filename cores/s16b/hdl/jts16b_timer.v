@@ -61,7 +61,19 @@ always @(posedge clk, posedge rst) begin
         sel4 <= 0;
         written <= 0;
     end else begin
-        if( cs ) dout <= A[4] ? 16'hffff : mmr[ A[3:1] ];
+        if( cs ) begin
+            case( A[4:1] )
+                0: dout <= mmr[0];
+                1: dout <= mmr[1];
+                2: dout <= mmr[2];
+                3: dout <= mmr[3];
+                4: dout <= mmr[4];
+                5: dout <= mmr[1];  // 5 & 6 used to access 1 & 2 too
+                6: dout <= mmr[2];
+                7: dout <= mmr[7];
+                default: dout <= 16'hffff;
+            endcase
+        end
 
         // comparison
         if( value<min ) begin
