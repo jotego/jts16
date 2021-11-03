@@ -36,7 +36,7 @@ module jts16b_timer(
 reg  [15:0] mmr[0:7];
 reg  [ 3:0] sel4;
 reg  [ 7:0] snd_data;
-reg         written;
+reg         up_sel4;
 wire write = cs && !dsn && !rnw;
 
 wire signed [15:0] value, bound1, bound2, min, max;
@@ -59,7 +59,7 @@ always @(posedge clk, posedge rst) begin
         mmr[0] <= 0; mmr[1] <= 0; mmr[2] <= 0; mmr[3] <= 0;
         mmr[4] <= 0; mmr[5] <= 0; mmr[6] <= 0; mmr[7] <= 0;
         sel4 <= 0;
-        written <= 0;
+        up_sel4 <= 0;
     end else begin
         if( cs ) begin
             case( A[4:1] )
@@ -89,16 +89,13 @@ always @(posedge clk, posedge rst) begin
 
         // write to registers
         if( write ) begin
-            written <= 1;
             case(A[4:1])
                 0: mmr[0] <= write_reg( 0 );
                 1: mmr[1] <= write_reg( 1 );
                 2: begin
                     mmr[2] <= write_reg( 2 );
-                    if( !written ) begin
-                        mmr[4][sel4] <= mmr[3]==0;
-                        sel4 <= sel4+1'd1;
-                    end
+                    mmr[4][sel4] <= mmr[3]==0;
+                    up_sel4 <= 1;
                 end
                 4: begin
                     mmr[4] <= 0;
@@ -111,7 +108,8 @@ always @(posedge clk, posedge rst) begin
                 end
             endcase
         end else begin
-            written <= 0;
+            up_sel4 <= 0;
+            if( up_sel4 ) sel4 <= sel4+1'd1;
         end
     end
 end

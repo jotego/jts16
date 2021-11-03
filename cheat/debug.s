@@ -27,6 +27,9 @@ constant KEYS, 30
     load s0,1
     output s0,b ; enable display
     call CLS
+    ; Reset second counter
+    load s0,0
+    store s0,1
 BEGIN:
     output s0,0x40
 
