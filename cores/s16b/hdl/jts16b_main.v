@@ -343,15 +343,17 @@ always @(posedge clk, posedge rst) begin
             pal_cs    <= active[REG_PAL];
             io_cs     <= active[REG_IO];
             if( pcb_5797 ) begin
-                if( active[1] || active[2] ) begin
+                if( active[1] ) begin
                     case(A[13:12])
                         0: mul_cs <= 1;
                         1: begin
-                            cmp_cs  <= active[1];
-                            cmp2_cs <= active[2];
+                            cmp_cs <= 1;
                         end
                         2: tbank_cs <= !RnW;
                     endcase
+                end
+                if( active[2] ) begin
+                    cmp2_cs <= 1;
                 end
             end else begin
                 tbank_cs <= active[2] && !RnW; // PCB 171-5521/5704
@@ -472,16 +474,16 @@ always @(posedge clk) begin
     if(rst) begin
         cpu_din <= 0;
     end else begin
-        cpu_din <= (ram_cs | vram_cs ) ? ram_data  : (
-                    rom_cs             ? rom_dec   : (
-                    char_cs            ? char_dout : (
-                    pal_cs             ? pal_dout  : (
-                    objram_cs          ? obj_dout  : (
+        cpu_din <= (ram_cs | vram_cs ) ? ram_data  :
+                    rom_cs             ? rom_dec   :
+                    char_cs            ? char_dout :
+                    pal_cs             ? pal_dout  :
+                    objram_cs          ? obj_dout  :
                     io_cs              ? { 8'hff, cab_dout } :
                     mul_cs             ? mul_dout  :
                     cmp_cs             ? cmp_dout  :
                     cmp2_cs            ? cmp2_dout :
-                                       cpu_din ))))); // no change for unmapped memory
+                                         cpu_din; // no change for unmapped memory
     end
 end
 

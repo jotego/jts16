@@ -16,6 +16,8 @@
     Version: 1.0
     Date: 31-10-2021 */
 
+// SEGA 315-5248 model based on MAME driver
+
 module jts16b_mul(
     input              rst,
     input              clk,

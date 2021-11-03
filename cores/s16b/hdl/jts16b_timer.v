@@ -37,7 +37,7 @@ reg  [15:0] mmr[0:7];
 reg  [ 3:0] sel4;
 reg  [ 7:0] snd_data;
 reg         written;
-wire write = !dsn && !rnw;
+wire write = cs && !dsn && !rnw;
 
 wire signed [15:0] value, bound1, bound2, min, max;
 
