@@ -115,6 +115,8 @@ splits = [
     { machine="riotcity", region="sprites", offset=0x100000 },
     { machine="goldnaxe", region="sprites", offset=0x100000 },
     { setname="eswat",    region="sprites", offset=0x100000 },
+    { setname="eswatj",   region="sprites", offset=0x100000 },
+    { setname="eswatu",   region="sprites", offset=0x100000 },
     { machine="mvp",      region="sprites", offset=0x100000 },
     { machine="ultracin", region="sprites", offset=0x100000 },
     # Do not split

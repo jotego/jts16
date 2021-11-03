@@ -108,6 +108,12 @@ sdib
 defense
 altbeast
 aliensyn
+goldnaxe
+goldnaxe1
+goldnaxeu
+eswat
+eswatj
+eswatu
 # to fix input system:
 mjleague
 suprleag
@@ -120,6 +126,7 @@ hwchampj
 # sjryuko
 # sjryuko1
 ##############################################################
+# Bad graphics
 # Not working
 # cencourt
 # passshtj
@@ -134,12 +141,6 @@ hwchampj
 # bayroutej
 # cottonj
 # cottonja
-# eswatj
-# eswatu
-# eswat
-# goldnaxe
-# goldnaxe1
-# goldnaxeu
 # quartet
 # quartet2
 # quartet2a
