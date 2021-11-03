@@ -162,6 +162,7 @@ always @(*) begin
 end
 
 `ifdef SIMULATION
+`ifdef DISPLAY_IO
 reg displayed=0, displ_wr=0, io_csl;
 always @(posedge clk) begin
     io_csl <= io_cs;
@@ -177,6 +178,7 @@ always @(posedge clk) begin
         displayed<=0;
     end
 end
+`endif
 `endif
 
 always @(posedge clk, posedge rst) begin
