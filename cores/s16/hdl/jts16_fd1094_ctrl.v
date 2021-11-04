@@ -37,12 +37,14 @@ reg [ 7:0] state;
 reg        irqmode;
 reg [ 1:0] stchange;
 reg [15:0] stcode;
+reg        dtacknl;
 
 assign st = irqmode ? gkey0 : state;
 
 reg  [6:1] next_addr;
-wire       addr_good = addr[6:1] == next_addr;
-wire       stadv = addr_good && !dtackn && sup_prog && stchange!=0;
+//wire       addr_good = addr[6:1] == next_addr;
+//wire       stadv = addr_good && !dtackn && sup_prog && stchange!=0;
+wire       stadv = !op_n && dtacknl && !dtackn && sup_prog && stchange!=0;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -50,7 +52,9 @@ always @(posedge clk, posedge rst) begin
         stchange  <= 0;
         next_addr <= 0;
         irqmode   <= 0;
+        dtacknl   <= 0;
     end else begin
+        dtacknl <= dtackn;
         // if( !op_n && !dtackn && sup_prog )
         //     next_addr <= addr[2:1];
         if( !op_n && !dtackn && sup_prog && stchange==0 ) begin
