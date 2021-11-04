@@ -37,7 +37,7 @@ reg [ 7:0] state;
 reg        irqmode;
 reg [ 1:0] stchange;
 reg [15:0] stcode;
-reg        dtacknl;
+reg        dtacknl, other;
 wire       stadv;
 
 assign st    = irqmode ? gkey0 : state;
@@ -51,14 +51,6 @@ always @(posedge clk, posedge rst) begin
         dtacknl   <= 0;
     end else begin
         dtacknl <= dtackn;
-        if( !op_n && !dtackn && sup_prog /*&& stchange==0*/ ) begin
-            // cmpi.l #data
-            if( dec[15:8]==8'h0c && dec[7:6]==2'b10 ) begin
-                stchange <= 2'b01;
-            end
-            // rte
-            if( dec == 16'h4e73 ) irqmode <= 0;
-        end
         if( !inta_n ) irqmode <= 1;
         if( stadv ) begin
             stchange <= stchange << 1;
@@ -76,6 +68,18 @@ always @(posedge clk, posedge rst) begin
                     3: irqmode <= 0; // leave interruption
                 endcase
             end
+        end
+        if( !op_n && !dtackn && sup_prog /*&& stchange==0*/ ) begin
+            // cmpi.l #data
+            if( dec[15:8]==8'h0c && dec[7:6]==2'b10 ) begin
+                stchange <= 2'b01;
+            end
+            // rte
+            if( dec == 16'h4e73 ) irqmode <= 0;
+        end
+        if( !dtackn && dtacknl ) begin
+            other <= op_n;
+            if(other && op_n) stchange<=0;
         end
     end
 end
