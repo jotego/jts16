@@ -91,21 +91,11 @@ goldnaxe2
 ############ Halloween beta
 cotton
 cottonu
-############ Working and not released
-dunkshot
-dunkshota
-dunkshoto
-mvp
-mvpj
-exctleag
+############ beta 5th Nov 21
 fantzn2x
 fantzn2xp
 riotcity
 toryumon
-sonicbom
-sdi
-sdib
-defense
 altbeast
 aliensyn
 goldnaxe
@@ -114,6 +104,17 @@ goldnaxeu
 eswat
 eswatj
 eswatu
+############ Working and not released
+# dunkshot
+# dunkshota
+# dunkshoto
+# mvp
+# mvpj
+# exctleag
+# sonicbom
+# sdi
+# sdib
+# defense
 # to fix input system:
 mjleague
 suprleag
