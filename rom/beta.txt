@@ -104,6 +104,8 @@ goldnaxeu
 eswat
 eswatj
 eswatu
+cottonj
+cottonja
 ############ Working and not released
 # dunkshot
 # dunkshota
@@ -116,19 +118,19 @@ eswatu
 # sdib
 # defense
 # to fix input system:
-mjleague
-suprleag
-hwchamp
-hwchampa
-hwchampj
+# mjleague
+# suprleag
+# hwchamp
+# hwchampa
+# hwchampj
 # unsuited controls
-# aceattac
 # aceattaca
 # sjryuko
 # sjryuko1
 ##############################################################
 # Bad graphics
 # Not working
+# aceattac
 # cencourt
 # passshtj
 # passshta
@@ -140,8 +142,6 @@ hwchampj
 # bayroute
 # bayroute1
 # bayroutej
-# cottonj
-# cottonja
 # quartet
 # quartet2
 # quartet2a
