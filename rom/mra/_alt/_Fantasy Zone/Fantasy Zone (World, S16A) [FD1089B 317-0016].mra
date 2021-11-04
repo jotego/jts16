@@ -124,7 +124,7 @@
         <!-- DSW2 -->
         <dip name="Cabinet" bits="8" ids="Upright,Cocktail"/>
         <dip name="Demo Sounds" bits="9" ids="On,Off"/>
-        <dip name="Lives" bits="10,11" ids="240 ,4,2,3"/>
+        <dip name="Lives" bits="10,11" ids="240,4,2,3"/>
         <dip name="Extra Ship Cost" bits="12,13" ids="20k,15000,10k,5000"/>
         <dip name="Difficulty" bits="14,15" ids="Hardest,Hard,Easy,Normal"/>
     </switches>

@@ -129,7 +129,7 @@
         <!-- DSW2 -->
         <dip name="Continues" bits="8" ids="Unlimited,Only before level 5"/>
         <dip name="Demo Sounds" bits="9" ids="On,Off"/>
-        <dip name="Lives" bits="10,11" ids="240 ,5,4,3"/>
+        <dip name="Lives" bits="10,11" ids="240,5,4,3"/>
         <dip name="Extend" bits="12,13" ids="None,40k,10k,20k"/>
         <dip name="Time Adjust" bits="14,15" ids="40,50,70,60"/>
     </switches>

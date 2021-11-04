@@ -53,6 +53,9 @@
     <rom index="1">
         <part>00</part>
     </rom>
-    <switches base="16" default="ff"/>
+    <switches base="16" default="ff,ff">
+        <!-- DSW1 -->
+        <!-- DSW2 -->
+    </switches>
     <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>
