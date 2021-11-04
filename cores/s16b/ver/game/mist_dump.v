@@ -54,8 +54,8 @@ module mist_dump(
                 $shm_probe(UUT.u_game.u_sound,"A");
                 $shm_probe(UUT.u_game.u_sound.u_pcm,"AS");
             `else
-                $shm_probe(UUT.u_game.u_video,"AS");
-                $shm_probe(UUT.u_game.u_video.u_colmix,"A");
+                //$shm_probe(UUT.u_game.u_video,"AS");
+                //$shm_probe(UUT.u_game.u_video.u_colmix,"A");
             `endif
             //$shm_probe(UUT.u_game,"A");
             `ifdef DUMPMAIN
@@ -63,11 +63,11 @@ module mist_dump(
                 //$shm_probe(UUT.u_game.u_main.u_cabinet,"A");
                 //$shm_probe(UUT.u_game.u_main.u_mapper,"A");
                 //$shm_probe(UUT.u_game.u_main.u_cpu,"A");
-                $shm_probe(UUT.u_game.u_main.u_timer1,"A");
-                $shm_probe(UUT.u_game.u_main.u_timer2,"A");
-                $shm_probe(UUT.u_game.u_main.u_mul,"A");
+                //$shm_probe(UUT.u_game.u_main.u_timer1,"A");
+                //$shm_probe(UUT.u_game.u_main.u_timer2,"A");
+                //$shm_probe(UUT.u_game.u_main.u_mul,"A");
                 `ifdef FD1094
-                    //$shm_probe(UUT.u_game.u_main.u_dec,"AS");
+                    $shm_probe(UUT.u_game.u_main.u_dec,"AS");
                 `endif
             `endif
             `ifdef LOADROM
