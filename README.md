@@ -1,5 +1,10 @@
 # JTS16
 
+You can show your appreciation through
+* Patreon: https://patreon.com/topapate
+* Paypal: https://paypal.me/topapate
+* Github: https://github.com/sponsors/jotego
+
 SEGA System 16 compatible verilog core for FPGA by Jose Tejada (jotego). This core was developed with the help of a SEGA System 16B model 171-5358 board lent by FunkyCochise.
 
 # Supported Games
