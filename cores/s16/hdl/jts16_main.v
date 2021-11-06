@@ -349,24 +349,19 @@ end
 
 
 `ifndef NOMCU
-    reg mcu_rst;
     reg [1:0] mcu_aux;
     wire      mcu_br;
+    wire      mcu_rst;
 
     assign mcu_bus = ~BGACKn;
     assign mcu_br  = mcu_en & mcu_acc;
+    assign mcu_rst = mcu_aux[1];
 
     always @(negedge clk24, posedge rst24) begin
         if( rst24 ) begin
-            mcu_rst <= 1;
-            mcu_aux <= 0;
+            mcu_aux <= 3;
         end else begin
-            if(mcu_aux==2'b11)
-                mcu_rst <= 0;
-            if( !mcu_cen ) begin
-                mcu_rst <= 1;
-                mcu_aux <= 0;
-            end
+            mcu_aux <= mcu_en ? mcu_aux<<1 : 3;
         end
     end
 
@@ -396,7 +391,8 @@ end
         .DIVCEN     ( 1             ),
         .SYNC_XDATA ( 1             ),
         .SYNC_P1    ( 1             ),
-        .SYNC_INT   ( 1             )
+        .SYNC_INT   ( 1             ),
+        .ROMBIN     ( "mcu.bin"     )
     ) u_mcu(
         .rst        ( mcu_rst       ),
         .clk        ( clk24         ),

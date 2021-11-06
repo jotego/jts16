@@ -72,6 +72,7 @@ rm -f sdram_bank?.*
 jtsim_sdram $HEXDUMP -header 32 \
     -banks $BA1_START $BA2_START $BA3_START \
     -stop $MCU_START \
+    -dumpbin mcu.bin      $MCU_START     0x2000 \
     -dumpbin 317-5021.key $MAINKEY_START 0x2000 \
     -dumpbin fd1089.bin   $FD1089_START  0x0100 \
     $SDRAM_SNAP || exit $?
