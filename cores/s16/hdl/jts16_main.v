@@ -22,6 +22,9 @@ module jts16_main(
     input              clk_rom,
     output             cpu_cen,
     output             cpu_cenb,
+    input              rst24,       // MCU
+    input              clk24,
+    input              mcu_cen,
     input  [7:0]       game_id,
     // Video
     input              vint,
@@ -87,6 +90,10 @@ module jts16_main(
     input    [7:0]     dipsw_a,
     input    [7:0]     dipsw_b,
 
+    // MCU enable and ROM programming
+    input              mcu_en,
+    input              mcu_prog_we,
+
     // NVRAM - debug
     input       [15:0] ioctl_addr,
     output      [ 7:0] ioctl_din,
@@ -106,9 +113,9 @@ localparam [7:0] GAME_HWCHAMP =`GAME_HWCHAMP ,
                  GAME_BULLET  =`GAME_BULLET  ,
                  GAME_PASSSHT3=`GAME_PASSSHT3,
                  GAME_SDI     =`GAME_SDI     ;
-wire [23:1] A;
+wire [23:1] A, cpu_A;
 wire        BERRn;
-wire [ 2:0] FC;
+wire [ 2:0] FC, IPLn;
 
 `ifdef SIMULATION
 wire [23:0] A_full = {A,1'b0};
@@ -117,24 +124,43 @@ wire [23:0] A_full = {A,1'b0};
 wire        BRn, BGACKn, BGn;
 wire        ASn, UDSn, LDSn, BUSn;
 wire        ok_dly;
-wire [15:0] rom_dec;
+wire [15:0] rom_dec, cpu_dout_raw;
+reg  [15:0] cpu_din;
+wire        cpu_LDSn, cpu_UDSn, cpu_RnW, DTACKn;
 
 reg         io_cs, wdog_cs,
             pre_ram_cs, pre_vram_cs;
 
+reg         cpu_rst;
+
 wire [15:0] fave, fworst;
+
+// MCU
+wire        mcu_bus;    // the MCU controls the bus
+wire [ 7:0] mcu_ctrl;
+wire        mcu_wr, mcu_acc;
+wire [15:0] mcu_addr;
+reg [23:16] mcu_top;
+
+assign A   = mcu_bus ? { mcu_top, 2'b0, mcu_addr[13:1] } : cpu_addr;
+assign RnW = mcu_bus ? mcu_wr : cpu_RnW;
+assign UDSn= mcu_bus ? mcu_addr[0] : cpu_UDSn;
+assign LDSn= mcu_bus ?~mcu_addr[0] : cpu_LDSn;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
-assign BUSn  = ASn | (LDSn & UDSn);
+assign BUSn  = (BGACKn & ASn) | (LDSn & UDSn);
+assign IPLn  = { irqn, 2'b11 } & ({3{mcu_en}} | mcu_ctrl[2:0]);
 
 // No peripheral bus access for now
-assign BRn   = 1;
-assign BGACKn= 1;
 assign cpu_addr = A[12:1];
 assign rom_addr = {1'b0, A[17:1]}; // only 256kB on System 16A
 assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
                               && !io_cs  && !wdog_cs && pre_vram_cs && pre_ram_cs);
+
+always @(negedge clk) begin
+    cpu_rst <= rst | (~mcu_ctrl[6] & mcu_en);
+end
 
 // System 16A memory map
 always @(posedge clk, posedge rst) begin
@@ -150,7 +176,7 @@ always @(posedge clk, posedge rst) begin
             pre_ram_cs  <= 0;
             //rom_addr  <= 0;
     end else begin
-        if( !ASn && BGACKn ) begin
+        if( BGACKn ? !ASn : mcu_acc ) begin
             rom_cs    <= A[23:22]==0 && !A[18];         // 00-03
             char_cs   <= A[22] && A[18:16]==1;    // 41
             //if( !A[23] ) rom_addr <= A[17:1];
@@ -319,6 +345,101 @@ always @(posedge clk, posedge rst) begin
     end
 end
 
+
+`ifndef NOMCU
+    reg mcu_rst;
+    reg [1:0] mcu_aux;
+    wire      mcu_br;
+
+    assign mcu_bus = ~BGACKn;
+    assign mcu_bq  = mcu_en & mcu_acc;
+
+    always @(negedge clk24, posedge rst24) begin
+        if( rst24 ) begin
+            mcu_rst <= 1;
+            mcu_aux <= 0;
+        end else begin
+            if(mcu_aux==2'b11)
+                mcu_rst <= 0;
+            if( !mcu_cen ) begin
+                mcu_rst <= 1;
+                mcu_aux <= 0;
+            end
+        end
+    end
+
+    // This is done by IC69 (a 82S153 programmable logic chip)
+    always @(*) begin
+        case(mcu_ctrl[1:0])
+            0: mcu_top = mcu_addr[15] ? 8'hc4 : 8'hc7;  // main RAM or IO
+            1: mcu_top = 8'h41; // text RAM
+            3: mcu_top = 8'h41;
+            default: mcu_top = 0;
+        endcase
+    end
+
+    jtframe_68kdma u_dma(
+        .rst        ( rst       ),
+        .clk        ( clk       ),
+        .cen        ( cpu_cen   ),
+        .cpu_BRn    ( BRn       ),
+        .cpu_BGACKn ( BGACKn    ),
+        .cpu_BGn    ( BGn       ),
+        .cpu_ASn    ( ASn       ),
+        .cpu_DTACKn ( DTACKn    ),
+        .dev_br     ( mcu_br    )      // high to signal a bus request from a device
+    );
+
+    jtframe_8751mcu #(
+        .DIVCEN     ( 1             ),
+        .SYNC_XDATA ( 1             ),
+        .SYNC_P1    ( 1             ),
+        .SYNC_INT   ( 1             )
+    ) u_mcu(
+        .rst        ( mcu_rst       ),
+        .clk        ( clk24         ),
+        .cen        ( mcu_cen       ),
+
+        .int0n      ( ~vint         ),
+        .int1n      ( 1'b1          ),
+
+        .p0_i       ( mcu_din       ),
+        .p1_i       ( 8'hff         ),
+        .p2_i       ( 8'hff         ),
+        .p3_i       ( 8'hff         ),
+
+        .p0_o       (               ),
+        .p1_o       ( mcu_ctrl      ),
+        .p2_o       (               ),
+        .p3_o       (               ),
+
+        // external memory
+        .x_din      ( cpu_din       ),
+        .x_dout     ( mcu_dout      ),
+        .x_addr     ( mcu_addr      ),
+        .x_wr       ( mcu_wr        ),
+        .x_acc      ( mcu_acc       ),
+
+        // ROM programming
+        .clk_rom    ( clk           ),
+        .prog_addr  (prog_addr[11:0]),
+        .prom_din   ( prog_data     ),
+        .prom_we    ( mcu_prog_we   )
+    );
+`else
+    assign BRn   = 1;
+    assign BGACKn= 1;
+    assign mcu_wr   = 0;
+    assign mcu_acc  = 0;
+    assign mcu_dout = 0;
+    assign mcu_ctrl = 8'ff;
+    assign mcu_addr = 0;
+    assign mcu_bus  = 0;
+    initial begin
+        mcu_top = 0;
+    end
+`endif
+
 jt8255 u_8255(
     .rst       ( rst        ),
     .clk       ( clk        ),
@@ -342,8 +463,6 @@ jt8255 u_8255(
 );
 
 // Data bus input
-reg  [15:0] cpu_din;
-
 always @(posedge clk) begin
     if(rst) begin
         cpu_din <= 16'hffff;
@@ -377,7 +496,6 @@ always @(posedge clk, posedge rst) begin
     end
 end
 
-wire DTACKn;
 wire bus_cs    = pal_cs | char_cs | pre_vram_cs | pre_ram_cs | rom_cs | objram_cs | io_cs;
 wire bus_busy  = |{ rom_cs & ~ok_dly, (pre_ram_cs | pre_vram_cs) & ~ram_ok };
 wire bus_legit = 0;
@@ -450,19 +568,19 @@ jtframe_68kdtack #(.W(8)) u_dtack(
 
 jtframe_m68k u_cpu(
     .clk        ( clk         ),
-    .rst        ( rst         ),
+    .rst        ( cpu_rst     ),
     .cpu_cen    ( cpu_cen     ),
     .cpu_cenb   ( cpu_cenb    ),
 
     // Buses
-    .eab        ( A           ),
+    .eab        ( cpu_A       ),
     .iEdb       ( cpu_din     ),
-    .oEdb       ( cpu_dout    ),
+    .oEdb       ( cpu_dout_raw),
 
 
-    .eRWn       ( RnW         ),
-    .LDSn       ( LDSn        ),
-    .UDSn       ( UDSn        ),
+    .eRWn       ( cpu_RnW     ),
+    .LDSn       ( cpu_LDSn    ),
+    .UDSn       ( cpu_UDSn    ),
     .ASn        ( ASn         ),
     .VPAn       ( inta_n      ),
     .FC         ( FC          ),
@@ -475,7 +593,7 @@ jtframe_m68k u_cpu(
     .BGn        ( BGn         ),
 
     .DTACKn     ( DTACKn      ),
-    .IPLn       ( { irqn, 2'b11 } ) // VBLANK
+    .IPLn       ( IPLn        ) // VBLANK
 );
 
 // Debug

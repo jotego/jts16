@@ -267,6 +267,12 @@ jts16_cen u_cen(
     .key_we      ( key_we     ),
     .fd1089_we   ( fd1089_we  ),
     .dec_type    ( dec_type   ),
+    // MCU
+    .rst24       ( rst24      ),
+    .clk24       ( clk24      ),  // To ease MCU compilation
+    .mcu_cen     ( mcu_cen    ),
+    .mcu_en      ( mcu_en     ),
+    .mcu_prog_we ( mcu_we     ),
 `ifndef S16B
     // Sound communication
     .snd_latch   ( snd_latch  ),
@@ -274,12 +280,7 @@ jts16_cen u_cen(
     .snd_ack     ( snd_ack    ),
     .sound_en    ( sound_en   ),
 `else
-    .rst24       ( rst24      ),
-    .clk24       ( clk24      ),  // To ease MCU compilation
-    .mcu_cen     ( mcu_cen    ),
-    .mcu_en      ( mcu_en     ),
     .pxl_cen     ( pxl_cen    ),
-    .mcu_prog_we ( mcu_we     ),
     .sndmap_rd   ( sndmap_rd  ),
     .sndmap_wr   ( sndmap_wr  ),
     .sndmap_din  ( sndmap_din ),

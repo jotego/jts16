@@ -128,7 +128,6 @@ cottonja
 # sjryuko
 # sjryuko1
 ##############################################################
-# Bad graphics
 # Not working
 # aceattac
 # cencourt

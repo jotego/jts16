@@ -39,6 +39,9 @@ set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) ../../m
 # 68000
 set_global_assignment -name QIP_FILE [file join $::quartus(qip_path) ../../modules/jtframe/hdl/cpu/jtframe_m68k.qip   ]
 
+# MCU
+set_global_assignment -name QIP_FILE     [file join $::quartus(qip_path) ../../../modules/jtframe/hdl/cpu/8051/mc8051.qip      ]
+
 # Clocking
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) ../../modules/jtframe/hdl/clocking/jtframe_frac_cen.v   ]
 

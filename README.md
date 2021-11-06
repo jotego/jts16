@@ -109,15 +109,14 @@ Ace Attack     |    1     |            | inputs via CXD1095
 
 Because of the hardware variety, there are different cores targeted for each of them
 
-System                   |  Core
--------------------------|---------
-16A no protection/FD1089 | jts16
-16A with MCU support     | jts16a1
-16A FD1094 protection    | jts16a2
-16B FD1094               | jts16b
-16B FD1089               | jts16b1
-16B 8123 encryption      | jts16b2
-16B i8751                | jts16b3
+System                         |  Core
+-------------------------------|---------
+16A no protection/FD1089/i8751 | jts16
+16A FD1094 protection          | jts16a2
+16B FD1094                     | jts16b
+16B FD1089                     | jts16b1
+16B 8123 encryption            | jts16b2
+16B i8751                      | jts16b3
 
 # PCB Check List
 
