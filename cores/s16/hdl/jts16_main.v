@@ -132,20 +132,22 @@ reg         io_cs, wdog_cs,
             pre_ram_cs, pre_vram_cs;
 
 reg         cpu_rst;
+reg         irqn; // VBLANK
 
 wire [15:0] fave, fworst;
 
 // MCU
 wire        mcu_bus;    // the MCU controls the bus
-wire [ 7:0] mcu_ctrl;
+wire [ 7:0] mcu_ctrl, mcu_dout;
 wire        mcu_wr, mcu_acc;
 wire [15:0] mcu_addr;
 reg [23:16] mcu_top;
 
-assign A   = mcu_bus ? { mcu_top, 2'b0, mcu_addr[13:1] } : cpu_addr;
+assign A   = mcu_bus ? { mcu_top, 2'b0, mcu_addr[13:1] } : cpu_A;
 assign RnW = mcu_bus ? mcu_wr : cpu_RnW;
 assign UDSn= mcu_bus ? mcu_addr[0] : cpu_UDSn;
 assign LDSn= mcu_bus ?~mcu_addr[0] : cpu_LDSn;
+assign cpu_dout = mcu_bus ? mcu_dout : cpu_dout_raw;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -352,7 +354,7 @@ end
     wire      mcu_br;
 
     assign mcu_bus = ~BGACKn;
-    assign mcu_bq  = mcu_en & mcu_acc;
+    assign mcu_br  = mcu_en & mcu_acc;
 
     always @(negedge clk24, posedge rst24) begin
         if( rst24 ) begin
@@ -403,7 +405,7 @@ end
         .int0n      ( ~vint         ),
         .int1n      ( 1'b1          ),
 
-        .p0_i       ( mcu_din       ),
+        .p0_i       ( cpu_din       ),
         .p1_i       ( 8'hff         ),
         .p2_i       ( 8'hff         ),
         .p3_i       ( 8'hff         ),
@@ -478,7 +480,6 @@ always @(posedge clk) begin
 end
 
 // interrupt generation
-reg        irqn; // VBLANK
 wire       inta_n = ~&{ FC[2], FC[1], FC[0], ~ASn }; // interrupt ack.
 reg        last_vint;
 
