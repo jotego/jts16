@@ -122,7 +122,7 @@ wire [23:0] A_full = {A,1'b0};
 `endif
 
 wire        BRn, BGACKn, BGn;
-wire        ASn, UDSn, LDSn, BUSn;
+wire        ASn, UDSn, LDSn, BUSn, VPAn;
 wire        ok_dly;
 wire [15:0] rom_dec, cpu_dout_raw;
 reg  [15:0] cpu_din;
@@ -152,7 +152,7 @@ assign cpu_dout = mcu_bus ? mcu_dout : cpu_dout_raw;
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
 assign BUSn  = (BGACKn & ASn) | (LDSn & UDSn);
-assign IPLn  = { irqn, 2'b11 } & ({3{mcu_en}} | mcu_ctrl[2:0]);
+assign IPLn  = { irqn, 2'b11 } & ({3{~mcu_en}} | mcu_ctrl[2:0]);
 
 // No peripheral bus access for now
 assign cpu_addr = A[12:1];
@@ -238,7 +238,6 @@ endfunction
 
 
 assign { flip, sound_en, video_en } = { ppib_dout[7], ~ppib_dout[5], ppib_dout[4] };
-//assign flip = ppib_dout[7];
 //assign sound_en = 1;
 //assign video_en = 1;
 
@@ -422,7 +421,7 @@ end
         .cen        ( mcu_cen       ),
 
         .int0n      ( ~vint         ),
-        .int1n      ( 1'b1          ),
+        .int1n      ( ppib_dout[6]  ),
 
         .p0_i       ( mcu_din       ),
         .p1_i       ( 8'hff         ),
@@ -453,7 +452,7 @@ end
     assign mcu_wr   = 0;
     assign mcu_acc  = 0;
     assign mcu_dout = 0;
-    assign mcu_ctrl = 8'ff;
+    assign mcu_ctrl = 8'hff;
     assign mcu_addr = 0;
     assign mcu_bus  = 0;
     initial begin
@@ -501,6 +500,8 @@ end
 // interrupt generation
 wire       inta_n = ~&{ FC[2], FC[1], FC[0], ~ASn }; // interrupt ack.
 reg        last_vint;
+
+assign VPAn = inta_n | (mcu_en & mcu_ctrl[7]);
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -602,7 +603,7 @@ jtframe_m68k u_cpu(
     .LDSn       ( cpu_LDSn    ),
     .UDSn       ( cpu_UDSn    ),
     .ASn        ( ASn         ),
-    .VPAn       ( inta_n      ),
+    .VPAn       ( VPAn        ),
     .FC         ( FC          ),
 
     .BERRn      ( BERRn       ),
