@@ -144,9 +144,9 @@ wire [15:0] mcu_addr;
 reg [23:16] mcu_top;
 
 assign A   = mcu_bus ? { mcu_top, 2'b0, mcu_addr[13:1] } : cpu_A;
-assign RnW = mcu_bus ? mcu_wr : cpu_RnW;
-assign UDSn= mcu_bus ? mcu_addr[0] : cpu_UDSn;
-assign LDSn= mcu_bus ?~mcu_addr[0] : cpu_LDSn;
+assign RnW = mcu_bus ? ~mcu_wr : cpu_RnW;
+assign UDSn= mcu_bus ?~mcu_addr[0] : cpu_UDSn;
+assign LDSn= mcu_bus ? mcu_addr[0] : cpu_LDSn;
 assign cpu_dout = mcu_bus ? mcu_dout : cpu_dout_raw;
 
 assign UDSWn = RnW | UDSn;
@@ -350,6 +350,7 @@ end
 
 `ifndef NOMCU
     reg [1:0] mcu_aux;
+    reg [7:0] mcu_din;
     wire      mcu_br;
     wire      mcu_rst;
 
@@ -365,12 +366,20 @@ end
         end
     end
 
+    always @(negedge clk24, posedge rst24 ) begin
+        if( rst24 ) begin
+            mcu_din <= 0;
+        end else if(mcu_acc && !mcu_wr) begin
+            mcu_din <= LDSn ? cpu_din[15:8] : cpu_din[7:0];
+        end
+    end
+
     // This is done by IC69 (a 82S153 programmable logic chip)
     always @(*) begin
         case(mcu_ctrl[1:0])
             0: mcu_top = mcu_addr[15] ? 8'hc4 : 8'hc7;  // main RAM or IO
             1: mcu_top = 8'h41; // text RAM
-            3: mcu_top = 8'h41;
+            3: mcu_top = 8'h84; // Palette
             default: mcu_top = 0;
         endcase
     end
@@ -401,7 +410,7 @@ end
         .int0n      ( ~vint         ),
         .int1n      ( 1'b1          ),
 
-        .p0_i       ( cpu_din       ),
+        .p0_i       ( mcu_din       ),
         .p1_i       ( 8'hff         ),
         .p2_i       ( 8'hff         ),
         .p3_i       ( 8'hff         ),
