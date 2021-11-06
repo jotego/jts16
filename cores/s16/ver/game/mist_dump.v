@@ -49,7 +49,7 @@ module mist_dump(
             $display("NC Verilog: will dump selected signals");
             $shm_probe(frame_cnt);
             //$shm_probe(UUT.u_game,"A");
-            $shm_probe(UUT.u_game.u_sdram,"A");
+            //$shm_probe(UUT.u_game.u_sdram,"A");
             `ifndef NOSOUND
                 $shm_probe(UUT.u_game.u_sound,"A");
                 $shm_probe(UUT.u_game.u_sound.u_pcm,"AS");
@@ -57,7 +57,7 @@ module mist_dump(
             `ifndef NOMAIN
             //$shm_probe(UUT.u_game,"AS");
             $shm_probe(UUT.u_game.u_main,"A");
-            $shm_probe(UUT.u_game.u_main.u_cpu,"A");
+            //$shm_probe(UUT.u_game.u_main.u_cpu,"A");
             $shm_probe(UUT.u_game.u_main.u_mcu,"A");
             `endif
             `ifdef FD1094
@@ -65,7 +65,8 @@ module mist_dump(
             `endif
             //$shm_probe(UUT.u_game.u_sound,"A");
             //$shm_probe(UUT.u_game.u_main.u_dtack,"A");
-            //$shm_probe(UUT.u_game.u_video,"AS");
+            //$shm_probe(UUT.u_game.u_video,"A");
+            //$shm_probe(UUT.u_game.u_video.u_colmix,"A");
             `ifdef LOADROM
                 $shm_probe(UUT.u_game.u_sdram.u_dwnld,"A");
             `endif

@@ -366,13 +366,27 @@ end
         end
     end
 
-    always @(negedge clk24, posedge rst24 ) begin
+    always @(posedge clk24, posedge rst24 ) begin
         if( rst24 ) begin
             mcu_din <= 0;
-        end else if(mcu_acc && !mcu_wr) begin
+        end else if(mcu_bus && !mcu_wr) begin
             mcu_din <= LDSn ? cpu_din[15:8] : cpu_din[7:0];
         end
     end
+
+    `ifdef SIMULATION
+    reg mcu_busl;
+    always @(posedge clk) mcu_busl <= mcu_bus;
+
+    always @(posedge mcu_busl ) begin
+        $display("MCU access to %X (%s) %s ",A_full,mcu_wr ? "WR" : "RD",
+            ram_cs ? "RAM" : io_cs ? "IO" : pal_cs ? "PAL" : "N/A");
+        if(mcu_top==0) begin
+            $display("Unexpected MCU access");
+            $finish;
+        end
+    end
+    `endif
 
     // This is done by IC69 (a 82S153 programmable logic chip)
     always @(*) begin
