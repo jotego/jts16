@@ -143,7 +143,7 @@ wire        mcu_wr, mcu_acc;
 wire [15:0] mcu_addr;
 reg [23:16] mcu_top;
 
-assign A   = mcu_bus ? { mcu_top, 2'b0, mcu_addr[13:1] } : cpu_A;
+assign A   = mcu_bus ? { mcu_top, 1'b0, mcu_addr[14:1] } : cpu_A;
 assign RnW = mcu_bus ? ~mcu_wr : cpu_RnW;
 assign UDSn= mcu_bus ?~mcu_addr[0] : cpu_UDSn;
 assign LDSn= mcu_bus ? mcu_addr[0] : cpu_LDSn;
@@ -163,6 +163,8 @@ assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
 always @(negedge clk) begin
     cpu_rst <= rst | (~mcu_ctrl[6] & mcu_en);
 end
+
+localparam [23:16] NOTHING_CS = 8'h0f; // this will not select rom_cs or anything else
 
 // System 16A memory map
 always @(posedge clk, posedge rst) begin
@@ -374,7 +376,9 @@ end
     end
 
     `ifdef SIMULATION
-    reg mcu_busl;
+    reg  mcu_busl;
+    wire nothing_cs = mcu_top == NOTHING_CS;
+
     always @(posedge clk) mcu_busl <= mcu_bus;
 
     always @(posedge mcu_busl ) begin
@@ -388,12 +392,13 @@ end
     `endif
 
     // This is done by IC69 (a 82S153 programmable logic chip)
-    always @(*) begin
-        case(mcu_ctrl[4:3])
-            0: mcu_top = mcu_addr[15] ? 8'hc4 : 8'hc7;  // main RAM or IO
-            1: mcu_top = 8'h41; // text RAM
-            3: mcu_top = 8'h84; // Palette
-            default: mcu_top = 0;
+    always @(posedge clk) begin
+        case(mcu_ctrl[5:3])
+            0: mcu_top <= mcu_addr[15:14]==2'b01 ? 8'hc7 : // work RAM
+                          mcu_addr[15:14]==2'b10 ? 8'hc4 : NOTHING_CS; // IO space
+            1: mcu_top <= mcu_addr[15:12]==8     ? 8'h41 : NOTHING_CS; // text RAM
+            3: mcu_top <= 8'h84; // Palette
+            default: mcu_top <= NOTHING_CS;
         endcase
     end
 
