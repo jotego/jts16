@@ -389,7 +389,7 @@ end
 
     // This is done by IC69 (a 82S153 programmable logic chip)
     always @(*) begin
-        case(mcu_ctrl[1:0])
+        case(mcu_ctrl[4:3])
             0: mcu_top = mcu_addr[15] ? 8'hc4 : 8'hc7;  // main RAM or IO
             1: mcu_top = 8'h41; // text RAM
             3: mcu_top = 8'h84; // Palette
