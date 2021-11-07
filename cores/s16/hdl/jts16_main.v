@@ -383,11 +383,13 @@ end
 
     always @(posedge mcu_busl ) begin
         $display("MCU access to %X (%s) %s ",A_full,mcu_wr ? "WR" : "RD",
-            ram_cs ? "RAM" : io_cs ? "IO" : pal_cs ? "PAL" : "N/A");
-        if(mcu_top==0) begin
-            $display("Unexpected MCU access");
-            $finish;
-        end
+            ram_cs ? "RAM" : io_cs ? "IO" : pal_cs ? "PAL" :
+            char_cs ? "Char" : rom_cs ? "ROM" :
+            nothing_cs ? "Nothing" : "N/A");
+        //if(mcu_top==0) begin
+        //    $display("Unexpected MCU access");
+        //    $finish;
+        //end
     end
     `endif
 
@@ -398,6 +400,9 @@ end
                           mcu_addr[15:14]==2'b10 ? 8'hc4 : NOTHING_CS; // IO space
             1: mcu_top <= mcu_addr[15:12]==8     ? 8'h41 : NOTHING_CS; // text RAM
             3: mcu_top <= 8'h84; // Palette
+            5: mcu_top <= 8'h0; // ROM 0
+            6: mcu_top <= 8'h1; // ROM 1
+            7: mcu_top <= 8'h2; // ROM 2
             default: mcu_top <= NOTHING_CS;
         endcase
     end
