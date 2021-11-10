@@ -146,16 +146,17 @@ dev = [
 # init_generic_5358        = 0x10
 # init_generic_5358_small  = 0x11
 # init_sdi_5358_small      = 0x12
-# init_dunkshot_5358_small = 0x14
-# init_aliensyn7_5358_small= 0x16
 # init_passshtj_5358       = 0x13
+# init_dunkshot_5358_small = 0x14
 # init_exctleag_5358       = 0x15
+# init_aliensyn7_5358_small= 0x16
 # init_aceattac_5358       = 0x17
 # init_cencourt_5358       = 0x18
-# init_sjryuko_5358_small  = 0x1b
-# init_timescan_5358_small = 0x1c
 # init_defense_5358_small  = 0x19
 # init_shinobi3_5358       = 0x1a
+# init_sjryuko_5358_small  = 0x1b
+# init_timescan_5358_small = 0x1c
+#      afighter_analog     = 0x1d
 # init_generic_5797        = 0x20
 # init_generic_5704        = 0x40
 # init_tturf_5704          = 0x41
@@ -168,8 +169,8 @@ machines = [
     { setname="aliensyn7",  byte=0x18, value=0x11 }, # same as the others
     { setname="aliensyn3",  byte=0x18, value=0x11 },
     { setname="aliensynj",  byte=0x18, value=0x11 },
-    { setname="afightere",  byte=0x18, value=0x11 },
-    { setname="afighterf",  byte=0x18, value=0x11 },
+    { setname="afightere",  byte=0x18, value=0x1d },
+    { setname="afighterf",  byte=0x18, value=0x1d },
     { setname="afighterg",  byte=0x18, value=0x11 },
     { setname="afighterh",  byte=0x18, value=0x11 },
     { setname="altbeast",   byte=0x18, value=0 },

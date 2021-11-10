@@ -106,17 +106,18 @@ eswatj
 eswatu
 cottonj
 cottonja
+############ beta 12th Nov 21
+dunkshot
+dunkshota
+dunkshoto
+mvp
+mvpj
+exctleag
+sonicbom
+sdi
+sdib
+defense
 ############ Working and not released
-# dunkshot
-# dunkshota
-# dunkshoto
-# mvp
-# mvpj
-# exctleag
-# sonicbom
-# sdi
-# sdib
-# defense
 # to fix input system:
 # mjleague
 # suprleag

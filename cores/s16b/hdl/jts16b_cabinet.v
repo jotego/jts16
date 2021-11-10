@@ -65,10 +65,11 @@ localparam [7:0] GAME_HWCHAMP =`GAME_HWCHAMP ,
                  GAME_EXCTLEAG=`GAME_EXCTLEAG,
                  GAME_BULLET  =`GAME_BULLET  ,
                  GAME_PASSSHT3=`GAME_PASSSHT3,
+                 GAME_AFIGHTAN=`GAME_AFIGHTAN,  // Action Fighter, analogue controls
                  GAME_SDI     =`GAME_SDI     ;
 
 reg  game_passsht, game_dunkshot, game_bullet,
-     game_exctleag, game_sdi;
+     game_exctleag, game_sdi, game_afightan;
 
 // Game ID registers
 always @(posedge clk) begin
@@ -76,6 +77,7 @@ always @(posedge clk) begin
     game_dunkshot <= game_id==GAME_DUNKSHOT;
     game_bullet   <= game_id==GAME_BULLET;
     game_exctleag <= game_id==GAME_EXCTLEAG;
+    game_afightan <= game_id==GAME_AFIGHTAN;
     game_sdi      <= game_id==GAME_SDI || game_id==GAME_SDIBL;
 end
 
@@ -217,15 +219,37 @@ always @(posedge clk, posedge rst) begin
                         cab_dout <= game_bullet ? sort1_bullet :
                             game_dunkshot ? sort_dunkshot :
                             game_exctleag ? { trackball[1][11:9], trackball[1][11:10], trackball[1][11:9] } :
+                            game_afightan ? { joystick1[7:4], 1'b1,
+                                joyana1[15] ? 3'd0 : joyana1[14:12] } : // accelerator
                             sort1;
                     end
                     2: begin
                         if( game_bullet ) cab_dout <= sort3_bullet;
                         if( game_sdi    ) cab_dout <= { sort2[7:4], sort1[7:4] };
+                        if( game_afightan )
+                            cab_dout <=
+                                joyana1[7] ? 8'h01 :
+                                joyana1[6] ? 8'h80 :
+                                joyana1[5] ? 8'h40 :
+                                joyana1[4] ? 8'h20 :
+                                joyana1[3] ? 8'h10 :
+                                joyana1[2] ? 8'h08 :
+                                joyana1[1] ? 8'h04 :
+                                joyana1[0] ? 8'h02 : 8'h01;
                     end
                     3: begin  // P2
                         cab_dout <= game_bullet ? sort2_bullet :
                             game_exctleag ? { trackball[3][11:9], trackball[3][11:10], trackball[3][11:9] } :
+                            game_afightan ? (   // left side of driving wheel
+                                !joyana1[7] ? 8'h80 :
+                                !joyana1[6] ? 8'h40 :
+                                !joyana1[5] ? 8'h20 :
+                                !joyana1[4] ? 8'h10 :
+                                !joyana1[3] ? 8'h08 :
+                                !joyana1[2] ? 8'h04 :
+                                !joyana1[1] ? 8'h02 :
+                                !joyana1[0] ? 8'h01 : 8'h80
+                            ) :
                             sort2;
                     end
                 endcase
