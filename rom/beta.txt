@@ -107,16 +107,18 @@ eswatu
 cottonj
 cottonja
 ############ beta 12th Nov 21
+sonicbom
 dunkshot
 dunkshota
 dunkshoto
 mvp
 mvpj
 exctleag
-sonicbom
 sdi
 sdib
 defense
+afightere
+afighterf
 ############ Working and not released
 # to fix input system:
 # mjleague
@@ -124,6 +126,8 @@ defense
 # hwchamp
 # hwchampa
 # hwchampj
+# afighterb
+# afighterd
 # unsuited controls
 # aceattaca
 # sjryuko
@@ -135,10 +139,6 @@ defense
 # passshtj
 # passshta
 # sdia
-# afighterb
-# afighterd
-# afightere
-# afighterf
 # bayroute
 # bayroute1
 # bayroutej

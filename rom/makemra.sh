@@ -53,5 +53,4 @@ s16a_mra timescan  "Time Scanner" "L. Flipper/Ball Start,R. Flipper/Lane Shift,-
 # System 16B
 mame2mra -def $CORES/s16b/hdl/jts16b.def -toml s16b.toml -outdir mra $*
 
-# echo "Enter MiSTer's root password"
-# scp -r mra/* root@MiSTer.home:/media/fat/_S16
+sshpass -p 1 scp -r mra/* root@MiSTer.home:/media/fat/_S16

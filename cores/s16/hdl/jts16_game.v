@@ -409,8 +409,10 @@ jts16_cen u_cen(
 `else
     assign snd_cs=0;
     assign snd_addr=0;
+    `ifdef SIMULATION
     assign pcm_cs=0;
     assign pcm_addr=0;
+    `endif
 `endif
 
 `ifdef S16B

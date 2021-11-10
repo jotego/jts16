@@ -36,6 +36,8 @@ core=4 # max number of buttons supported by the core
 names = [
     { machine="aceattac", names="none" },
     { machine="afighter", names="Shot,Special Weapon" },
+    { setname="afightere", names="Shot,Weapon A, Weapong B, Weapon C" },
+    { setname="afighterf", names="Shot,Weapon A, Weapong B, Weapon C" },
     { machine="aliensyn", names="Shot" },
     { machine="altbeast", names="Punch,Kick,Jump" },
     { machine="aurail",   names="Rapid Shot,Kite/Turn,Shield" },
