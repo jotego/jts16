@@ -87,7 +87,7 @@ module `GAMETOP(
     input   [31:0]  dipsw,
     input           service,
     input           dip_pause,
-    input           dip_flip,
+    inout           dip_flip,
     input           dip_test,
     input   [ 1:0]  dip_fxlevel, // Not a DIP on the original PCB
     // Sound output

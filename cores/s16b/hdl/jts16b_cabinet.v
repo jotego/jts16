@@ -220,14 +220,18 @@ always @(posedge clk, posedge rst) begin
                             game_dunkshot ? sort_dunkshot :
                             game_exctleag ? { trackball[1][11:9], trackball[1][11:10], trackball[1][11:9] } :
                             game_afightan ? { joystick1[7:4], 1'b1,
-                                !joyana1[15] ? 3'd7 : joyana1[14:12] } : // accelerator
+                                // The accelerator is hot-one encoded in 3 bits
+                                joyana1[15:14]==2'b10 ? ~3'b100 :
+                                joyana1[15:14]==2'b11 ? ~3'b010:
+                                joyana1[15:14]==2'b00 ? ~3'b001: ~3'b0,
+                                } : // accelerator
                             sort1;
                     end
                     2: begin
                         if( game_bullet ) cab_dout <= sort3_bullet;
                         if( game_sdi    ) cab_dout <= { sort2[7:4], sort1[7:4] };
                         if( game_afightan )
-                            cab_dout <=  // right side of driving wheel
+                            cab_dout <=  // right side of driving wheel (hot one)
                               ~(joyana1[7] ? 8'h00 :
                                 joyana1[6] ? 8'h80 :
                                 joyana1[5] ? 8'h40 :
@@ -240,7 +244,7 @@ always @(posedge clk, posedge rst) begin
                     3: begin  // P2
                         cab_dout <= game_bullet ? sort2_bullet :
                             game_exctleag ? { trackball[3][11:9], trackball[3][11:10], trackball[3][11:9] } :
-                            game_afightan ? ~(   // left side of driving wheel
+                            game_afightan ? ~(   // left side of driving wheel (hot one)
                                 !joyana1[7] ? 8'h00 :
                                 !joyana1[6] ? 8'h80 :
                                 !joyana1[5] ? 8'h40 :

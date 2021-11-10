@@ -30,10 +30,8 @@
     <players>1</players>
     <joystick/>
     <rotation>horizontal</rotation>
-    <region>Japan</region>
-    <category>Puzzle</category>
-    <catver>Tabletop/Mahjong * Mature *</catver>
-    <platform>Sega S16A</platform>
+    <region>World</region>
+    <platform>SEGA S16A</platform>
     <mraauthor>jotego,atrac17</mraauthor>
     <rom index="0" zip="sjryuko1.zip|sjryuko.zip" md5="None">
         <part>
@@ -130,5 +128,5 @@
         <dip name="CPU Level" bits="8,9" ids="Strong,Medium Strong,Medium Weak,Weak"/>
         <dip name="Demo Sounds" bits="10" ids="On,Off"/>
     </switches>
-    <buttons names="None,-,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="1"/>
+    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>

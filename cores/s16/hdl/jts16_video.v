@@ -40,7 +40,7 @@ module jts16_video(
 
     // Other configuration
     input              flip,
-    input              ext_flip,
+    inout              ext_flip,
     input              colscr_en,
     input              rowscr_en,
 
@@ -129,6 +129,7 @@ wire [15:0] scr1_pages,      scr2_pages,
     wire flipx = ext_flip ^ flip;
 `else
     wire flipx = flip;
+    assign ext_flip = ~flip;
 `endif
 // Frame rate and horizontal frequency as the original
 // "The sprite X position defines the starting location of the sprite. The

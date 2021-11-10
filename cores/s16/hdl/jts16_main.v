@@ -112,6 +112,7 @@ localparam [7:0] GAME_HWCHAMP =`GAME_HWCHAMP ,
                  GAME_EXCTLEAG=`GAME_EXCTLEAG,
                  GAME_BULLET  =`GAME_BULLET  ,
                  GAME_PASSSHT3=`GAME_PASSSHT3,
+                 GAME_AFIGHTAN=`GAME_AFIGHTAN,  // Action Fighter, analogue controls
                  GAME_SDI     =`GAME_SDI     ;
 wire [23:1] A, cpu_A;
 wire        BERRn;
@@ -248,12 +249,13 @@ always @(*) begin
     sort2 = sort_joy( joystick2 );
 end
 
-reg  game_sdi, game_passsht;
+reg  game_sdi, game_passsht, game_afightan;
 wire [11:0] trackball0, trackball1, trackball2, trackball3;
 
 always @(posedge clk) begin
     game_sdi      <= game_id==GAME_SDI || game_id==GAME_SDIBL;
     game_passsht  <= game_id==GAME_PASSSHT2 || game_id==GAME_PASSSHT3 || game_id==GAME_PASSSHT;
+    game_afightan <= game_id==GAME_AFIGHTAN;
 end
 
 jts16_trackball u_trackball(
@@ -326,20 +328,45 @@ always @(posedge clk, posedge rst) begin
                                     0: cab_dout <= pass_joy( joystick4 );
                                 endcase
                             end
+                            GAME_AFIGHTAN: cab_dout <=
+                                { joystick1[7:4], 1'b1,
+                                // The accelerator is hot-one encoded in 3 bits
+                                joyana1[15:14]==2'b10 ? ~3'b100 :
+                                joyana1[15:14]==2'b11 ? ~3'b010:
+                                joyana1[15:14]==2'b00 ? ~3'b001: ~3'b0 }; // accelerator
                             default: cab_dout <= sort1;
                         endcase
                     end
                     2: begin
-                        if( game_id == GAME_SDI ) begin
+                        if( game_sdi ) begin
                             cab_dout <= { sort2[7:4], sort1[7:4] };
+                        end
+                        if( game_afightan ) begin
+                            cab_dout <=  // right side of driving wheel (hot one)
+                              ~(joyana1[7] ? 8'h00 :
+                                joyana1[6] ? 8'h80 :
+                                joyana1[5] ? 8'h40 :
+                                joyana1[4] ? 8'h20 :
+                                joyana1[3] ? 8'h10 :
+                                joyana1[2] ? 8'h08 :
+                                joyana1[1] ? 8'h04 :
+                                joyana1[0] ? 8'h02 : 8'h01);
                         end
                     end
                     3: begin
-                        if( game_id == GAME_SDI ) begin
-                            cab_dout <= sdi_joy( {trackball3[10:3],trackball2[10:3]} );
-                        end else begin
-                            cab_dout <= sort2;
-                        end
+                        cab_dout <=
+                            game_sdi ? sdi_joy( {trackball3[10:3],trackball2[10:3]} ) :
+                            game_afightan ? ~(   // left side of driving wheel (hot one)
+                                !joyana1[7] ? 8'h00 :
+                                !joyana1[6] ? 8'h80 :
+                                !joyana1[5] ? 8'h40 :
+                                !joyana1[4] ? 8'h20 :
+                                !joyana1[3] ? 8'h10 :
+                                !joyana1[2] ? 8'h08 :
+                                !joyana1[1] ? 8'h04 :
+                                !joyana1[0] ? 8'h02 : 8'h01
+                            ):
+                            sort2;
                     end
                 endcase
             2'd2:
