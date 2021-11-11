@@ -119,6 +119,8 @@ sdib
 defense
 afightere
 afighterf
+afighterb
+afighterd
 ############ Working and not released
 # to fix input system:
 # mjleague
@@ -126,8 +128,6 @@ afighterf
 # hwchamp
 # hwchampa
 # hwchampj
-# afighterb
-# afighterd
 # unsuited controls
 # aceattaca
 # sjryuko
