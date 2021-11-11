@@ -386,7 +386,7 @@ end
     assign mcu_br  = mcu_en & mcu_acc;
     assign mcu_rst = mcu_aux[1];
 
-    always @(negedge clk24, posedge rst24) begin
+    always @(posedge clk24, posedge rst24) begin
         if( rst24 ) begin
             mcu_aux <= 3;
         end else begin

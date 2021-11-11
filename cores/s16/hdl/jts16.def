@@ -14,10 +14,6 @@ JTFRAME_4PLAYERS
 JTFRAME_ANALOG
 JTFRAME_ANALOG_DUAL
 
-# For now disable the MCU on S16A
-# as it doesn't work correctly
-NOMCU
-
 # For audio section
 JTFRAME_CLK24
 
