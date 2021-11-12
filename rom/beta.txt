@@ -114,9 +114,6 @@ dunkshoto
 mvp
 mvpj
 exctleag
-sdi
-sdib
-defense
 afightere
 afighterf
 afighterb
@@ -134,6 +131,9 @@ afighterd
 # sjryuko1
 ##############################################################
 # Not working
+# sdi
+# sdib
+# defense
 # aceattac
 # cencourt
 # passshtj
