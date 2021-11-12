@@ -291,7 +291,6 @@ jts16_cen u_cen(
     .prog_addr   ( prog_addr[12:0] ),
     .prog_data   ( prog_data[ 7:0] ),
     // DIP switches
-    .dip_pause   ( dip_pause  ),
     .dip_test    ( dip_test   ),
     .dipsw_a     ( dipsw_a    ),
     .dipsw_b     ( dipsw_b    ),
@@ -450,6 +449,7 @@ jts16_video u_video(
     .pal_cs     ( pal_cs    ),
     .objram_cs  ( objram_cs ),
     .vint       ( vint      ),
+    .dip_pause  ( dip_pause ),
 
     .cpu_dout   ( main_dout ),
     .dsn        ( dsn       ),

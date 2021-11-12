@@ -26,6 +26,7 @@ module jts16_video(
     input [7:0]        game_id,
 
     // CPU interface
+    input              dip_pause,
     input              char_cs,
     input              pal_cs,
     input              objram_cs,
@@ -137,7 +138,7 @@ wire [15:0] scr1_pages,      scr2_pages,
 
 parameter [8:0] HB_END = 9'h0bf;
 
-assign vint = vdump==223;
+assign vint = vdump==223 && dip_pause;
 assign scr_bad = scr1_bad | scr2_bad;
 
 `ifndef S16B

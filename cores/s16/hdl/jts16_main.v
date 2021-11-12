@@ -85,7 +85,6 @@ module jts16_main(
     input      [ 7:0] prog_data,
 
     // DIP switches
-    input              dip_pause,
     input              dip_test,
     input    [7:0]     dipsw_a,
     input    [7:0]     dipsw_b,
@@ -645,7 +644,7 @@ jtframe_m68k u_cpu(
 
     .BERRn      ( BERRn       ),
     // Bus arbitrion
-    .HALTn      ( dip_pause   ),
+    .HALTn      ( 1'b1        ),
     .BRn        ( BRn         ),
     .BGACKn     ( BGACKn      ),
     .BGn        ( BGn         ),
