@@ -114,5 +114,5 @@
         <dip name="Credit Power" bits="9,10" ids="9000,2000,500,1000"/>
         <dip name="Difficulty" bits="11,12" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Shot,Jump,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="Jump,Shot,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>

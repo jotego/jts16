@@ -109,5 +109,5 @@
         <dip name="Bonus Life" bits="12,13" ids="None,40k,10k,20k"/>
         <dip name="Time Adjust" bits="14,15" ids="40,50,70,60"/>
     </switches>
-    <buttons names="Shot,Weapon A, Weapong B, Weapon C,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="4"/>
+    <buttons names="Jump/Swim,Shot,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>

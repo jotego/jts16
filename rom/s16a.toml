@@ -70,10 +70,25 @@ descriptions = [ "16B", "Taito" ]
 [buttons]
 core=4 # max number of buttons supported by the core
 names = [
+    { machine="afighter",  names="Shot,Special Weapon" },
     { setname="afighterb", names="Shot,Weapon A, Weapong B, Weapon C" },
-    { setname="afighterd", names="Shot,Weapon A, Weapong B, Weapon C" }
+    { setname="afighterd", names="Shot,Weapon A, Weapong B, Weapon C" },
+    { machine="shinobi",   names="Shuriken,Jump,Magic" },
+    { machine="alexkidd",  names="Jump/Swim,Shot" },
+    { machine="sdi",       names="Shot" },
+    { machine="quartet",   names="Jump,Shot" },
+    { machine="fantzone",  names="Shot,Bomb" },
+    { machine="tetris",    names="Rotate,Rotate,Rotate" },
+    { machine="aliensyn",  names="Shot" },
+    { machine="bodyslam",  names="Punch/Throw,Kick/Pin,Get Up/Tag" },
+    { machine="timescan",  names="L. Flipper/Ball Start,R. Flipper/Lane Shift" },
+    { machine="passsht",   names="Flat,Slice,Lob,Top Spin" },
+    { machine="wb3",       names="Shot,Jump" }
+# aceattac  Ace Attacker" "None" "ff,ff" "Sports" "Sports/Volleyball" "Sega S16A"
+# sjryuko   Sukeban" "None" "ff,ff" "Puzzle" "Tabletop/Mahjong * Mature *" "Sega S16A"
+# mjleague  Major League" "Open Stance,Curb/Shoot/Fork,Close Stance,Pinch Hitter/Sliding/Runner" "ff,ff" "Sports" "Sports/Baseball" "Sega S16A"
 ]
-#    { machine="afighter", names="Shot,Special Weapon" }
+
 [rbf]
 name="jts16"
 dev = [

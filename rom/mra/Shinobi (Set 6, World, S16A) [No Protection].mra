@@ -106,5 +106,5 @@
         <dip name="Enemy&apos;s Bullet Speed" bits="14" ids="Fast,Slow"/>
         <dip name="Language" bits="15" ids="English,Japanese"/>
     </switches>
-    <buttons names="Shot,Weapon A, Weapong B, Weapon C,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="4"/>
+    <buttons names="Shuriken,Jump,Magic,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>
