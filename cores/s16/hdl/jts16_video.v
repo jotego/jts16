@@ -74,8 +74,6 @@ module jts16_video(
     // Video signal
     output             HS,
     output             VS,
-    output             HB,
-    output             VB,
     output             LVBL,
     output             LHBL_dly,
     output             LVBL_dly,
@@ -97,9 +95,9 @@ module jts16_video(
 
 localparam MODEL = `ifdef S16B 1; `else 0; `endif
 
-localparam [9:0] SCR2_DLY= MODEL ? 9 : 17;
+localparam [9:0] SCR2_DLY= MODEL ? 10'd9 : 10'd17;
 localparam [9:0] SCR1_DLY= SCR2_DLY;
-localparam [9:0] OBJ_DLY = MODEL ? 22 : 17;
+localparam [9:0] OBJ_DLY = MODEL ? 10'd22 : 10'd17;
 
 wire [ 8:0] hdump, vrender1;
 wire        LHBL;

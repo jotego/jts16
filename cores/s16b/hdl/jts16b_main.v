@@ -137,6 +137,7 @@ wire        ok_dly;
 wire [15:0] rom_dec, cpu_dout_raw, mul_dout, cmp_dout, cmp2_dout;
 
 reg         io_cs, mul_cs, cmp_cs, cmp2_cs, wdog_cs, tbank_cs;
+wire        cpu_RnW;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -153,7 +154,6 @@ wire [15:0] mcu_addr;
 wire [ 1:0] mcu_intn;
 wire [ 2:0] cpu_ipln;
 wire        DTACKn, cpu_vpan;
-wire        op_n; // low for CPU OP requests
 
 reg  [ 1:0] act_enc;
 
@@ -377,7 +377,6 @@ always @(posedge clk, posedge rst) begin
     end
 end
 
-assign op_n        = FC[1:0]!=2'b10;
 assign colscr_en   = 0;
 assign rowscr_en   = 0;
 
@@ -511,6 +510,8 @@ end
     );
 `endif
 `ifdef FD1089
+    wire op_n = FC[1:0]!=2'b10; // low for CPU OP requests
+
     jts16_fd1089 u_dec(
         .rst        ( rst       ),
         .clk        ( clk       ),

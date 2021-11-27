@@ -101,9 +101,6 @@ aliensyn
 goldnaxe
 goldnaxe1
 goldnaxeu
-eswat
-eswatj
-eswatu
 cottonj
 cottonja
 ############ beta 12th Nov 21
@@ -131,6 +128,9 @@ afighterd
 # sjryuko1
 ##############################################################
 # Not working
+# eswat
+# eswatj
+# eswatu
 # sdi
 # sdib
 # defense

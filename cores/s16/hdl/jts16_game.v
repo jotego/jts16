@@ -120,7 +120,7 @@ wire    cpu_cen, cpu_cenb,
         cen_pcm, cen_pcmb;
 
 // video signals
-wire        HB, VB, LVBL;
+wire        LVBL;
 wire [ 8:0] vrender;
 wire        hstart, vint;
 wire        colscr_en, rowscr_en;
@@ -491,8 +491,6 @@ jts16_video u_video(
     // Video signal
     .HS         ( HS        ),
     .VS         ( VS        ),
-    .HB         ( HB        ),
-    .VB         ( VB        ),
     .LVBL       ( LVBL      ),
     .LHBL_dly   ( LHBL_dly  ),
     .LVBL_dly   ( LVBL_dly  ),
