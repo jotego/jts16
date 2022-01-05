@@ -1,0 +1,11 @@
+game:
+  - from: s16b
+    get:
+      - game.yaml
+  - from: s16b2
+    get:
+      - jtmc8123.v
+jtframe:
+  - from: cpu
+    get:
+      - 8051/mc8051.qip

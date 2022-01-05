@@ -1,0 +1,7 @@
+game:
+  - from: s16
+    get:
+      - game.yaml
+      - jts16_fd1094.v
+      - jts16_fd1094_dec.v
+      - jts16_fd1094_ctrl.v

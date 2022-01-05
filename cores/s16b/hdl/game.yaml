@@ -1,0 +1,19 @@
+game:
+  - from: s16a2
+  - get:
+    - game.yaml
+  - from: s16b
+    get:
+      - jts16b_main.v
+      - jts16b_cabinet.v
+      - jts16b_mapper.v
+      - jts16b_snd.v
+      - jts16b_mul.v
+      - jts16b_timer.v
+jtframe:
+  - from: cpu
+    get:
+      - 8051/mc8051.qip
+modules:
+  jt:
+    - name: jt7759

@@ -1,0 +1,4 @@
+game:
+  - from: s16b
+    get:
+      - game.yaml
