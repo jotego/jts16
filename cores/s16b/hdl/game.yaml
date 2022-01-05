@@ -1,6 +1,6 @@
 game:
   - from: s16a2
-  - get:
+    get:
     - game.yaml
   - from: s16b
     get:

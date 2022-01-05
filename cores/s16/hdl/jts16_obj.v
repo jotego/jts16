@@ -157,7 +157,7 @@ end
 jtframe_obj_buffer #(
     .DW     (   12    ),
     .AW     (    9    ),
-    .ALPHA  ( 4'h0    )
+    .ALPHA  (    0    )
 ) u_line(
     .clk        ( clk       ),
     .LHBL       ( LHBL      ),
