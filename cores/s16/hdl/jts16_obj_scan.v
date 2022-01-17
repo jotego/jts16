@@ -119,7 +119,7 @@ always @(posedge clk, posedge rst) begin
                 cur_obj  <= 0;
                 stop     <= 0;
                 dr_start <= 0;
-                if( !hstart || vrf>223 ) begin // holds it still
+                if( !hstart || vrender>223 ) begin // holds it still
                     st  <= 0;
                     idx <= 0;
                 end
