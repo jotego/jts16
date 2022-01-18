@@ -72,7 +72,6 @@ reg               zoom_sel, hflipb; // H flip bit for S16B
 wire       [15:0] next_offset;
 wire       [15:0] next_zoom;
 wire       [ 5:0] vzoom;
-wire       [ 8:0] vrf = flip ? 9'd223-vrender : vrender;
 
 assign tbl_addr    = { cur_obj, idx };
 assign next_offset = (first ? offset : tbl_dout) + ( pitch << (MODEL[0] & zoom[15]) );
@@ -80,9 +79,8 @@ assign vzoom       = { 1'b0, first ? 5'd0 : tbl_dout[14:10] } + { 1'b0, tbl_dout
 assign next_zoom   = { vzoom, tbl_dout[9:0] };
 assign tbl_din     = zoom_sel ? {1'b0, zoom[14:0] } : offset;
 
-wire [7:0] top    = tbl_dout[ 7:0],
-           bottom = tbl_dout[15:8];
-wire       inzone = vrf[7:0]>=top && bottom>vrf[7:0];
+reg  [7:0] top, bottom;
+wire       inzone = vrender[7:0]>=top && bottom>vrender[7:0];
 wire       badobj = top >= bottom;
 
 `ifndef S16B
@@ -92,6 +90,17 @@ wire       badobj = top >= bottom;
 `ifdef SIMULATION
     wire hide = MODEL && st==3 && tbl_dout[14];
 `endif
+
+always @* begin
+    if (!flip) begin
+        top    = tbl_dout[ 7:0];
+        bottom = tbl_dout[15:8];
+    end else begin
+        bottom = 9'd223-tbl_dout[ 7:0];
+        top    = 9'd223-tbl_dout[15:8];
+    end
+end
+
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -141,7 +150,7 @@ always @(posedge clk, posedge rst) begin
                         if( &cur_obj )
                             st <= 0; // we're done
                     end else begin // draw this one
-                        first <= top == vrf[7:0]; // first line
+                        first <= top == vrender[7:0]; // first line
                     end
                 end
             end
