@@ -194,7 +194,7 @@ always @(posedge clk) begin
         mcu_snd_intn <= 1;
     end else begin
         if(sndmap_wr) begin
-            snd_latch <= sndmap_dout;
+            snd_latch <= sndmap_din;
             mcu_snd_intn <= 0;
         end
         if( mcu_rd_s && mcu_addr_s[1:0]==2'b11 ) begin
