@@ -97,10 +97,10 @@ jtframe_frac_cen #(.WC(14)) u_sndcen( // 5 MHz
     );
 `else
     // 640 kHz
-    jtframe_frac_cen  u_pcmcen(
+    jtframe_frac_cen  #(.WC(16)) u_pcmcen(
         .clk    ( clk24     ),
-        .n      ( 10'd2     ),
-        .m      ( 10'd75    ),
+        .n      ( 16'd873   ),
+        .m      ( 16'd34340 ),
         .cen    ( { nc2, pcm_cen  } ),
         .cenb   ( { ncb2, pcm_cenb} )
     );
