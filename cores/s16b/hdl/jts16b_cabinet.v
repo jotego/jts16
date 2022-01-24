@@ -222,8 +222,8 @@ always @(posedge clk, posedge rst) begin
                             game_afightan ? { joystick1[7:4], 1'b1,
                                 // The accelerator is hot-one encoded in 3 bits
                                 joyana1[15:14]==2'b10 ? ~3'b100 :
-                                joyana1[15:14]==2'b11 ? ~3'b010:
-                                joyana1[15:14]==2'b00 ? ~3'b001: ~3'b0,
+                                joyana1[15:14]==2'b11 ? ~3'b010 :
+                                joyana1[15:14]==2'b00 ? ~3'b001 : ~3'b0
                                 } : // accelerator
                             sort1;
                     end

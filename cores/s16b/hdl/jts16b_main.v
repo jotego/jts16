@@ -411,7 +411,8 @@ jts16b_timer u_timer1(
     .rnw    ( RnW       ),
     .cs     ( cmp_cs    ),
     .din    ( cpu_dout  ),
-    .dout   ( cmp_dout  )
+    .dout   ( cmp_dout  ),
+    .snd_irq(           )
 );
 
 jts16b_timer u_timer2(
@@ -422,7 +423,8 @@ jts16b_timer u_timer2(
     .rnw    ( RnW       ),
     .cs     ( cmp2_cs   ),
     .din    ( cpu_dout  ),
-    .dout   ( cmp2_dout )
+    .dout   ( cmp2_dout ),
+    .snd_irq(           )
 );
 
 jts16b_cabinet u_cabinet(

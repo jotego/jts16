@@ -161,6 +161,7 @@ jtframe_obj_buffer #(
 ) u_line(
     .clk        ( clk       ),
     .LHBL       ( LHBL      ),
+    .flip       ( 1'b0      ),
     // New data writes
     .wr_data    ( buf_data  ),
     .wr_addr    ( buf_addr  ),

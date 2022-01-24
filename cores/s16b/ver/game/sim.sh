@@ -63,7 +63,6 @@ if [ ! -z "$SCENE" ]; then
     # VRAM snap goes to 20'0000h (bytes) = 10'0000h (words)
     SDRAM_SNAP="-snap scr.bin 0 0x200000"
 else
-    export YM2151=1
     export Z80=1
     rm -f char_*.bin pal_*.bin obj_*.bin scr.bin
 fi

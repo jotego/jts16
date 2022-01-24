@@ -149,7 +149,7 @@ wire [1:0] size0, dtack0,
            size5, dtack5,
            size6, dtack6,
            size7, dtack7;
-
+/* verilator lint_off WIDTH */
 assign {dtack0, size0 } = mmr[ {1'b1, 3'd0, 1'b0 }];
 assign {dtack1, size1 } = mmr[ {1'b1, 3'd1, 1'b0 }];
 assign {dtack2, size2 } = mmr[ {1'b1, 3'd2, 1'b0 }];
@@ -158,6 +158,7 @@ assign {dtack4, size4 } = mmr[ {1'b1, 3'd4, 1'b0 }];
 assign {dtack5, size5 } = mmr[ {1'b1, 3'd5, 1'b0 }];
 assign {dtack6, size6 } = mmr[ {1'b1, 3'd6, 1'b0 }];
 assign {dtack7, size7 } = mmr[ {1'b1, 3'd7, 1'b0 }];
+/* verilator lint_on WIDTH */
 `endif
 
 assign addr_out  = bus_mcu ? (rdmem ? rdaddr : wraddr ) : addr;
@@ -340,7 +341,7 @@ always @(posedge clk) begin
         bus_busy_l <= bus_busy;
         if( bus_wait!=0 && bus_avail ) bus_wait <= bus_wait-1'd1;
         if( (bus_rq && !cpu_bgackn) || cpu_rst || !cpu_haltn ) bus_mcu <= 1;
-        if( !bus_wait && !bus_busy ) begin
+        if( bus_wait==0 && !bus_busy ) begin
             mcu_asn <= 1;
             if( !bus_busy_l ) begin
                 wrmem   <= 0;

@@ -96,8 +96,8 @@ always @* begin
         top    = tbl_dout[ 7:0];
         bottom = tbl_dout[15:8];
     end else begin
-        bottom = 9'd223-tbl_dout[ 7:0];
-        top    = 9'd223-tbl_dout[15:8];
+        bottom = 8'd223-tbl_dout[ 7:0];
+        top    = 8'd223-tbl_dout[15:8];
     end
 end
 
