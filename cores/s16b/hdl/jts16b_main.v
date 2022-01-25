@@ -483,7 +483,9 @@ always @(posedge clk) begin
                     mul_cs             ? mul_dout  :
                     cmp_cs             ? cmp_dout  :
                     cmp2_cs            ? cmp2_dout :
-                                         cpu_din; // no change for unmapped memory
+                                         cpu_dout; // mapper output
+                                         // which is either a read or
+                                         // no change for unmapped memory
     end
 end
 
