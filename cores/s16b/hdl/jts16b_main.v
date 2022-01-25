@@ -193,6 +193,8 @@ wire bus_busy  = |{ rom_cs & ~ok_dly, (ram_cs | vram_cs) & ~ram_ok };
 wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
+wire [15:0] mapper_dout;
+wire        none_cs;
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -210,6 +212,9 @@ jts16b_mapper u_mapper(
     .bus_busy   ( bus_busy       ),
     // effective bus signals
     .addr_out   ( A              ),
+
+    .none       ( none_cs        ),
+    .mapper_dout( mapper_dout    ),
 
     // Bus sharing
     .bus_dout   ( cpu_din        ),
@@ -483,9 +488,8 @@ always @(posedge clk) begin
                     mul_cs             ? mul_dout  :
                     cmp_cs             ? cmp_dout  :
                     cmp2_cs            ? cmp2_dout :
-                                         cpu_dout; // mapper output
-                                         // which is either a read or
-                                         // no change for unmapped memory
+                    none_cs            ? mapper_dout :
+                                         16'hffff;
     end
 end
 

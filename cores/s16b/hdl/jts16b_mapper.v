@@ -66,6 +66,8 @@ module jts16b_mapper(
     output            cpu_haltn,
     output            cpu_vpan,
 
+    output     [15:0] mapper_dout,
+    output reg        none,
     // Bus sharing
     output            cpu_berrn,
     output            cpu_brn,
@@ -106,7 +108,6 @@ module jts16b_mapper(
 
 reg  [ 1:0] dtack_cyc;    // number of DTACK cycles
 reg  [ 7:0] mmr[0:31];
-reg         none;
 reg         bus_rq;
 wire        mcu_cen;
 reg         cpu_sel;
@@ -162,8 +163,8 @@ assign {dtack7, size7 } = mmr[ {1'b1, 3'd7, 1'b0 }];
 `endif
 
 assign addr_out  = bus_mcu ? (rdmem ? rdaddr : wraddr ) : addr;
-assign bus_din   = bus_mcu ? wrdata : none ? {mmr[5'hd], mmr[5'he]} :
-    cpu_rnw ? bus_dout : cpu_dout;
+assign bus_din   = bus_mcu ? wrdata : cpu_dout;
+assign mapper_dout = {mmr[5'hd], mmr[5'he]};
 
 assign cpu_haltn = ~mmr[2][1];
 assign cpu_berrn = 1;
