@@ -106,7 +106,7 @@ module jts16b_mapper(
 
 reg  [ 1:0] dtack_cyc;    // number of DTACK cycles
 reg  [ 7:0] mmr[0:31];
-wire        none = active==0;
+reg         none;
 reg         bus_rq;
 wire        mcu_cen;
 reg         cpu_sel;
@@ -251,7 +251,11 @@ always @(addr_out,cpu_fc,mmr) begin
     active[5] = check(5) && active[4:0]==0;
     active[6] = check(6) && active[5:0]==0;
     active[7] = check(7) && active[6:0]==0;
-    if( &cpu_fc ) active = 0; // irq ack or end of bus cycle
+    none = active==0;
+    if( &cpu_fc ) begin
+        active = 0; // irq ack or end of bus cycle
+        none   = 0;
+    end
     case( active )
         8'h01: dtack_cyc = mmr[ {1'b1,3'd0,1'b0}][3:2];
         8'h02: dtack_cyc = mmr[ {1'b1,3'd1,1'b0}][3:2];
