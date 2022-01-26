@@ -134,6 +134,7 @@ wire [23:0] A_full = {A,1'b0};
 wire        BRn, BGACKn, BGn;
 wire        ASn, UDSn, LDSn, BUSn;
 wire        ok_dly;
+reg         sdram_ok;
 wire [15:0] rom_dec, cpu_dout_raw, mul_dout, cmp_dout, cmp2_dout;
 
 reg         io_cs, mul_cs, cmp_cs, cmp2_cs, wdog_cs, tbank_cs;
@@ -141,7 +142,7 @@ wire        cpu_RnW;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
-assign BUSn  = ASn | (LDSn & UDSn);
+assign BUSn  = LDSn & UDSn;
 
 // No peripheral bus access for now
 assign cpu_addr = A[12:1];
@@ -189,7 +190,7 @@ always @(*) begin
 end
 
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs;
-wire bus_busy  = |{ rom_cs & ~ok_dly, (ram_cs | vram_cs) & ~ram_ok };
+wire bus_busy  = |{ rom_cs, ram_cs, vram_cs } & ~sdram_ok;
 wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
@@ -338,8 +339,14 @@ always @(posedge clk, posedge rst) begin
             vram_cs   <= 0; // 32kB
             ram_cs    <= 0;
             tbank_cs  <= 0;
+            sdram_ok  <= 0;
     end else begin
-        if( !ASn /*&& BGACKn*/ ) begin
+        if( ASn )
+            sdram_ok <= 0;
+        else if( !BUSn ) begin
+            sdram_ok <= rom_cs ? ok_dly : ram_ok;
+        end
+        if( !BUSn || (!ASn && RnW) /*&& BGACKn*/ ) begin
             rom_cs    <= (pcb_5797 ? active[0] : |active[2:0]) && RnW;
             char_cs   <= active[REG_VRAM] && A[16];
 

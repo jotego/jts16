@@ -346,7 +346,7 @@ always @(posedge clk) begin
         wren_mcu_l <= wren_mcu;
         bus_busy_l <= bus_busy;
         if( bus_wait!=0 && bus_avail ) bus_wait <= bus_wait-1'd1;
-        if( (bus_rq && !cpu_bgackn) || cpu_rst || !cpu_haltn ) bus_mcu <= 1;
+        if( (bus_rq && !cpu_bgackn) /*|| cpu_rst*/ || !cpu_haltn ) bus_mcu <= 1;
         if( bus_wait==0 && !bus_busy ) begin
             mcu_asn <= 1;
             if( !bus_busy_l ) begin
