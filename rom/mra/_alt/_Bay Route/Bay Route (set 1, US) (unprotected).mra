@@ -53,15 +53,8 @@
             <part name="br.a3" crc="0d362905" map="01"/>
             <part name="br.a6" crc="ed97ad4c" map="10"/>
         </interleave>
-        <part repeat="0x20000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
-        <part name="sound.a7"/>
-        <part repeat="0x8000"> FF</part>
-        <part name="sound.a8"/>
-        <part name="sound.a9"/>
-        <part name="sound.a10"/>
-        <part name="sound.a11"/>
-        <part repeat="0x70000"> FF</part>
+        <!-- Skipping region soundcpu because there is no dump known -->
+        <part repeat="0xE0000"> FF</part>
         <!-- gfx1 - starts at 0x140000 -->
         <interleave output="32">
             <part name="opr-12462.a14" crc="a19943b5" map="0001"/>

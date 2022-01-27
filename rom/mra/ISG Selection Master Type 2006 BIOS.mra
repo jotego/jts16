@@ -58,5 +58,5 @@
         <!-- DSW1 -->
         <!-- DSW2 -->
     </switches>
-    <buttons names="button 1, button 2,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="button 1,button 2,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
 </misterromdescription>
