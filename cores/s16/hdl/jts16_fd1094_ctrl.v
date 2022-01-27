@@ -56,6 +56,7 @@ always @(posedge clk, posedge rst) begin
             stchange <= stchange << 1;
             if( stchange[0] ) begin
                 stcode <= dec;
+                if( dec[15:10]!=0 ) stchange <= 0; // not a cmpi.l #$00/01/02/03
             end
             if( stchange[1] && dec==16'hffff ) begin
                 case( stcode[9:8])
