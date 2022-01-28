@@ -115,6 +115,10 @@ afightere
 afighterf
 afighterb
 afighterd
+############ beta 27th Jan 21
+bayroute
+bayroute1
+bayroutej
 ############ Working and not released
 # to fix input system:
 # mjleague
@@ -139,9 +143,6 @@ afighterd
 # passshtj
 # passshta
 # sdia
-# bayroute
-# bayroute1
-# bayroutej
 # quartet
 # quartet2
 # quartet2a
