@@ -8,7 +8,6 @@ info=[
 
 [features]
 # ddr = true
-beta = true
 # qsound=true
 # NVRAM = 64kB+10kB+1 byte
 debug=true

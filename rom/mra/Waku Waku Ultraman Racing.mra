@@ -88,9 +88,6 @@
         </interleave>
         <!-- Total 0x400000 bytes - 4096 kBytes -->
     </rom>
-    <rom index="17" zip="jtbeta.zip" md5="None">
-        <part name="beta.bin"/>
-    </rom>
     <rom index="16" zip="debug.zip" md5="None">
         <part name="debug.bin"/>
     </rom>
