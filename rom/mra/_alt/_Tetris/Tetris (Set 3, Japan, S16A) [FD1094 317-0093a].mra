@@ -67,9 +67,6 @@
         <part name="317-0093a.key" crc="7ca4a8ee"/>
         <!-- Total 0x184000 bytes - 1552 kBytes -->
     </rom>
-    <rom index="17" zip="jtbeta.zip" md5="None">
-        <part name="beta.bin"/>
-    </rom>
     <rom index="16" zip="debug.zip" md5="None">
         <part name="debug.bin"/>
     </rom>

@@ -110,9 +110,6 @@
         </part>
         <!-- Total 0x186100 bytes - 1560 kBytes -->
     </rom>
-    <rom index="17" zip="jtbeta.zip" md5="None">
-        <part name="beta.bin"/>
-    </rom>
     <rom index="16" zip="debug.zip" md5="None">
         <part name="debug.bin"/>
     </rom>

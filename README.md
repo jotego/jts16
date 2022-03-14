@@ -9,89 +9,9 @@ SEGA System 16 compatible verilog core for FPGA by Jose Tejada (jotego). This co
 
 # Supported Games
 
-As of 2nd of April 2021, only unprotected, System 16A games that don't use the i8751 microcontroller will work. The only game that has been thoroughly tested is Shinobi.
+Most games work correctly. Some games have problems mapping their inputs because the original arcade was not a joystick with buttons but something else hard to translate. Please check the [issues section in Github](https://github.com/jotego/jts16/issues).
 
-Some of the features needed for the rest of the games are already implemented but I still haven't hooked up all the elements together.
-
-Encrypted games don't work on the J68 CPU.
-
-## Missing Features
-
-This is the remaining to-do list
-
-**System 16A**
--Column scroll
--Video/audio disable bits
-
-**System 16B**
--Row and column scroll
--Alternate scroll layers (registers and tile/char info)
--Sprite scaling
-
-## System 16A
-
-Game           |  System            | Status
----------------|--------------------|----------
-Ace Attacker   | 1094               | Won't boot
-Action Fighter | 1089A/16A          | Missing analog controls. Digital version ok
-Action Fighter | 16B                | Won't boot
-Alex Kidd      | 16A                | ok
-Alyen Syndrome | 16B                | Won't boot
-Alyen Syndrome | 16A/1089A          | Sprite issues. FX disappear
-Body Slam      | 8751               | Boots, bad graphics
-Phantasy Zone  |                    | ok
-Major League   |                    | Missing trackball (analog controls)
-Passing Shot   | 1094               | Won't boot
-Quartet / 2    | 8751               | Boots, bad graphics
-Quartet 2      | unprotected        | Sound effect missing upon selecting character
-SDI            | 1089B              | Missing analog controls.
-Shinobi        | 16A / 1094         | Ok
-Sukeban        | 1089B              | Won't boot
-Sukeban        | 16A / 1089B        | Missing graphics. Needs over 10 buttons!
-Tetris         | 1094               | Ok
-Time Scanner   | 16A                | Boots to odd screen. Some sprites not shown?
-Time Scanner   | 16B                | Won't boot
-Wonder Boy III | 16A / 1089A / 1094 | Ok
-Wonder Boy III | 16B                | Won't boot
-
-## System 16B
-
-Game                |  System            | Status
---------------------|--------------------|----------
-Ace Attacker        | FD1094 317-0059)
-Alien Syndrome      | unprotected / MC-8123B / FD1089A
-Action Fighter      | unprotected / FD1089B
-Altered Beast       | 8751
-Altered Beast       | 8751 / FD1094 / MC-8123B
-Aurail              | unprotected / FD1089A/B
-Bay Route           | unprotected
-Bullet              | FD1094
-Cotton              | FD1094
-Dynamite Dux        | FD1094 / 8751
-Dunk Shot           | FD1089A
-E-Swat              | FD1094
-Excite League       | FD1094
-Flash Point         | FD1094
-Golden Axe          | 8751 / FD1094
-Heavyweight Champ   | /FD1094
-MVP                 | FD1094
-Passing Shot        | FD1094
-Center Court        | MC-8123B
-Riot City (Japan)   |
-RyuKyu              | FD1094
-Defense             | FD1089A
-SDI                 | FD1089A
-Shinobi             | unprotected/MC-8123B/FD1094 317-0049
-Sonic Boom          | FD1094
-Sukeban Jansi Ryuko | FD1089B
-Super League        | FD1094
-Tetris              | FD1094
-Time Scanner        |
-Toryumon            |
-Tough Turf          | 8751
-Waku Waku U. R.     |
-Wonder Boy III      | 8751 / FD1094
-Wrestle War         | 8751 / FD1094
+Developer's note: encrypted games don't work if the core is compiled using the J68 CPU module for M68000.
 
 # Special Inputs
 
@@ -123,14 +43,6 @@ System                         |  Core
 These items need double checking on the PCB
 
 * How much shadow is created by sprite palette 3F? The core assumes a 25% attenuation
-* Idle bus cycles (other than the 1-cycle delay required by the M68000)
-
-# Known Problems
-
--If you win the bonus stage the game will halt
--The sprite surface may not be covering the top and bottom screen lines
--Bus timings are only approximated, and may be slower than the original timing
--The refresh rate is based on a single PCB measurement, it may be off because of device ageing
 
 # Clocks
 
@@ -202,6 +114,7 @@ Contact the author for special licensing needs. Otherwise follow the GPLv3 licen
 Apart from the directors and supported shown in the core credits screen,
 the following patrons also supported the development of JTS16:
 
+```
 Adam Leslie          Adam Small           Adam Zorzin          Adrian Labastida
 Alan Shurvinton      Alda Alesio          Alexander Lash       Alexander Upton
 Alfonso Clemente     Alvaro Paniagua      Andrea Chiavazza     Andreas Micklei
@@ -283,3 +196,4 @@ metal                natalie              nonamebear           patrick pejic
 qzxcvbn              retrod00d            rsn8887              slayer213
 taal.M               tonitellezb          troy coberly         turbochop3300
 type78               yoaarond
+```
