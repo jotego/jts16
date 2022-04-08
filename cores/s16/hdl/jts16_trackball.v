@@ -69,7 +69,7 @@ always @(posedge clk, posedge rst) begin
     end else begin
         LHBLl <= LHBL;
         if( !LHBL && LHBLl ) begin
-            hcnt<=hcnt+1;
+            hcnt<=hcnt+6'd1;
             if( hcnt==0 ) begin
                 trackball0 <= trackball0 - extjoy( mainstick1[ 7:0] ); // X
                 trackball1 <= trackball1 + extjoy( mainstick1[15:8] ); // Y

@@ -183,7 +183,8 @@ wire        mcu_wr_s, mcu_acc_s, mcu_rd_s;
 assign mcu_rd_s = mcu_acc_s & ~mcu_wr_s;
 
 jtframe_sync #(.W(2+16+8)) u_sync(
-    .clk    (   clk                                 ),
+    .clk_in ( 1'b0      ), // not needed if input is passed unlatched
+    .clk_out(   clk                                 ),
     .raw    ( { mcu_acc,   mcu_wr,   mcu_addr,   mcu_dout    }  ),
     .sync   ( { mcu_acc_s, mcu_wr_s, mcu_addr_s, mcu_dout_s  }  )
 );

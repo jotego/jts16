@@ -174,9 +174,8 @@ reg [23:0] pxl_data;
 reg [ 3:0] attr, attr0;
 
 assign pxl = { attr,
-    pxl_data[flip ? 16: 23],
-    pxl_data[flip ?  8: 15],
-    pxl_data[flip ?  0:  7] };
+    flip ? { pxl_data[16], pxl_data[ 8], pxl_data[0] } :
+           { pxl_data[23], pxl_data[15], pxl_data[7] } };
 
 function [7:0] shift;
     input [7:0] din;

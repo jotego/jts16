@@ -212,7 +212,6 @@ assign ram_cs  = pre_ram_cs,
 
 // cabinet input
 reg [ 7:0] cab_dout, sort1, sort2;
-reg [ 7:0] ppi_b;
 reg [ 1:0] port_cnt;    // used by Passing Shot
 reg        ppi_cs, last_iocs;
 
@@ -248,12 +247,12 @@ always @(*) begin
     sort2 = sort_joy( joystick2 );
 end
 
-reg  game_sdi, game_passsht, game_afightan;
+reg  game_sdi, game_afightan; // game_passsht
 wire [11:0] trackball0, trackball1, trackball2, trackball3;
 
 always @(posedge clk) begin
     game_sdi      <= game_id==GAME_SDI || game_id==GAME_SDIBL;
-    game_passsht  <= game_id==GAME_PASSSHT2 || game_id==GAME_PASSSHT3 || game_id==GAME_PASSSHT;
+    // game_passsht  <= game_id==GAME_PASSSHT2 || game_id==GAME_PASSSHT3 || game_id==GAME_PASSSHT;
     game_afightan <= game_id==GAME_AFIGHTAN;
 end
 
@@ -287,7 +286,6 @@ jts16_trackball u_trackball(
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        ppi_b     <= 8'hff;
         cab_dout  <= 8'hff;
         ppi_cs    <= 0;
         port_cnt  <= 0;
@@ -389,7 +387,7 @@ end
         if( rst24 ) begin
             mcu_aux <= 3;
         end else begin
-            mcu_aux <= mcu_en ? mcu_aux<<1 : 3;
+            mcu_aux <= mcu_en ? mcu_aux<<1 : 2'd3;
         end
     end
 

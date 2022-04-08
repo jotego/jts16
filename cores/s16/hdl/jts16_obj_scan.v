@@ -116,7 +116,7 @@ always @(posedge clk, posedge rst) begin
         dr_prio   <= 0;
         dr_pal    <= 0;
     end else begin
-        idx <= idx>=LAST_IDX ? 7 : (idx + 3'd1); // 7 is the scratch location
+        idx <= idx>=LAST_IDX ? 3'd7 : (idx + 3'd1); // 7 is the scratch location
         if( !stop ) begin
             st <= st+1'd1;
         end
@@ -231,7 +231,7 @@ always @(posedge clk, posedge rst) begin
                         stop    <= 1;
                     end
                 end else begin
-                    if(!hstart) st <= ST_DRAW;
+                    if(!hstart) st <= ST_DRAW[STW-1:0];
                 end
             end
         endcase

@@ -159,7 +159,6 @@ wire        prom_we, header;
 
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 reg         fd1089_en, fd1094_en;
-reg         dunkshot;
 
 assign xram_cs    = ram_cs | vram_cs;
 
@@ -170,11 +169,15 @@ assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM    [21: 8];
 assign mcu_we     = prom_we && prog_addr[21:12]==MCU_PROM   [21:12];
 assign mc8123_we  = prom_we && prog_addr[21:13]==MC8123_PROM[21:13];
 
-reg  game_fantzn2x;
+
+`ifdef S16B
+reg dunkshot, game_fantzn2x;
 
 always @(posedge clk) begin
+    dunkshot      <= game_id == DUNKSHOT;
     game_fantzn2x <= game_id == GAME_FANTZN2X;
 end
+`endif
 
 always @(*) begin
     xram_addr = { ram_cs, main_addr[VRAMW-2:1] }; // RAM is mapped up
@@ -220,11 +223,6 @@ end
     assign scr1_adj = { 2'd0, scr1_addr[16:0] };
     assign scr2_adj = { 2'd0, scr2_addr[16:0] };
 `endif
-
-// Special needs by game:
-always @(posedge clk) begin
-    dunkshot <= game_id==DUNKSHOT;
-end
 
 always @(*) begin
     obj_addr_g = obj_addr;
