@@ -99,6 +99,7 @@ module `GAMETOP(
     // Debug
     input   [3:0]   gfx_en,
     input   [7:0]   debug_bus,
+    output  [7:0]   debug_view,
     // status dump
     input   [ 7:0]  st_addr,
     output reg [ 7:0]  st_dout
@@ -190,6 +191,7 @@ wire [7:0] st_video, st_main;
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn = { UDSWn, LDSWn };
 assign game_led = /*snd_clip | */ ~scr_bad;
+assign debug_view = 0;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
