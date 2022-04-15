@@ -17,6 +17,7 @@ JTFRAME_ROTATE
 
 # For audio section
 JTFRAME_CLK24
+JTFRAME_PLL=jtframe_pll6293
 
 # instance names
 JTS16_MAIN=jts16_main
@@ -60,7 +61,6 @@ JTFRAME_OSD_TEST
 # JTFRAME_OSD_FLIP
 
 JTFRAME_WIDTH=512
-JTFRAME_PLL=plls16
 
 [mister]
 JTFRAME_OSD_NOLOAD
