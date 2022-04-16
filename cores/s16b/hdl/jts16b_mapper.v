@@ -429,6 +429,7 @@ jtframe_68kdma u_dma(
 );
 
 // Debug
+`ifdef MISTER
 always @(posedge clk) begin
     // 0-7 base registers
     // 8-F size registers
@@ -443,5 +444,8 @@ always @(posedge clk) begin
     else
         st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];
 end
+`else
+    always @* st_dout = debug_bus[0] ? fave[13:5] : fworst[13:5];
+`endif
 
 endmodule

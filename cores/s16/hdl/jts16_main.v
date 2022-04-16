@@ -653,43 +653,43 @@ jtframe_m68k u_cpu(
 
 // Debug
 `ifdef MISTER
-`ifndef JTFRAME_RELEASE
-`ifndef BETA
-jts16_shadow u_shadow(
-    .clk        ( clk       ),
-    .clk_rom    ( clk_rom   ),
+    `ifndef JTFRAME_RELEASE
+    `ifndef BETA
+    jts16_shadow u_shadow(
+        .clk        ( clk       ),
+        .clk_rom    ( clk_rom   ),
 
-    // Capture SDRAM bank 0 inputs
-    .addr       ( A[14:1]   ),
-    .char_cs    ( char_cs   ),    //  4k
-    .vram_cs    ( vram_cs   ),    // 32k
-    .pal_cs     ( pal_cs    ),     //  4k
-    .objram_cs  ( objram_cs ),  //  2k
-    .din        ( cpu_dout  ),
-    .dswn       ( {UDSWn, LDSWn} ),  // write mask -active low
+        // Capture SDRAM bank 0 inputs
+        .addr       ( A[14:1]   ),
+        .char_cs    ( char_cs   ),    //  4k
+        .vram_cs    ( vram_cs   ),    // 32k
+        .pal_cs     ( pal_cs    ),     //  4k
+        .objram_cs  ( objram_cs ),  //  2k
+        .din        ( cpu_dout  ),
+        .dswn       ( {UDSWn, LDSWn} ),  // write mask -active low
 
-    // Let data be dumped via NVRAM interface
-    .ioctl_addr ( ioctl_addr),
-    .ioctl_din  ( ioctl_din )
-);
+        // Let data be dumped via NVRAM interface
+        .ioctl_addr ( ioctl_addr),
+        .ioctl_din  ( ioctl_din )
+    );
 
-always @(posedge clk) begin
-    // 10-11, average frequency
-    if( st_addr[4] )
-        case( st_addr[1:0] )
-            0: st_dout <= fave[7:0];
-            1: st_dout <= fave[15:8];
-            2: st_dout <= fworst[7:0];
-            3: st_dout <= fworst[15:8];
-        endcase
-    else
-        st_dout <= 0;
-end
-`endif
-`endif
+    always @(posedge clk) begin
+        // 10-11, average frequency
+        if( st_addr[4] )
+            case( st_addr[1:0] )
+                0: st_dout <= fave[7:0];
+                1: st_dout <= fave[15:8];
+                2: st_dout <= fworst[7:0];
+                3: st_dout <= fworst[15:8];
+            endcase
+        else
+            st_dout <= 0;
+    end
+    `endif
+    `endif
 `else
     assign ioctl_din = 0;
-    assign st_dout   = 0;
+    always @* st_dout = fave[10:2];
 `endif
 
 endmodule

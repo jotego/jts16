@@ -191,7 +191,7 @@ wire [7:0] st_video, st_main;
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn = { UDSWn, LDSWn };
 assign game_led = /*snd_clip | */ ~scr_bad;
-assign debug_view = 0;
+assign debug_view = st_main;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
