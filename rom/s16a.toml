@@ -9,7 +9,6 @@ info=[
 # ddr = true
 # cheat=true
 nvram = 43008
-debug = true
 # qsound=true
 
 [parse]

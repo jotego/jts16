@@ -44,9 +44,6 @@
         <part name="ism2006v00.u1" crc="2292585c"/>
         <!-- Total 0x20000 bytes - 128 kBytes -->
     </rom>
-    <rom index="16" zip="debug.zip" md5="None">
-        <part name="debug.bin"/>
-    </rom>
     <nvram index="2" size="75777"/>
     <rom index="1">
         <part>00</part>
