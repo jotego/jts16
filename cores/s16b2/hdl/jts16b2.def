@@ -1,6 +1,0 @@
-include ../../s16b/hdl/jts16b.def
-
-[all]
-CORENAME=JTS16B2
--FD1094
-MC8123

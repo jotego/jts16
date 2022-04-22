@@ -20,6 +20,10 @@ module jts16_fd1094(
     input             rst,
     input             clk,
 
+    // Key access
+    output     [12:0] key_addr,
+    input      [ 7:0] key_data,
+
     // Configuration
     input      [12:0] prog_addr,
     input             fd1094_we,
@@ -67,6 +71,10 @@ jts16_fd1094_ctrl u_ctrl(
 jts16_fd1094_dec u_dec(
     .rst        ( rst       ),
     .clk        ( clk       ),
+
+    // Key access
+    .key_addr   ( key_addr  ),
+    .key_data   ( key_data  ),
 
     // Configuration
     .prog_addr  ( prog_addr ),

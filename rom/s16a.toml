@@ -89,9 +89,6 @@ names = [
 
 [rbf]
 name="jts16"
-dev = [
-    { dev="fd1094", rbf="jts16a2" },
-]
 
 [dipsw]
 delete = [ "Unused", "Unknown" ]

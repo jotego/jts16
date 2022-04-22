@@ -29,8 +29,11 @@ module jts16_sdram #(
     input      [5:0] tile_bank, // always 0 for S16A
 
     // Encryption
-    output           key_we,
     output           fd1089_we,
+    output           key_we,
+    input     [12:0] key_addr,
+    input     [12:0] key_mcaddr,
+    output    [ 7:0] key_data,
 
     // Main CPU
     input            main_cs,
@@ -59,6 +62,9 @@ module jts16_sdram #(
 
     // ADPCM ROM
     output  reg      dec_en,
+    output  reg      fd1089_en,
+    output  reg      fd1094_en,
+    output  reg      mc8123_en,
     output  reg      dec_type,
     input     [16:0] pcm_addr,
     input            pcm_cs,
@@ -151,24 +157,27 @@ localparam [7:0] DUNKSHOT='h14;
 // Scroll address after banking
 wire [18:0] char_adj, scr1_adj, scr2_adj;
 reg  [19:0] obj_addr_g;
+wire [ 7:0] key_din;
+wire [12:0] key_mux;
 
 reg  [VRAMW-1:1] xram_addr;  // S16A = 32 kB VRAM + 16kB RAM
                              // S16B = 64 kB VRAM + 16-256kB RAM
 wire        xram_cs;
-wire        prom_we, header;
+wire        prom_we, header, fd_we;
 
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
-reg         fd1089_en, fd1094_en;
 
 assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading | prom_we; // prom_we is really just for sims
 assign n7751_prom = prom_we && prog_addr[21:10]==N7751_PROM [21:10];
-assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM   [21:13];
+assign fd_we      = prom_we && prog_addr[21:13]==KEY_PROM   [21:13];
 assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM    [21: 8];
 assign mcu_we     = prom_we && prog_addr[21:12]==MCU_PROM   [21:12];
 assign mc8123_we  = prom_we && prog_addr[21:13]==MC8123_PROM[21:13];
-
+assign key_we     = mc8123_en ? mc8123_we : fd_we;
+assign key_din    = prog_data^{8{mc8123_en}}; // the data is inverted for the MC8123
+assign key_mux    = mc8123_en ? key_mcaddr : key_addr;
 
 `ifdef S16B
 reg dunkshot, game_fantzn2x;
@@ -197,11 +206,22 @@ always @(posedge clk) begin
             dec_type  <= ioctl_dout[1];
         end
         if( ioctl_addr[4:0]==5'h11 ) fd1094_en <= ioctl_dout[0];
+        if( ioctl_addr[4:0]==5'h12 ) mc8123_en <= ioctl_dout[0];
         if( ioctl_addr[4:0]==5'h13 ) mcu_en    <= ioctl_dout[0];
         if( ioctl_addr[4:0]==5'h18 ) game_id   <= ioctl_dout;
     end
     dec_en <= fd1089_en | fd1094_en;
 end
+
+jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
+    .clk    ( clk       ),
+    .cen    ( 1'b1      ),
+    .data   ( key_din   ),
+    .rd_addr( key_mux   ),
+    .wr_addr( prog_addr ),
+    .we     ( key_we    ),
+    .q      ( key_data  )
+);
 
 `ifdef S16B
     reg single_bank;
@@ -230,7 +250,6 @@ always @(*) begin
     if( dunkshot ) obj_addr_g[15]=0;
 `endif
 end
-
 
 jtframe_dwnld #(
     .HEADER    ( 32        ),

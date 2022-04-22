@@ -35,16 +35,15 @@ module jtmc8123(
     output reg  [7:0] dec,
     output reg        dec_ok,
 
-    // Configuration
-    input             mc8123_we,
-    input      [12:0] prog_addr,
-    input      [ 7:0] prog_data
+    // Keys
+    output     [12:0] key_addr,
+    input      [ 7:0] key_data
 );
 
 wire [ 7:0] key;
-wire [12:0] key_a;
 
-assign key_a = {m1_n,a[15:10],a[8],a[6],a[4],a[2:0]};
+assign key = key_data;
+assign key_addr = {m1_n,a[15:10],a[8],a[6],a[4],a[2:0]};
 
 wire [2:0] decrypt_type = {key[4]^key[5],
                    key[0]^key[1]^key[2]^key[4],
@@ -73,16 +72,6 @@ always @(posedge clk) begin
             7: dec <= decrypt_type_3b(enc, param, swap);
         endcase
 end
-
-jtframe_prom #(.aw(13),.simfile("mc8123.bin")) u_lut(
-    .clk    ( clk       ),
-    .cen    ( 1'b1      ),
-    .data   (~prog_data ), // we invert the data here
-    .rd_addr( key_a     ),
-    .wr_addr( prog_addr ),
-    .we     ( mc8123_we ),
-    .q      ( key       )
-);
 
 `define bitswap8(a,b,c,d,e,f,g,h) {v[a],v[b],v[c],v[d],v[e],v[f],v[g],v[h]}
 

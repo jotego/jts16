@@ -20,6 +20,10 @@ module jts16_fd1094_dec(
     input             rst,
     input             clk,
 
+    // Key access
+    output reg [12:0] key_addr,
+    input      [ 7:0] key_data,
+
     // Configuration
     input      [12:0] prog_addr,
     input             fd1094_we,
@@ -47,8 +51,7 @@ module jts16_fd1094_dec(
 reg [7:0] gkey1, gkey2, gkey3;
 reg [7:0] gkey1_st, gkey2_st, gkey3_st;
 
-wire [ 7:0] xor_mask1, xor_mask2, xor_mask3, mainkey;
-reg  [12:0] key_addr;
+wire [ 7:0] xor_mask1, xor_mask2, xor_mask3;
 reg         key_F, mask_en;
 reg  [15:0] val, masked;
 
@@ -75,29 +78,29 @@ wire global_swap3        = ~gkey3_st[6];
 wire global_swap1        = ~gkey3_st[4];
 wire global_swap4        = ~gkey3_st[2];
 
-wire key_0a = mainkey[0] ^ gkey3_st[1];
-wire key_0b = mainkey[0] ^ gkey1_st[7];
-wire key_0c = mainkey[0] ^ gkey1_st[1];
+wire key_0a = key_data[0] ^ gkey3_st[1];
+wire key_0b = key_data[0] ^ gkey1_st[7];
+wire key_0c = key_data[0] ^ gkey1_st[1];
 
-wire key_1a = mainkey[1] ^ gkey2_st[7];
-wire key_1b = mainkey[1] ^ gkey1_st[3];
+wire key_1a = key_data[1] ^ gkey2_st[7];
+wire key_1b = key_data[1] ^ gkey1_st[3];
 
-wire key_2a = mainkey[2] ^ gkey3_st[7];
-wire key_2b = mainkey[2] ^ gkey1_st[4];
+wire key_2a = key_data[2] ^ gkey3_st[7];
+wire key_2b = key_data[2] ^ gkey1_st[4];
 
-wire key_3a = mainkey[3] ^ gkey2_st[0];
-wire key_3b = mainkey[3] ^ gkey3_st[3];
+wire key_3a = key_data[3] ^ gkey2_st[0];
+wire key_3b = key_data[3] ^ gkey3_st[3];
 
-wire key_4a = mainkey[4] ^ gkey2_st[3];
-wire key_4b = mainkey[4] ^ gkey3_st[0];
+wire key_4a = key_data[4] ^ gkey2_st[3];
+wire key_4b = key_data[4] ^ gkey3_st[0];
 
-wire key_5a = mainkey[5] ^ gkey3_st[5];
-wire key_5b = mainkey[5] ^ gkey1_st[6];
+wire key_5a = key_data[5] ^ gkey3_st[5];
+wire key_5b = key_data[5] ^ gkey1_st[6];
 
-wire key_6a = mainkey[6] ^ gkey2_st[1];
-wire key_6b = mainkey[6] ^ gkey2_st[6];
+wire key_6a = key_data[6] ^ gkey2_st[1];
+wire key_6b = key_data[6] ^ gkey2_st[6];
 
-wire key_7a = mainkey[7] ^ gkey2_st[4];
+wire key_7a = key_data[7] ^ gkey2_st[4];
 
 always @(posedge clk) begin
     if( fd1094_we && prog_addr<4 ) begin
@@ -115,7 +118,7 @@ always @(*) begin
     key_addr = addr[13:1];
     if ((addr[16:1] & 16'h0ffc) == 0 && addr >= 4)
         key_addr[12] = 1;
-    key_F = addr[13] ? mainkey[7] : mainkey[6];
+    key_F = addr[13] ? key_data[7] : key_data[6];
 
     gkey1_st = gkey1 ^ xor_mask1;
     gkey2_st = gkey2 ^ xor_mask2;
@@ -130,8 +133,8 @@ always @(*) begin
 end
 
 // `ifdef SIMULATION
-// always @(mainkey) begin
-//     $display("mainkey = %X",mainkey);
+// always @(key_data) begin
+//     $display("key_data = %X",key_data);
 // end
 // `endif
 
@@ -203,16 +206,6 @@ always @(posedge clk) begin
     if(rom_ok) masked <= mask_en ? 16'hffff : val;
     ok_dly <= rom_ok;
 end
-
-jtframe_prom #(.aw(13),.simfile("fd1094.bin")) u_lut(
-    .clk    ( clk            ),
-    .cen    ( 1'b1           ),
-    .data   ( prog_data      ),
-    .rd_addr( key_addr       ),
-    .wr_addr( prog_addr      ),
-    .we     ( fd1094_we      ),
-    .q      ( mainkey        )
-);
 
 always @(val, key_F) begin
     case( { val[15:1], 1'b0} )

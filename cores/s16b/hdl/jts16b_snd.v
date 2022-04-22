@@ -47,9 +47,9 @@ module jts16b_snd(
     input                rom_ok,
 
     // MC8123 encoding
-    input                mc8123_we,
-    input         [12:0] prog_addr,
-    input         [ 7:0] prog_data,
+    input                dec_en,
+    output        [12:0] key_addr,
+    input         [ 7:0] key_data,
 
     // Sound output
     output signed [15:0] snd,
@@ -65,8 +65,8 @@ reg         fm_cs, mapper_cs, ram_cs, bank_cs,
 wire        mreq_n, iorq_n, int_n;
 reg  [ 7:0] cpu_din, pcm_cmd, pcmgain;
 reg         rom_ok2;
-wire        rom_good;
-wire [ 7:0] cpu_dout, fm_dout, ram_dout, dec;
+wire        rom_good, dec_ok;
+wire [ 7:0] cpu_dout, fm_dout, ram_dout, rom_dec, dec_dout;
 wire        nmi_n, pcm_busyn,
             wr_n, rd_n, m1_n;
 reg         pcm_mdn, pcm_rst;
@@ -129,7 +129,7 @@ end
 
 always @(posedge clk) begin
     rom_ok2  <= rom_ok;
-    cpu_din  <= rom_cs    ? dec      : ( // rom_data
+    cpu_din  <= rom_cs    ? rom_dec  : ( // rom_data
                 ram_cs    ? ram_dout : (
                 fm_cs     ? fm_dout  : (
                 pcm_cs    ? { pcm_busyn, ~7'd0 } : (
@@ -181,32 +181,29 @@ jtframe_mixer #(.W2(9)) u_mixer(
 assign int_n = ~mapper_pbf;
 
 // CPU encryption
-`ifdef MC8123
-    jtmc8123 u_dec(
-        .clk        ( clk       ),
+assign rom_good = dec_en ? dec_ok : rom_ok2 & rom_ok;
+assign rom_dec  = dec_en ? dec_dout : rom_data;
 
-        // interface to Z80 CPU
-        .m1_n       ( m1_n      ),
-        .a          ( A         ),
-        .enc_en     ( ~bank_cs  ),
+jtmc8123 u_dec(
+    .clk        ( clk       ),
 
-        // connect to program ROM
-        .enc        ( rom_data  ),
-        .rom_ok     ( rom_ok2   ),
+    // interface to Z80 CPU
+    .m1_n       ( m1_n      ),
+    .a          ( A         ),
+    .enc_en     ( ~bank_cs  ),
 
-        // Decoded
-        .dec        ( dec       ),
-        .dec_ok     ( rom_good  ),
+    // connect to program ROM
+    .enc        ( rom_data  ),
+    .rom_ok     ( rom_ok2   ),
 
-        // Configuration
-        .mc8123_we  ( mc8123_we ),
-        .prog_addr  ( prog_addr ),
-        .prog_data  ( prog_data )
-    );
-`else
-    assign rom_good = rom_ok2 & rom_ok;
-    assign dec      = rom_data;
-`endif
+    // Decoded
+    .dec        ( dec_dout  ),
+    .dec_ok     ( dec_ok    ),
+
+    // Keys
+    .key_addr   ( key_addr  ),
+    .key_data   ( key_data  )
+);
 
 jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
     .rst_n      ( ~rst        ),

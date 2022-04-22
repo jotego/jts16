@@ -173,8 +173,11 @@ wire        n7751_prom;
 
 // Protection
 wire        key_we, fd1089_we;
-wire        dec_en, dec_type;
+wire        dec_en, dec_type,
+            fd1089_en, fd1094_en, mc8123_en;
 wire        mcu_en, mcu_we, mcu_cen;
+wire [ 7:0] key_data;
+wire [12:0] key_addr, key_mcaddr;
 
 wire [ 7:0] snd_latch;
 wire        snd_irqn, snd_ack;
@@ -266,9 +269,13 @@ jts16_cen u_cen(
     .rom_ok      ( main_ok    ),
     // Decoder configuration
     .dec_en      ( dec_en     ),
+    .fd1089_en   ( fd1089_en  ),
+    .fd1094_en   ( fd1094_en  ),
     .key_we      ( key_we     ),
     .fd1089_we   ( fd1089_we  ),
     .dec_type    ( dec_type   ),
+    .key_addr    ( key_addr   ),
+    .key_data    ( key_data   ),
     // MCU
     .rst24       ( rst24      ),
     .clk24       ( clk24      ),  // To ease MCU compilation
@@ -374,9 +381,9 @@ jts16_cen u_cen(
     .mapper_pbf ( sndmap_pbf),
     .game_id    ( game_id   ),
     // MC8123 encoding
-    .mc8123_we  ( mc8123_we ),
-    .prog_addr  (prog_addr[12:0]),
-    .prog_data  ( prog_data ),
+    .dec_en     ( mc8123_en ),
+    .key_addr   ( key_mcaddr),
+    .key_data   ( key_data  ),
 `else
     // System 16A
     .cen_pcmb   ( cen_pcmb  ),   // 6MHz
@@ -521,9 +528,15 @@ jts16_sdram #(.SNDW(SNDW)) u_sdram(
     //.tile_bank  ( debug_bus[5:0] ),
 
     .dec_en     ( dec_en    ),
+    .fd1089_en  ( fd1089_en ),
+    .fd1094_en  ( fd1094_en ),
+    .mc8123_en  ( mc8123_en ),
     .dec_type   ( dec_type  ),
     .key_we     ( key_we    ),
     .fd1089_we  ( fd1089_we ),
+    .key_addr   ( key_addr  ),
+    .key_mcaddr ( key_mcaddr),
+    .key_data   ( key_data  ),
 
     // i8751 MCU
     .mcu_we     ( mcu_we    ),

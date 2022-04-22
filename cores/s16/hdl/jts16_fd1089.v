@@ -20,6 +20,10 @@ module jts16_fd1089(
     input             rst,
     input             clk,
 
+    // Key access
+    output     [12:0] key_addr,
+    input      [ 7:0] key_data,
+
     // Configuration
     input      [12:0] prog_addr,
     input             key_we,
@@ -57,6 +61,9 @@ wire [ 7:0] last[0:15];
 wire [ 7:0] xored_last_in[0:15];
 reg         bypass, lsbxor;
 reg         ok_latch;
+
+assign key_addr = lut_a;
+assign shkey    = key_data;
 
 `ifdef DEBUG
 assign debug_key     = key;
@@ -247,16 +254,6 @@ always @(preval,key,op_n) begin
     end
     val_b = lastb;
 end
-
-jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
-    .clk    ( clk       ),
-    .cen    ( 1'b1      ),
-    .data   ( prog_data ),
-    .rd_addr( lut_a     ),
-    .wr_addr( prog_addr ),
-    .we     ( key_we    ),
-    .q      ( shkey     )
-);
 
 jtframe_prom #(.aw(8),.simfile("fd1089.bin")) u_lut(
     .clk    ( clk            ),

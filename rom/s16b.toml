@@ -78,9 +78,6 @@ names = [
 [rbf]
 name="jts16b"
 dev = [
-    { dev="fd1089a", rbf="jts16b1" },
-    { dev="fd1089b", rbf="jts16b1" },
-    { dev="mc8123",  rbf="jts16b2" },
     { dev="i8751",   rbf="jts16b3" }
 ]
 

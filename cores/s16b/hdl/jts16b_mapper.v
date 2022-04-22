@@ -87,6 +87,7 @@ module jts16b_mapper(
     output reg        sndmap_pbf, // pbf signal == buffer full ?
 
     // MCU side
+    input             mcu_en,
     input      [ 7:0] mcu_dout,
     output reg [ 7:0] mcu_din,
     input      [15:0] mcu_addr,
@@ -180,7 +181,7 @@ wire [15:0] mcu_addr_s;
 wire [ 7:0] mcu_dout_s;
 wire        mcu_wr_s, mcu_acc_s, mcu_rd_s;
 
-assign mcu_rd_s = mcu_acc_s & ~mcu_wr_s;
+assign mcu_rd_s = mcu_en & mcu_acc_s & ~mcu_wr_s;
 
 jtframe_sync #(.W(2+16+8)) u_sync(
     .clk_in ( 1'b0      ), // not needed if input is passed unlatched
@@ -312,7 +313,7 @@ end
 wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
 wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout_s;
 wire       wren_cpu = ~cpu_asn & ~cpu_dswn[0] & none;
-wire       wren_mcu = mcu_wr_s;
+wire       wren_mcu = mcu_en & mcu_wr_s;
 wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
 reg        wren_cpu_l, wren_mcu_l, bus_busy_l;
 wire       wredge_cpu = wren_cpu & ~wren_cpu_l;
@@ -363,7 +364,7 @@ always @(posedge clk) begin
                 end
             end
         end
-        if( mcu_wr_s ) cpu_sel <= 0; // once cleared, it stays like that until reset
+        if( mcu_en & mcu_wr_s ) cpu_sel <= 0; // once cleared, it stays like that until reset
         // not really sure about status_msb
         if( none || !bus_mcu || mmr[4][3] || &cpu_fc[2:0]) status_msb<=1;
         if( wredge_mcu || (wredge_cpu && cpu_sel) ) begin

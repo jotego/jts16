@@ -79,11 +79,15 @@ module jts16b_main(
 
     // Decoder configuration
     input              dec_en,
+    input              fd1089_en,
+    input              fd1094_en,
     input              dec_type,
     input       [12:0] prog_addr,
     input              key_we,
     input              fd1089_we,
     input       [ 7:0] prog_data,
+    output      [12:0] key_addr,
+    input       [ 7:0] key_data,
 
     // DIP switches
     input              dip_test,
@@ -245,6 +249,7 @@ jts16b_mapper u_mapper(
     .sndmap_pbf ( sndmap_pbf     ),
 
     // MCU side
+    .mcu_en     ( mcu_en         ),
     .mcu_dout   ( mcu_dout       ),
     .mcu_din    ( mcu_din        ),
     .mcu_intn   ( mcu_intn       ),
@@ -322,6 +327,7 @@ jts16b_mapper u_mapper(
     assign mcu_acc  = 0;
     assign mcu_dout = 0;
 `endif
+
 
 // System 16B memory map
 always @(posedge clk, posedge rst) begin
@@ -500,62 +506,68 @@ always @(posedge clk) begin
     end
 end
 
-`ifdef FD1094
-    jts16_fd1094 u_dec(
-        .rst        ( rst       ),
-        .clk        ( clk       ),
+// Shared by FD1094 and FD1089
+wire [12:0] key_1094, key_1089;
+wire [15:0] dec_1094, dec_1089;
+wire        ok_1094, ok_1089;
 
-        // Configuration
-        .prog_addr  ( prog_addr ),
-        .fd1094_we  ( key_we    ),
-        .prog_data  ( prog_data ),
+assign key_addr= fd1094_en ? key_1094 : key_1089;
+assign rom_dec = fd1094_en ? dec_1094 : dec_1089;
+assign ok_dly  = fd1094_en ? ok_1094  : ok_1089;
 
-        // Operation
-        .dec_en     ( dec_en    ),
-        .FC         ( FC        ),
-        .ASn        ( ASn       ),
+jts16_fd1094 u_dec1094(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
 
-        .addr       ( A         ),
-        .enc        ( rom_data  ),
-        .dec        ( rom_dec   ),
+    // Configuration
+    .prog_addr  ( prog_addr ),
+    .fd1094_we  ( key_we    ),
+    .prog_data  ( prog_data ),
 
-        .dtackn     ( DTACKn    ),
-        .rom_ok     ( rom_ok    ),
-        .ok_dly     ( ok_dly    )
-    );
-`endif
-`ifdef FD1089
-    wire op_n = FC[1:0]!=2'b10; // low for CPU OP requests
+    // Key access
+    .key_addr   ( key_1094  ),
+    .key_data   ( key_data  ),
 
-    jts16_fd1089 u_dec(
-        .rst        ( rst       ),
-        .clk        ( clk       ),
+    // Operation
+    .dec_en     ( dec_en    ),
+    .FC         ( FC        ),
+    .ASn        ( ASn       ),
 
-        // Configuration
-        .prog_addr  ( prog_addr ),
-        .key_we     ( key_we    ),
-        .fd1089_we  ( fd1089_we ),
-        .prog_data  ( prog_data ),
+    .addr       ( A         ),
+    .enc        ( rom_data  ),
+    .dec        ( dec_1094  ),
 
-        // Operation
-        .dec_type   ( dec_type  ), // 0=a, 1=b
-        .dec_en     ( dec_en    ),
-        .rom_ok     ( rom_ok    ),
-        .ok_dly     ( ok_dly    ),
+    .dtackn     ( DTACKn    ),
+    .rom_ok     ( rom_ok    ),
+    .ok_dly     ( ok_1094   )
+);
 
-        .op_n       ( op_n      ),     // OP (0) or data (1)
-        .addr       ( A         ),
-        .enc        ( rom_data  ),
-        .dec        ( rom_dec   )
-    );
-`endif
-`ifndef FD1094
-`ifndef FD1089
-    // No main CPU encoding when sound CPU is
-    assign rom_dec = rom_data;
-    assign ok_dly  = rom_ok;
-`endif
-`endif
+wire op_n = FC[1:0]!=2'b10; // low for CPU OP requests
+
+jts16_fd1089 u_dec1089(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+
+    // Configuration
+    .prog_addr  ( prog_addr ),
+    .fd1089_we  ( fd1089_we ),
+    .prog_data  ( prog_data ),
+
+    // Key access
+    .key_addr   ( key_1089  ),
+    .key_data   ( key_data  ),
+
+    // Operation
+    .dec_type   ( dec_type  ), // 0=a, 1=b
+    .dec_en     ( dec_en    ),
+    .rom_ok     ( rom_ok    ),
+    .ok_dly     ( ok_1089   ),
+
+    .op_n       ( op_n      ),     // OP (0) or data (1)
+    .addr       ( A         ),
+    .enc        ( rom_data  ),
+    .dec        ( dec_1089  )
+);
 
 jtframe_m68k u_cpu(
     .clk        ( clk         ),

@@ -149,11 +149,11 @@ assign scr_bad = scr1_bad | scr2_bad;
 jtframe_vtimer #(
     .HB_START  ( 9'h1ff ),
     .HB_END    ( HB_END ),
-    .HCNT_START( 9'h70  ),
+    .HCNT_START( 9'h70  ), // it should be 'h50
     .HCNT_END  ( 9'h1FF ),
     .VB_START  ( 9'h0DF ),
-    .VB_END    ( 9'h104 ),
-    .VCNT_END  ( 9'h104 ),
+    .VB_END    ( 9'h105 ),
+    .VCNT_END  ( 9'h105 ), // 262 lines
     //.VS_START ( 9'h0   ),
     .VS_START ( 9'hF0   ),
     //.VS_END   ( 9'h8   ),

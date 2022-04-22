@@ -1,5 +1,0 @@
-include ../../s16/hdl/jts16.def
-
-[all]
-CORENAME=JTS16A2
-FD1094
