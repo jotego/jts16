@@ -83,7 +83,7 @@ dev = [
 
 [dipsw]
 delete = [ "Unused", "Unknown" ]
-# base = 16
+bitcnt = 16
 
 # Sample header data
 # data=[
