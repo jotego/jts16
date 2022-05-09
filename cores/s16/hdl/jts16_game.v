@@ -26,8 +26,8 @@ module `GAMETOP(
     output   [4:0]  red,
     output   [4:0]  green,
     output   [4:0]  blue,
-    output          LHBL_dly,
-    output          LVBL_dly,
+    output          LHBL,
+    output          LVBL,
     output          HS,
     output          VS,
     // cabinet I/O
@@ -121,7 +121,6 @@ wire    cpu_cen, cpu_cenb,
         cen_pcm, cen_pcmb;
 
 // video signals
-wire        LVBL;
 wire [ 8:0] vrender;
 wire        hstart, vint;
 wire        colscr_en, rowscr_en;
@@ -500,9 +499,8 @@ jts16_video u_video(
     // Video signal
     .HS         ( HS        ),
     .VS         ( VS        ),
+    .LHBL       ( LHBL      ),
     .LVBL       ( LVBL      ),
-    .LHBL_dly   ( LHBL_dly  ),
-    .LVBL_dly   ( LVBL_dly  ),
     .vdump      (           ),
     .vrender    ( vrender   ),
     .hstart     ( hstart    ),

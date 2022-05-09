@@ -74,9 +74,8 @@ module jts16_video(
     // Video signal
     output             HS,
     output             VS,
+    output             LHBL,
     output             LVBL,
-    output             LHBL_dly,
-    output             LVBL_dly,
     output             hstart,
     output     [ 8:0]  vdump,
     output     [ 8:0]  vrender,
@@ -100,7 +99,7 @@ localparam [9:0] SCR1_DLY= SCR2_DLY;
 localparam [9:0] OBJ_DLY = MODEL ? 10'd22 : 10'd17;
 
 wire [ 8:0] hdump, vrender1;
-wire        LHBL;
+wire        preLHBL, preLVBL;
 wire        alt_en, alt_objbank; // 171-5358 boards have a different GFX layout
 wire        rowscr1_en, rowscr2_en,
             colscr1_en, colscr2_en,
@@ -164,8 +163,8 @@ jtframe_vtimer #(
     .vdump     ( vdump    ),
     .H         ( hdump    ),
     .Hinit     ( hstart   ),
-    .LHBL      ( LHBL     ),
-    .LVBL      ( LVBL     ),
+    .LHBL      ( preLHBL  ),
+    .LVBL      ( preLVBL  ),
     .HS        ( HS       ),
     .VS        ( VS       ),
     .Vinit     (          ),
@@ -369,8 +368,8 @@ jts16_colmix u_colmix(
     .cpu_din   ( pal_dout       ),
 
 
-    .LHBL      ( LHBL           ),
-    .LVBL      ( LVBL           ),
+    .preLVBL   ( preLVBL        ),
+    .preLHBL   ( preLHBL        ),
 
     .char_pxl  ( char_pxl       ),
     .scr1_pxl  ( scr1_pxl       ),
@@ -378,11 +377,11 @@ jts16_colmix u_colmix(
     .scr2_pxl  ( scr2_pxl       ),
     .obj_pxl   ( obj_pxl        ),
 
+    .LHBL      ( LHBL           ),
+    .LVBL      ( LVBL           ),
     .red       ( red            ),
     .green     ( green          ),
-    .blue      ( blue           ),
-    .LVBL_dly  ( LVBL_dly       ),
-    .LHBL_dly  ( LHBL_dly       )
+    .blue      ( blue           )
 );
 
 endmodule

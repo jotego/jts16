@@ -25,8 +25,8 @@ module jts16_colmix(
     input              video_en,
     input      [ 3:0]  gfx_en,
 
-    input              LHBL,
-    input              LVBL,
+    input              preLHBL,
+    input              preLVBL,
 
     // CPU interface
     input              pal_cs,
@@ -43,8 +43,8 @@ module jts16_colmix(
     output     [ 4:0]  red,
     output     [ 4:0]  green,
     output     [ 4:0]  blue,
-    output             LVBL_dly,
-    output             LHBL_dly
+    output             LVBL,
+    output             LHBL
 );
 
 wire [ 1:0] we;
@@ -56,10 +56,6 @@ wire [ 1:0] obj_prio;
 reg         shadow;
 
 assign we = ~dsn & {2{pal_cs}};
-
-// assign red   = { rgb[ 3:0], rgb[12] };
-// assign green = { rgb[ 7:4], rgb[13] };
-// assign blue  = { rgb[11:8], rgb[14] };
 assign { red, green, blue } = rgb;
 
 wire [4:0] rpal, gpal, bpal;
@@ -163,10 +159,10 @@ end
 jtframe_blank #(.DLY(2),.DW(15)) u_blank(
     .clk        ( clk       ),
     .pxl_cen    ( pxl_cen   ),
+    .preLHBL    ( preLHBL   ),
+    .preLVBL    ( preLVBL   ),
     .LHBL       ( LHBL      ),
     .LVBL       ( LVBL      ),
-    .LHBL_dly   ( LHBL_dly  ),
-    .LVBL_dly   ( LVBL_dly  ),
     .preLBL     (           ),
     .rgb_in     ( gated     ),
     .rgb_out    ( rgb[14:0] )
