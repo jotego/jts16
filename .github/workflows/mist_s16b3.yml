@@ -7,6 +7,7 @@ on:
       - build
       - mist
       - build_s16b3
+      - master
 
   workflow_dispatch:
 
