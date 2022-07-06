@@ -9,6 +9,11 @@
 *.jpg
 *.cdf
 *.arc
+*.key
+*.xml
+*.nvm
+*.lst
+*.raw
 cheat/*.bin
 cheat/*.fmt
 history
@@ -29,3 +34,5 @@ macros.f
 core.def
 jtsim.f
 jtsim_vhdl.f
+log
+firmware/*.c2
