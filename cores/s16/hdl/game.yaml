@@ -42,9 +42,7 @@ jtframe:
       - 8051/mc8051.qip
       - t8243/t8243.qip
       - t48/t48.qip
-      - jtframe_z80.v
-      - jtframe_z80wait.v
-      - t80/T80.qip
+      - jtframe_z80.yaml
   - from: clocking
     get:
       - jtframe_frac_cen.v
