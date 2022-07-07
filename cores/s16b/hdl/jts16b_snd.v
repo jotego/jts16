@@ -77,7 +77,6 @@ wire signed [15:0] fm_left, fm_right, mixed;
 wire signed [ 8:0] pcm_raw, pcm_snd;
 wire [7:0] fmgain;
 
-assign ack      = mapper_cs;
 assign fmgain   = enable_fm ? FMGAIN : 8'h0;
 
 assign mapper_rd   = mapper_cs && !rd_n;

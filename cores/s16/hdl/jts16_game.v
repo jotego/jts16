@@ -221,7 +221,7 @@ jts16_cen u_cen(
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
     .game_id    ( game_id   ),
-    .LHBL       ( LHBL_dly  ),
+    .LHBL       ( LHBL      ),
     // Video
     .vint       ( vint      ),
     .video_en   ( video_en  ),
@@ -331,7 +331,7 @@ jts16_cen u_cen(
         always @(negedge LVBL) begin
             framecnt <= framecnt+1;
         end
-        always @(negedge LHBL_dly) begin
+        always @(negedge LHBL) begin
             last_fcnt <= framecnt;
             aux_obf <= last_fcnt != framecnt && (framecnt==10
                 || framecnt==12
