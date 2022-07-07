@@ -193,6 +193,7 @@ wire [7:0] st_video, st_main;
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn = { UDSWn, LDSWn };
 assign game_led = /*snd_clip | */ ~scr_bad;
+assign debug_view = st_dout;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -305,7 +306,6 @@ jts16_cen u_cen(
     .debug_bus   ( debug_bus  ),
     .st_addr     ( st_addr    ),
     .st_dout     ( st_main    ),
-    .debug_view  ( debug_view ),
     // NVRAM dump
     .ioctl_din   ( ioctl_din  ),
     .ioctl_addr  ( ioctl_addr[16:0] )
