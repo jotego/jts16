@@ -104,7 +104,8 @@ module jts16_main(
     // status dump - debug
     input       [ 7:0] debug_bus,
     input       [ 7:0] st_addr,
-    output reg  [ 7:0] st_dout
+    output reg  [ 7:0] st_dout,
+    output      [ 7:0] debug_view
 );
 
 localparam [7:0] GAME_HWCHAMP =`GAME_HWCHAMP ,
@@ -163,6 +164,7 @@ assign cpu_addr = A[12:1];
 assign rom_addr = {1'b0, A[17:1]}; // only 256kB on System 16A
 assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
                               && !io_cs  && !wdog_cs && pre_vram_cs && pre_ram_cs);
+assign debug_view = mcu_ctrl;
 
 always @(negedge clk) begin
     cpu_rst <= rst | (~mcu_ctrl[6] & mcu_en);
