@@ -147,11 +147,11 @@ wire        mcu_wr, mcu_acc;
 wire [15:0] mcu_addr;
 reg [23:16] mcu_top;
 
-assign A   = mcu_bus ? { mcu_top, 1'b0, mcu_addr[14:1] } : cpu_A;
+assign A   = mcu_bus ? { mcu_top, mcu_addr[15:1] } : cpu_A;
 assign RnW = mcu_bus ? ~mcu_wr : cpu_RnW;
 assign UDSn= mcu_bus ?~mcu_addr[0] : cpu_UDSn;
 assign LDSn= mcu_bus ? mcu_addr[0] : cpu_LDSn;
-assign cpu_dout = mcu_bus ? mcu_dout : cpu_dout_raw;
+assign cpu_dout = mcu_bus ? {2{mcu_dout}} : cpu_dout_raw;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -398,7 +398,7 @@ end
     always @(posedge clk24, posedge rst24 ) begin
         if( rst24 ) begin
             mcu_din <= 0;
-        end else if(mcu_bus && !mcu_wr) begin
+        end else if(mcu_br && !mcu_wr) begin
             mcu_din <= LDSn ? cpu_din[15:8] : cpu_din[7:0];
         end
     end
@@ -421,6 +421,9 @@ end
     end
     `endif
 
+    wire mcu_gated;
+    reg  mcu_ok, BGACKnl;
+
     // This is done by IC69 (a 82S153 programmable logic chip)
     always @(posedge clk) begin
         case(mcu_ctrl[5:3])
@@ -433,7 +436,14 @@ end
             7: mcu_top <= 8'h2; // ROM 2
             default: mcu_top <= NOTHING_CS;
         endcase
+        BGACKnl <= BGACKn;
+        if( !mcu_cen ) mcu_ok = (BRn & BGACKn) | (
+            BGACKnl ? 1'b0   :
+            rom_cs  ? rom_ok :
+            ram_cs  ? ram_ok : 1'b1 );
     end
+
+    assign mcu_gated = mcu_cen & mcu_ok;
 
     jtframe_68kdma u_dma(
         .rst        ( rst       ),
@@ -456,7 +466,7 @@ end
     ) u_mcu(
         .rst        ( mcu_rst       ),
         .clk        ( clk24         ),
-        .cen        ( mcu_cen       ),
+        .cen        ( mcu_gated     ),
 
         .int0n      ( ~vint         ),
         .int1n      ( ppib_dout[6]  ),
@@ -472,7 +482,7 @@ end
         .p3_o       (               ),
 
         // external memory
-        .x_din      ( cpu_din       ),
+        .x_din      ( mcu_din       ),
         .x_dout     ( mcu_dout      ),
         .x_addr     ( mcu_addr      ),
         .x_wr       ( mcu_wr        ),

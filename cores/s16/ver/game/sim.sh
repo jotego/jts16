@@ -5,11 +5,11 @@ GAME=shinobi
 SCENE=
 OTHER=
 HEXDUMP=-nohex
-SIMULATOR=-verilator
+# SIMULATOR=-verilator
 SDRAM_SNAP=
 
 AUXTMP=/tmp/$RANDOM$RANDOM
-jtcfgstr -target=mist -output=bash -parse ../../hdl/jts16.def |grep _START > $AUXTMP
+jtcfgstr -target=mist -output=bash -core s16 |grep _START > $AUXTMP
 source $AUXTMP
 
 while [ $# -gt 0 ]; do
