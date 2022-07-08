@@ -156,7 +156,7 @@ assign cpu_dout = mcu_bus ? {2{mcu_dout}} : cpu_dout_raw;
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
 assign BUSn  = (BGACKn & ASn) | (LDSn & UDSn);
-assign IPLn  = { irqn, 2'b11 } & ({3{~mcu_en}} | mcu_ctrl[2:0]);
+assign IPLn  = mcu_en ? mcu_ctrl[2:0] : { irqn, 2'b11 };
 
 // No peripheral bus access for now
 assign cpu_addr = A[12:1];
@@ -679,6 +679,20 @@ jtframe_m68k u_cpu(
     .IPLn       ( IPLn        ) // VBLANK
 );
 
+always @(posedge clk) begin
+    // 10-11, average frequency
+    case( st_addr[3:0] )
+        0: st_dout <= fave[7:0];
+        1: st_dout <= fave[15:8];
+        2: st_dout <= fworst[7:0];
+        3: st_dout <= fworst[15:8];
+        4: st_dout <= mcu_ctrl;
+        5: st_dout <= mcu_top;
+        6: st_dout <= mcu_addr[7:0];
+        7: st_dout <= mcu_addr[15:8];
+    endcase
+end
+
 // Debug
 `ifdef MISTER
     `ifndef JTFRAME_RELEASE
@@ -700,24 +714,10 @@ jtframe_m68k u_cpu(
         .ioctl_addr ( ioctl_addr),
         .ioctl_din  ( ioctl_din )
     );
-
-    always @(posedge clk) begin
-        // 10-11, average frequency
-        if( st_addr[4] )
-            case( st_addr[1:0] )
-                0: st_dout <= fave[7:0];
-                1: st_dout <= fave[15:8];
-                2: st_dout <= fworst[7:0];
-                3: st_dout <= fworst[15:8];
-            endcase
-        else
-            st_dout <= 0;
-    end
     `endif
     `endif
 `else
     assign ioctl_din = 0;
-    always @* st_dout = fave[10:2];
 `endif
 
 endmodule

@@ -430,7 +430,6 @@ assign tile_bank = 0; // unused on S16A
 `endif
 
 always @(posedge clk) begin
-    st_dout <= 0;
     case( st_addr[7:4] )
         0: st_dout <= st_video;
         1: case( st_addr[3:0] )
