@@ -1,0 +1,42 @@
+[global]
+# info = [ {tag="mameversion", value="0229"} ]
+mraauthor=["jotego"]
+
+[features]
+# ddr = true
+# cheat=true
+beta=true
+# nvram = 43008
+# qsound=true
+
+[parse]
+sourcefile="segaorun.cpp"
+
+[buttons]
+core=4 # max number of buttons supported by the core
+
+[rbf]
+name="jtoutrun"
+
+[dipsw]
+delete = [ "Unused", "Unknown" ]
+bitcnt = 16
+
+[ROM]
+# values starting with $ refer to macro definitions in the .def file
+# or arguments passed to mame2mra
+regions = [
+    { name="maincpu",     width=16, reverse=true },
+    { name="subcpu",      width=16, reverse=true },
+    { name="soundcpu"      },
+    { name="pcm"           },
+    { name="gfx1",        frac={ bytes=1, parts=4} },
+    { name="sprites",     width=16, reverse=true },
+    { name="segaic16road",width=16, reverse=true },
+    { name="maincpu:key", len=0x2000 },
+]
+
+order = [
+    "maincpu", "subcpu", "soundcpu", "pcm", "gfx1",
+    "sprites", "segaic16road", "maincpu:key"
+]
