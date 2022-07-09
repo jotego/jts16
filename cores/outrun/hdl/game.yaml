@@ -1,0 +1,37 @@
+game:
+  - from: outrun
+    get:
+      - jtsoutrun_game.v
+      - jtsoutrun_main.v
+      - jtsoutrun_sub.v
+      - jtsoutrun_snd.v
+jtframe:
+  - get:
+      - jtframe_ff.v
+  - from: sdram
+    get:
+      - jtframe_dwnld.v
+  - from: ram
+    get:
+      - jtframe_dual_ram16.v
+      - jtframe_ram.v
+      - jtframe_obj_buffer.v
+  - from: cpu
+    get:
+      - jtframe_m68k.yaml
+      - jtframe_z80.yaml
+  - from: clocking
+    get:
+      - jtframe_frac_cen.v
+  - from: video
+    get:
+      - jtframe_vtimer.v
+      - jtframe_blank.v
+      - jtframe_linebuf.v
+  - from: sound
+    get:
+      - jtframe_mixer.v
+      - jtframe_pole.v
+modules:
+  jt:
+    - name: jt51
