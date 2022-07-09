@@ -1,1 +1,0 @@
-../../../s16b/ver/game/mist_dump.v
