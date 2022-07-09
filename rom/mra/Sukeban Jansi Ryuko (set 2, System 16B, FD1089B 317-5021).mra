@@ -5,9 +5,8 @@
               This work is not mantained by the MiSTer project. Please contact the
               core author for issues and updates.
 
-              (c) Jose Tejada, 2021-2022. Please support the author
+              (c) Jose Tejada, 2022. Please support this research
               Patreon: https://patreon.com/topapate
-              Paypal:  https://paypal.me/topapate
 
               The author does not endorse or participate in illegal distribution
               of copyrighted material. This work can be used with legally
@@ -115,7 +114,7 @@
     <rom index="1">
         <part>00</part>
     </rom>
-    <switches base="16" default="ff,fb">
+    <switches page_id="1" page_name="Switches" base="16" default="ff,fb">
         <!-- DSW1 -->
         <dip name="Coin A" bits="0,3" ids=" 1/1,None,None,None,None,None,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <dip name="Coin B" bits="4,7" ids=" 1/1,None,None,None,None,None,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>

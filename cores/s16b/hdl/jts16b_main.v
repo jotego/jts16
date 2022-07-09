@@ -133,7 +133,6 @@ wire [ 2:0] FC;
 
 `ifdef SIMULATION
 wire [23:0] A_full = {A,1'b0};
-wire        op_n   = FC[1:0]!=2'b10; // low for CPU OP requests
 `endif
 
 wire        BRn, BGACKn, BGn;
@@ -264,6 +263,65 @@ jts16b_mapper u_mapper(
     .st_addr    ( st_addr        ),
     .st_dout    ( st_dout        )
 );
+
+reg mcu_rst;
+reg [1:0] mcu_aux;
+reg vintl;
+
+always @(posedge clk24) vintl <= vint;
+
+always @(posedge clk24, posedge rst24) begin
+    if( rst24 )
+        mcu_aux <= 0;
+    else if( vint && !vintl )
+        mcu_aux <= { mcu_aux[0], 1'b1 };
+end
+
+always @(negedge clk24, posedge rst24) begin
+    if( rst24 )
+        mcu_rst <= 1;
+    else if(mcu_aux==2'b11)
+        mcu_rst <= 0;
+end
+
+
+jtframe_8751mcu #(
+    .DIVCEN     ( 1             ),
+    .SYNC_XDATA ( 1             ),
+    .SYNC_P1    ( 1             ),
+    .SYNC_INT   ( 1             )
+) u_mcu(
+    .rst        ( mcu_rst       ),
+    .clk        ( clk24         ),
+    .cen        ( mcu_cen       ),
+
+    .int0n      ( mcu_intn[0]   ),
+    .int1n      ( mcu_intn[1]   ),
+
+    .p0_i       ( mcu_din       ),
+    .p1_i       ( sys_inputs    ),
+    .p2_i       ( 8'hff         ),
+    .p3_i       ( 8'hff          ),
+
+    .p0_o       (               ),
+    .p1_o       (               ),
+    .p2_o       (               ),
+    .p3_o       (               ),
+
+    // external memory
+    .x_din      ( mcu_din       ),
+    .x_dout     ( mcu_dout      ),
+    .x_addr     ( mcu_addr      ),
+    .x_wr       ( mcu_wr        ),
+    .x_acc      ( mcu_acc       ),
+
+    // ROM programming
+    .clk_rom    ( clk           ),
+    .prog_addr  ( prog_addr[11:0] ),
+    .prom_din   ( prog_data     ),
+    .prom_we    ( mcu_prog_we   )
+);
+
 
 // System 16B memory map
 always @(posedge clk, posedge rst) begin
@@ -442,132 +500,68 @@ always @(posedge clk) begin
     end
 end
 
-`ifdef NOMCU
-    // Shared by FD1094 and FD1089
-    wire [12:0] key_1094, key_1089;
-    wire [15:0] dec_1094, dec_1089;
-    wire        ok_1094, ok_1089;
+// Shared by FD1094 and FD1089
+wire [12:0] key_1094, key_1089;
+wire [15:0] dec_1094, dec_1089;
+wire        ok_1094, ok_1089;
 
-    assign mcu_wr   = 0;
-    assign mcu_acc  = 0;
-    assign mcu_dout = 0;
-    assign key_addr = fd1094_en ? key_1094 : key_1089;
-    assign rom_dec  = fd1094_en ? dec_1094 : dec_1089;
-    assign ok_dly   = fd1094_en ? ok_1094  : ok_1089;
+assign key_addr= fd1094_en ? key_1094 : key_1089;
+assign rom_dec = fd1094_en ? dec_1094 : dec_1089;
+assign ok_dly  = fd1094_en ? ok_1094  : ok_1089;
 
-    jts16_fd1094 u_dec1094(
-        .rst        ( rst       ),
-        .clk        ( clk       ),
+jts16_fd1094 u_dec1094(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
 
-        // Configuration
-        .prog_addr  ( prog_addr ),
-        .fd1094_we  ( key_we    ),
-        .prog_data  ( prog_data ),
+    // Configuration
+    .prog_addr  ( prog_addr ),
+    .fd1094_we  ( key_we    ),
+    .prog_data  ( prog_data ),
 
-        // Key access
-        .key_addr   ( key_1094  ),
-        .key_data   ( key_data  ),
+    // Key access
+    .key_addr   ( key_1094  ),
+    .key_data   ( key_data  ),
 
-        // Operation
-        .dec_en     ( dec_en    ),
-        .FC         ( FC        ),
-        .ASn        ( ASn       ),
+    // Operation
+    .dec_en     ( dec_en    ),
+    .FC         ( FC        ),
+    .ASn        ( ASn       ),
 
-        .addr       ( A         ),
-        .enc        ( rom_data  ),
-        .dec        ( dec_1094  ),
+    .addr       ( A         ),
+    .enc        ( rom_data  ),
+    .dec        ( dec_1094  ),
 
-        .dtackn     ( DTACKn    ),
-        .rom_ok     ( rom_ok    ),
-        .ok_dly     ( ok_1094   )
-    );
+    .dtackn     ( DTACKn    ),
+    .rom_ok     ( rom_ok    ),
+    .ok_dly     ( ok_1094   )
+);
 
-    jts16_fd1089 u_dec1089(
-        .rst        ( rst       ),
-        .clk        ( clk       ),
+wire op_n = FC[1:0]!=2'b10; // low for CPU OP requests
 
-        // Configuration
-        .prog_addr  ( prog_addr ),
-        .fd1089_we  ( fd1089_we ),
-        .prog_data  ( prog_data ),
+jts16_fd1089 u_dec1089(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
 
-        // Key access
-        .key_addr   ( key_1089  ),
-        .key_data   ( key_data  ),
+    // Configuration
+    .prog_addr  ( prog_addr ),
+    .fd1089_we  ( fd1089_we ),
+    .prog_data  ( prog_data ),
 
-        // Operation
-        .dec_type   ( dec_type  ), // 0=a, 1=b
-        .dec_en     ( dec_en    ),
-        .rom_ok     ( rom_ok    ),
-        .ok_dly     ( ok_1089   ),
+    // Key access
+    .key_addr   ( key_1089  ),
+    .key_data   ( key_data  ),
 
-        .op_n       ( op_n      ),     // OP (0) or data (1)
-        .addr       ( A         ),
-        .enc        ( rom_data  ),
-        .dec        ( dec_1089  )
-    );
-`else
-    reg mcu_rst;
-    reg [1:0] mcu_aux;
-    reg vintl;
+    // Operation
+    .dec_type   ( dec_type  ), // 0=a, 1=b
+    .dec_en     ( dec_en    ),
+    .rom_ok     ( rom_ok    ),
+    .ok_dly     ( ok_1089   ),
 
-    always @(posedge clk24) vintl <= vint;
-
-    always @(posedge clk24, posedge rst24) begin
-        if( rst24 )
-            mcu_aux <= 0;
-        else if( vint && !vintl )
-            mcu_aux <= { mcu_aux[0], 1'b1 };
-    end
-
-    always @(negedge clk24, posedge rst24) begin
-        if( rst24 )
-            mcu_rst <= 1;
-        else if(mcu_aux==2'b11)
-            mcu_rst <= 0;
-    end
-
-
-    jtframe_8751mcu #(
-        .DIVCEN     ( 1             ),
-        .SYNC_XDATA ( 1             ),
-        .SYNC_P1    ( 1             ),
-        .SYNC_INT   ( 1             )
-    ) u_mcu(
-        .rst        ( mcu_rst       ),
-        .clk        ( clk24         ),
-        .cen        ( mcu_cen       ),
-
-        .int0n      ( mcu_intn[0]   ),
-        .int1n      ( mcu_intn[1]   ),
-
-        .p0_i       ( mcu_din       ),
-        .p1_i       ( sys_inputs    ),
-        .p2_i       ( 8'hff         ),
-        .p3_i       ( 8'hff          ),
-
-        .p0_o       (               ),
-        .p1_o       (               ),
-        .p2_o       (               ),
-        .p3_o       (               ),
-
-        // external memory
-        .x_din      ( mcu_din       ),
-        .x_dout     ( mcu_dout      ),
-        .x_addr     ( mcu_addr      ),
-        .x_wr       ( mcu_wr        ),
-        .x_acc      ( mcu_acc       ),
-
-        // ROM programming
-        .clk_rom    ( clk           ),
-        .prog_addr  ( prog_addr[11:0] ),
-        .prom_din   ( prog_data     ),
-        .prom_we    ( mcu_prog_we   )
-    );
-
-    assign dec_1089 = 0;
-    assign dec_1094 = 0;
-`endif
+    .op_n       ( op_n      ),     // OP (0) or data (1)
+    .addr       ( A         ),
+    .enc        ( rom_data  ),
+    .dec        ( dec_1089  )
+);
 
 jtframe_m68k u_cpu(
     .clk        ( clk         ),
@@ -621,8 +615,6 @@ jts16_shadow #(.VRAMW(15)) u_shadow(
     .ioctl_din  ( ioctl_din )
 );
 `endif
-`else
-assign ioctl_din = 0;
 `endif
 
 endmodule
