@@ -5,9 +5,8 @@
               This work is not mantained by the MiSTer project. Please contact the
               core author for issues and updates.
 
-              (c) Jose Tejada, 2022. Please support the author
+              (c) Jose Tejada, 2022. Please support this research
               Patreon: https://patreon.com/topapate
-              Paypal:  https://paypal.me/topapate
 
               The author does not endorse or participate in illegal distribution
               of copyrighted material. This work can be used with legally
@@ -33,6 +32,10 @@
     <region>World</region>
     <mraauthor>jotego</mraauthor>
     <rom index="0" zip="outrundxj.zip|outrun.zip" md5="None">
+        <part>
+            00 00 00 00 00 00 00 00
+            00 00 00 00 00 00 00 00
+        </part>
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
             <part name="epr-10333.ic118" crc="fce8394e" map="01"/>
@@ -42,7 +45,8 @@
             <part name="epr-10334.ic117" crc="ff22ad0b" map="01"/>
             <part name="epr-10332.ic132" crc="53d298d7" map="10"/>
         </interleave>
-        <!-- subcpu - starts at 0x40000 -->
+        <part repeat="0x20000"> FF</part>
+        <!-- subcpu - starts at 0x60000 -->
         <interleave output="16">
             <part name="epr-10329.58" crc="fe0fa5e2" map="01"/>
             <part name="epr-10327.76" crc="da99d855" map="10"/>
@@ -51,21 +55,18 @@
             <part name="epr-10330.57" crc="59786e99" map="01"/>
             <part name="epr-10328.75" crc="3c0e9a7f" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0xA0000 -->
         <part name="epr-10187.88" crc="a10abaa9"/>
-        <!-- pcm - starts at 0x88000 -->
+        <part repeat="0x8000"> FF</part>
+        <!-- pcm - starts at 0xB0000 -->
         <part name="opr-10193.66" crc="bcd10dde"/>
-        <part repeat="0x8000"> FF</part>
         <part name="opr-10192.67" crc="770f1270"/>
-        <part repeat="0x8000"> FF</part>
         <part name="opr-10191.68" crc="20a284ab"/>
-        <part repeat="0x8000"> FF</part>
         <part name="opr-10190.69" crc="7cab70e2"/>
-        <part repeat="0x8000"> FF</part>
         <part name="opr-10189.70" crc="01366b54"/>
-        <part repeat="0x8000"> FF</part>
         <part name="opr-10188.71" crc="bad30ad9"/>
-        <!-- gfx1 - starts at 0xE0000 -->
+        <part repeat="0x30000"> FF</part>
+        <!-- gfx1 - starts at 0x110000 -->
         <interleave output="32">
             <part name="opr-10268.99" crc="95344b04" map="0001"/>
             <part name="opr-10232.102" crc="776ba1eb" map="0010"/>
@@ -78,7 +79,7 @@
             <part name="opr-10230.104" crc="686f5e50" map="0100"/>
             <part name="opr-10230.104" crc="686f5e50" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x120000 -->
+        <!-- sprites - starts at 0x150000 -->
         <interleave output="16">
             <part name="mpr-10373.10" crc="b0d26ac9" map="01"/>
             <part name="mpr-10371.9" crc="7cc86208" map="10"/>
@@ -95,15 +96,15 @@
             <part name="mpr-10378.16" crc="a1062984" map="01"/>
             <part name="mpr-10376.15" crc="f3b8f318" map="10"/>
         </interleave>
-        <!-- segaic16road - starts at 0x220000 -->
+        <!-- segaic16road - starts at 0x250000 -->
         <part repeat="0x8000"> FF</part>
         <interleave output="16">
             <part name="opr-10185.11" crc="22794426" map="01"/>
             <part name="opr-10186.47" crc="22794426" map="10"/>
         </interleave>
-        <!-- maincpu:key - starts at 0x238000 -->
+        <!-- maincpu:key - starts at 0x268000 -->
         <part name="317-0019.key" crc="8ffbed98"/>
-        <!-- FD1089 base table starts at 0x23A000 -->
+        <!-- FD1089 base table starts at 0x26A000 -->
         <part>
             00 1C 76 6A 5E 42 24 38 4B 67 AD 81 E9 C5 03 2F
             45 69 AF 83 E7 CB 01 2D 02 1E 78 64 5C 40 2A 36
@@ -122,7 +123,7 @@
             12 0E 68 74 E2 FE 94 88 65 49 8F A3 99 B5 7F 53
             35 19 D3 FF C9 E5 23 0F BE A2 C8 D4 4E 52 34 28
         </part>
-        <!-- Total 0x23A100 bytes - 2280 kBytes -->
+        <!-- Total 0x26A100 bytes - 2472 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>
@@ -130,7 +131,7 @@
     <rom index="1">
         <part>00</part>
     </rom>
-    <switches base="16" default="ff,fd">
+    <switches page_id="1" page_name="Switches" base="16" default="ff,fd">
         <!-- COINAGE -->
         <dip name="Coin A" bits="0,3" ids="Free Play or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <dip name="Coin B" bits="4,7" ids="Free Play or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>

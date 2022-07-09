@@ -22,18 +22,25 @@ name="jtoutrun"
 delete = [ "Unused", "Unknown" ]
 bitcnt = 16
 
+[header]
+len=16
+fill=0
+dev = [
+    { byte=0, dev="fd1094",  value=1 },
+]
+
 [ROM]
 # values starting with $ refer to macro definitions in the .def file
 # or arguments passed to mame2mra
 regions = [
     { name="maincpu",     width=16, reverse=true },
-    { name="subcpu",      width=16, reverse=true },
-    { name="soundcpu"      },
-    { name="pcm"           },
-    { name="gfx1",        frac={ bytes=1, parts=4} },
-    { name="sprites",     width=16, reverse=true },
-    { name="segaic16road",width=16, reverse=true },
-    { name="maincpu:key", len=0x2000 },
+    { name="subcpu",      start=$SUB_START, width=16, reverse=true },
+    { name="soundcpu",    start=$BA1_START },
+    { name="pcm",         start=$PCM_START, No_offset=true },
+    { name="gfx1",        start=$BA2_START, frac={ bytes=1, parts=4} },
+    { name="sprites",     start=$BA3_START, width=16, reverse=true },
+    { name="segaic16road",start=$ROAD_START, width=16, reverse=true },
+    { name="maincpu:key", start=$KEY_START, len=0x2000 },
 ]
 
 order = [
