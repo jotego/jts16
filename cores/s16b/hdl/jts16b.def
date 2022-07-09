@@ -1,5 +1,8 @@
 include ../../s16/hdl/jts16.def
 
+[mist]
+-JTFRAME_CREDITS
+
 [all]
 S16B
 
