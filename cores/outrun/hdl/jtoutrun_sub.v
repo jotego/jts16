@@ -22,6 +22,19 @@ module jtoutrun_sub(
 
     input              irqn,    // common with main CPU
 
+    // From main CPU
+    input      [19:1]  main_A,
+    input      [ 1:0]  main_dsn,
+    input              main_rnw,
+    input              main_br, // bus request
+    input      [15:0]  main_dout,
+    output     [15:0]  main_din,
+    output             main_ok,
+
+    // sub CPU bus
+    output     [15:0]  cpu_dout,
+    output     [ 1:0]
+
     output reg [17:0]  rom_addr,
     output reg         rom_cs,
     input              rom_ok,
@@ -30,21 +43,42 @@ module jtoutrun_sub(
     output reg         ram_cs,
     input              ram_ok,
     input      [15:0]  ram_data,
+
+    output reg         road_cs,
+    output reg         sio_cs,
+    output     [ 1:0]  dswn,
 );
 
-wire [23:1] A, Abus, cpu_A;
+wire [19:1] A;
+wire [23:1] cpu_A;
 wire        BERRn;
 wire [ 2:0] FC, IPLn;
 wire        BRn, BGACKn, BGn;
-wire        ASn, UDSn, LDSn, BUSn, VPAn;
+wire        ASn, UDSn, LDSn, BUSn, VPAn, RnW, BUSn,
+            cpu_UDSn, cpu_LDSn, cpu_RnW;
+reg  [15:0] cpu_din;
+wire [15:0] cpu_dout_raw;
+wire        bus_busy, bus_cs;
+wire        cpu_cen, cpu_cenb;
+wire        inta_n;
 
 `ifdef SIMULATION
-wire [23:0] A_full = {A,1'b0};
+wire [19:0] A_full = {A,1'b0};
 `endif
 
-assign IPLn = { irqn, 2'b11 };
-
-reg road_cs, sio_cs;
+assign IPLn     = { irqn, 2'b11 };
+assign dswn     = { UDSn, LDSn } | {2{RnW}};
+assign main_din = cpu_din;
+assign {UDSn, LDSn} = BGACKn ? {cpu_UDSn,cpu_LDSn} : main_dsn;
+assign RnW      = BGACKn ? cpu_RnW : main_rnw;
+assign cpu_dout = BGACKn ? cpu_dout_raw : main_dout;
+assign A        = BGACKn ? cpu_A[19:1] : main_A;
+assign bus_cs   = rom_cs | ram_cs;
+assign bus_busy = (rom_cs & ~rom_ok) | (ram_cs & ~ram_ok);
+assign inta_n   = ~&FC[1:0];
+assign VPAn     = ~(~ASn & ~inta_n); // autovector
+assign main_ok  = ~BGACKn & ~bus_busy;
+assign BUSn     = LDSn & UDSn;
 
 // memory map
 always @(posedge clk, posedge rst) begin
@@ -57,7 +91,7 @@ always @(posedge clk, posedge rst) begin
         if( !BGACKn || !ASn ) begin
             case( Abus[19:17] )
                 0,1,2: rom_cs = 1;  // <6'0000
-                3: ram_cs = 1;      //  6'0000
+                3: ram_cs = ~BUSn;  //  6'0000
                 4: begin            //  8'0000
                     road_cs = !Abus[16]; // 8'0000 road RAM
                     sio_cs  =  Abus[16]; // 9'0000 road other
@@ -79,8 +113,8 @@ jtframe_68kdtack #(.W(8),.MFREQ(50_347)) u_dtack( // 10 MHz
     .cpu_cenb   ( cpu_cenb  ),
     .bus_cs     ( bus_cs    ),
     .bus_busy   ( bus_busy  ),
-    .bus_legit  ( bus_legit ),
-    .ASn        ( ASn       ),
+    .bus_legit  ( 1'b0      ),
+    .ASn        ( ASn | ~inta_n ), // do not generate DTACK for int ack
     .DSn        ({UDSn,LDSn}),
     .num        ( 7'd29     ),  // numerator
     .den        ( 8'd146    ),  // denominator
@@ -89,6 +123,18 @@ jtframe_68kdtack #(.W(8),.MFREQ(50_347)) u_dtack( // 10 MHz
     .fave       ( fave      ),
     .fworst     ( fworst    ),
     .frst       ( rst       )
+);
+
+jtframe_68kdma u_dma(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .cpu_cen    ( cpu_cen   ),
+    .cpu_BRn    ( BRn       ),
+    .cpu_BGACKn ( BGACKn    ),
+    .cpu_BGn    ( BGn       ),
+    .cpu_ASn    ( ASn       ),
+    .cpu_DTACKn ( DTACKn    ),
+    .dev_br     ( main_br   )
 );
 
 jtframe_m68k u_cpu(
