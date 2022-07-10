@@ -18,6 +18,7 @@
 
 // This module represents the SEGA 315-5195
 //
+//  The region meaning depends on the system, for S16B:
 //  Region 0 - Program ROM
 //  Region 3 - 68000 work RAM
 //  Region 4 - Text/tile RAM
@@ -285,7 +286,7 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .bus_cs     ( bus_cs    ),
     .bus_busy   ( bus_busy  ),
     .bus_legit  ( 1'b0      ),
-    .ASn        ( cpu_asn   ),  // BUSn = ASn | (LDSn & UDSn)
+    .ASn        ( cpu_asn || cpu_fc[1:0]==2'b11  ),  // BUSn = ASn | (LDSn & UDSn)
     .DSn        ( cpu_dsn   ),
     .num        ( 7'd29     ),  // numerator
     .den        ( 8'd146    ),  // denominator
