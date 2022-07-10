@@ -18,6 +18,7 @@
 
 // This module represents the SEGA 315-5195
 //
+//  The region meaning depends on the system, for S16B:
 //  Region 0 - Program ROM
 //  Region 3 - 68000 work RAM
 //  Region 4 - Text/tile RAM

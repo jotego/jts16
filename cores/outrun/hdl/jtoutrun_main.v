@@ -103,17 +103,13 @@ module jtoutrun_main(
     output      [ 7:0] st_dout
 );
 
-//  Region 0 - Program ROM
-//  Region 3 - 68000 work RAM
-//  Region 4 - Text/tile RAM
-//  Region 5 - Object RAM
-//  Region 6 - Color RAM
-//  Region 7 - I/O area
-localparam [2:0] REG_RAM  = 3,
-                 REG_ORAM = 4,
-                 REG_VRAM = 5,
-                 REG_PAL  = 6,
-                 REG_IO   = 7;
+//  Mapper regions, CSS signals in schematics
+localparam [2:0] REG_MEM  = 0,
+                 REG_SCR  = 1,
+                 REG_PAL  = 2,
+                 REG_OBJ  = 3,
+                 REG_IO   = 4,
+                 REG_SUB  = 5;
 
 wire [23:1] A,cpu_A;
 wire        BERRn;
