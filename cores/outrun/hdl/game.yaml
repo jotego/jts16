@@ -4,7 +4,11 @@ game:
       - jtsoutrun_game.v
       - jtsoutrun_main.v
       - jtsoutrun_sub.v
-      - jtsoutrun_snd.v
+      - jtsoutrun_road.v
+      - jtsoutrun_sdram.v
+      # - jtsoutrun_video.v
+      # - jtsoutrun_obj.v
+      # - jtsoutrun_snd.v
 jtframe:
   - get:
       - jtframe_ff.v

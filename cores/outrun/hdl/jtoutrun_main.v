@@ -19,8 +19,6 @@
 module jtoutrun_main(
     input              rst,
     input              clk,
-    input              rst24,
-    input              clk24,       // required to ease MCU synthesis
     input              pxl_cen,
     input              clk_rom,
     output             cpu_cen,
@@ -121,11 +119,9 @@ wire [23:0] A_full = {A,1'b0};
 
 wire        BRn, BGACKn, BGn;
 wire        ASn, UDSn, LDSn, BUSn;
-wire        ok_dly;
-reg         sdram_ok;
 wire [15:0] rom_dec, cpu_dout_raw;
 
-reg         io_cs, wdog_cs, tbank_cs;
+reg         io_cs;
 wire        cpu_RnW;
 
 assign UDSWn = RnW | UDSn;
@@ -142,7 +138,7 @@ wire [ 2:0] cpu_ipln;
 wire        DTACKn, cpu_vpan;
 
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs;
-wire bus_busy  = |{ rom_cs, ram_cs, vram_cs } & ~sdram_ok;
+wire bus_busy  = |{ rom_cs & ~rom_ok, (ram_cs | vram_cs) & ~ram_ok };
 wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
@@ -217,103 +213,33 @@ jts16b_mapper u_mapper(
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
             rom_cs    <= 0;
-            char_cs   <= 0; // 4 kB
+            ram_cs    <= 0;
+            char_cs   <= 0;
+            vram_cs   <= 0; // 32kB
             objram_cs <= 0; // 2 kB
             pal_cs    <= 0; // 4 kB
             io_cs     <= 0;
-            mul_cs    <= 0;
-            cmp_cs    <= 0;
-            cmp2_cs   <= 0;
-            wdog_cs   <= 0;
-
-            vram_cs   <= 0; // 32kB
-            ram_cs    <= 0;
-            tbank_cs  <= 0;
-            sdram_ok  <= 0;
     end else begin
-        if( ASn )
-            sdram_ok <= 0;
-        else if( !BUSn ) begin
-            sdram_ok <= rom_cs ? ok_dly : ram_ok;
-        end
-        if( !BUSn || (!ASn && RnW) /*&& BGACKn*/ ) begin
-            rom_cs    <= (pcb_5797 ? active[0] : |active[2:0]) && RnW;
-            char_cs   <= active[REG_VRAM] && A[16];
+        if( !BUSn || (!ASn && RnW) ) begin
+            rom_cs    <= active[REG_MEM] && A[18:17]!=2'b11;
+            ram_cs    <= active[REG_MEM] && A[18:17]==2'b11 && !BUSn;
 
-            objram_cs <= active[REG_ORAM];
+            char_cs   <= active[REG_SCR] &&  A[16];
+            vram_cs   <= active[REG_SCR] && !A[16] && !BUSn;
+            objram_cs <= active[REG_OBJ];
             pal_cs    <= active[REG_PAL];
             io_cs     <= active[REG_IO];
-
-            // jtframe_ramrq requires cs to toggle to
-            // process a new request. BUSn will toggle for
-            // read-modify-writes
-            vram_cs <= !BUSn && active[REG_VRAM] && !A[16];
-            ram_cs  <= !BUSn && active[REG_RAM];
         end else begin
             rom_cs    <= 0;
+            ram_cs    <= 0;
             char_cs   <= 0;
+            vram_cs   <= 0;
             objram_cs <= 0;
             pal_cs    <= 0;
             io_cs     <= 0;
-            mul_cs    <= 0;
-            wdog_cs   <= 0;
-            vram_cs   <= 0;
-            ram_cs    <= 0;
-            tbank_cs  <= 0;
         end
     end
 end
-
-assign colscr_en   = 0;
-assign rowscr_en   = 0;
-
-always @(posedge clk, posedge rst) begin
-    if( rst ) begin
-        tile_bank <= 0;
-    end else begin
-        if( tbank_cs && !LDSWn )
-            if( A[1] )
-                tile_bank[5:3] <= cpu_dout[2:0];
-            else
-                tile_bank[2:0] <= cpu_dout[2:0];
-    end
-end
-
-jts16b_mul u_mul(
-    .rst    ( rst       ),
-    .clk    ( clk       ),
-    .A      ( A         ),
-    .dsn    ({UDSn,LDSn}),
-    .rnw    ( RnW       ),
-    .cs     ( mul_cs    ),
-    .din    ( cpu_dout  ),
-    .dout   ( mul_dout  )
-);
-
-jts16b_timer u_timer1(
-    .rst    ( rst       ),
-    .clk    ( clk       ),
-    .A      ( A         ),
-    .dsn    ({UDSn,LDSn}),
-    .rnw    ( RnW       ),
-    .cs     ( cmp_cs    ),
-    .din    ( cpu_dout  ),
-    .dout   ( cmp_dout  ),
-    .snd_irq(           )
-);
-
-jts16b_timer u_timer2(
-    .rst    ( rst       ),
-    .clk    ( clk       ),
-    .A      ( A         ),
-    .dsn    ({UDSn,LDSn}),
-    .rnw    ( RnW       ),
-    .cs     ( cmp2_cs   ),
-    .din    ( cpu_dout  ),
-    .dout   ( cmp2_dout ),
-    .snd_irq(           )
-);
-
 
 // Data bus input
 always @(posedge clk) begin

@@ -88,7 +88,7 @@ always @(posedge clk, posedge rst) begin
         ram_cs  <= 0;
         road_cs <= 0;
     end else begin
-        if( !BGACKn || !ASn ) begin
+        if( !BUSn || !BGACKn || (!ASn && RnW) ) begin
             case( Abus[19:17] )
                 0,1,2: rom_cs = 1;  // <6'0000
                 3: ram_cs = ~BUSn;  //  6'0000
