@@ -56,11 +56,11 @@ always @(posedge clk, posedge rst) begin
     end else begin
         if( !BGACKn || !ASn ) begin
             case( Abus[19:17] )
-                0,1,2: rom_cs = 1;
-                3: ram_cs = 1;
-                4: begin
-                    road_cs = !Abus[16];
-                    sio_cs  =  Abus[16];
+                0,1,2: rom_cs = 1;  // <6'0000
+                3: ram_cs = 1;      //  6'0000
+                4: begin            //  8'0000
+                    road_cs = !Abus[16]; // 8'0000 road RAM
+                    sio_cs  =  Abus[16]; // 9'0000 road other
                 end
             endcase
         end else begin
