@@ -33,7 +33,7 @@
     <mraauthor>jotego</mraauthor>
     <rom index="0" zip="shangon2.zip|shangon.zip" md5="None">
         <part>
-            00 00 00 00 00 00 00 00
+            03 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
         <!-- maincpu - starts at 0x0 -->

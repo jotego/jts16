@@ -197,7 +197,7 @@ jts16_cen u_cen(
     .cpu_cenb   (           ),
 
     .clk24      ( clk24     ),
-    .mcu_cen    ( mcu_cen   ),
+    .mcu_cen    (           ),
     .fm2_cen    ( cen_fm2   ),
     .fm_cen     ( cen_fm    ),
     .snd_cen    ( cen_snd   ),
@@ -227,8 +227,6 @@ jtoutrun_main u_main(
     .obj_dout   ( obj_dout  ),
 
     .flip       ( flip      ),
-    .colscr_en  ( colscr_en ),
-    .rowscr_en  ( rowscr_en ),
     // RAM access
     .ram_cs     ( ram_cs    ),
     .ram_data   ( ram_data  ),
@@ -263,21 +261,11 @@ jtoutrun_main u_main(
     .dec_type    ( dec_type   ),
     .key_addr    ( key_addr   ),
     .key_data    ( key_data   ),
-`ifndef S16B
     // Sound communication
     .snd_latch   ( snd_latch  ),
     .snd_irqn    ( snd_irqn   ),
     .snd_ack     ( snd_ack    ),
     .sound_en    ( sound_en   ),
-`else
-    .pxl_cen     ( pxl_cen    ),
-    .sndmap_rd   ( sndmap_rd  ),
-    .sndmap_wr   ( sndmap_wr  ),
-    .sndmap_din  ( sndmap_din ),
-    .sndmap_dout (sndmap_dout ),
-    .sndmap_pbf  ( sndmap_pbf ),
-    .tile_bank   ( tile_bank  ),
-`endif
     .prog_addr   ( prog_addr[12:0] ),
     .prog_data   ( prog_data[ 7:0] ),
     // DIP switches
@@ -299,16 +287,40 @@ jtoutrun_main u_main(
     assign main_rnw  = 1;
     assign main_dout = 0;
     assign video_en  = 1;
-    `ifdef SIMULATION
-        reg [7:0] sim_def[0:1];
-
-        initial begin
-            $readmemh("tilebank.hex",sim_def);
-            $display("Tile bank set to %X",sim_def[0]);
-        end
-        assign tile_bank = sim_def[0][5:0];
-    `endif
 `endif
+
+jtoutrun_sub u_sub(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+
+    .irqn       ( irqn      ),    // common with main CPU
+
+    // From main CPU
+    .main_A     ( main_A    ),
+    .main_dsn   ( main_dsn  ),
+    .main_rnw   ( main_rnw  ),
+    .main_br    ( main_br   ), // bus request
+    .main_dout  ( main_dout ),
+    .main_din   ( main_din  ),
+    .main_ok    ( main_ok   ),
+
+    // sub CPU bus
+    .cpu_dout   ( sub_dout  ),
+
+    .rom_addr   ( srom_addr ),
+    .rom_cs     ( srom_cs   ),
+    .rom_ok     ( srom_ok   ),
+    .rom_data   ( srom_data ),
+
+    .ram_cs     ( sram_cs   ),
+    .ram_ok     ( sram_ok   ),
+    .ram_data   ( sram_data ),
+
+    .road_cs    ( road_cs   ),
+    .sio_cs     ( sio_cs    ),
+    .dsn        ( sub_dsn   ),
+    .RnW        ( sub_rnw   )
+);
 
 // no sound for now
 assign snd_cs   = 0;
@@ -316,63 +328,63 @@ assign snd_addr = 0;
 assign pcm_cs   = 0;
 assign pcm_addr = 0;
 
-always @(posedge clk) begin
-    case( st_addr[7:4] )
-        0: st_dout <= st_video;
-        1: case( st_addr[3:0] )
-                // 0: st_dout <= sndmap_dout;
-                1: st_dout <= {2'd0, tile_bank};
-                2: st_dout <= game_id;
-            endcase
-        2,3: st_dout <= st_main;
-    endcase
-end
+// always @(posedge clk) begin
+//     case( st_addr[7:4] )
+//         0: st_dout <= st_video;
+//         1: case( st_addr[3:0] )
+//                 // 0: st_dout <= sndmap_dout;
+//                 1: st_dout <= {2'd0, tile_bank};
+//                 2: st_dout <= game_id;
+//             endcase
+//         2,3: st_dout <= st_main;
+//     endcase
+// end
 
 jtoutrun_video u_video(
     .rst        ( rst       ),
     .clk        ( clk       ),
     .pxl2_cen   ( pxl2_cen  ),
     .pxl_cen    ( pxl_cen   ),
-    .gfx_en     ( gfx_en    ),
+    // .gfx_en     ( gfx_en    ),
 
-    .video_en   ( video_en  ),
-    .game_id    ( game_id   ),
-    // CPU interface
-    .cpu_addr   ( cpu_addr  ),
-    .char_cs    ( char_cs   ),
-    .pal_cs     ( pal_cs    ),
-    .objram_cs  ( objram_cs ),
-    .vint       ( vint      ),
-    .dip_pause  ( dip_pause ),
+    // .video_en   ( video_en  ),
+    // .game_id    ( game_id   ),
+    // // CPU interface
+    // .cpu_addr   ( cpu_addr  ),
+    // .char_cs    ( char_cs   ),
+    // .pal_cs     ( pal_cs    ),
+    // .objram_cs  ( objram_cs ),
+    // .vint       ( vint      ),
+    // .dip_pause  ( dip_pause ),
 
-    .cpu_dout   ( main_dout ),
-    .dsn        ( dsn       ),
-    .char_dout  ( char_dout ),
-    .pal_dout   ( pal_dout  ),
-    .obj_dout   ( obj_dout  ),
+    // .cpu_dout   ( main_dout ),
+    // .dsn        ( dsn       ),
+    // .char_dout  ( char_dout ),
+    // .pal_dout   ( pal_dout  ),
+    // .obj_dout   ( obj_dout  ),
 
-    .flip       ( flip      ),
-    .ext_flip   ( dip_flip  ),
-    .colscr_en  ( colscr_en ),
-    .rowscr_en  ( rowscr_en ),
+    // .flip       ( flip      ),
+    // .ext_flip   ( dip_flip  ),
+    // .colscr_en  ( colscr_en ),
+    // .rowscr_en  ( rowscr_en ),
 
     // SDRAM interface
-    .char_ok    ( char_ok   ),
-    .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    .char_data  ( char_data ),
+    // .char_ok    ( char_ok   ),
+    // .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    // .char_data  ( char_data ),
 
-    .map1_ok    ( map1_ok   ),
-    .map1_addr  ( map1_addr ),
-    .map1_data  ( map1_data ),
+    // .map1_ok    ( map1_ok   ),
+    // .map1_addr  ( map1_addr ),
+    // .map1_data  ( map1_data ),
 
-    .scr1_ok    ( scr1_ok   ),
-    .scr1_addr  ( scr1_addr ),
-    .scr1_data  ( scr1_data ),
+    // .scr1_ok    ( scr1_ok   ),
+    // .scr1_addr  ( scr1_addr ),
+    // .scr1_data  ( scr1_data ),
 
-    .obj_ok     ( obj_ok    ),
-    .obj_cs     ( obj_cs    ),
-    .obj_addr   ( obj_addr  ),
-    .obj_data   ( obj_data  ),
+    // .obj_ok     ( obj_ok    ),
+    // .obj_cs     ( obj_cs    ),
+    // .obj_addr   ( obj_addr  ),
+    // .obj_data   ( obj_data  ),
 
     // Video signal
     .HS         ( HS        ),
@@ -400,23 +412,16 @@ jtoutrun_sdram #(.SNDW(SNDW)) u_sdram(
     .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),
     .game_id    ( game_id   ),
-    .tile_bank  ( tile_bank ),
-    //.tile_bank  ( debug_bus[5:0] ),
 
     .dec_en     ( dec_en    ),
     .fd1089_en  ( fd1089_en ),
     .fd1094_en  ( fd1094_en ),
-    .mc8123_en  ( mc8123_en ),
     .dec_type   ( dec_type  ),
     .key_we     ( key_we    ),
     .fd1089_we  ( fd1089_we ),
     .key_addr   ( key_addr  ),
     .key_mcaddr ( key_mcaddr),
     .key_data   ( key_data  ),
-
-    // i8751 MCU
-    .mcu_we     ( mcu_we    ),
-    .mcu_en     ( mcu_en    ),
 
     // Main CPU
     .main_cs    ( main_cs   ),
@@ -430,60 +435,72 @@ jtoutrun_sdram #(.SNDW(SNDW)) u_sdram(
     .main_ok    ( main_ok   ),
     .ram_ok     ( ram_ok    ),
 
-    .dsn        ( dsn       ),
+    .main_dsn   ( main_dsn  ),
     .main_dout  ( main_dout ),
     .main_rnw   ( main_rnw  ),
 
+    // Sub CPU
+    .srom_cs    ( srom_cs   ),
+    .sram_cs    ( sram_cs   ),
+
+    .sub_addr   ( sub_addr  ),
+    .srom_data  ( srom_data ),
+    .sram_data  ( sram_data ),
+
+    .sub_ok     ( sub_ok    ),
+    .sram_ok    ( sram_ok   ),
+
+    .sub_dsn    ( sub_dsn   ),
+    .sub_dout   ( sub_dout  ),
+    .sub_rnw    ( sub_rnw   ),
+
     // Sound CPU
-    .snd_addr   ( snd_addr  ),
-    .snd_cs     ( snd_cs    ),
-    .snd_data   ( snd_data  ),
-    .snd_ok     ( snd_ok    ),
-    .mc8123_we  ( mc8123_we ),
+    // .snd_addr   ( snd_addr  ),
+    // .snd_cs     ( snd_cs    ),
+    // .snd_data   ( snd_data  ),
+    // .snd_ok     ( snd_ok    ),
 
     // ADPCM ROM
-    .pcm_addr   ( pcm_addr  ),
-    .pcm_cs     ( pcm_cs    ),
-    .pcm_data   ( pcm_data  ),
-    .pcm_ok     ( pcm_ok    ),
+    // .pcm_addr   ( pcm_addr  ),
+    // .pcm_cs     ( pcm_cs    ),
+    // .pcm_data   ( pcm_data  ),
+    // .pcm_ok     ( pcm_ok    ),
 
     // Char interface
-    .char_ok    ( char_ok   ),
-    .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    .char_data  ( char_data ),
+    // .char_ok    ( char_ok   ),
+    // .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    // .char_data  ( char_data ),
 
     // Scroll 1
-    .map1_ok    ( map1_ok   ),
-    .map1_addr  ( map1_addr ),
-    .map1_data  ( map1_data ),
+    // .map1_ok    ( map1_ok   ),
+    // .map1_addr  ( map1_addr ),
+    // .map1_data  ( map1_data ),
 
-    .scr1_ok    ( scr1_ok   ),
-    .scr1_addr  ( scr1_addr ),
-    .scr1_data  ( scr1_data ),
+    // .scr1_ok    ( scr1_ok   ),
+    // .scr1_addr  ( scr1_addr ),
+    // .scr1_data  ( scr1_data ),
 
     // Sprite interface
-    .obj_ok     ( obj_ok    ),
-    .obj_cs     ( obj_cs    ),
-    .obj_addr   ( obj_addr  ),
-    .obj_data   ( obj_data  ),
+    // .obj_ok     ( obj_ok    ),
+    // .obj_cs     ( obj_cs    ),
+    // .obj_addr   ( obj_addr  ),
+    // .obj_data   ( obj_data  ),
 
     // Bank 0: allows R/W
-    .ba0_addr    ( ba0_addr      ),
-    .ba1_addr    ( ba1_addr      ),
-    .ba2_addr    ( ba2_addr      ),
-    .ba3_addr    ( ba3_addr      ),
-    .ba_rd       ( ba_rd         ),
-    .ba_wr       ( ba_wr         ),
-    .ba_ack      ( ba_ack        ),
-    .ba_dst      ( ba_dst        ),
-    .ba_dok      ( ba_dok        ),
-    .ba_rdy      ( ba_rdy        ),
-    .ba0_din     ( ba0_din       ),
-    .ba0_din_m   ( ba0_din_m     ),
+    .ba0_addr   ( ba0_addr   ),
+    .ba1_addr   ( ba1_addr   ),
+    .ba2_addr   ( ba2_addr   ),
+    .ba3_addr   ( ba3_addr   ),
+    .ba_rd      ( ba_rd      ),
+    .ba_wr      ( ba_wr      ),
+    .ba_ack     ( ba_ack     ),
+    .ba_dst     ( ba_dst     ),
+    .ba_dok     ( ba_dok     ),
+    .ba_rdy     ( ba_rdy     ),
+    .ba0_din    ( ba0_din    ),
+    .ba0_din_m  ( ba0_din_m  ),
 
-    //.debug_bus   ( debug_bus     ),
-
-    .data_read   ( data_read     ),
+    .data_read  ( data_read  ),
 
     // ROM load
     .downloading(downloading ),
@@ -497,7 +514,6 @@ jtoutrun_sdram #(.SNDW(SNDW)) u_sdram(
     .prog_mask  ( prog_mask  ),
     .prog_ba    ( prog_ba    ),
     .prog_we    ( prog_we    ),
-    .n7751_prom ( n7751_prom ),
     .prog_rd    ( prog_rd    ),
     .prog_ack   ( prog_ack   ),
     .prog_rdy   ( prog_rdy   )

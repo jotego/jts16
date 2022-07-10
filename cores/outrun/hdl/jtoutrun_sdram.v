@@ -25,8 +25,7 @@ module jtoutrun_sdram #(
     input            ioctl_ram,
     input            LVBL,
     input      [8:0] vrender,
-    output reg [7:0] game_id,
-    input      [5:0] tile_bank, // always 0 for S16A
+    output reg [1:0] game_id,
 
     // Encryption
     output           fd1089_we,
@@ -49,47 +48,41 @@ module jtoutrun_sdram #(
     input            main_rnw,
 
     // Sound CPU
-    input            snd_cs,
-    output           snd_ok,
-    input [SNDW-1:0] snd_addr,
-    output     [7:0] snd_data,
-    output           mc8123_we,
+    // input            snd_cs,
+    // output           snd_ok,
+    // input [SNDW-1:0] snd_addr,
+    // output     [7:0] snd_data,
 
-    // PROM
-    output           n7751_prom,
-    output           mcu_we,
-    output  reg      mcu_en,
 
     // ADPCM ROM
     output  reg      dec_en,
     output  reg      fd1089_en,
     output  reg      fd1094_en,
-    output  reg      mc8123_en,
     output  reg      dec_type,
-    input     [16:0] pcm_addr,
-    input            pcm_cs,
-    output    [ 7:0] pcm_data,
-    output           pcm_ok,
+    // input     [16:0] pcm_addr,
+    // input            pcm_cs,
+    // output    [ 7:0] pcm_data,
+    // output           pcm_ok,
 
     // Char
-    output           char_ok,
-    input    [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    output   [31:0]  char_data,
+    // output           char_ok,
+    // input    [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    // output   [31:0]  char_data,
 
     // Scroll 1
-    output           map1_ok,
-    input    [14:0]  map1_addr, // 3(+1) pages + 11 addr = 14/15 (32/64 kB)
-    output   [15:0]  map1_data,
+    // output           map1_ok,
+    // input    [14:0]  map1_addr, // 3(+1) pages + 11 addr = 14/15 (32/64 kB)
+    // output   [15:0]  map1_data,
 
-    output           scr1_ok,
-    input    [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
-    output   [31:0]  scr1_data,
+    // output           scr1_ok,
+    // input    [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    // output   [31:0]  scr1_data,
 
     // Obj
-    output           obj_ok,
-    input            obj_cs,
-    input    [19:0]  obj_addr,
-    output   [15:0]  obj_data,
+    // output           obj_ok,
+    // input            obj_cs,
+    // input    [19:0]  obj_addr,
+    // output   [15:0]  obj_data,
 
     // Bank 0: allows R/W
     output    [21:0] ba0_addr,
@@ -133,23 +126,13 @@ localparam [21:0] ZERO_OFFSET=0,
 localparam [24:0] BA1_START  = `BA1_START,
                   BA2_START  = `BA2_START,
                   BA3_START  = `BA3_START,
-                  MCU_PROM   = `MCU_START,
-                  N7751_PROM = `N7751_START,
-                  KEY_PROM   = `MAINKEY_START,
-                  MC8123_PROM= `SNDKEY_START,
+                  ROAD_START = `ROAD_START,
+                  KEY_PROM   = `KEY_START,
                   FD_PROM    = `FD1089_START;
-
-localparam [ 7:0] GAME_FANTZN2X = `GAME_FANTZN2X;
 /* verilator lint_on WIDTH */
 
-localparam VRAMW = `VRAMW;
-localparam [7:0] DUNKSHOT='h14;
 
-// Scroll address after banking
-wire [18:0] char_adj, scr1_adj, scr2_adj;
-reg  [19:0] obj_addr_g;
 wire [ 7:0] key_din;
-wire [12:0] key_mux;
 
 reg  [VRAMW-1:1] xram_addr;  // S16A = 32 kB VRAM + 16kB RAM
                              // S16B = 64 kB VRAM + 16-256kB RAM
@@ -161,23 +144,10 @@ wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 assign xram_cs    = ram_cs | vram_cs;
 
 assign dwnld_busy = downloading | prom_we; // prom_we is really just for sims
-assign n7751_prom = prom_we && prog_addr[21:10]==N7751_PROM [21:10];
 assign fd_we      = prom_we && prog_addr[21:13]==KEY_PROM   [21:13];
 assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM    [21: 8];
-assign mcu_we     = prom_we && prog_addr[21:12]==MCU_PROM   [21:12];
-assign mc8123_we  = prom_we && prog_addr[21:13]==MC8123_PROM[21:13];
 assign key_we     = mc8123_en ? mc8123_we : fd_we;
 assign key_din    = prog_data^{8{mc8123_en}}; // the data is inverted for the MC8123
-assign key_mux    = mc8123_en ? key_mcaddr : key_addr;
-
-`ifdef S16B
-reg dunkshot, game_fantzn2x;
-
-always @(posedge clk) begin
-    dunkshot      <= game_id == DUNKSHOT;
-    game_fantzn2x <= game_id == GAME_FANTZN2X;
-end
-`endif
 
 always @(*) begin
     xram_addr = { ram_cs, main_addr[VRAMW-2:1] }; // RAM is mapped up
@@ -192,14 +162,12 @@ end
 
 always @(posedge clk) begin
     if( header && ioctl_wr ) begin
-        if( ioctl_addr[4:0]==5'h10 ) begin
-            fd1089_en <= |ioctl_dout[1:0];
-            dec_type  <= ioctl_dout[1];
+        if( ioctl_addr[3:0]==0 ) begin
+            fd1089_en <= ioctl_dout[1];
+            dec_type  <= ioctl_dout[0];
+            fd1094_en <= ioctl_dout[2];
         end
-        if( ioctl_addr[4:0]==5'h11 ) fd1094_en <= ioctl_dout[0];
-        if( ioctl_addr[4:0]==5'h12 ) mc8123_en <= ioctl_dout[0];
-        if( ioctl_addr[4:0]==5'h13 ) mcu_en    <= ioctl_dout[0];
-        if( ioctl_addr[4:0]==5'h18 ) game_id   <= ioctl_dout;
+        if( ioctl_addr[3:0]==1 ) game_id <= ioctl_dout[1:0];
     end
     dec_en <= fd1089_en | fd1094_en;
 end
@@ -208,39 +176,11 @@ jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
     .clk    ( clk       ),
     .cen    ( 1'b1      ),
     .data   ( key_din   ),
-    .rd_addr( key_mux   ),
+    .rd_addr( key_addr   ),
     .wr_addr( prog_addr ),
     .we     ( key_we    ),
     .q      ( key_data  )
 );
-
-`ifdef S16B
-    reg single_bank;
-    always @(posedge clk) begin
-        single_bank <= game_id[4];
-                    //game_id==8'h10 || // shinobi2/5
-                    //game_id==8'h1A || // shinobi3
-                    //game_id==8'h11 || // afighterh/g/f
-                    //game_id==8'h16 || // aliensyn7
-                    //game_id==8'h19 || // defense
-    end
-    assign char_adj = { tile_bank[2:0], 3'd0, char_addr };
-    assign scr1_adj = { single_bank ? {2'b0, scr1_addr[16] } :
-                      scr1_addr[16] ? tile_bank[5:3] : tile_bank[2:0], scr1_addr[15:0] };
-    assign scr2_adj = { single_bank ? {2'b0, scr2_addr[16] } :
-                      scr2_addr[16] ? tile_bank[5:3] : tile_bank[2:0], scr2_addr[15:0] };
-`else
-    assign char_adj = { 6'd0, char_addr };
-    assign scr1_adj = { 2'd0, scr1_addr[16:0] };
-    assign scr2_adj = { 2'd0, scr2_addr[16:0] };
-`endif
-
-always @(*) begin
-    obj_addr_g = obj_addr;
-`ifdef S16B
-    if( dunkshot ) obj_addr_g[15]=0;
-`endif
-end
 
 jtframe_dwnld #(
     .HEADER    ( 32        ),
@@ -345,7 +285,7 @@ jtframe_ram2_5slots #(
     .sdram_wrmask( ba0_din_m ),
     .data_read   ( data_read )
 );
-
+/*
 jtframe_rom_3slots #(
     .SLOT0_DW(32),
     .SLOT0_AW(19),
@@ -384,8 +324,11 @@ jtframe_rom_3slots #(
     .data_rdy   ( ba_rdy[2] ),
     .data_read  ( data_read )
 );
+*/
+assign ba_rd[2]=0;
 
 // OBJ
+/*
 jtframe_rom_1slot #(
     .SLOT0_DW(16),
     .SLOT0_AW(20)
@@ -406,7 +349,9 @@ jtframe_rom_1slot #(
     .data_rdy   ( ba_rdy[3] ),
     .data_read  ( data_read )
 );
-
+*/
+assign ba_rd[3]=0;
+/*
 // Sound
 jtframe_rom_2slots #(
     .SLOT0_DW(   8),
@@ -438,5 +383,7 @@ jtframe_rom_2slots #(
     .data_rdy   ( ba_rdy[1] ),
     .data_read  ( data_read )
 );
+*/
+assign ba_rd[1]=0;
 
 endmodule

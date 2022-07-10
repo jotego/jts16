@@ -33,7 +33,7 @@
     <mraauthor>jotego</mraauthor>
     <rom index="0" zip="toutrunj.zip|toutrun.zip" md5="None">
         <part>
-            01 00 00 00 00 00 00 00
+            04 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
         <!-- maincpu - starts at 0x0 -->

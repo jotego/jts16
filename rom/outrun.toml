@@ -26,8 +26,12 @@ bitcnt = 16
 len=16
 fill=0
 dev = [
-    { byte=0, dev="fd1094",  value=1 },
+    { byte=0, dev="fd1089a", value=2 },
+    { byte=0, dev="fd1089b", value=3 },
+    { byte=0, dev="fd1094",  value=4 },
 ]
+
+
 
 [ROM]
 # values starting with $ refer to macro definitions in the .def file

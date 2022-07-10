@@ -46,7 +46,7 @@ module jtoutrun_sub(
 
     output reg         road_cs,
     output reg         sio_cs,
-    output     [ 1:0]  dswn,
+    output     [ 1:0]  dswn
 );
 
 wire [19:1] A;

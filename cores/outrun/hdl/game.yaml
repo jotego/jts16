@@ -1,11 +1,11 @@
 game:
   - from: outrun
     get:
-      - jtsoutrun_game.v
-      - jtsoutrun_main.v
-      - jtsoutrun_sub.v
-      - jtsoutrun_road.v
-      - jtsoutrun_sdram.v
+      - jtoutrun_game.v
+      - jtoutrun_main.v
+      - jtoutrun_sub.v
+      - jtoutrun_road.v
+      - jtoutrun_sdram.v
       # - jtsoutrun_video.v
       # - jtsoutrun_obj.v
       # - jtsoutrun_snd.v
@@ -38,4 +38,5 @@ jtframe:
       - jtframe_pole.v
 modules:
   jt:
+    - name: jt8255
     - name: jt51
