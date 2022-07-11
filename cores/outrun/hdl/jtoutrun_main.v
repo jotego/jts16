@@ -46,9 +46,9 @@ module jtoutrun_main(
     input              ram_ok,
     // CPU bus
     output      [15:0] cpu_dout,
-    output             UDSWn,
-    output             LDSWn,
     output             RnW,
+    output reg         sub_cs,
+    output      [ 1:0] dsn,
     output      [12:1] cpu_addr,
 
     // cabinet I/O
@@ -61,9 +61,9 @@ module jtoutrun_main(
     input       [ 1:0] start_button,
     input       [ 1:0] coin_input,
     input              service,
+    output      [19:1] addr,
     // ROM access
     output reg         rom_cs,
-    output reg  [18:1] rom_addr,
     input       [15:0] rom_data,
     input              rom_ok,
 
@@ -124,15 +124,6 @@ wire [15:0] rom_dec, cpu_dout_raw;
 reg         io_cs;
 wire        cpu_RnW, dec_ok;
 
-assign UDSWn = RnW | UDSn;
-assign LDSWn = RnW | LDSn;
-assign BUSn  = LDSn & UDSn;
-
-// No peripheral bus access for now
-assign cpu_addr = A[12:1];
-// assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
-//                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
-
 wire [ 7:0] active, sys_inputs, cab_dout;
 wire [ 2:0] cpu_ipln;
 wire        DTACKn, cpu_vpan;
@@ -144,6 +135,16 @@ wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
 wire [15:0] mapper_dout;
 wire        none_cs;
+
+assign BUSn  = LDSn & UDSn;
+assign dsn   = { UDSn, LDSn };
+// No peripheral bus access for now
+assign cpu_addr = A[12:1];
+// assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
+//                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
+assign video_en = 1;
+assign flip = 0;
+assign cab_dout = 8'hff;
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -208,6 +209,7 @@ jts16b_mapper u_mapper(
     .st_dout    ( st_dout        )
 );
 
+assign addr = A[19:1];
 
 // System 16B memory map
 always @(posedge clk, posedge rst) begin
@@ -219,10 +221,12 @@ always @(posedge clk, posedge rst) begin
             objram_cs <= 0; // 2 kB
             pal_cs    <= 0; // 4 kB
             io_cs     <= 0;
+            sub_cs    <= 0;
     end else begin
         if( !BUSn || (!ASn && RnW) ) begin
-            rom_cs    <= active[REG_MEM] && A[18:17]!=2'b11;
+            rom_cs   <= active[REG_MEM] && A[18:17]!=2'b11;
             ram_cs    <= active[REG_MEM] && A[18:17]==2'b11 && !BUSn; // $60000
+            sub_cs    <= active[REG_SUB];
 
             char_cs   <= active[REG_SCR] &&  A[16];
             vram_cs   <= active[REG_SCR] && !A[16] && !BUSn;
@@ -232,6 +236,7 @@ always @(posedge clk, posedge rst) begin
         end else begin
             rom_cs    <= 0;
             ram_cs    <= 0;
+            sub_cs    <= 0;
             char_cs   <= 0;
             vram_cs   <= 0;
             objram_cs <= 0;

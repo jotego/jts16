@@ -16,13 +16,10 @@
     Version: 1.0
     Date: 10-3-2021 */
 
-module jtoutrun_sdram #(
-    parameter SNDW=15
-) (
+module jtoutrun_sdram(
     input            rst,
     input            clk,
 
-    input            ioctl_ram,
     input            LVBL,
     input      [8:0] vrender,
     output reg [1:0] game_id,
@@ -148,7 +145,7 @@ reg  [16:1] xram_addr;
 wire        xram_cs;
 wire        prom_we, header;
 
-wire        gfx_cs = LVBL || vrender==0 || vrender[8];
+//  wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 
 assign xram_cs    = ram_cs | vram_cs;
 assign dwnld_busy = downloading | prom_we; // prom_we is really just for sims

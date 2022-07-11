@@ -64,8 +64,8 @@ module jtoutrun_game(
     input   [24:0]  ioctl_addr,
     input   [ 7:0]  ioctl_dout,
     input           ioctl_wr,
-    output  [ 7:0]  ioctl_din,
-    input           ioctl_ram, // 0 - ROM, 1 - RAM(EEPROM)
+    // output  [ 7:0]  ioctl_din,
+    // input           ioctl_ram, // 0 - ROM, 1 - RAM(EEPROM)
     output  [21:0]  prog_addr,
     output  [15:0]  prog_data,
     output  [ 1:0]  prog_mask,
@@ -99,16 +99,6 @@ module jtoutrun_game(
     output reg [ 7:0]  st_dout
 );
 
-`ifndef S16B
-    localparam SNDW=15;
-    wire [7:0] sndmap_dout=0;
-`else
-    localparam SNDW=19;
-
-    wire [7:0] sndmap_din, sndmap_dout;
-    wire       sndmap_rd, sndmap_wr, sndmap_pbf;
-`endif
-
 // clock enable signals
 wire    cpu_cen, cpu_cenb,
         cen_fm,  cen_fm2, cen_snd,
@@ -123,7 +113,7 @@ wire        scr_bad;
 
 // SDRAM interface
 wire        main_cs, vram_cs, ram_cs;
-wire [18:1] main_addr;
+wire [19:1] main_addr;
 wire [15:0] main_data, ram_data;
 wire        main_ok, ram_ok;
 
@@ -146,22 +136,26 @@ wire [15:0] obj_data;
 // CPU interface
 wire [12:1] cpu_addr;
 wire [15:0] main_dout, char_dout, pal_dout, obj_dout;
-wire [ 1:0] dsn;
-wire        UDSWn, LDSWn, main_rnw;
-wire        char_cs, scr1_cs, pal_cs, objram_cs;
+wire [ 1:0] main_dsn;
+wire        main_rnw, sub_br, irqn,
+            char_cs, scr1_cs, pal_cs, objram_cs;
 
+// Sub CPU
+wire [18:1] sub_addr;
+wire [15:0] sub_din, sub_dout, sram_data, srom_data;
+wire [ 1:0] sub_dsn;
+wire        sub_rnw, srom_cs, sram_cs, sub_ok,
+            srom_ok, sram_ok, road_cs, sio_cs, main_br;
 // Sound CPU
-wire [SNDW-1:0] snd_addr;
-wire [ 7:0] snd_data;
-wire        snd_cs, snd_ok;
-wire        snd_clip;
+// wire [SNDW-1:0] snd_addr;
+// wire [ 7:0] snd_data;
+// wire        snd_cs, snd_ok;
 
 // PCM
-wire [16:0] pcm_addr;
-wire        pcm_cs;
-wire [ 7:0] pcm_data;
-wire        pcm_ok;
-wire        n7751_prom;
+// wire [16:0] pcm_addr;
+// wire        pcm_cs;
+// wire [ 7:0] pcm_data;
+// wire        pcm_ok;
 
 // Protection
 wire        key_we, fd1089_we;
@@ -170,8 +164,8 @@ wire        dec_en, dec_type,
 wire [ 7:0] key_data;
 wire [12:0] key_addr, key_mcaddr;
 
-wire [ 7:0] snd_latch;
-wire        snd_irqn, snd_ack;
+// wire [ 7:0] snd_latch;
+// wire        snd_irqn, snd_ack;
 
 wire        flip, video_en, sound_en;
 
@@ -183,9 +177,9 @@ wire [ 1:0] game_id;
 wire [7:0] st_video, st_main;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
-assign dsn                  = { UDSWn, LDSWn };
 assign game_led             = 1;
 assign debug_view           = st_dout;
+assign irqn                 = 1;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -232,11 +226,10 @@ jtoutrun_main u_main(
     .ram_data   ( ram_data  ),
     .ram_ok     ( ram_ok    ),
     // CPU bus
-    .cpu_dout   ( main_dout ),
-    .UDSWn      ( UDSWn     ),
-    .LDSWn      ( LDSWn     ),
-    .RnW        ( main_rnw  ),
     .cpu_addr   ( cpu_addr  ),
+    .cpu_dout   ( main_dout ),
+    .dsn        ( main_dsn  ),
+    .RnW        ( main_rnw  ),
     // cabinet I/O
     .joystick1   ( joystick1  ),
     .joystick2   ( joystick2  ),
@@ -248,8 +241,8 @@ jtoutrun_main u_main(
     .coin_input  ( coin_input ),
     .service     ( service    ),
     // ROM access
+    .addr        ( main_addr  ),
     .rom_cs      ( main_cs    ),
-    .rom_addr    ( main_addr  ),
     .rom_data    ( main_data  ),
     .rom_ok      ( main_ok    ),
     // Decoder configuration
@@ -262,10 +255,11 @@ jtoutrun_main u_main(
     .key_addr    ( key_addr   ),
     .key_data    ( key_data   ),
     // Sound communication
-    .snd_latch   ( snd_latch  ),
-    .snd_irqn    ( snd_irqn   ),
-    .snd_ack     ( snd_ack    ),
-    .sound_en    ( sound_en   ),
+    .sndmap_rd   ( 1'b0       ),
+    .sndmap_wr   ( 1'b0       ),
+    .sndmap_din  ( 8'd0       ),
+    .sndmap_dout (            ),
+    .sndmap_pbf  (            ),
     .prog_addr   ( prog_addr[12:0] ),
     .prog_data   ( prog_data[ 7:0] ),
     // DIP switches
@@ -282,8 +276,6 @@ jtoutrun_main u_main(
     assign main_cs   = 0;
     assign ram_cs    = 0;
     assign vram_cs   = 0;
-    assign UDSWn     = 1;
-    assign LDSWn     = 1;
     assign main_rnw  = 1;
     assign main_dout = 0;
     assign video_en  = 1;
@@ -296,18 +288,18 @@ jtoutrun_sub u_sub(
     .irqn       ( irqn      ),    // common with main CPU
 
     // From main CPU
-    .main_A     ( main_A    ),
+    .main_A     ( main_addr ),
     .main_dsn   ( main_dsn  ),
     .main_rnw   ( main_rnw  ),
-    .main_br    ( main_br   ), // bus request
+    .sub_br     ( sub_br    ), // bus request
+    .sub_din    ( sub_din   ),
     .main_dout  ( main_dout ),
-    .main_din   ( main_din  ),
-    .main_ok    ( main_ok   ),
+    .sub_ok     ( sub_ok    ),
 
     // sub CPU bus
     .cpu_dout   ( sub_dout  ),
+    .sub_addr   ( sub_addr  ),
 
-    .rom_addr   ( srom_addr ),
     .rom_cs     ( srom_cs   ),
     .rom_ok     ( srom_ok   ),
     .rom_data   ( srom_data ),
@@ -323,11 +315,10 @@ jtoutrun_sub u_sub(
 );
 
 // no sound for now
-assign snd_cs   = 0;
-assign snd_addr = 0;
-assign pcm_cs   = 0;
-assign pcm_addr = 0;
+assign sample = 0;
+assign snd    = 0;
 
+initial st_dout = 0;
 // always @(posedge clk) begin
 //     case( st_addr[7:4] )
 //         0: st_dout <= st_video;
@@ -369,10 +360,9 @@ jtframe_vtimer #(
 assign { red, green, blue } = 0;
 
 
-jtoutrun_sdram #(.SNDW(SNDW)) u_sdram(
+jtoutrun_sdram u_sdram(
     .rst        ( rst       ),
     .clk        ( clk       ),
-    .ioctl_ram  ( ioctl_ram ),
 
     .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),
@@ -393,7 +383,7 @@ jtoutrun_sdram #(.SNDW(SNDW)) u_sdram(
     .vram_cs    ( vram_cs   ),
     .ram_cs     ( ram_cs    ),
 
-    .main_addr  ( main_addr ),
+    .main_addr  ( main_addr[18:1] ),
     .main_data  ( main_data ),
     .ram_data   ( ram_data  ),
 
@@ -412,7 +402,7 @@ jtoutrun_sdram #(.SNDW(SNDW)) u_sdram(
     .srom_data  ( srom_data ),
     .sram_data  ( sram_data ),
 
-    .sub_ok     ( sub_ok    ),
+    .srom_ok    ( srom_ok   ),
     .sram_ok    ( sram_ok   ),
 
     .sub_dsn    ( sub_dsn   ),

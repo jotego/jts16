@@ -1,6 +1,7 @@
-test.rom: test.mra test-rom.zip
+jtoutrun.rom: test.mra test-rom.zip
 	mra test.mra -z .
-	cp -v test.rom $(ROM)
+	cp -v jtoutrun.rom $(ROM)
+	if [ -d /m/MIST ] ; then cp -v jtoutrun.rom /m/MIST; fi
 
 test-rom.zip: main.bin sub.bin
 	zip test-rom.zip main.bin sub.bin
@@ -16,4 +17,4 @@ main.bin: main.asm
 	truncate --size=384K main.bin
 
 clear:
-	rm -f main.bin sub.bin test-rom.zip test.rom
+	rm -f main.bin sub.bin test-rom.zip jtoutrun.rom

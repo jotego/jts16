@@ -26,15 +26,15 @@ module jtoutrun_sub(
     input      [19:1]  main_A,
     input      [ 1:0]  main_dsn,
     input              main_rnw,
-    input              main_br, // bus request
+    input              sub_br, // bus request
     input      [15:0]  main_dout,
-    output     [15:0]  main_din,
-    output             main_ok,
+    output     [15:0]  sub_din,
+    output             sub_ok,
 
     // sub CPU bus
     output     [15:0]  cpu_dout,
+    output     [18:1]  sub_addr,
 
-    output reg [17:0]  rom_addr,
     output reg         rom_cs,
     input              rom_ok,
     input      [15:0]  rom_data,
@@ -45,7 +45,8 @@ module jtoutrun_sub(
 
     output reg         road_cs,
     output reg         sio_cs,
-    output     [ 1:0]  dswn
+    output             RnW,
+    output     [ 1:0]  dsn
 );
 
 wire [19:1] A;
@@ -53,7 +54,7 @@ wire [23:1] cpu_A;
 wire        BERRn;
 wire [ 2:0] FC, IPLn;
 wire        BRn, BGACKn, BGn, DTACKn;
-wire        ASn, UDSn, LDSn, BUSn, VPAn, RnW, BUSn,
+wire        ASn, UDSn, LDSn, BUSn, VPAn,
             cpu_UDSn, cpu_LDSn, cpu_RnW;
 reg  [15:0] cpu_din;
 wire [15:0] cpu_dout_raw;
@@ -66,8 +67,8 @@ wire [19:0] A_full = {A,1'b0};
 `endif
 
 assign IPLn     = { irqn, 2'b11 };
-assign dswn     = { UDSn, LDSn } | {2{RnW}};
-assign main_din = cpu_din;
+assign dsn      = { UDSn, LDSn };
+assign sub_din  = cpu_din;
 assign {UDSn, LDSn} = BGACKn ? {cpu_UDSn,cpu_LDSn} : main_dsn;
 assign RnW      = BGACKn ? cpu_RnW : main_rnw;
 assign cpu_dout = BGACKn ? cpu_dout_raw : main_dout;
@@ -76,8 +77,9 @@ assign bus_cs   = rom_cs | ram_cs;
 assign bus_busy = (rom_cs & ~rom_ok) | (ram_cs & ~ram_ok);
 assign inta_n   = ~&FC[1:0];
 assign VPAn     = ~(~ASn & ~inta_n); // autovector
-assign main_ok  = ~BGACKn & ~bus_busy;
+assign sub_ok   = ~BGACKn & ~bus_busy; // for
 assign BUSn     = LDSn & UDSn;
+assign sub_addr = A[18:1];
 
 // memory map
 always @(posedge clk, posedge rst) begin
@@ -133,7 +135,7 @@ jtframe_68kdma u_dma(
     .cpu_BGn    ( BGn       ),
     .cpu_ASn    ( ASn       ),
     .cpu_DTACKn ( DTACKn    ),
-    .dev_br     ( main_br   )
+    .dev_br     ( sub_br    )
 );
 
 jtframe_m68k u_cpu(
