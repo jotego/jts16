@@ -122,7 +122,7 @@ wire        ASn, UDSn, LDSn, BUSn;
 wire [15:0] rom_dec, cpu_dout_raw;
 
 reg         io_cs;
-wire        cpu_RnW;
+wire        cpu_RnW, dec_ok;
 
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
@@ -138,7 +138,7 @@ wire [ 2:0] cpu_ipln;
 wire        DTACKn, cpu_vpan;
 
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs;
-wire bus_busy  = |{ rom_cs & ~rom_ok, (ram_cs | vram_cs) & ~ram_ok };
+wire bus_busy  = |{ rom_cs & ~dec_ok, (ram_cs | vram_cs) & ~ram_ok };
 wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
@@ -264,7 +264,7 @@ wire        ok_1094, ok_1089;
 
 assign key_addr= fd1094_en ? key_1094 : key_1089;
 assign rom_dec = fd1094_en ? dec_1094 : dec_1089;
-assign ok_dly  = fd1094_en ? ok_1094  : ok_1089;
+assign dec_ok  = fd1094_en ? ok_1094  : ok_1089;
 
 jts16_fd1094 u_dec1094(
     .rst        ( rst       ),

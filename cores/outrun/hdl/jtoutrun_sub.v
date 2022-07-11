@@ -33,7 +33,6 @@ module jtoutrun_sub(
 
     // sub CPU bus
     output     [15:0]  cpu_dout,
-    output     [ 1:0]
 
     output reg [17:0]  rom_addr,
     output reg         rom_cs,
@@ -53,7 +52,7 @@ wire [19:1] A;
 wire [23:1] cpu_A;
 wire        BERRn;
 wire [ 2:0] FC, IPLn;
-wire        BRn, BGACKn, BGn;
+wire        BRn, BGACKn, BGn, DTACKn;
 wire        ASn, UDSn, LDSn, BUSn, VPAn, RnW, BUSn,
             cpu_UDSn, cpu_LDSn, cpu_RnW;
 reg  [15:0] cpu_din;
@@ -89,12 +88,12 @@ always @(posedge clk, posedge rst) begin
         road_cs <= 0;
     end else begin
         if( !BUSn || !BGACKn || (!ASn && RnW) ) begin
-            case( Abus[19:17] )
+            case( A[19:17] )
                 0,1,2: rom_cs = 1;  // <6'0000
                 3: ram_cs = ~BUSn;  //  6'0000
                 4: begin            //  8'0000
-                    road_cs = !Abus[16]; // 8'0000 road RAM
-                    sio_cs  =  Abus[16]; // 9'0000 road other
+                    road_cs = !A[16]; // 8'0000 road RAM
+                    sio_cs  =  A[16]; // 9'0000 road other
                 end
             endcase
         end else begin
@@ -120,15 +119,15 @@ jtframe_68kdtack #(.W(8),.MFREQ(50_347)) u_dtack( // 10 MHz
     .den        ( 8'd146    ),  // denominator
     .DTACKn     ( DTACKn    ),
     // Frequency report
-    .fave       ( fave      ),
-    .fworst     ( fworst    ),
+    .fave       (           ),
+    .fworst     (           ),
     .frst       ( rst       )
 );
 
 jtframe_68kdma u_dma(
     .rst        ( rst       ),
     .clk        ( clk       ),
-    .cpu_cen    ( cpu_cen   ),
+    .cen        ( cpu_cen   ),
     .cpu_BRn    ( BRn       ),
     .cpu_BGACKn ( BGACKn    ),
     .cpu_BGn    ( BGn       ),
@@ -139,7 +138,7 @@ jtframe_68kdma u_dma(
 
 jtframe_m68k u_cpu(
     .clk        ( clk         ),
-    .rst        ( cpu_rst     ),
+    .rst        ( rst         ),
     .cpu_cen    ( cpu_cen     ),
     .cpu_cenb   ( cpu_cenb    ),
 
