@@ -447,7 +447,7 @@ always @(posedge clk) begin
         st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];
 end
 `else
-    always @* st_dout = debug_bus[0] ? fave[13:5] : fworst[13:5];
+    always @* st_dout = debug_bus[0] ? fave[12:5] : fworst[12:5];
 `endif
 
 endmodule

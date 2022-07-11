@@ -26,7 +26,6 @@ module jts16_fd1089(
 
     // Configuration
     input      [12:0] prog_addr,
-    input             key_we,
     input             fd1089_we,
     input      [ 7:0] prog_data,
 
