@@ -413,7 +413,7 @@ always @(posedge clk) begin
         end else if( vint && !last_vint ) begin
             irqn <= 0;
             mcu_vintn <= 0;
-            mcu_cnt  <= ~0;
+            mcu_cnt  <= ~9'd0;
         end
     end
 end
