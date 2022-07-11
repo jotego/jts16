@@ -4,9 +4,9 @@ game:
       - jtoutrun_game.v
       - jtoutrun_main.v
       - jtoutrun_sub.v
-      - jtoutrun_road.v
       - jtoutrun_sdram.v
       # - jtsoutrun_video.v
+      # - jtoutrun_road.v
       # - jtsoutrun_obj.v
       # - jtsoutrun_snd.v
 jtframe:
@@ -23,7 +23,7 @@ jtframe:
   - from: cpu
     get:
       - jtframe_m68k.yaml
-      - jtframe_z80.yaml
+#      - jtframe_z80.yaml
   - from: clocking
     get:
       - jtframe_frac_cen.v
@@ -36,7 +36,7 @@ jtframe:
     get:
       - jtframe_mixer.v
       - jtframe_pole.v
-modules:
-  jt:
-    - name: jt8255
-    - name: jt51
+# modules:
+#   jt:
+#     - name: jt8255
+#     - name: jt51

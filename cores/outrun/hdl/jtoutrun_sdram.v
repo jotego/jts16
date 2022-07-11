@@ -43,9 +43,21 @@ module jtoutrun_sdram #(
     output    [15:0] ram_data,
     output           main_ok,
     output           ram_ok,
-    input     [ 1:0] dsn,
+    input     [ 1:0] main_dsn,
     input     [15:0] main_dout,
     input            main_rnw,
+
+    // Sub CPU
+    input            srom_cs,
+    input            sram_cs,
+    input     [18:1] sub_addr,
+    output    [15:0] srom_data,
+    output    [15:0] sram_data,
+    output           srom_ok,
+    output           sram_ok,
+    input     [ 1:0] sub_dsn,
+    input     [15:0] sub_dout,
+    input            sub_rnw,
 
     // Sound CPU
     // input            snd_cs,
@@ -118,10 +130,6 @@ module jtoutrun_sdram #(
     //, input    [ 7:0]  debug_bus
 );
 
-localparam [21:0] ZERO_OFFSET=0,
-                  VRAM_OFFSET=22'h10_0000,
-                  PCM_OFFSET =(`PCM_START-`BA1_START)>>1;
-
 /* verilator lint_off WIDTH */
 localparam [24:0] BA1_START  = `BA1_START,
                   BA2_START  = `BA2_START,
@@ -130,34 +138,26 @@ localparam [24:0] BA1_START  = `BA1_START,
                   KEY_PROM   = `KEY_START,
                   FD_PROM    = `FD1089_START;
 /* verilator lint_on WIDTH */
+localparam [21:0] ZERO_OFFSET= 22'd0,
+                  VRAM_OFFSET= 22'h08_0000,
+                  SROM_OFFSET= 22'h10_0000,
+                  SRAM_OFFSET= 22'h18_0000;
 
 
-wire [ 7:0] key_din;
-
-reg  [VRAMW-1:1] xram_addr;  // S16A = 32 kB VRAM + 16kB RAM
-                             // S16B = 64 kB VRAM + 16-256kB RAM
+reg  [16:1] xram_addr;
 wire        xram_cs;
-wire        prom_we, header, fd_we;
+wire        prom_we, header;
 
 wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 
 assign xram_cs    = ram_cs | vram_cs;
-
 assign dwnld_busy = downloading | prom_we; // prom_we is really just for sims
-assign fd_we      = prom_we && prog_addr[21:13]==KEY_PROM   [21:13];
+assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM   [21:13];
 assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM    [21: 8];
-assign key_we     = mc8123_en ? mc8123_we : fd_we;
-assign key_din    = prog_data^{8{mc8123_en}}; // the data is inverted for the MC8123
 
 always @(*) begin
-    xram_addr = { ram_cs, main_addr[VRAMW-2:1] }; // RAM is mapped up
-`ifndef S16B
-    if( ram_cs ) xram_addr[VRAMW-2:14]=0; // only 16kB for RAM
-`else
-    // Mask RAM for System16B too, but no for System16C
-    if( ram_cs && !game_fantzn2x ) xram_addr[VRAMW-2:14]=0; // only 16kB for RAM
-    if( vram_cs ) xram_addr[VRAMW-2:16]=0;
-`endif
+    xram_addr = { ram_cs, main_addr[15:1] }; // RAM is mapped up
+    if( ram_cs ) xram_addr[15] = 0;
 end
 
 always @(posedge clk) begin
@@ -175,9 +175,9 @@ end
 jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
     .clk    ( clk       ),
     .cen    ( 1'b1      ),
-    .data   ( key_din   ),
-    .rd_addr( key_addr   ),
-    .wr_addr( prog_addr ),
+    .data   ( prog_data[7:0] ),
+    .rd_addr( key_addr  ),
+    .wr_addr( prog_addr[12:0] ),
     .we     ( key_we    ),
     .q      ( key_data  )
 );
@@ -187,7 +187,7 @@ jtframe_dwnld #(
     .BA1_START ( BA1_START ), // sound
     .BA2_START ( BA2_START ), // tiles
     .BA3_START ( BA3_START ), // obj
-    .PROM_START( MCU_PROM  ), // PCM MCU
+    .PROM_START( KEY_PROM  ), // PCM MCU
     .SWAB      ( 1         )
 ) u_dwnld(
     .clk          ( clk            ),
@@ -208,52 +208,57 @@ jtframe_dwnld #(
 
 jtframe_ram2_5slots #(
     // Main CPU RAM/VRAM
+    .SLOT0_AW(16),  // 64 (VRAM) + 32 (RAM) kB
     .SLOT0_DW(16),
-    .SLOT0_AW(16),  // 32+64 kB
 
     // Sub CPU RAM
-    .SLOT1_DW(16),
     .SLOT1_AW(14),  // 32 kB
+    .SLOT1_DW(16),
 
     // Main CPU ROM
-    .SLOT2_DW(16),
-    .SLOT2_AW(17),  // 512kB
+    .SLOT2_AW   (18),  // 512kB
+    .SLOT2_DW   (16),
+    .SLOT2_LATCH( 0),
 
     // Sub CPU ROM
-    .SLOT3_DW(16),
-    .SLOT3_AW(17),  // 512kB
+    .SLOT3_AW   (18),  // 512kB
+    .SLOT3_DW   (16),
+    .SLOT3_LATCH( 0),
 
     // VRAM access by SCR
-    .SLOT4_DW(16),
-    .SLOT4_AW(14)
+    .SLOT4_AW   (15),
+    .SLOT4_DW   (16)
 ) u_bank0(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
     .offset0    (VRAM_OFFSET),  // RAM/VRAM main
     .offset1    (SRAM_OFFSET),  // RAM sub
-    .offset2    (MAIN_OFFSET),  // Main ROM
+    .offset2    (ZERO_OFFSET),  // Main ROM
     .offset3    (SROM_OFFSET),  // Main RAM
     .offset4    (VRAM_OFFSET),
 
     .slot0_addr ( xram_addr ),
-    .slot1_addr ( sram_addr ),
+    .slot1_addr ( sub_addr[14:1] ),
     .slot2_addr ( main_addr ),
-    .slot3_addr ( srom_addr ),
-    .slot4_addr ( map_addr  ),
+    .slot3_addr ( sub_addr  ),
+    //.slot4_addr ( map_addr  ),
+    .slot4_addr (    ),
 
     //  output data
     .slot0_dout ( ram_data  ),
     .slot1_dout ( sram_data ),
     .slot2_dout ( main_data ),
     .slot3_dout ( srom_data ),
-    .slot4_dout ( map_data  ),
+    //.slot4_dout ( map_data  ),
+    .slot4_dout (    ),
 
     .slot0_cs   ( xram_cs   ),
     .slot1_cs   ( sram_cs   ),
     .slot2_cs   ( main_cs   ),
     .slot3_cs   ( srom_cs   ),
-    .slot4_cs   ( map_cs    ),
+    .slot4_cs   ( 1'b0    ),
+    //.slot4_cs   ( map_cs    ),
 
     .slot0_wen  ( ~main_rnw ),
     .slot0_din  ( main_dout ),
@@ -272,7 +277,8 @@ jtframe_ram2_5slots #(
     .slot1_ok   ( sram_ok   ),
     .slot2_ok   ( main_ok   ),
     .slot3_ok   ( srom_ok   ),
-    .slot4_ok   ( map_ok    ),
+    //.slot4_ok   ( map_ok    ),
+    .slot4_ok   (     ),
 
     // SDRAM controller interface
     .sdram_ack   ( ba_ack[0] ),
@@ -326,6 +332,7 @@ jtframe_rom_3slots #(
 );
 */
 assign ba_rd[2]=0;
+assign ba2_addr=0;
 
 // OBJ
 /*
@@ -351,6 +358,7 @@ jtframe_rom_1slot #(
 );
 */
 assign ba_rd[3]=0;
+assign ba3_addr=0;
 /*
 // Sound
 jtframe_rom_2slots #(
@@ -385,5 +393,6 @@ jtframe_rom_2slots #(
 );
 */
 assign ba_rd[1]=0;
+assign ba1_addr=0;
 
 endmodule

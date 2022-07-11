@@ -19,7 +19,7 @@
 module jtoutrun_road(
     input              rst,
     input              clk,
-    input        [7:0] v,
+    input        [8:0] v,
     // CPU interface
     input       [11:1] cpu_addr,
     input       [15:0] cpu_dout,
@@ -30,7 +30,7 @@ module jtoutrun_road(
 );
 
 wire [10:0] rd_addr;
-wire [15:0] rd0_gfx, rd1_gfx;
+wire [15:0] rd0_gfx, rd1_gfx, rd0_dout, rd1_dout;
 wire [ 1:0] rd0_we, rd1_we;
 reg         rdsel, toggle;
 reg         rdhon;

@@ -340,69 +340,34 @@ assign pcm_addr = 0;
 //     endcase
 // end
 
-jtoutrun_video u_video(
-    .rst        ( rst       ),
-    .clk        ( clk       ),
-    .pxl2_cen   ( pxl2_cen  ),
-    .pxl_cen    ( pxl_cen   ),
-    // .gfx_en     ( gfx_en    ),
-
-    // .video_en   ( video_en  ),
-    // .game_id    ( game_id   ),
-    // // CPU interface
-    // .cpu_addr   ( cpu_addr  ),
-    // .char_cs    ( char_cs   ),
-    // .pal_cs     ( pal_cs    ),
-    // .objram_cs  ( objram_cs ),
-    // .vint       ( vint      ),
-    // .dip_pause  ( dip_pause ),
-
-    // .cpu_dout   ( main_dout ),
-    // .dsn        ( dsn       ),
-    // .char_dout  ( char_dout ),
-    // .pal_dout   ( pal_dout  ),
-    // .obj_dout   ( obj_dout  ),
-
-    // .flip       ( flip      ),
-    // .ext_flip   ( dip_flip  ),
-    // .colscr_en  ( colscr_en ),
-    // .rowscr_en  ( rowscr_en ),
-
-    // SDRAM interface
-    // .char_ok    ( char_ok   ),
-    // .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    // .char_data  ( char_data ),
-
-    // .map1_ok    ( map1_ok   ),
-    // .map1_addr  ( map1_addr ),
-    // .map1_data  ( map1_data ),
-
-    // .scr1_ok    ( scr1_ok   ),
-    // .scr1_addr  ( scr1_addr ),
-    // .scr1_data  ( scr1_data ),
-
-    // .obj_ok     ( obj_ok    ),
-    // .obj_cs     ( obj_cs    ),
-    // .obj_addr   ( obj_addr  ),
-    // .obj_data   ( obj_data  ),
-
-    // Video signal
-    .HS         ( HS        ),
-    .VS         ( VS        ),
-    .LHBL       ( LHBL      ),
-    .LVBL       ( LVBL      ),
-    .vdump      (           ),
-    .vrender    ( vrender   ),
-    .hstart     ( hstart    ),
-    .red        ( red       ),
-    .green      ( green     ),
-    .blue       ( blue      ),
-    // debug
-    .debug_bus  ( debug_bus ),
-    .st_addr    ( st_addr   ),
-    .st_dout    ( st_video  ),
-    .scr_bad    ( scr_bad   )
+jtframe_vtimer #(
+    .HB_START  ( 9'h1ff ),
+    .HB_END    ( 9'h0bf ),
+    .HCNT_START( 9'h70  ), // it should be 'h50
+    .HCNT_END  ( 9'h1FF ),
+    .VB_START  ( 9'h0DF ),
+    .VB_END    ( 9'h105 ),
+    .VCNT_END  ( 9'h105 ), // 262 lines
+    //.VS_START ( 9'h0   ),
+    .VS_START ( 9'hF0   ),
+    //.VS_END   ( 9'h8   ),
+    .HS_START ( 9'h080 )
+) u_timer(
+    .clk       ( clk      ),
+    .pxl_cen   ( pxl_cen  ),
+    .vdump     (          ),
+    .H         (          ),
+    .Hinit     (          ),
+    .LHBL      ( LHBL     ),
+    .LVBL      ( LVBL     ),
+    .HS        ( HS       ),
+    .VS        ( VS       ),
+    .Vinit     (          ),
+    .vrender   (          ),
+    .vrender1  (          )
 );
+assign { red, green, blue } = 0;
+
 
 jtoutrun_sdram #(.SNDW(SNDW)) u_sdram(
     .rst        ( rst       ),

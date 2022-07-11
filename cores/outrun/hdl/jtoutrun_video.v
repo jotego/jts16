@@ -14,16 +14,16 @@
 
     Author: Jose Tejada Gomez. Twitter: @topapate
     Version: 1.0
-    Date: 7-3-2021 */
+    Date: 10-7-2022 */
 
-module jts16_video(
+module jtoutrun_video(
     input              rst,
     input              clk,
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
 
     input              video_en,
-    input [7:0]        game_id,
+    input [1:0]        game_id,
 
     // CPU interface
     input              dip_pause,
