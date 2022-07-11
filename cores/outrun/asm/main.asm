@@ -1,0 +1,9 @@
+RAM EQU $60000
+
+    ORG 0
+    DC.L RAM+$8000
+    DC.L RESET
+    ORG $100
+
+RESET:
+    BRA RESET

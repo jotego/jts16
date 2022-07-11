@@ -222,7 +222,7 @@ always @(posedge clk, posedge rst) begin
     end else begin
         if( !BUSn || (!ASn && RnW) ) begin
             rom_cs    <= active[REG_MEM] && A[18:17]!=2'b11;
-            ram_cs    <= active[REG_MEM] && A[18:17]==2'b11 && !BUSn;
+            ram_cs    <= active[REG_MEM] && A[18:17]==2'b11 && !BUSn; // $60000
 
             char_cs   <= active[REG_SCR] &&  A[16];
             vram_cs   <= active[REG_SCR] && !A[16] && !BUSn;
