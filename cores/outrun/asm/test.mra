@@ -29,9 +29,13 @@
             00 00 00 00 00 00 00 00
         </part>
         <!-- maincpu - starts at 0x0 -->
-        <part name="main.bin"/>
+        <interleave output="16">
+            <part name="main.bin" map="12"/>
+        </interleave>
         <!-- subcpu - starts at 0x60000 -->
-        <part name="sub.bin"/>
+        <interleave output="16">
+            <part name="sub.bin" map="12"/>
+        </interleave>
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>

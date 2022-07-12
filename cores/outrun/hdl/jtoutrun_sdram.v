@@ -136,8 +136,8 @@ localparam [24:0] BA1_START  = `BA1_START,
                   FD_PROM    = `FD1089_START;
 /* verilator lint_on WIDTH */
 localparam [21:0] ZERO_OFFSET= 22'd0,
-                  VRAM_OFFSET= 22'h08_0000,
-                  SROM_OFFSET= 22'h10_0000,
+                  SROM_OFFSET= `SUB_START>>1,
+                  VRAM_OFFSET= 22'h10_0000,
                   SRAM_OFFSET= 22'h18_0000;
 
 
@@ -180,7 +180,7 @@ jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
 );
 
 jtframe_dwnld #(
-    .HEADER    ( 32        ),
+    .HEADER    ( 16        ),
     .BA1_START ( BA1_START ), // sound
     .BA2_START ( BA2_START ), // tiles
     .BA3_START ( BA3_START ), // obj
@@ -215,12 +215,13 @@ jtframe_ram2_5slots #(
     // Main CPU ROM
     .SLOT2_AW   (18),  // 512kB
     .SLOT2_DW   (16),
-    .SLOT2_LATCH( 0),
+    .SLOT2_OKLATCH( 0),
 
     // Sub CPU ROM
     .SLOT3_AW   (18),  // 512kB
     .SLOT3_DW   (16),
-    .SLOT3_LATCH( 0),
+    .SLOT3_OKLATCH( 1),
+    .SLOT3_LATCH(0),
 
     // VRAM access by SCR
     .SLOT4_AW   (15),
@@ -264,7 +265,6 @@ jtframe_ram2_5slots #(
     .slot1_wen  ( ~sub_rnw  ),
     .slot1_din  ( sub_dout  ),
     .slot1_wrmask( sub_dsn  ),
-
 
     .slot2_clr  ( 1'b0      ),
     .slot3_clr  ( 1'b0      ),

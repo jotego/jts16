@@ -19,8 +19,8 @@
 module jtoutrun_main(
     input              rst,
     input              clk,
-    input              pxl_cen,
     input              clk_rom,
+    input              pxl_cen,
     output             cpu_cen,
     output             cpu_cenb,
     input  [1:0]       game_id,
@@ -83,10 +83,6 @@ module jtoutrun_main(
     input              dip_test,
     input    [7:0]     dipsw_a,
     input    [7:0]     dipsw_b,
-
-    // MCU enable and ROM programming
-    input              mcu_en,
-    input              mcu_prog_we,
 
     // Sound - Mapper interface
     input              sndmap_rd,

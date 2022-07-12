@@ -31,8 +31,8 @@ module jtoutrun_game(
     output          HS,
     output          VS,
     // cabinet I/O
-    input   [ 3:0]  start_button,
-    input   [ 3:0]  coin_input,
+    input   [ 1:0]  start_button,
+    input   [ 1:0]  coin_input,
     input   [ 7:0]  joystick1,
     input   [ 7:0]  joystick2,
     input   [15:0]  joyana_l1,
@@ -206,6 +206,7 @@ jtoutrun_main u_main(
     .clk_rom    ( clk       ),  // same clock - at least for now
     .cpu_cen    ( cpu_cen   ),
     .cpu_cenb   ( cpu_cenb  ),
+    .pxl_cen    ( pxl_cen   ),
     .game_id    ( game_id   ),
     .LHBL       ( LHBL      ),
     // Video
@@ -230,6 +231,7 @@ jtoutrun_main u_main(
     .cpu_dout   ( main_dout ),
     .dsn        ( main_dsn  ),
     .RnW        ( main_rnw  ),
+    .sub_cs     ( sub_br    ),
     // cabinet I/O
     .joystick1   ( joystick1  ),
     .joystick2   ( joystick2  ),

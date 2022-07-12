@@ -57,7 +57,7 @@ wire        BRn, BGACKn, BGn, DTACKn;
 wire        ASn, UDSn, LDSn, BUSn, VPAn,
             cpu_UDSn, cpu_LDSn, cpu_RnW;
 reg  [15:0] cpu_din;
-wire [15:0] cpu_dout_raw;
+wire [15:0] cpu_dout_raw, fave;
 wire        bus_busy, bus_cs;
 wire        cpu_cen, cpu_cenb;
 wire        inta_n;
@@ -107,6 +107,16 @@ always @(posedge clk, posedge rst) begin
     end
 end
 
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        cpu_din <= 0;
+    end else begin
+        cpu_din <= rom_cs ? rom_data :
+                   ram_cs ? ram_data :
+                   16'hfff;
+    end
+end
+
 jtframe_68kdtack #(.W(8),.MFREQ(50_347)) u_dtack( // 10 MHz
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -121,7 +131,7 @@ jtframe_68kdtack #(.W(8),.MFREQ(50_347)) u_dtack( // 10 MHz
     .den        ( 8'd146    ),  // denominator
     .DTACKn     ( DTACKn    ),
     // Frequency report
-    .fave       (           ),
+    .fave       ( fave      ),
     .fworst     (           ),
     .frst       ( rst       )
 );
@@ -157,7 +167,7 @@ jtframe_m68k u_cpu(
     .VPAn       ( VPAn        ),
     .FC         ( FC          ),
 
-    .BERRn      ( BERRn       ),
+    .BERRn      ( 1'b1        ),
     // Bus arbitrion
     .HALTn      ( 1'b1        ),
     .BRn        ( BRn         ),
