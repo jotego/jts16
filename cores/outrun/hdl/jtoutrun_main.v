@@ -48,6 +48,8 @@ module jtoutrun_main(
     output      [15:0] cpu_dout,
     output             RnW,
     output reg         sub_cs,
+    input              sub_ok,
+    input       [15:0] sub_din,
     output      [ 1:0] dsn,
     output      [12:1] cpu_addr,
 
@@ -124,8 +126,8 @@ wire [ 7:0] active, sys_inputs, cab_dout;
 wire [ 2:0] cpu_ipln;
 wire        DTACKn, cpu_vpan;
 
-wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs;
-wire bus_busy  = |{ rom_cs & ~dec_ok, (ram_cs | vram_cs) & ~ram_ok };
+wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs | sub_cs;
+wire bus_busy  = |{ rom_cs & ~dec_ok, (ram_cs | vram_cs) & ~ram_ok, sub_cs & ~sub_ok };
 wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
@@ -252,6 +254,7 @@ always @(posedge clk) begin
                     char_cs            ? char_dout :
                     pal_cs             ? pal_dout  :
                     objram_cs          ? obj_dout  :
+                    sub_din            ? sub_din  :
                     io_cs              ? { 8'hff, cab_dout } :
                     none_cs            ? mapper_dout :
                                          16'hffff;

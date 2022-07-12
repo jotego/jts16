@@ -1,5 +1,5 @@
-RAM     EQU $60000
-SIO     EQU $90000
+RAM     EQU $060000
+SUB     EQU $200000
 
     ORG 0
     DC.L RAM+$8000
@@ -32,6 +32,16 @@ CMP_ROM:
     MOVE.L (A0)+,D1
     CMP.L (A1)+,D1
     BNE BAD
+
+    ; Check the SUB CPU space
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; copy the sub CPU ROM
+    LEA.L  SUB,A0
+    MOVE.L #RAM,A1
+    MOVE.L #$8000>>2-1,D0
+COPY_SUB:
+    MOVE.L (A0)+,(A1)+
+    DBF D0,COPY_SUB
 
 GOOD:
     MOVE.W #$BABE,D0

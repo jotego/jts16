@@ -26,9 +26,9 @@ module jtoutrun_sub(
     input      [19:1]  main_A,
     input      [ 1:0]  main_dsn,
     input              main_rnw,
-    input              sub_br, // bus request
+    input              sub_br,      // bus request
     input      [15:0]  main_dout,
-    output     [15:0]  sub_din,
+    output     [15:0]  sub_din,     // bus output to sub CPU
     output             sub_ok,
 
     // sub CPU bus
@@ -61,6 +61,7 @@ wire [15:0] cpu_dout_raw, fave;
 wire        bus_busy, bus_cs;
 wire        cpu_cen, cpu_cenb;
 wire        inta_n;
+reg         BGACKnl;
 
 `ifdef SIMULATION
 wire [19:0] A_full = {A,1'b0};
@@ -77,7 +78,7 @@ assign bus_cs   = rom_cs | ram_cs;
 assign bus_busy = (rom_cs & ~rom_ok) | (ram_cs & ~ram_ok);
 assign inta_n   = ~&FC[1:0];
 assign VPAn     = ~(~ASn & ~inta_n); // autovector
-assign sub_ok   = ~BGACKn & ~bus_busy; // for
+assign sub_ok   = ~BGACKnl & ~bus_busy; // for
 assign BUSn     = LDSn & UDSn;
 assign sub_addr = A[18:1];
 
@@ -88,7 +89,9 @@ always @(posedge clk, posedge rst) begin
         sio_cs  <= 0;
         ram_cs  <= 0;
         road_cs <= 0;
+        BGACKnl <= 0;
     end else begin
+        BGACKnl <= BGACKn;
         if( !BUSn || !BGACKn || (!ASn && RnW) ) begin
             case( A[19:17] )
                 0,1,2: rom_cs = 1;  // <6'0000
