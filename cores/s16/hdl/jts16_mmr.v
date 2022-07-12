@@ -152,7 +152,6 @@ always @(posedge clk) begin
     end
 end
 
-`ifdef JTFRAME_CHEAT
 always @(posedge clk) begin
     case( st_addr )
         0:  st_dout <= MODEL ? scr1_pages[7:0]  : scr1_pages_nofl[ 7:0];
@@ -171,6 +170,5 @@ always @(posedge clk) begin
         default: st_dout <= 0;
     endcase
 end
-`endif
 
 endmodule
