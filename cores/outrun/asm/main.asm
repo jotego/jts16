@@ -37,7 +37,8 @@ CMP_ROM:
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; copy the sub CPU ROM
     LEA.L  SUB,A0
-    MOVE.L #RAM,A1
+    LEA.L  SUB+$60000,A1
+    ; MOVE.L #RAM,A1
     MOVE.L #$8000>>2-1,D0
 COPY_SUB:
     MOVE.L (A0)+,(A1)+
