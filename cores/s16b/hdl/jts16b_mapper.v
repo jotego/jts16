@@ -111,7 +111,6 @@ module jts16b_mapper(
 reg  [ 1:0] dtack_cyc;    // number of DTACK cycles
 reg  [ 7:0] mmr[0:31];
 reg         bus_rq;
-wire        mcu_cen;
 reg         cpu_sel;
 reg         irqn; // VBLANK
 reg         rdmem, wrmem;

@@ -152,6 +152,12 @@ assign dwnld_busy = downloading | prom_we; // prom_we is really just for sims
 assign key_we     = prom_we && prog_addr[21:13]==KEY_PROM   [21:13];
 assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM    [21: 8];
 
+initial begin
+    fd1089_en = 0;
+    fd1094_en = 0;
+    dec_type  = 0;
+end
+
 always @(*) begin
     xram_addr = { ram_cs, main_addr[15:1] }; // RAM is mapped up
     if( ram_cs ) xram_addr[15] = 0;

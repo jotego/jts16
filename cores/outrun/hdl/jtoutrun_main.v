@@ -191,12 +191,12 @@ jts16b_mapper u_mapper(
 
     // MCU side
     .mcu_en     ( 1'b0           ),
-    .mcu_dout   (                ),
+    .mcu_dout   ( 8'd0           ),
     .mcu_din    (                ),
     .mcu_intn   (                ),
-    .mcu_addr   (                ),
-    .mcu_wr     (                ),
-    .mcu_acc    (                ),
+    .mcu_addr   ( 16'd0          ),
+    .mcu_wr     ( 1'b0           ),
+    .mcu_acc    ( 1'b0           ),
 
     .active     ( active         ),
     .debug_bus  ( debug_bus      ),
@@ -220,7 +220,7 @@ always @(posedge clk, posedge rst) begin
             sub_cs    <= 0;
     end else begin
         if( !BUSn || (!ASn && RnW) ) begin
-            rom_cs   <= active[REG_MEM] && A[18:17]!=2'b11;
+            rom_cs    <= active[REG_MEM] && A[18:17]!=2'b11;
             ram_cs    <= active[REG_MEM] && A[18:17]==2'b11 && !BUSn; // $60000
             sub_cs    <= active[REG_SUB];
 

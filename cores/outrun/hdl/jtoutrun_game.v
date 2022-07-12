@@ -210,7 +210,7 @@ jtoutrun_main u_main(
     .game_id    ( game_id   ),
     .LHBL       ( LHBL      ),
     // Video
-    .vint       ( vint      ),
+    .vint       ( 1'b0      ),
     .video_en   ( video_en  ),
     // Video circuitry
     .vram_cs    ( vram_cs   ),

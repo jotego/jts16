@@ -31,6 +31,7 @@ module mist_dump(
                 $dumpvars(0,mist_test);
             `else
                 $dumpvars(1,mist_test.UUT.u_game.u_main);
+                $dumpvars(0,mist_test.UUT.u_game.u_main.u_mapper);
                 $dumpvars(1,mist_test.UUT.u_game.u_sub);
                 $dumpvars(1,mist_test.UUT.u_game.u_sdram);
                 $dumpvars(1,mist_test.UUT.u_game.u_sdram.u_dwnld);
@@ -55,7 +56,8 @@ module mist_dump(
             $display("NC Verilog: will dump selected signals");
             $shm_probe(frame_cnt);
             //$shm_probe(UUT.u_game,"A");
-            //$shm_probe(UUT.u_game.u_main,"A");
+            $shm_probe(UUT.u_game.u_main,"A");
+            $shm_probe(UUT.u_game.u_main.u_mapper,"AS");
             $shm_probe(UUT.u_game.u_sub,"A");
             $shm_probe(UUT.u_game.u_sdram,"A");
             //$shm_probe(UUT.u_game.u_sdram.u_bank0,"AS");
