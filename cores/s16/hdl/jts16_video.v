@@ -97,7 +97,7 @@ localparam [9:0] OBJ_DLY = MODEL ? 10'd22 : 10'd17;
 
 wire [ 8:0] hdump;
 wire        preLHBL, preLVBL;
-wire        alt_objbank; // 171-5358 boards have a different GFX layout
+reg         alt_en, alt_objbank; // 171-5358 boards have a different GFX layout
 wire        flipx;
 
 // video layers
@@ -105,13 +105,19 @@ wire [11:0] obj_pxl;
 wire [10:0] pal_addr;
 wire        shadow;
 
+always @(posedge clk) begin
+    // Dunkshot, Sukeban and Time Scanner use a different
+    // encoding for in tile map bytes.
+    alt_en      <= MODEL && (game_id==8'h1b || game_id==8'h1c || game_id==8'h14);
+    alt_objbank <= MODEL && game_id[4];
+end
+
 jts16_tilemap #(.MODEL(MODEL)) u_tilemap(
     .rst        ( rst       ),
     .clk        ( clk       ),
     .pxl2_cen   ( pxl2_cen  ),
     .pxl_cen    ( pxl_cen   ),
 
-    .game_id    ( game_id   ),
     .dip_pause  ( dip_pause ),
     .char_cs    ( char_cs   ),
     .pal_cs     ( pal_cs    ),
@@ -127,7 +133,7 @@ jts16_tilemap #(.MODEL(MODEL)) u_tilemap(
     .ext_flip   ( ext_flip  ),
     .colscr_en  ( colscr_en ),
     .rowscr_en  ( rowscr_en ),
-    .alt_objbank(alt_objbank),
+    .alt_en     ( alt_en    ),
 
     // SDRAM interface
     .char_ok    ( char_ok   ),

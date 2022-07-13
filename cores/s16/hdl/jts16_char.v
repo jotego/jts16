@@ -21,9 +21,7 @@ module jts16_char(
     input              clk,
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
-    input      [ 7:0]  game_id,
-    output reg         alt_en,
-    output reg         alt_objbank,
+    input              alt_en,
 
     // CPU interface
     input              char_cs,
@@ -96,14 +94,6 @@ localparam [8:0] FLIPOFFSET = 9'ha3;
 
 assign char_addr = { code, vf[2:0], 1'b0 };
 assign scr_start = hdump[8:4]==ROWREAD+1;
-
-always @(posedge clk) begin
-    // Dunkshot, Sukeban and Time Scanner use a different
-    // encoding for in tile map bytes.
-    alt_en <= MODEL && (game_id==8'h1b || game_id==8'h1c || game_id==8'h14);
-    alt_objbank <= MODEL && game_id[4];
-end
-
 
 // Flip
 always @(posedge clk) begin

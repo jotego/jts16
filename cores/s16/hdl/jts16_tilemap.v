@@ -25,7 +25,6 @@ module jts16_tilemap(
     input              pxl2_cen,  // pixel clock enable (2x)
     input              pxl_cen,   // pixel clock enable
 
-    input [7:0]        game_id,
     // CPU interface
     input              dip_pause,
     input              char_cs,
@@ -43,7 +42,7 @@ module jts16_tilemap(
     inout              ext_flip,
     input              colscr_en,
     input              rowscr_en,
-    output             alt_objbank,
+    input              alt_en,
 
     // SDRAM interface
     input              char_ok,
@@ -120,7 +119,6 @@ wire        rowscr1_en, rowscr2_en,
             colscr1_en, colscr2_en,
             altscr1_en, altscr2_en;
 wire [ 8:0] scr1_hscan, scr2_hscan;
-wire        alt_en;
 
 // MMR
 wire [15:0] scr1_pages,      scr2_pages,
@@ -201,9 +199,7 @@ jts16_char #(.MODEL(MODEL)) u_char(
     .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
 
-    .game_id   ( game_id        ),
     .alt_en    ( alt_en         ),
-    .alt_objbank(alt_objbank    ),
     // CPU interface
     .char_cs   ( char_cs        ),
     .cpu_addr  ( cpu_addr[11:1] ),
