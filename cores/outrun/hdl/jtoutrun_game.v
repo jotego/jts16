@@ -121,13 +121,13 @@ wire        char_ok;
 wire [12:0] char_addr;
 wire [31:0] char_data;
 
-wire        map1_ok;
-wire [14:0] map1_addr; // 3(+1 S16B) pages + 11 addr = 14 (32 kB)
-wire [15:0] map1_data;
+wire        map1_ok, map2_ok;
+wire [14:0] map1_addr, map2_addr; // 3(+1 S16B) pages + 11 addr = 14 (32 kB)
+wire [15:0] map1_data, map2_data;
 
-wire        scr1_ok;
-wire [16:0] scr1_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
-wire [31:0] scr1_data;
+wire        scr1_ok, scr2_ok;
+wire [16:0] scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
+wire [31:0] scr1_data, scr2_data;
 
 wire        obj_ok, obj_cs;
 wire [19:0] obj_addr;
@@ -335,34 +335,77 @@ initial st_dout = 0;
 //     endcase
 // end
 
-jtframe_vtimer #(
-    .HB_START  ( 9'h1ff ),
-    .HB_END    ( 9'h0bf ),
-    .HCNT_START( 9'h70  ), // it should be 'h50
-    .HCNT_END  ( 9'h1FF ),
-    .VB_START  ( 9'h0DF ),
-    .VB_END    ( 9'h105 ),
-    .VCNT_END  ( 9'h105 ), // 262 lines
-    //.VS_START ( 9'h0   ),
-    .VS_START ( 9'hF0   ),
-    //.VS_END   ( 9'h8   ),
-    .HS_START ( 9'h080 )
-) u_timer(
-    .clk       ( clk      ),
-    .pxl_cen   ( pxl_cen  ),
-    .vdump     (          ),
-    .H         (          ),
-    .Hinit     (          ),
-    .LHBL      ( LHBL     ),
-    .LVBL      ( LVBL     ),
-    .HS        ( HS       ),
-    .VS        ( VS       ),
-    .Vinit     (          ),
-    .vrender   (          ),
-    .vrender1  (          )
-);
-assign { red, green, blue } = 0;
+jts16_video u_video(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .pxl2_cen   ( pxl2_cen  ),
+    .pxl_cen    ( pxl_cen   ),
+    .gfx_en     ( gfx_en    ),
 
+    .video_en   ( video_en  ),
+    .game_id    ( game_id   ),
+    // CPU interface
+    .cpu_addr   ( cpu_addr  ),
+    .char_cs    ( char_cs   ),
+    .pal_cs     ( pal_cs    ),
+    .objram_cs  ( objram_cs ),
+    .vint       ( vint      ),
+    .dip_pause  ( dip_pause ),
+
+    .cpu_dout   ( main_dout ),
+    .dsn        ( dsn       ),
+    .char_dout  ( char_dout ),
+    .pal_dout   ( pal_dout  ),
+    .obj_dout   ( obj_dout  ),
+
+    .flip       ( flip      ),
+    .ext_flip   ( dip_flip  ),
+    .colscr_en  ( colscr_en ),
+    .rowscr_en  ( rowscr_en ),
+
+    // SDRAM interface
+    .char_ok    ( char_ok   ),
+    .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    .char_data  ( char_data ),
+
+    .map1_ok    ( map1_ok   ),
+    .map1_addr  ( map1_addr ),
+    .map1_data  ( map1_data ),
+
+    .scr1_ok    ( scr1_ok   ),
+    .scr1_addr  ( scr1_addr ),
+    .scr1_data  ( scr1_data ),
+
+    .map2_ok    ( map2_ok   ),
+    .map2_addr  ( map2_addr ),
+    .map2_data  ( map2_data ),
+
+    .scr2_ok    ( scr2_ok   ),
+    .scr2_addr  ( scr2_addr ),
+    .scr2_data  ( scr2_data ),
+
+    // .obj_ok     ( obj_ok    ),
+    // .obj_cs     ( obj_cs    ),
+    // .obj_addr   ( obj_addr  ),
+    // .obj_data   ( obj_data  ),
+
+    // Video signal
+    .HS         ( HS        ),
+    .VS         ( VS        ),
+    .LHBL       ( LHBL      ),
+    .LVBL       ( LVBL      ),
+    .vdump      (           ),
+    .vrender    ( vrender   ),
+    .hstart     ( hstart    ),
+    .red        ( red       ),
+    .green      ( green     ),
+    .blue       ( blue      ),
+    // debug
+    .debug_bus  ( debug_bus ),
+    .st_addr    ( st_addr   ),
+    .st_dout    ( st_video  ),
+    .scr_bad    ( scr_bad   )
+);
 
 jtoutrun_sdram u_sdram(
     .rst        ( rst       ),
@@ -426,18 +469,27 @@ jtoutrun_sdram u_sdram(
     // .pcm_ok     ( pcm_ok    ),
 
     // Char interface
-    // .char_ok    ( char_ok   ),
-    // .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    // .char_data  ( char_data ),
+    .char_ok    ( char_ok   ),
+    .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    .char_data  ( char_data ),
 
     // Scroll 1
-    // .map1_ok    ( map1_ok   ),
-    // .map1_addr  ( map1_addr ),
-    // .map1_data  ( map1_data ),
+    .map1_ok    ( map1_ok   ),
+    .map1_addr  ( map1_addr ),
+    .map1_data  ( map1_data ),
 
-    // .scr1_ok    ( scr1_ok   ),
-    // .scr1_addr  ( scr1_addr ),
-    // .scr1_data  ( scr1_data ),
+    .scr1_ok    ( scr1_ok   ),
+    .scr1_addr  ( scr1_addr ),
+    .scr1_data  ( scr1_data ),
+
+    // Scroll 1
+    .map2_ok    ( map2_ok   ),
+    .map2_addr  ( map2_addr ),
+    .map2_data  ( map2_data ),
+
+    .scr2_ok    ( scr2_ok   ),
+    .scr2_addr  ( scr2_addr ),
+    .scr2_data  ( scr2_data ),
 
     // Sprite interface
     // .obj_ok     ( obj_ok    ),

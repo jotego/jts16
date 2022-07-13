@@ -74,18 +74,27 @@ module jtoutrun_sdram(
     // output           pcm_ok,
 
     // Char
-    // output           char_ok,
-    // input    [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    // output   [31:0]  char_data,
+    output           char_ok,
+    input    [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    output   [31:0]  char_data,
 
     // Scroll 1
-    // output           map1_ok,
-    // input    [14:0]  map1_addr, // 3(+1) pages + 11 addr = 14/15 (32/64 kB)
-    // output   [15:0]  map1_data,
+    output           map1_ok,
+    input    [14:0]  map1_addr, // 3(+1) pages + 11 addr = 14/15 (32/64 kB)
+    output   [15:0]  map1_data,
 
-    // output           scr1_ok,
-    // input    [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
-    // output   [31:0]  scr1_data,
+    output           scr1_ok,
+    input    [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output   [31:0]  scr1_data,
+
+    // Scroll 1
+    output           map2_ok,
+    input    [14:0]  map2_addr, // 3(+1) pages + 11 addr = 14/15 (32/64 kB)
+    output   [15:0]  map2_data,
+
+    output           scr2_ok,
+    input    [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output   [31:0]  scr2_data,
 
     // Obj
     // output           obj_ok,
@@ -145,7 +154,7 @@ reg  [16:1] xram_addr;
 wire        xram_cs;
 wire        prom_we, header;
 
-//  wire        gfx_cs = LVBL || vrender==0 || vrender[8];
+wire        gfx_cs = LVBL || vrender==0 || vrender[8];
 
 assign xram_cs    = ram_cs | vram_cs;
 assign dwnld_busy = downloading | prom_we; // prom_we is really just for sims
@@ -229,9 +238,13 @@ jtframe_ram2_5slots #(
     .SLOT3_OKLATCH( 1),
     .SLOT3_LATCH(0),
 
-    // VRAM access by SCR
+    // VRAM access by SCR1
     .SLOT4_AW   (15),
     .SLOT4_DW   (16)
+
+    // VRAM access by SCR2
+    .SLOT5_AW   (15),
+    .SLOT5_DW   (16)
 ) u_bank0(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -241,28 +254,29 @@ jtframe_ram2_5slots #(
     .offset2    (ZERO_OFFSET),  // Main ROM
     .offset3    (SROM_OFFSET),  // Main RAM
     .offset4    (VRAM_OFFSET),
+    .offset5    (VRAM_OFFSET),
 
     .slot0_addr ( xram_addr ),
     .slot1_addr ( sub_addr[14:1] ),
     .slot2_addr ( main_addr ),
     .slot3_addr ( sub_addr  ),
-    //.slot4_addr ( map_addr  ),
-    .slot4_addr (    ),
+    .slot4_addr ( map1_addr ),
+    .slot5_addr ( map2_addr ),
 
     //  output data
     .slot0_dout ( ram_data  ),
     .slot1_dout ( sram_data ),
     .slot2_dout ( main_data ),
     .slot3_dout ( srom_data ),
-    //.slot4_dout ( map_data  ),
-    .slot4_dout (    ),
+    .slot4_dout ( map1_data ),
+    .slot5_dout ( map2_data ),
 
     .slot0_cs   ( xram_cs   ),
     .slot1_cs   ( sram_cs   ),
     .slot2_cs   ( main_cs   ),
     .slot3_cs   ( srom_cs   ),
-    .slot4_cs   ( 1'b0    ),
-    //.slot4_cs   ( map_cs    ),
+    .slot4_cs   ( gfx_cs    ),
+    .slot5_cs   ( gfx_cs    ),
 
     .slot0_wen  ( ~main_rnw ),
     .slot0_din  ( main_dout ),
@@ -275,13 +289,14 @@ jtframe_ram2_5slots #(
     .slot2_clr  ( 1'b0      ),
     .slot3_clr  ( 1'b0      ),
     .slot4_clr  ( 1'b0      ),
+    .slot5_clr  ( 1'b0      ),
 
     .slot0_ok   ( ram_ok    ),
     .slot1_ok   ( sram_ok   ),
     .slot2_ok   ( main_ok   ),
     .slot3_ok   ( srom_ok   ),
-    //.slot4_ok   ( map_ok    ),
-    .slot4_ok   (     ),
+    .slot4_ok   ( map1_ok   ),
+    .slot5_ok   ( map2_ok   ),
 
     // SDRAM controller interface
     .sdram_ack   ( ba_ack[0] ),
@@ -294,7 +309,7 @@ jtframe_ram2_5slots #(
     .sdram_wrmask( ba0_din_m ),
     .data_read   ( data_read )
 );
-/*
+
 jtframe_rom_3slots #(
     .SLOT0_DW(32),
     .SLOT0_AW(19),
@@ -333,9 +348,6 @@ jtframe_rom_3slots #(
     .data_rdy   ( ba_rdy[2] ),
     .data_read  ( data_read )
 );
-*/
-assign ba_rd[2]=0;
-assign ba2_addr=0;
 
 // OBJ
 /*
