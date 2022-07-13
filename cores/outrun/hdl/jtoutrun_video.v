@@ -98,9 +98,9 @@ wire        alt_objbank; // 171-5358 boards have a different GFX layout
 wire        flipx;
 
 // video layers
-wire [ 6:0] char_pxl;
-wire [10:0] scr1_pxl, scr2_pxl;
 wire [11:0] obj_pxl;
+wire [10:0] pal_addr;
+wire        shadow;
 
 jts16_tilemap #(.MODEL(1)) u_tilemap(
     .rst        ( rst       ),
@@ -153,9 +153,9 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .vrender    ( vrender   ),
     .hdump      ( hdump     ),
     // Video layers
-    .char_pxl   ( char_pxl  ),
-    .scr1_pxl   ( scr1_pxl  ),
-    .scr2_pxl   ( scr2_pxl  ),
+    .obj_pxl    ( obj_pxl   ),
+    .pal_addr   ( pal_addr  ),
+    .shadow     ( shadow    ),
     // Debug
     .debug_bus  ( debug_bus ),
     .st_addr    ( st_addr   ),
