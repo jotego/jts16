@@ -101,9 +101,9 @@ wire        alt_objbank; // 171-5358 boards have a different GFX layout
 wire        flipx;
 
 // video layers
-wire [ 6:0] char_pxl;
-wire [10:0] scr1_pxl, scr2_pxl;
 wire [11:0] obj_pxl;
+wire [10:0] pal_addr;
+wire        shadow;
 
 jts16_tilemap #(.MODEL(MODEL)) u_tilemap(
     .rst        ( rst       ),
@@ -145,6 +145,7 @@ jts16_tilemap #(.MODEL(MODEL)) u_tilemap(
     .scr2_ok    ( scr2_ok   ),
     .scr2_addr  ( scr2_addr ),
     .scr2_data  ( scr2_data ),
+
     // Video signal
     .HS         ( HS        ),
     .VS         ( VS        ),
@@ -156,10 +157,11 @@ jts16_tilemap #(.MODEL(MODEL)) u_tilemap(
     .vrender    ( vrender   ),
     .hdump      ( hdump     ),
     // Video layers
-    .char_pxl   ( char_pxl  ),
-    .scr1_pxl   ( scr1_pxl  ),
-    .scr2_pxl   ( scr2_pxl  ),
+    .obj_pxl    ( obj_pxl   ),
+    .pal_addr   ( pal_addr  ),
+    .shadow     ( shadow    ),
     // Debug
+    .gfx_en     ( gfx_en    ),
     .debug_bus  ( debug_bus ),
     .st_addr    ( st_addr   ),
     .st_dout    ( st_dout   ),
@@ -201,9 +203,11 @@ jts16_colmix u_colmix(
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
-    .gfx_en    ( gfx_en         ),
 
     .video_en  ( video_en       ),
+
+    .pal_addr  ( pal_addr       ),
+    .shadow    ( shadow         ),
     // CPU interface
     .pal_cs    ( pal_cs         ),
     .cpu_addr  ( cpu_addr[11:1] ),
@@ -211,15 +215,8 @@ jts16_colmix u_colmix(
     .dsn       ( dsn            ),
     .cpu_din   ( pal_dout       ),
 
-
     .preLVBL   ( preLVBL        ),
     .preLHBL   ( preLHBL        ),
-
-    .char_pxl  ( char_pxl       ),
-    .scr1_pxl  ( scr1_pxl       ),
-    //.scr1_pxl  ( 11'd0       ),
-    .scr2_pxl  ( scr2_pxl       ),
-    .obj_pxl   ( obj_pxl        ),
 
     .LHBL      ( LHBL           ),
     .LVBL      ( LVBL           ),

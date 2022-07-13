@@ -77,10 +77,12 @@ module jts16_tilemap(
     output      [ 8:0] vdump,
     output      [ 8:0] vrender,
 
-    // Video layers
-    output      [ 6:0] char_pxl,
-    output      [10:0] scr1_pxl, 
-    output      [10:0] scr2_pxl,
+    // Layer mixing
+    input       [11:0] obj_pxl,
+    output      [10:0] pal_addr,
+    output             shadow,
+    input       [ 3:0] gfx_en,
+
     // Debug
     input       [ 7:0] debug_bus,
     input       [ 7:0] st_addr,
@@ -103,6 +105,9 @@ localparam [9:0] SCR1_DLY= SCR2_DLY;
     assign flipx = flip;
     assign ext_flip = ~flip;
 `endif
+
+wire [ 6:0] char_pxl;
+wire [10:0] scr1_pxl, scr2_pxl;
 
 // Scroll
 wire [ 9:0] rowscr1, rowscr2;
@@ -309,6 +314,22 @@ jts16_scr #(.PXL_DLY(SCR2_DLY[8:0]),.MODEL(MODEL)) u_scr2(
     .pxl       ( scr2_pxl       ),
     .debug_bus ( debug_bus      ),
     .bad       ( scr2_bad       )
+);
+
+jts16_prio u_prio(
+    .rst       ( rst            ),
+    .clk       ( clk            ),
+    .pxl2_cen  ( pxl2_cen       ),
+    .pxl_cen   ( pxl_cen        ),
+
+    .char_pxl  ( char_pxl       ),
+    .scr1_pxl  ( scr1_pxl       ),
+    .scr2_pxl  ( scr2_pxl       ),
+    .obj_pxl   ( obj_pxl        ),
+
+    .pal_addr  ( pal_addr       ),
+    .shadow    ( shadow         ),
+    .gfx_en    ( gfx_en         )
 );
 
 endmodule
