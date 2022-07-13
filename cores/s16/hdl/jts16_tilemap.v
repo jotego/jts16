@@ -19,6 +19,14 @@
 // Implements 315-5197       -- System 16B and Out Run
 // Implements 315-5049 (x2)  -- System 16A
 
+// The tile map generator (TMG) works with two external 16-bit memories,
+// a 64kB one is used for the scroll layers, and a 4kB one is used for
+// the char layer. These RAM chips are external to the 315-5197
+// but the control signals are inside the TMG.
+// In this implementation, the select signal between char and scroll RAM
+// is the main CPU module because they are located in different devices:
+// the char RAM is made of BRAM, and the scroll RAM is mapped to the SDRAM
+
 module jts16_tilemap(
     input              rst,
     input              clk,

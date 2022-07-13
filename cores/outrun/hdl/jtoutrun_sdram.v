@@ -218,7 +218,7 @@ jtframe_dwnld #(
     .sdram_ack    ( prog_ack       )
 );
 
-jtframe_ram2_5slots #(
+jtframe_ram2_6slots #(
     // Main CPU RAM/VRAM
     .SLOT0_AW(16),  // 64 (VRAM) + 32 (RAM) kB
     .SLOT0_DW(16),
@@ -240,7 +240,7 @@ jtframe_ram2_5slots #(
 
     // VRAM access by SCR1
     .SLOT4_AW   (15),
-    .SLOT4_DW   (16)
+    .SLOT4_DW   (16),
 
     // VRAM access by SCR2
     .SLOT5_AW   (15),

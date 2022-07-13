@@ -210,7 +210,7 @@ jtoutrun_main u_main(
     .game_id     ( game_id    ),
     .LHBL        ( LHBL       ),
     // Video
-    .vint        ( 1'b0       ),
+    .vint        ( vint       ),
     .video_en    ( video_en   ),
     // Video circuitry
     .vram_cs     ( vram_cs    ),
@@ -335,7 +335,7 @@ initial st_dout = 0;
 //     endcase
 // end
 
-jts16_video u_video(
+jtoutrun_video u_video(
     .rst        ( rst       ),
     .clk        ( clk       ),
     .pxl2_cen   ( pxl2_cen  ),

@@ -174,7 +174,6 @@ jts16_tilemap #(.MODEL(MODEL)) u_tilemap(
     .scr_bad    ( scr_bad   )
 );
 
-
 jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
     .rst       ( rst            ),
     .clk       ( clk            ),

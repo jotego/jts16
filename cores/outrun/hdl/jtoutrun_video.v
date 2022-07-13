@@ -30,7 +30,7 @@ module jtoutrun_video(
     input              char_cs,
     input              pal_cs,
     input              objram_cs,
-    input      [12:1]  cpu_addr,
+    input      [13:1]  cpu_addr,
     input      [15:0]  cpu_dout,
     input      [ 1:0]  dsn,
 
@@ -108,12 +108,11 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .pxl2_cen   ( pxl2_cen  ),
     .pxl_cen    ( pxl_cen   ),
 
-    .game_id    ( game_id   ),
     .dip_pause  ( dip_pause ),
     .char_cs    ( char_cs   ),
     .pal_cs     ( pal_cs    ),
     .objram_cs  ( objram_cs ),
-    .cpu_addr   ( cpu_addr  ),
+    .cpu_addr   ( cpu_addr[12:1] ),
     .cpu_dout   ( cpu_dout  ),
     .dsn        ( dsn       ),
     .char_dout  ( char_dout ),
@@ -124,7 +123,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .ext_flip   ( ext_flip  ),
     .colscr_en  ( colscr_en ),
     .rowscr_en  ( rowscr_en ),
-    .alt_objbank(alt_objbank),
+    .alt_en     ( 1'b0      ),
 
     // SDRAM interface
     .char_ok    ( char_ok   ),
@@ -162,7 +161,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .st_dout    ( st_dout   ),
     .scr_bad    ( scr_bad   )
 );
-
+/*
 jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
     .rst       ( rst            ),
     .clk       ( clk            ),
@@ -190,16 +189,18 @@ jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
     .hdump     ( hdump          ),
     .pxl       ( obj_pxl        ),
     .debug_bus ( debug_bus      )
-);
-/*
+);*/
+
 jtoutrun_colmix u_colmix(
     .rst       ( rst            ),
     .clk       ( clk            ),
-    .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
-    .gfx_en    ( gfx_en         ),
+    .pxl2_cen  ( pxl2_cen       ),
 
-    .video_en  ( video_en       ),
+    //.video_en  ( video_en       ),
+    .video_en  ( 1'b1           ),
+    .pal_addr  ( pal_addr       ),
+    .shadow    ( shadow         ),
     // CPU interface
     .pal_cs    ( pal_cs         ),
     .cpu_addr  ( cpu_addr[11:1] ),
@@ -207,21 +208,16 @@ jtoutrun_colmix u_colmix(
     .dsn       ( dsn            ),
     .cpu_din   ( pal_dout       ),
 
-
     .preLVBL   ( preLVBL        ),
     .preLHBL   ( preLHBL        ),
 
-    .char_pxl  ( char_pxl       ),
-    .scr1_pxl  ( scr1_pxl       ),
-    //.scr1_pxl  ( 11'd0       ),
-    .scr2_pxl  ( scr2_pxl       ),
-    .obj_pxl   ( obj_pxl        ),
+    //.obj_pxl   ( obj_pxl        ),
 
     .LHBL      ( LHBL           ),
     .LVBL      ( LVBL           ),
     .red       ( red            ),
     .green     ( green          ),
     .blue      ( blue           )
-);*/
+);
 
 endmodule

@@ -5,10 +5,11 @@ game:
       - jtoutrun_main.v
       - jtoutrun_sub.v
       - jtoutrun_sdram.v
-      # - jtsoutrun_video.v
+      - jtoutrun_video.v
+      - jtoutrun_colmix.v
       # - jtoutrun_road.v
-      # - jtsoutrun_obj.v
-      # - jtsoutrun_snd.v
+      # - jtoutrun_obj.v
+      # - jtoutrun_snd.v
   - from: s16b
     get:
       - jts16b_mapper.v
@@ -19,6 +20,7 @@ game:
       - jts16_fd1094.v
       - jts16_fd1094_dec.v
       - jts16_fd1094_ctrl.v
+      - tilemap.yaml
 jtframe:
   - get:
       - jtframe_ff.v
