@@ -54,27 +54,28 @@
             <part name="epr-12294.ic58" crc="27cdcfd3" map="01"/>
             <part name="epr-12295.ic76" crc="d43a3a84" map="10"/>
         </interleave>
+        <part repeat="0x20000"> FF</part>
         <interleave output="16">
             <part name="epr-12296.ic57" crc="0a513671" map="01"/>
             <part name="epr-12297.ic75" crc="1d9b5677" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0xA0000 -->
+        <!-- soundcpu - starts at 0xC0000 -->
         <part name="epr-12300.ic88" crc="e8ff7011"/>
-        <!-- pcm - starts at 0xB0000 -->
+        <!-- pcm - starts at 0xD0000 -->
         <part name="epr-12301.ic66" crc="6e78ad15"/>
         <part name="epr-12302.ic67" crc="e72928af"/>
         <part name="epr-12303.ic68" crc="8384205c"/>
         <part name="epr-12304.ic69" crc="e1762ac3"/>
         <part name="epr-12305.ic70" crc="ba9ce677"/>
         <part name="epr-12306.ic71" crc="e49249fd"/>
-        <!-- gfx1 - starts at 0x110000 -->
+        <!-- gfx1 - starts at 0x130000 -->
         <interleave output="32">
             <part name="epr-12323.ic102" crc="4de43a6f" map="0001"/>
             <part name="epr-12324.ic103" crc="24607a55" map="0010"/>
             <part name="epr-12325.ic104" crc="1405137a" map="0100"/>
             <part name="epr-12325.ic104" crc="1405137a" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x150000 -->
+        <!-- sprites - starts at 0x170000 -->
         <interleave output="16">
             <part name="epr-12308.ic10" crc="0de70cc2" map="01"/>
             <part name="epr-12307.ic9" crc="437dcf09" map="10"/>
@@ -107,15 +108,16 @@
             <part name="epr-12322.ic24" crc="8b812492" map="01"/>
             <part name="epr-12321.ic23" crc="830bacd4" map="10"/>
         </interleave>
-        <!-- segaic16road - starts at 0x250000 -->
+        <!-- segaic16road - starts at 0x270000 -->
         <part repeat="0x8000"> FF</part>
         <interleave output="16">
             <part name="epr-12298.ic28" crc="fc9bc41b" map="01"/>
             <part name="epr-12298.ic47" crc="fc9bc41b" map="10"/>
         </interleave>
-        <!-- maincpu:key - starts at 0x268000 -->
+        <part repeat="0x10000"> FF</part>
+        <!-- maincpu:key - starts at 0x298000 -->
         <part name="317-0101.key" crc="eb636314"/>
-        <!-- Total 0x26A000 bytes - 2472 kBytes -->
+        <!-- Total 0x29A000 bytes - 2664 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>

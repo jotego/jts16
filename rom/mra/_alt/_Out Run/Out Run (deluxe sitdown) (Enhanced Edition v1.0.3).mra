@@ -51,14 +51,15 @@
             <part name="epr-10329.58" crc="fe0fa5e2" map="01"/>
             <part name="epr-10327.76" crc="da99d855" map="10"/>
         </interleave>
+        <part repeat="0x20000"> FF</part>
         <interleave output="16">
             <part name="epr-10330.57" crc="59786e99" map="01"/>
             <part name="epr-10328.75" crc="3c0e9a7f" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0xA0000 -->
+        <!-- soundcpu - starts at 0xC0000 -->
         <part name="epr-10187.88" crc="a10abaa9"/>
         <part repeat="0x8000"> FF</part>
-        <!-- pcm - starts at 0xB0000 -->
+        <!-- pcm - starts at 0xD0000 -->
         <part name="opr-10193.66" crc="bcd10dde"/>
         <part name="opr-10192.67" crc="770f1270"/>
         <part name="opr-10191.68" crc="20a284ab"/>
@@ -66,7 +67,7 @@
         <part name="opr-10189.70" crc="01366b54"/>
         <part name="enhanced_103_opr-10188.71" crc="37598616"/>
         <part repeat="0x30000"> FF</part>
-        <!-- gfx1 - starts at 0x110000 -->
+        <!-- gfx1 - starts at 0x130000 -->
         <interleave output="32">
             <part name="opr-10268.99" crc="95344b04" map="0001"/>
             <part name="opr-10232.102" crc="776ba1eb" map="0010"/>
@@ -79,7 +80,7 @@
             <part name="opr-10230.104" crc="686f5e50" map="0100"/>
             <part name="opr-10230.104" crc="686f5e50" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x150000 -->
+        <!-- sprites - starts at 0x170000 -->
         <interleave output="16">
             <part name="epr-10203.38" crc="8445a622" map="01"/>
             <part name="epr-10194.26" crc="f0eda3bd" map="10"/>
@@ -144,13 +145,13 @@
             <part name="epr-10228.73" crc="25803978" map="01"/>
             <part name="epr-10219.59" crc="e73b9224" map="10"/>
         </interleave>
-        <!-- segaic16road - starts at 0x250000 -->
+        <!-- segaic16road - starts at 0x270000 -->
         <part repeat="0x8000"> FF</part>
         <interleave output="16">
             <part name="opr-10185.11" crc="22794426" map="01"/>
             <part name="opr-10186.47" crc="22794426" map="10"/>
         </interleave>
-        <!-- Total 0x268000 bytes - 2464 kBytes -->
+        <!-- Total 0x288000 bytes - 2592 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>

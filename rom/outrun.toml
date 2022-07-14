@@ -52,3 +52,7 @@ order = [
     "maincpu", "subcpu", "soundcpu", "pcm", "gfx1",
     "sprites", "segaic16road", "maincpu:key"
 ]
+
+blanks = [
+    { region="subcpu", offset=0x20000, len=0x20000}
+]

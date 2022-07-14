@@ -51,14 +51,15 @@
             <part name="epr-10329.58" crc="fe0fa5e2" map="01"/>
             <part name="epr-10327.76" crc="da99d855" map="10"/>
         </interleave>
+        <part repeat="0x20000"> FF</part>
         <interleave output="16">
             <part name="epr-10330.57" crc="59786e99" map="01"/>
             <part name="epr-10328.75" crc="3c0e9a7f" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0xA0000 -->
+        <!-- soundcpu - starts at 0xC0000 -->
         <part name="epr-10187.88" crc="a10abaa9"/>
         <part repeat="0x8000"> FF</part>
-        <!-- pcm - starts at 0xB0000 -->
+        <!-- pcm - starts at 0xD0000 -->
         <part name="opr-10193.66" crc="bcd10dde"/>
         <part name="opr-10192.67" crc="770f1270"/>
         <part name="opr-10191.68" crc="20a284ab"/>
@@ -66,7 +67,7 @@
         <part name="opr-10189.70" crc="01366b54"/>
         <part name="opr-10188.71" crc="bad30ad9"/>
         <part repeat="0x30000"> FF</part>
-        <!-- gfx1 - starts at 0x110000 -->
+        <!-- gfx1 - starts at 0x130000 -->
         <interleave output="32">
             <part name="opr-10268.99" crc="95344b04" map="0001"/>
             <part name="opr-10232.102" crc="776ba1eb" map="0010"/>
@@ -79,7 +80,7 @@
             <part name="opr-10230.104" crc="686f5e50" map="0100"/>
             <part name="opr-10230.104" crc="686f5e50" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x150000 -->
+        <!-- sprites - starts at 0x170000 -->
         <interleave output="16">
             <part name="mpr-10373.10" crc="b0d26ac9" map="01"/>
             <part name="mpr-10371.9" crc="7cc86208" map="10"/>
@@ -96,15 +97,16 @@
             <part name="mpr-10378.16" crc="a1062984" map="01"/>
             <part name="mpr-10376.15" crc="f3b8f318" map="10"/>
         </interleave>
-        <!-- segaic16road - starts at 0x250000 -->
+        <!-- segaic16road - starts at 0x270000 -->
         <part repeat="0x8000"> FF</part>
         <interleave output="16">
             <part name="opr-10185.11" crc="22794426" map="01"/>
             <part name="opr-10186.47" crc="22794426" map="10"/>
         </interleave>
-        <!-- maincpu:key - starts at 0x268000 -->
+        <part repeat="0x10000"> FF</part>
+        <!-- maincpu:key - starts at 0x298000 -->
         <part name="317-0019.key" crc="8ffbed98"/>
-        <!-- FD1089 base table starts at 0x26A000 -->
+        <!-- FD1089 base table starts at 0x29A000 -->
         <part>
             00 1C 76 6A 5E 42 24 38 4B 67 AD 81 E9 C5 03 2F
             45 69 AF 83 E7 CB 01 2D 02 1E 78 64 5C 40 2A 36
@@ -123,7 +125,7 @@
             12 0E 68 74 E2 FE 94 88 65 49 8F A3 99 B5 7F 53
             35 19 D3 FF C9 E5 23 0F BE A2 C8 D4 4E 52 34 28
         </part>
-        <!-- Total 0x26A100 bytes - 2472 kBytes -->
+        <!-- Total 0x29A100 bytes - 2664 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>
