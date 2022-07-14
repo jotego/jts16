@@ -13,8 +13,8 @@ if which ncverilog >/dev/null; then
 fi
 
 # Fast load
-rm -f sdram_bank*
-dd if=rom.bin of=sdram_bank0.bin ibs=16 skip=1 conv=swab
+# rm -f sdram_bank*
+# dd if=rom.bin of=sdram_bank0.bin ibs=16 skip=1 conv=swab
 
 jtsim -mist -sysname $SYSNAME $SIMULATOR \
 	-d JTFRAME_DWNLD_PROM_ONLY \

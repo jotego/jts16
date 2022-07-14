@@ -52,7 +52,6 @@ module jtoutrun_main(
     input              sub_ok,
     input       [15:0] sub_din,
     output      [ 1:0] dsn,
-    output      [12:1] cpu_addr,
 
     // cabinet I/O
     input       [ 7:0] joystick1,
@@ -142,15 +141,14 @@ assign BUSn  = LDSn & UDSn;
 assign dsn   = { UDSn, LDSn };
 assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
-// No peripheral bus access for now
-assign cpu_addr = A[12:1];
 // assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
 //                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
 assign obj_cfg  = ppia_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
 assign video_en = ppia_dout[5];
 assign adc_ch   = ppia_dout[4:2];
 assign snd_rstb = ppia_dout[0];
-assign flip = 0;
+assign flip     = 0;
+assign addr     = A[19:1];
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -214,8 +212,6 @@ jts16b_mapper u_mapper(
     .st_addr    ( st_addr        ),
     .st_dout    ( st_dout        )
 );
-
-assign addr = A[19:1];
 
 // System 16B memory map
 always @(posedge clk, posedge rst) begin

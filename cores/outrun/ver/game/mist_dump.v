@@ -58,8 +58,8 @@ module mist_dump(
             //$shm_probe(UUT.u_game,"A");
             $shm_probe(UUT.u_game.u_main,"A");
             //$shm_probe(UUT.u_game.u_main.u_mapper,"AS");
-            //$shm_probe(UUT.u_game.u_sub,"A");
-            //$shm_probe(UUT.u_game.u_sub.u_dma,"A");
+            $shm_probe(UUT.u_game.u_sub,"A");
+            $shm_probe(UUT.u_game.u_sub.u_dma,"A");
             //$shm_probe(UUT.u_game.u_sub.u_dtack,"A");
             //$shm_probe(UUT.u_game.u_sdram,"A");
             //$shm_probe(UUT.u_game.u_sdram.u_bank0,"AS");

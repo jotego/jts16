@@ -27,13 +27,13 @@ CMP_ROM:
 
 GOOD:
     MOVE.W #$BABE,D0
-    MOVE.L #RAM,A0
+    MOVE.L #0,A0
     MOVE.W D0,(A0)
     BRA GOOD
 
 BAD:
     MOVE.W #$BAD,D0
-    MOVE.L #RAM,A0
+    MOVE.L #0,A0
     MOVE.W D0,(A0)+
     MOVE.W D7,(A0)
     BRA BAD

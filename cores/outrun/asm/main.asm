@@ -79,21 +79,30 @@ CMP_VRAM:
     ; copy the sub CPU ROM
     LEA.L  SUB,A0
     LEA.L  SUB+$60000,A1
-    ; MOVE.L #RAM,A1
     MOVE.L #$8000>>2-1,D0
 COPY_SUB:
     MOVE.L (A0)+,(A1)+
     DBF D0,COPY_SUB
+    ; Test it
+    LEA.L  SUB,A0
+    LEA.L  SUB+$60000,A1
+    MOVE.L #$8000>>2-1,D0
+    MOVE.L #4,D7
+TEST_SUB:
+    MOVE.L (A0)+,D1
+    CMP.L (A1)+,D1
+    BNE BAD
+    DBF D0,TEST_SUB
 
 GOOD:
     MOVE.W #$BABE,D0
-    MOVE.L #RAM,A0
+    MOVE.L #0,A0
     MOVE.W D0,(A0)
     BRA GOOD
 
 BAD:
     MOVE.W #$BAD,D0
-    MOVE.L #RAM,A0
+    MOVE.L #0,A0
     MOVE.W D0,(A0)+
     MOVE.W D7,(A0)
     BRA BAD

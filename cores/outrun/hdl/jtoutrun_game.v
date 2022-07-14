@@ -134,7 +134,6 @@ wire [19:0] obj_addr;
 wire [15:0] obj_data;
 
 // CPU interface
-wire [12:1] cpu_addr;
 wire [15:0] main_dout, char_dout, pal_dout, obj_dout;
 wire [ 1:0] main_dsn, main_dswn;
 wire        main_rnw, sub_br, irqn,
@@ -229,7 +228,6 @@ jtoutrun_main u_main(
     .ram_data    ( ram_data   ),
     .ram_ok      ( ram_ok     ),
     // CPU bus
-    .cpu_addr    ( cpu_addr   ),
     .cpu_dout    ( main_dout  ),
     .dsn         ( main_dsn   ),
     .RnW         ( main_rnw   ),
@@ -348,7 +346,7 @@ jtoutrun_video u_video(
     .video_en   ( video_en  ),
     .game_id    ( game_id   ),
     // CPU interface
-    .cpu_addr   ( cpu_addr  ),
+    .cpu_addr   ( main_addr[13:1]),
     .sub_addr   ( sub_addr[11:1] ),
     .road_cs    ( road_cs   ),
     .sub_io_cs  ( sio_cs    ),

@@ -222,7 +222,7 @@ jtoutrun_colmix u_colmix(
     .shadow    ( shadow         ),
     // CPU interface
     .pal_cs    ( pal_cs         ),
-    .cpu_addr  ( cpu_addr[11:1] ),
+    .cpu_addr  ( cpu_addr[13:1] ),
     .cpu_dout  ( cpu_dout       ),
     .dswn      ( main_dswn      ),
     .cpu_din   ( pal_dout       ),

@@ -75,7 +75,7 @@ jtframe_dual_ram16 #(
     .q0     ( cpu_din   ),
 
     // Video reads
-    .addr1  ( pal_addr  ),
+    .addr1  ( { 2'd0, pal_addr }  ),
     .data1  (           ),
     .we1    ( 2'b0      ),
     .q1     ( pal       )
