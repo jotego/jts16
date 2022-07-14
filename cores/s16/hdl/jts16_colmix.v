@@ -31,7 +31,7 @@ module jts16_colmix(
     input              pal_cs,
     input      [11:1]  cpu_addr,
     input      [15:0]  cpu_dout,
-    input      [ 1:0]  dsn,
+    input      [ 1:0]  dswn,
     output     [15:0]  cpu_din,
 
     input      [10:0]  pal_addr,
@@ -48,7 +48,7 @@ wire [ 1:0] we;
 wire [15:0] pal;
 wire [14:0] rgb;
 
-assign we = ~dsn & {2{pal_cs}};
+assign we = ~dswn & {2{pal_cs}};
 assign { red, green, blue } = rgb;
 
 wire [4:0] rpal, gpal, bpal;

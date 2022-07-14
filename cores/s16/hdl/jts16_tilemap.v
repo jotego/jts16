@@ -40,7 +40,7 @@ module jts16_tilemap(
     input              objram_cs,
     input      [12:1]  cpu_addr,
     input      [15:0]  cpu_dout,
-    input      [ 1:0]  dsn,
+    input      [ 1:0]  dswn,
 
     output     [15:0]  char_dout,
     output             vint,    
@@ -182,7 +182,7 @@ jts16_mmr #(.MODEL(MODEL)) u_mmr(
     .char_cs   ( char_cs        ),
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
+    .dswn      ( dswn           ),
 
     // Video registers
     .scr1_pages ( scr1_pages    ),
@@ -214,7 +214,7 @@ jts16_char #(.MODEL(MODEL)) u_char(
     .char_cs   ( char_cs        ),
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
+    .dswn      ( dswn           ),
     .cpu_din   ( char_dout      ),
 
     // SDRAM interface

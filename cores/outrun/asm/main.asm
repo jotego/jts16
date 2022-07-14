@@ -1,5 +1,7 @@
 RAM     EQU $060000
 SUB     EQU $200000
+CHAR    EQU $110000
+VRAM    EQU $100000
 
     ORG 0
     DC.L RAM+$8000
@@ -32,6 +34,45 @@ CMP_ROM:
     MOVE.L (A0)+,D1
     CMP.L (A1)+,D1
     BNE BAD
+    DBF D0,CMP_ROM
+
+    ; Copy the ROM to the CHAR space
+    MOVE.L #0,A0
+    MOVE.L #CHAR,A1
+    MOVE.L #$1000>>2-1,D0   ; 4kB
+COPY_ROM2CHAR:
+    MOVE.L (A0)+,(A1)+
+    DBF D0,COPY_ROM2CHAR
+
+    ; Copy the ROM to the VRAM space
+    MOVE.L #0,A0
+    LEA.L  VRAM,A1
+    MOVE.L #$1000>>2-1,D0   ; 4kB
+COPY_ROM2VRAM:
+    MOVE.L (A0)+,(A1)+
+    DBF D0,COPY_ROM2VRAM
+
+    ; Compare the CHAR and RAM copies
+    LEA.L  CHAR,A0
+    LEA.L  RAM,A1
+    MOVE.L #$1000>>2-1,D0
+    MOVE.L #2,D7
+CMP_CHAR:
+    MOVE.L (A0)+,D1
+    CMP.L (A1)+,D1
+    BNE BAD
+    DBF D0,CMP_CHAR
+
+    ; Compare the VRAM and RAM copies
+    LEA.L  VRAM,A0
+    LEA.L  RAM,A1
+    MOVE.L #$1000>>2-1,D0
+    MOVE.L #3,D7
+CMP_VRAM:
+    MOVE.L (A0)+,D1
+    CMP.L (A1)+,D1
+    BNE BAD
+    DBF D0,CMP_VRAM
 
     ; Check the SUB CPU space
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;

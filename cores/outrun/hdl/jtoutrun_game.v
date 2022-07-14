@@ -136,14 +136,14 @@ wire [15:0] obj_data;
 // CPU interface
 wire [12:1] cpu_addr;
 wire [15:0] main_dout, char_dout, pal_dout, obj_dout;
-wire [ 1:0] main_dsn;
+wire [ 1:0] main_dsn, main_dswn;
 wire        main_rnw, sub_br, irqn,
             char_cs, scr1_cs, pal_cs, objram_cs;
 
 // Sub CPU
 wire [18:1] sub_addr;
 wire [15:0] sub_din, sub_dout, sram_data, srom_data, road_dout;
-wire [ 1:0] sub_dsn;
+wire [ 1:0] sub_dsn, sub_dswn;
 wire        sub_rnw, srom_cs, sram_cs, sub_ok,
             srom_ok, sram_ok, road_cs, sio_cs, main_br;
 // Sound CPU
@@ -180,6 +180,8 @@ assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign game_led             = 1;
 assign debug_view           = st_dout;
 assign irqn                 = 1;
+assign main_dswn            = {2{main_rnw}} | main_dsn;
+assign sub_dswn             = {2{sub_rnw }} | sub_dsn;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -299,6 +301,7 @@ jtoutrun_sub u_sub(
     .sub_din    ( sub_din   ),
     .main_dout  ( main_dout ),
     .sub_ok     ( sub_ok    ),
+    .road_dout  ( road_dout ),
 
     // sub CPU bus
     .cpu_dout   ( sub_dout  ),
@@ -356,8 +359,8 @@ jtoutrun_video u_video(
     .dip_pause  ( dip_pause ),
 
     .cpu_dout   ( main_dout ),
-    .main_dsn   ( main_dsn  ),
-    .sub_dsn    ( sub_dsn   ),
+    .main_dswn  ( main_dswn ),
+    .sub_dswn   ( sub_dswn  ),
     .sub_dout   ( sub_dout  ),
     .char_dout  ( char_dout ),
     .pal_dout   ( pal_dout  ),

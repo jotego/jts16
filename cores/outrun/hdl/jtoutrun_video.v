@@ -36,8 +36,8 @@ module jtoutrun_video(
     input      [11:1]  sub_addr,
     input      [15:0]  cpu_dout,
     input      [15:0]  sub_dout,
-    input      [ 1:0]  main_dsn,
-    input      [ 1:0]  sub_dsn,
+    input      [ 1:0]  main_dswn,
+    input      [ 1:0]  sub_dswn,
 
     output     [15:0]  char_dout,
     output     [15:0]  pal_dout,
@@ -115,7 +115,7 @@ jtoutrun_road u_road(
     .cpu_addr   ( sub_addr  ),
     .cpu_dout   ( sub_dout  ),
     .cpu_din    ( road_dout ),
-    .cpu_dswn   ( sub_dsn   ),
+    .cpu_dswn   ( sub_dswn   ),
     .road_cs    ( road_cs   ),
     .io_cs      ( sub_io_cs )
 );
@@ -132,7 +132,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .objram_cs  ( objram_cs ),
     .cpu_addr   ( cpu_addr[12:1] ),
     .cpu_dout   ( cpu_dout  ),
-    .dsn        ( main_dsn  ),
+    .dswn       ( main_dswn ),
     .char_dout  ( char_dout ),
     .vint       ( vint      ),
 
@@ -174,6 +174,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .pal_addr   ( pal_addr  ),
     .shadow     ( shadow    ),
     // Debug
+    .gfx_en     ( gfx_en    ),
     .debug_bus  ( debug_bus ),
     .st_addr    ( st_addr   ),
     .st_dout    ( st_dout   ),
@@ -190,7 +191,7 @@ jts16_obj #(.MODEL(1)) u_obj(
     .cpu_obj_cs( objram_cs      ),
     .cpu_addr  ( cpu_addr[10:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( main_dsn       ),
+    .dswn      ( main_dswn      ),
     .cpu_din   ( obj_dout       ),
 
     // SDRAM interface
@@ -223,7 +224,7 @@ jtoutrun_colmix u_colmix(
     .pal_cs    ( pal_cs         ),
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( main_dsn       ),
+    .dswn      ( main_dswn      ),
     .cpu_din   ( pal_dout       ),
 
     .preLVBL   ( preLVBL        ),

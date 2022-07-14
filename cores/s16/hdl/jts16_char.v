@@ -27,7 +27,7 @@ module jts16_char(
     input              char_cs,
     input      [11:1]  cpu_addr,
     input      [15:0]  cpu_dout,
-    input      [ 1:0]  dsn,
+    input      [ 1:0]  dswn,
     output     [15:0]  cpu_din,
 
     // SDRAM interface
@@ -66,7 +66,7 @@ reg  [10:0] scan_addr;
 wire [ 1:0] we;
 reg  [ 8:0] code, vf, vfr, hf;
 
-assign we = ~dsn & {2{char_cs}};
+assign we = ~dswn & {2{char_cs}};
 
 jtframe_dual_ram16 #(
     .aw(11),

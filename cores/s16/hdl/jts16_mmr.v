@@ -25,7 +25,7 @@ module jts16_mmr(
     input              char_cs,
     input      [11:1]  cpu_addr,
     input      [15:0]  cpu_dout,
-    input      [ 1:0]  dsn,
+    input      [ 1:0]  dswn,
 
     // Video registers
     output reg [15:0]  scr1_pages,
@@ -72,7 +72,7 @@ generate
 endgenerate
 
 function [15:0] bytemux( input [15:0] old );
-    bytemux = { dsn[1] ? old[15:8] : cpu_dout[15:8], dsn[0] ? old[7:0] : cpu_dout[7:0] };
+    bytemux = { dswn[1] ? old[15:8] : cpu_dout[15:8], dswn[0] ? old[7:0] : cpu_dout[7:0] };
 endfunction
 
 `ifdef SIMULATION
@@ -119,7 +119,7 @@ always @(posedge clk) begin
         scr1_hpos  <= altscr1_en ? scr1_hpos_alt : scr1_hpos_std;
         scr2_hpos  <= altscr2_en ? scr2_hpos_alt : scr2_hpos_std;
     end
-    if( char_cs && cpu_addr[11:9]==3'b111 && dsn!=2'b11) begin
+    if( char_cs && cpu_addr[11:9]==3'b111 && dswn!=2'b11) begin
         if( MODEL==0 ) begin
             case( {cpu_addr[8:1], 1'b0} )
                 9'h08e: scr1_pages_flip <= bytemux( scr1_pages_flip );

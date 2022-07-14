@@ -124,7 +124,7 @@ jts16_tilemap #(.MODEL(MODEL)) u_tilemap(
     .objram_cs  ( objram_cs ),
     .cpu_addr   ( cpu_addr  ),
     .cpu_dout   ( cpu_dout  ),
-    .dsn        ( dsn       ),
+    .dswn       ( dsn       ),
     .char_dout  ( char_dout ),
     .vint       ( vint      ),
 
@@ -184,7 +184,7 @@ jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
     .cpu_obj_cs( objram_cs      ),
     .cpu_addr  ( cpu_addr[10:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
+    .dswn      ( dsn            ),
     .cpu_din   ( obj_dout       ),
 
     // SDRAM interface
@@ -217,7 +217,7 @@ jts16_colmix u_colmix(
     .pal_cs    ( pal_cs         ),
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
+    .dswn      ( dsn            ),
     .cpu_din   ( pal_dout       ),
 
     .preLVBL   ( preLVBL        ),
