@@ -38,6 +38,7 @@ module jtoutrun_main(
     input       [15:0] obj_dout,
     output             flip,
     output             video_en,
+    output      [ 1:0] obj_cfg, // SG bus on page 6/7
 
     // RAM access
     output reg         ram_cs,
@@ -116,13 +117,15 @@ wire [23:0] A_full = {A,1'b0};
 `endif
 
 wire        BRn, BGACKn, BGn;
-wire        ASn, UDSn, LDSn, BUSn;
+wire        ASn, UDSn, LDSn, BUSn, UDSWn, LDSWn;
 wire [15:0] rom_dec, cpu_dout_raw;
 
-reg         io_cs;
+reg         io_cs, ppi_cs;
 wire        cpu_RnW, dec_ok;
 
-wire [ 7:0] active, sys_inputs, cab_dout;
+reg  [ 7:0] cab_dout;
+wire [ 7:0] active, sys_inputs,
+            ppi_dout, ppia_dout;
 wire [ 2:0] cpu_ipln;
 wire        DTACKn, cpu_vpan;
 
@@ -133,16 +136,21 @@ wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
 wire [15:0] mapper_dout;
 wire        none_cs;
+wire [ 2:0] adc_ch;
 
 assign BUSn  = LDSn & UDSn;
 assign dsn   = { UDSn, LDSn };
+assign UDSWn = RnW | UDSn;
+assign LDSWn = RnW | LDSn;
 // No peripheral bus access for now
 assign cpu_addr = A[12:1];
 // assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
 //                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
-assign video_en = 1;
+assign obj_cfg  = ppia_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
+assign video_en = ppia_dout[5];
+assign adc_ch   = ppia_dout[4:2];
+assign snd_rstb = ppia_dout[0];
 assign flip = 0;
-assign cab_dout = 8'hff;
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -243,6 +251,55 @@ always @(posedge clk, posedge rst) begin
         end
     end
 end
+
+always @(*) begin
+    ppi_cs   = 0;
+    cab_dout = 8'hff;
+    if( io_cs ) begin
+        case( A[6:4] )
+            0: begin
+                ppi_cs   = 1;
+                cab_dout = ppia_dout;
+            end
+            1: case( A[2:1] )
+                0: cab_dout = { coin_input, 1'b0, joystick1[4], start_button[0], service, dip_test, 1'b1 };
+                1: cab_dout = 8'hff;
+                2: cab_dout = dipsw_a;
+                3: cab_dout = dipsw_b;
+                default:;
+            endcase
+            3: case( adc_ch ) // ADC reads
+                0: cab_dout = joyana1[7:0]; // steering wheel
+                1: cab_dout = joyana1[15:8]+8'h80; // gas pedal
+                2: cab_dout = joyana2[15:8]+8'h80; // break pedal
+                default:;
+            endcase
+            default:;
+        endcase // A[6:4]
+    end
+end
+
+jt8255 u_8255(
+    .rst       ( rst        ),
+    .clk       ( clk        ),
+
+    // CPU interface
+    .addr      ( A[2:1]     ),
+    .din       ( cpu_dout[7:0] ),
+    .dout      ( ppi_dout   ),
+    .rdn       ( ~RnW       ),
+    .wrn       ( LDSWn      ),
+    .csn       ( ~ppi_cs    ),
+
+    // External pins to peripherals
+    .porta_din ( 8'hFF      ),  // Port A: read from motor
+    .portb_din ( 8'hFF      ),  // Port B: write to motor
+    .portc_din ( 8'hFF      ),
+
+    .porta_dout( ppia_dout  ),
+    .portb_dout(            ),
+    .portc_dout(            )
+);
 
 // Data bus input
 always @(posedge clk) begin
