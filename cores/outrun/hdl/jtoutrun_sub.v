@@ -28,6 +28,7 @@ module jtoutrun_sub(
     input              main_rnw,
     input              sub_br,      // bus request
     input      [15:0]  main_dout,
+    input      [15:0]  road_dout,
     output     [15:0]  sub_din,     // bus output to sub CPU
     output             sub_ok,
 
@@ -114,8 +115,9 @@ always @(posedge clk, posedge rst) begin
     if( rst ) begin
         cpu_din <= 0;
     end else begin
-        cpu_din <= rom_cs ? rom_data :
-                   ram_cs ? ram_data :
+        cpu_din <= rom_cs  ? rom_data  :
+                   ram_cs  ? ram_data  :
+                   road_cs ? road_dout :
                    16'hfff;
     end
 end

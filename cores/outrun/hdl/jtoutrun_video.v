@@ -30,13 +30,19 @@ module jtoutrun_video(
     input              char_cs,
     input              pal_cs,
     input              objram_cs,
+    input              road_cs,
+    input              sub_io_cs,
     input      [13:1]  cpu_addr,
+    input      [11:1]  sub_addr,
     input      [15:0]  cpu_dout,
-    input      [ 1:0]  dsn,
+    input      [15:0]  sub_dout,
+    input      [ 1:0]  main_dsn,
+    input      [ 1:0]  sub_dsn,
 
     output     [15:0]  char_dout,
     output     [15:0]  pal_dout,
     output     [15:0]  obj_dout,
+    output     [15:0]  road_dout,
     output             vint,
 
     // Other configuration
@@ -94,13 +100,25 @@ module jtoutrun_video(
 
 wire [ 8:0] hdump;
 wire        preLHBL, preLVBL;
-wire        alt_objbank; // 171-5358 boards have a different GFX layout
 wire        flipx;
 
 // video layers
 wire [11:0] obj_pxl;
 wire [10:0] pal_addr;
 wire        shadow;
+
+jtoutrun_road u_road(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .v          ( vdump     ),
+    // CPU interface
+    .cpu_addr   ( sub_addr  ),
+    .cpu_dout   ( sub_dout  ),
+    .cpu_din    ( road_dout ),
+    .cpu_dswn   ( sub_dsn   ),
+    .road_cs    ( road_cs   ),
+    .io_cs      ( sub_io_cs )
+);
 
 jts16_tilemap #(.MODEL(1)) u_tilemap(
     .rst        ( rst       ),
@@ -114,7 +132,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .objram_cs  ( objram_cs ),
     .cpu_addr   ( cpu_addr[12:1] ),
     .cpu_dout   ( cpu_dout  ),
-    .dsn        ( dsn       ),
+    .dsn        ( main_dsn  ),
     .char_dout  ( char_dout ),
     .vint       ( vint      ),
 
@@ -161,18 +179,18 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .st_dout    ( st_dout   ),
     .scr_bad    ( scr_bad   )
 );
-/*
-jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
+
+jts16_obj #(.MODEL(1)) u_obj(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl_cen   ( pxl_cen        ),
-    .alt_bank  ( alt_objbank    ),
+    .alt_bank  ( 1'b0           ),
 
     // CPU interface
     .cpu_obj_cs( objram_cs      ),
     .cpu_addr  ( cpu_addr[10:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
+    .dsn       ( main_dsn       ),
     .cpu_din   ( obj_dout       ),
 
     // SDRAM interface
@@ -189,7 +207,7 @@ jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
     .hdump     ( hdump          ),
     .pxl       ( obj_pxl        ),
     .debug_bus ( debug_bus      )
-);*/
+);
 
 jtoutrun_colmix u_colmix(
     .rst       ( rst            ),
@@ -205,7 +223,7 @@ jtoutrun_colmix u_colmix(
     .pal_cs    ( pal_cs         ),
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
+    .dsn       ( main_dsn       ),
     .cpu_din   ( pal_dout       ),
 
     .preLVBL   ( preLVBL        ),

@@ -7,7 +7,7 @@ game:
       - jtoutrun_sdram.v
       - jtoutrun_video.v
       - jtoutrun_colmix.v
-      # - jtoutrun_road.v
+      - jtoutrun_road.v
       # - jtoutrun_obj.v
       # - jtoutrun_snd.v
   - from: s16b
@@ -20,6 +20,10 @@ game:
       - jts16_fd1094.v
       - jts16_fd1094_dec.v
       - jts16_fd1094_ctrl.v
+      - jts16_obj.v
+      - jts16_obj_ram.v
+      - jts16_obj_draw.v
+      - jts16_obj_scan.v
       - tilemap.yaml
 jtframe:
   - get:

@@ -137,12 +137,14 @@ wire [15:0] scr1_pages,      scr2_pages,
 assign vint = vdump==223 && dip_pause;
 assign scr_bad = scr1_bad | scr2_bad;
 
-`ifndef S16B
-    assign rowscr1_en = rowscr_en;
-    assign rowscr2_en = rowscr_en;
-    assign colscr1_en = colscr_en;
-    assign colscr2_en = colscr_en;
-`endif
+generate
+    if( MODEL==0 ) begin
+        assign rowscr1_en = rowscr_en;
+        assign rowscr2_en = rowscr_en;
+        assign colscr1_en = colscr_en;
+        assign colscr2_en = colscr_en;
+    end
+endgenerate
 
 jtframe_vtimer #(
     .HB_START  ( 9'h1ff ),

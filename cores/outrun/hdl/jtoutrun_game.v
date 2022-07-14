@@ -142,7 +142,7 @@ wire        main_rnw, sub_br, irqn,
 
 // Sub CPU
 wire [18:1] sub_addr;
-wire [15:0] sub_din, sub_dout, sram_data, srom_data;
+wire [15:0] sub_din, sub_dout, sram_data, srom_data, road_dout;
 wire [ 1:0] sub_dsn;
 wire        sub_rnw, srom_cs, sram_cs, sub_ok,
             srom_ok, sram_ok, road_cs, sio_cs, main_br;
@@ -346,6 +346,9 @@ jtoutrun_video u_video(
     .game_id    ( game_id   ),
     // CPU interface
     .cpu_addr   ( cpu_addr  ),
+    .sub_addr   ( sub_addr[11:1] ),
+    .road_cs    ( road_cs   ),
+    .sub_io_cs  ( sio_cs    ),
     .char_cs    ( char_cs   ),
     .pal_cs     ( pal_cs    ),
     .objram_cs  ( objram_cs ),
@@ -353,10 +356,13 @@ jtoutrun_video u_video(
     .dip_pause  ( dip_pause ),
 
     .cpu_dout   ( main_dout ),
-    .dsn        ( dsn       ),
+    .main_dsn   ( main_dsn  ),
+    .sub_dsn    ( sub_dsn   ),
+    .sub_dout   ( sub_dout  ),
     .char_dout  ( char_dout ),
     .pal_dout   ( pal_dout  ),
     .obj_dout   ( obj_dout  ),
+    .road_dout  ( road_dout ),
 
     .flip       ( flip      ),
     .ext_flip   ( dip_flip  ),
@@ -384,10 +390,10 @@ jtoutrun_video u_video(
     .scr2_addr  ( scr2_addr ),
     .scr2_data  ( scr2_data ),
 
-    // .obj_ok     ( obj_ok    ),
-    // .obj_cs     ( obj_cs    ),
-    // .obj_addr   ( obj_addr  ),
-    // .obj_data   ( obj_data  ),
+    .obj_ok     ( obj_ok    ),
+    .obj_cs     ( obj_cs    ),
+    .obj_addr   ( obj_addr  ),
+    .obj_data   ( obj_data  ),
 
     // Video signal
     .HS         ( HS        ),
@@ -492,10 +498,10 @@ jtoutrun_sdram u_sdram(
     .scr2_data  ( scr2_data ),
 
     // Sprite interface
-    // .obj_ok     ( obj_ok    ),
-    // .obj_cs     ( obj_cs    ),
-    // .obj_addr   ( obj_addr  ),
-    // .obj_data   ( obj_data  ),
+    .obj_ok     ( obj_ok    ),
+    .obj_cs     ( obj_cs    ),
+    .obj_addr   ( obj_addr  ),
+    .obj_data   ( obj_data  ),
 
     // Bank 0: allows R/W
     .ba0_addr   ( ba0_addr   ),

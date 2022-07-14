@@ -23,7 +23,7 @@ module jtoutrun_main(
     input              pxl_cen,
     output             cpu_cen,
     output             cpu_cenb,
-    input  [1:0]       game_id,
+    input       [ 1:0] game_id,
 
     // Video
     input              vint,
@@ -83,14 +83,14 @@ module jtoutrun_main(
 
     // DIP switches
     input              dip_test,
-    input    [7:0]     dipsw_a,
-    input    [7:0]     dipsw_b,
+    input       [ 7:0] dipsw_a,
+    input       [ 7:0] dipsw_b,
 
     // Sound - Mapper interface
     input              sndmap_rd,
     input              sndmap_wr,
-    input    [7:0]     sndmap_din,
-    output   [7:0]     sndmap_dout,
+    input       [ 7:0] sndmap_din,
+    output      [ 7:0] sndmap_dout,
     output             sndmap_pbf, // pbf signal == buffer full ?
 
     // status dump
@@ -254,7 +254,7 @@ always @(posedge clk) begin
                     char_cs            ? char_dout :
                     pal_cs             ? pal_dout  :
                     objram_cs          ? obj_dout  :
-                    sub_din            ? sub_din  :
+                    sub_din            ? sub_din   :
                     io_cs              ? { 8'hff, cab_dout } :
                     none_cs            ? mapper_dout :
                                          16'hffff;

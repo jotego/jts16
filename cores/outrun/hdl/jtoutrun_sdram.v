@@ -97,10 +97,10 @@ module jtoutrun_sdram(
     output   [31:0]  scr2_data,
 
     // Obj
-    // output           obj_ok,
-    // input            obj_cs,
-    // input    [19:0]  obj_addr,
-    // output   [15:0]  obj_data,
+    output           obj_ok,
+    input            obj_cs,
+    input    [19:0]  obj_addr,
+    output   [15:0]  obj_data,
 
     // Bank 0: allows R/W
     output    [21:0] ba0_addr,
@@ -312,20 +312,20 @@ jtframe_ram2_6slots #(
 
 jtframe_rom_3slots #(
     .SLOT0_DW(32),
-    .SLOT0_AW(19),
+    .SLOT0_AW(13),
 
     .SLOT1_DW(32),
-    .SLOT1_AW(19),
+    .SLOT1_AW(17),
 
     .SLOT2_DW(32),
-    .SLOT2_AW(19)
+    .SLOT2_AW(17)
 ) u_bank2(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
-    .slot0_addr ( char_adj  ),
-    .slot1_addr ( scr1_adj  ),
-    .slot2_addr ( scr2_adj  ),
+    .slot0_addr ( char_addr ),
+    .slot1_addr ( scr1_addr ),
+    .slot2_addr ( scr2_addr ),
 
     //  output data
     .slot0_dout ( char_data ),
@@ -350,7 +350,7 @@ jtframe_rom_3slots #(
 );
 
 // OBJ
-/*
+
 jtframe_rom_1slot #(
     .SLOT0_DW(16),
     .SLOT0_AW(20)
@@ -358,7 +358,7 @@ jtframe_rom_1slot #(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
-    .slot0_addr ( obj_addr_g),
+    .slot0_addr ( obj_addr  ),
     .slot0_dout ( obj_data  ),
     .slot0_cs   ( obj_cs    ),
     .slot0_ok   ( obj_ok    ),
@@ -371,9 +371,7 @@ jtframe_rom_1slot #(
     .data_rdy   ( ba_rdy[3] ),
     .data_read  ( data_read )
 );
-*/
-assign ba_rd[3]=0;
-assign ba3_addr=0;
+
 /*
 // Sound
 jtframe_rom_2slots #(
