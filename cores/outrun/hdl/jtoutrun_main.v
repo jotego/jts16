@@ -150,7 +150,7 @@ assign adc_ch   = ppia_dout[4:2];
 assign snd_rstb = ppia_dout[0];
 assign flip     = 0;
 assign addr     = A[19:1];
-assign mix_ipln = cpu_ipln & { 1'b1, line_intn, 1'b1 };
+assign mix_ipln = { cpu_ipln[2], line_intn, 1'b1 };
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
