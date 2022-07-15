@@ -166,7 +166,7 @@ wire [12:0] key_addr, key_mcaddr;
 // wire [ 7:0] snd_latch;
 // wire        snd_irqn, snd_ack;
 
-wire        flip, video_en, sound_en;
+wire        flip, video_en, sound_en, line_intn;
 
 // Cabinet inputs
 wire [ 7:0] dipsw_a, dipsw_b;
@@ -212,6 +212,7 @@ jtoutrun_main u_main(
     .LHBL        ( LHBL       ),
     // Video
     .vint        ( vint       ),
+    .line_intn   ( line_intn  ),
     .video_en    ( video_en   ),
     // Video circuitry
     .vram_cs     ( vram_cs    ),
@@ -354,6 +355,7 @@ jtoutrun_video u_video(
     .pal_cs     ( pal_cs    ),
     .objram_cs  ( objram_cs ),
     .vint       ( vint      ),
+    .line_intn  ( line_intn ),
     .dip_pause  ( dip_pause ),
 
     .cpu_dout   ( main_dout ),

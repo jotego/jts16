@@ -44,6 +44,7 @@ module jtoutrun_video(
     output     [15:0]  obj_dout,
     output     [15:0]  road_dout,
     output             vint,
+    output reg         line_intn,
 
     // Other configuration
     input              flip,
@@ -106,6 +107,14 @@ wire        flipx;
 wire [11:0] obj_pxl;
 wire [10:0] pal_addr;
 wire        shadow;
+
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        line_intn <= 1;
+    end else begin
+        line_intn <= !(!LHBL && (vdump==64 || vdump==128 || vdump==192));
+    end
+end
 
 jtoutrun_road u_road(
     .rst        ( rst       ),

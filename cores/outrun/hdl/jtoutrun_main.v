@@ -27,6 +27,7 @@ module jtoutrun_main(
 
     // Video
     input              vint,
+    input              line_intn,
     input              LHBL,
 
     // Video circuitry
@@ -116,7 +117,7 @@ wire [23:0] A_full = {A,1'b0};
 `endif
 
 wire        BRn, BGACKn, BGn;
-wire        ASn, UDSn, LDSn, BUSn, UDSWn, LDSWn;
+wire        ASn, UDSn, LDSn, BUSn, LDSWn;
 wire [15:0] rom_dec, cpu_dout_raw;
 
 reg         io_cs, ppi_cs;
@@ -125,7 +126,7 @@ wire        cpu_RnW, dec_ok;
 reg  [ 7:0] cab_dout;
 wire [ 7:0] active, sys_inputs,
             ppi_dout, ppia_dout;
-wire [ 2:0] cpu_ipln;
+wire [ 2:0] cpu_ipln, mix_ipln;
 wire        DTACKn, cpu_vpan;
 
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs | sub_cs;
@@ -139,7 +140,7 @@ wire [ 2:0] adc_ch;
 
 assign BUSn  = LDSn & UDSn;
 assign dsn   = { UDSn, LDSn };
-assign UDSWn = RnW | UDSn;
+// assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
 // assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
 //                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
@@ -149,6 +150,7 @@ assign adc_ch   = ppia_dout[4:2];
 assign snd_rstb = ppia_dout[0];
 assign flip     = 0;
 assign addr     = A[19:1];
+assign mix_ipln = cpu_ipln & { 1'b1, line_intn, 1'b1 };
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -404,7 +406,7 @@ jtframe_m68k u_cpu(
     .BGn        ( BGn         ),
 
     .DTACKn     ( DTACKn      ),
-    .IPLn       ( cpu_ipln    ) // VBLANK
+    .IPLn       ( mix_ipln    ) // VBLANK
 );
 /*
 `ifdef SIMULATION
