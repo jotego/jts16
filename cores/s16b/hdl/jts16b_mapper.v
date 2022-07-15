@@ -112,7 +112,6 @@ reg  [ 1:0] dtack_cyc;    // number of DTACK cycles
 reg  [ 7:0] mmr[0:31];
 reg         bus_rq;
 reg         cpu_sel;
-reg         irqn; // VBLANK
 reg         rdmem, wrmem;
 reg         mcu_vintn, mcu_snd_intn;
 reg  [ 2:0] bus_wait;
@@ -393,13 +392,12 @@ end
 reg        last_vint;
 
 assign cpu_vpan = inta_n;
-assign cpu_ipln = cpu_sel ? { irqn, 2'b11 } : mmr[4][2:0];
+assign cpu_ipln = cpu_sel ? { ~vint, 2'b11 } : mmr[4][2:0];
 
 reg [8:0] mcu_cnt;
 
 always @(posedge clk) begin
     if( rst ) begin
-        irqn <= 1;
         mcu_vintn <= 1;
     end else begin
         last_vint <= vint;
@@ -407,10 +405,7 @@ always @(posedge clk) begin
         if( mcu_cnt!=0 && pxl_cen ) mcu_cnt   <= mcu_cnt-1'd1;
         if( mcu_cnt==0 ) mcu_vintn <= 1;
 
-        if( !inta_n ) begin
-            irqn <= 1;
-        end else if( vint && !last_vint ) begin
-            irqn <= 0;
+        if( vint && !last_vint ) begin
             mcu_vintn <= 0;
             mcu_cnt  <= ~9'd0;
         end
