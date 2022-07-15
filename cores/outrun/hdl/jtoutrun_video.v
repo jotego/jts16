@@ -170,7 +170,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .vrender    ( vrender   ),
     .hdump      ( hdump     ),
     // Video layers
-    .obj_pxl    ( obj_pxl   ),
+    .obj_pxl    ( 12'd0     ),
     .pal_addr   ( pal_addr  ),
     .shadow     ( shadow    ),
     // Debug

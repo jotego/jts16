@@ -307,7 +307,7 @@ always @(posedge clk) begin
                     char_cs            ? char_dout :
                     pal_cs             ? pal_dout  :
                     objram_cs          ? obj_dout  :
-                    sub_din            ? sub_din   :
+                    sub_cs             ? sub_din   :
                     io_cs              ? { 8'hff, cab_dout } :
                     none_cs            ? mapper_dout :
                                          16'hffff;
@@ -406,5 +406,11 @@ jtframe_m68k u_cpu(
     .DTACKn     ( DTACKn      ),
     .IPLn       ( cpu_ipln    ) // VBLANK
 );
-
+/*
+`ifdef SIMULATION
+always @(negedge  DTACKn ) if(sub_cs) begin
+    $display("Sub access: %X <> %X", cpu_A, cpu_din );
+end
+`endif
+*/
 endmodule
