@@ -51,11 +51,11 @@
             <part name="epr-10329a.58" crc="da131c81" map="01"/>
             <part name="epr-10327a.76" crc="e28a5baf" map="10"/>
         </interleave>
-        <part repeat="0x20000"> FF</part>
         <interleave output="16">
             <part name="epr-10330a.57" crc="ba9ec82a" map="01"/>
             <part name="epr-10328a.75" crc="d5ec5e5d" map="10"/>
         </interleave>
+        <part repeat="0x20000"> FF</part>
         <!-- soundcpu - starts at 0xC0000 -->
         <part name="epr-10187.88" crc="a10abaa9"/>
         <part repeat="0x8000"> FF</part>

@@ -63,7 +63,6 @@
             <part name="epr-10179.87" crc="180fd041" map="01"/>
             <part name="epr-10174.67" crc="aae7efad" map="10"/>
         </interleave>
-        <part repeat="0x20000"> FF</part>
         <interleave output="16">
             <part name="epr-10180.88" crc="4713b264" map="01"/>
             <part name="epr-10175.68" crc="31c76063" map="10"/>
@@ -72,6 +71,7 @@
             <part name="epr-10181.89" crc="e009a04d" map="01"/>
             <part name="epr-10176.69" crc="a7811f90" map="10"/>
         </interleave>
+        <part repeat="0x20000"> FF</part>
         <!-- soundcpu - starts at 0xC0000 -->
         <part name="epr-10187.88" crc="a10abaa9"/>
         <part repeat="0x8000"> FF</part>

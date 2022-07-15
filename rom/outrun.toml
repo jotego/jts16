@@ -53,6 +53,6 @@ order = [
     "sprites", "segaic16road", "maincpu:key"
 ]
 
-blanks = [
-    { region="subcpu", offset=0x20000, len=0x20000}
-]
+# blanks = [
+#     { region="subcpu", offset=0x20000, len=0x20000}
+# ]

@@ -54,11 +54,11 @@
             <part name="epr-12294.ic58" crc="27cdcfd3" map="01"/>
             <part name="epr-12295.ic76" crc="d43a3a84" map="10"/>
         </interleave>
-        <part repeat="0x20000"> FF</part>
         <interleave output="16">
             <part name="epr-12296.ic57" crc="0a513671" map="01"/>
             <part name="epr-12297.ic75" crc="1d9b5677" map="10"/>
         </interleave>
+        <part repeat="0x20000"> FF</part>
         <!-- soundcpu - starts at 0xC0000 -->
         <part name="epr-12300.ic88" crc="e8ff7011"/>
         <!-- pcm - starts at 0xD0000 -->

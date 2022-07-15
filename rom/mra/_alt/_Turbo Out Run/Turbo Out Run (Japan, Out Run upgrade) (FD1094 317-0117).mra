@@ -54,11 +54,11 @@
             <part name="opr-12294.58" crc="27cdcfd3" map="01"/>
             <part name="opr-12295.76" crc="d43a3a84" map="10"/>
         </interleave>
-        <part repeat="0x20000"> FF</part>
         <interleave output="16">
             <part name="opr-12296.57" crc="0a513671" map="01"/>
             <part name="opr-12297.75" crc="1d9b5677" map="10"/>
         </interleave>
+        <part repeat="0x20000"> FF</part>
         <!-- soundcpu - starts at 0xC0000 -->
         <part name="epr-12300.88" crc="e8ff7011"/>
         <!-- pcm - starts at 0xD0000 -->
