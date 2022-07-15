@@ -107,12 +107,18 @@ wire        flipx;
 wire [11:0] obj_pxl;
 wire [10:0] pal_addr;
 wire        shadow;
+reg         LHBLl;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         line_intn <= 1;
+        LHBLl <= 0;
     end else begin
-        line_intn <= !(!LHBL && (vdump==64 || vdump==128 || vdump==192));
+        LHBLl <= LHBL;
+        if( !LHBL && LHBLl && (vdump==64 || vdump==128 || vdump==192))
+            line_intn <= 0;
+        if( LHBL )
+            line_intn <= 1;
     end
 end
 
