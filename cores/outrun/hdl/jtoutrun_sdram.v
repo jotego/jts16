@@ -199,7 +199,7 @@ jtframe_dwnld #(
     .BA1_START ( BA1_START ), // sound
     .BA2_START ( BA2_START ), // tiles
     .BA3_START ( BA3_START ), // obj
-    .PROM_START( KEY_PROM  ), // PCM MCU
+    .PROM_START( KEY_PROM  ),
     .SWAB      ( 1         )
 ) u_dwnld(
     .clk          ( clk            ),
