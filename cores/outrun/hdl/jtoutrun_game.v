@@ -210,6 +210,7 @@ jtoutrun_main u_main(
     .pxl_cen     ( pxl_cen    ),
     .game_id     ( game_id    ),
     .LHBL        ( LHBL       ),
+    .snd_rstb    ( snd_rstb   ),
     // Video
     .vint        ( vint       ),
     .line_intn   ( line_intn  ),
