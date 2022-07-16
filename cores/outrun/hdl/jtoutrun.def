@@ -1,10 +1,14 @@
-[all]
 CORENAME=JTOUTRUN
 GAMETOP=jtoutrun_game
 JTFRAME_BUTTONS=4
 JTFRAME_SDRAM_BANKS
 JTFRAME_ANALOG
+JTFRAME_ANALOG_DUAL
 JTFRAME_STEREO
+
+# The decrypter module is
+# omitted by default to save BRAM
+NODEC
 
 # Screen parameters
 JTFRAME_PLL=jtframe_pll6293
@@ -35,5 +39,7 @@ KEY_START    = 0x298000
 FD1089_START = 0x29A000
 
 [mister]
+# MiSTer has enough memory for decryption
+-NODEC
 #JTFRAME_CHEAT
 

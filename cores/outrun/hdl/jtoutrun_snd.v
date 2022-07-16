@@ -170,8 +170,6 @@ jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
     .rom_ok     ( rom_ok      )
 );
 
-assign int_n = 1;
-
 jt51 u_jt51(
     .rst        ( mix_rst   ),
     .clk        ( clk       ),
@@ -184,7 +182,7 @@ jt51 u_jt51(
     .dout       ( fm_dout   ),
     .ct1        (           ),
     .ct2        (           ),
-    .irq_n      (           ),
+    .irq_n      ( int_n     ),
     // Low resolution output (same as real chip)
     .sample     ( sample    ), // marks new output sample
     .left       (           ),

@@ -60,8 +60,6 @@ module jtoutrun_main(
     input       [ 7:0] joystick2,
     input       [15:0] joyana1,
     input       [15:0] joyana1b,
-    input       [15:0] joyana2,
-    input       [15:0] joyana2b,
     input       [ 1:0] start_button,
     input       [ 1:0] coin_input,
     input              service,
@@ -269,8 +267,8 @@ always @(*) begin
             endcase
             3: case( adc_ch ) // ADC reads
                 0: cab_dout = joyana1[7:0]; // steering wheel
-                1: cab_dout = joyana1[15:8]+8'h80; // gas pedal
-                2: cab_dout = joyana2[15:8]+8'h80; // break pedal
+                1: cab_dout = joyana1b[15:8]+8'h80; // gas pedal
+                2: cab_dout = joyana1b[15:8]+8'h80; // break pedal
                 default:;
             endcase
             default:;
@@ -326,6 +324,7 @@ assign key_addr= fd1094_en ? key_1094 : key_1089;
 assign rom_dec = fd1094_en ? dec_1094 : dec_1089;
 assign dec_ok  = fd1094_en ? ok_1094  : ok_1089;
 
+`ifndef NODEC
 jts16_fd1094 u_dec1094(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -374,11 +373,17 @@ jts16_fd1089 u_dec1089(
     .rom_ok     ( rom_ok    ),
     .ok_dly     ( ok_1089   ),
 
-    .op_n       ( op_n      ),     // OP (0) or data (1)
+    .op_n       ( op_n      ), // OP (0) or data (1)
     .addr       ( A         ),
     .enc        ( rom_data  ),
     .dec        ( dec_1089  )
 );
+`else
+    assign dec_1089 = rom_data;
+    assign dec_1094 = rom_data;
+    assign ok_1089  = rom_ok;
+    assign ok_1094  = rom_ok;
+`endif
 
 jtframe_m68k u_cpu(
     .clk        ( clk         ),

@@ -109,7 +109,6 @@ wire    cpu_cen, cpu_cenb,
 wire [ 8:0] vrender;
 wire        hstart, vint;
 wire        colscr_en, rowscr_en;
-wire [ 5:0] tile_bank;
 wire        scr_bad;
 
 // SDRAM interface
@@ -241,8 +240,6 @@ jtoutrun_main u_main(
     .joystick2   ( joystick2  ),
     .joyana1     ( joyana_l1  ),
     .joyana1b    ( joyana_r1  ),
-    .joyana2     ( joyana_l2  ),
-    .joyana2b    ( joyana_r2  ),
     .start_button(start_button),
     .coin_input  ( coin_input ),
     .service     ( service    ),
@@ -377,7 +374,6 @@ always @(posedge clk) begin
         0: st_dout <= st_video;
         1: case( st_addr[3:0] )
                 0: st_dout <= sndmap_dout;
-                1: st_dout <= {2'd0, tile_bank};
                 2: st_dout <= game_id;
             endcase
         2,3: st_dout <= st_main;

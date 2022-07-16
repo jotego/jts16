@@ -186,6 +186,7 @@ always @(posedge clk) begin
     dec_en <= fd1089_en | fd1094_en;
 end
 
+`ifndef NODEC
 jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
     .clk    ( clk       ),
     .cen    ( 1'b1      ),
@@ -195,6 +196,9 @@ jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
     .we     ( key_we    ),
     .q      ( key_data  )
 );
+`else
+    assign key_data = 0;
+`endif
 
 jtframe_dwnld #(
     .HEADER    ( 16        ),
