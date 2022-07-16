@@ -321,6 +321,7 @@ jtoutrun_sub u_sub(
     .RnW        ( sub_rnw   )
 );
 
+`ifndef NOSOUND
 jtoutrun_snd u_sound(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -358,19 +359,30 @@ jtoutrun_snd u_sound(
     .sample     ( sample    ),
     .peak       ( snd_clip  )
 );
+`else
+    assign snd_cs    = 0;
+    assign pcm_cs    = 0;
+    assign pcm_addr  = 0;
+    assign snd_addr  = 0;
+    assign snd_clip  = 0;
+    assign sample    = 0;
+    assign snd_left  = 0;
+    assign snd_right = 0;
+    assign sndmap_rd = 0;
+    assign sndmap_wr = 0;
+`endif
 
-initial st_dout = 0;
-// always @(posedge clk) begin
-//     case( st_addr[7:4] )
-//         0: st_dout <= st_video;
-//         1: case( st_addr[3:0] )
-//                 // 0: st_dout <= sndmap_dout;
-//                 1: st_dout <= {2'd0, tile_bank};
-//                 2: st_dout <= game_id;
-//             endcase
-//         2,3: st_dout <= st_main;
-//     endcase
-// end
+always @(posedge clk) begin
+    case( st_addr[7:4] )
+        0: st_dout <= st_video;
+        1: case( st_addr[3:0] )
+                0: st_dout <= sndmap_dout;
+                1: st_dout <= {2'd0, tile_bank};
+                2: st_dout <= game_id;
+            endcase
+        2,3: st_dout <= st_main;
+    endcase
+end
 
 jtoutrun_video u_video(
     .rst        ( rst       ),
