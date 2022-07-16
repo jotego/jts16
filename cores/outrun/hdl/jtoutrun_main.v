@@ -24,6 +24,7 @@ module jtoutrun_main(
     output             cpu_cen,
     output             cpu_cenb,
     input       [ 1:0] game_id,
+    output             snd_rstb,
 
     // Video
     input              vint,

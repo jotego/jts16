@@ -19,6 +19,7 @@
 module jtoutrun_snd(
     input                rst,
     input                clk,
+    input                snd_rstb,
 
     input                cen_fm,    // 4MHz
     input                cen_fm2,   // 2MHz
@@ -47,9 +48,10 @@ module jtoutrun_snd(
     output               pcm_cs,
 
     // Sound output
-    output signed [15:0] snd,
+    output signed [15:0] snd_left,
+    output signed [15:0] snd_right,
     output               sample,
-    output               peak
+    output reg           peak
 );
 
 localparam [7:0] FMGAIN=8'h08;
@@ -61,6 +63,8 @@ reg  [ 7:0] cpu_din, pcmgain;
 wire [ 7:0] cpu_dout, fm_dout, ram_dout, pcm_dout;
 wire        nmi_n, wr_n, rd_n, m1_n;
 reg  [ 5:0] rom_msb;
+wire        peak_left, peak_right;
+wire        mix_rst;
 
 wire signed [15:0] fm_left, fm_right, mixed;
 wire        [ 7:0] fmgain;
@@ -71,6 +75,7 @@ assign mapper_rd  = mapper_cs && !rd_n;
 assign mapper_wr  = mapper_cs && !wr_n;
 assign mapper_din = cpu_dout;
 assign nmi_n      = ~mapper_pbf;
+assign mix_rst    = rst | ~snd_rstb;
 
 always @(*) begin
     ram_cs = !mreq_n && &A[15:11]; // 0xf8~
@@ -79,10 +84,11 @@ always @(*) begin
 
     // Port Map
     fm_cs     = !iorq_n && m1_n && A[7:6]==0;
-    mapper_cs = !iorq_n && m1_n && A[7:6]==2;
+    mapper_cs = !iorq_n && m1_n && A[7:6]==1;
 end
 
 always @(posedge clk) begin
+    peak     <= peak_left | peak_right;
     cpu_din  <= rom_cs    ? rom_data :
                 ram_cs    ? ram_dout :
                 fm_cs     ? fm_dout  :
@@ -102,12 +108,30 @@ always @(posedge clk ) begin
     if( !enable_psg ) pcmgain <= 0;
 end
 
-jtframe_mixer #(.W2(9)) u_mixer(
+jtframe_mixer #(.W2(9)) u_mixer_left(
     .rst    ( rst       ),
     .clk    ( clk       ),
     .cen    ( 1'b1      ),
     // input signals
     .ch0    ( fm_left   ),
+    .ch1    ( 16'd0     ),
+    .ch2    ( 16'd0     ),
+    .ch3    ( 16'd0     ),
+    // gain for each channel in 4.4 fixed point format
+    .gain0  ( fmgain    ),
+    .gain1  ( fmgain    ),
+    .gain2  ( pcmgain   ),
+    .gain3  ( 8'h00     ),
+    .mixed  ( snd_left  ),
+    .peak   ( peak_left )
+);
+
+jtframe_mixer #(.W2(9)) u_mixer_right(
+    .rst    ( rst       ),
+    .clk    ( clk       ),
+    .cen    ( 1'b1      ),
+    // input signals
+    .ch0    ( 16'd0     ),
     .ch1    ( fm_right  ),
     .ch2    ( 16'd0     ),
     .ch3    ( 16'd0     ),
@@ -116,12 +140,12 @@ jtframe_mixer #(.W2(9)) u_mixer(
     .gain1  ( fmgain    ),
     .gain2  ( pcmgain   ),
     .gain3  ( 8'h00     ),
-    .mixed  ( snd       ),
-    .peak   ( peak      )
+    .mixed  ( snd_right ),
+    .peak   ( peak_right)
 );
 
 jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
-    .rst_n      ( ~rst        ),
+    .rst_n      ( ~mix_rst    ),
     .clk        ( clk         ),
     .cen        ( cen_fm      ),
     .cpu_cen    (             ),
@@ -146,15 +170,10 @@ jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
     .rom_ok     ( rom_ok      )
 );
 
-//
-//  YM2151 output port
-//
-//  D1 = /RESET line on 7751
-//  D0 = /IRQ line on 7751
-//
+assign int_n = 1;
 
 jt51 u_jt51(
-    .rst        ( rst       ),
+    .rst        ( mix_rst   ),
     .clk        ( clk       ),
     .cen        ( cen_fm    ),
     .cen_p1     ( cen_fm2   ),
@@ -165,7 +184,7 @@ jt51 u_jt51(
     .dout       ( fm_dout   ),
     .ct1        (           ),
     .ct2        (           ),
-    .irq_n      ( int_n     ),
+    .irq_n      (           ),
     // Low resolution output (same as real chip)
     .sample     ( sample    ), // marks new output sample
     .left       (           ),
@@ -176,7 +195,7 @@ jt51 u_jt51(
 );
 
 jtoutrun_pcm u_pcm(
-    .rst        ( rst           ),
+    .rst        ( mix_rst       ),
     .clk        ( clk           ),
     .cen        ( cen_fm        ),
 

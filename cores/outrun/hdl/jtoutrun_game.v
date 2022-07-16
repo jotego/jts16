@@ -85,7 +85,8 @@ module jtoutrun_game(
     input           dip_test,
     input   [ 1:0]  dip_fxlevel, // Not a DIP on the original PCB
     // Sound output
-    output  signed [15:0] snd,
+    output  signed [15:0] snd_left,
+    output  signed [15:0] snd_right,
     output          sample,
     output          game_led,
     input           enable_psg,
@@ -150,7 +151,7 @@ wire [15:0] snd_addr;
 wire [ 7:0] snd_data;
 wire        snd_cs, snd_ok;
 wire [ 7:0] sndmap_din, sndmap_dout;
-wire        sndmap_rd, sndmap_wr, sndmap_pbf;
+wire        sndmap_rd, sndmap_wr, sndmap_pbf, snd_rstb;
 // PCM
 wire [18:0] pcm_addr;
 wire        pcm_cs;
@@ -322,6 +323,7 @@ jtoutrun_sub u_sub(
 jtoutrun_snd u_sound(
     .rst        ( rst       ),
     .clk        ( clk       ),
+    .snd_rstb   ( snd_rstb  ),
 
     .cen_fm     ( cen_fm    ),   // 4MHz
     .cen_fm2    ( cen_fm2   ),   // 2MHz
@@ -350,7 +352,8 @@ jtoutrun_snd u_sound(
     .pcm_ok     ( pcm_ok    ),
 
     // Sound output
-    .snd        ( snd       ),
+    .snd_left   ( snd_left  ),
+    .snd_right  ( snd_right ),
     .sample     ( sample    ),
     .peak       ( snd_clip  )
 );

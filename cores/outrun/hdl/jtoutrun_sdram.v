@@ -152,7 +152,6 @@ localparam [21:0] ZERO_OFFSET= 22'd0,
                   SRAM_OFFSET= 22'h18_0000;
 /* verilator lint_on WIDTH */
 
-
 reg  [16:1] xram_addr;
 wire        xram_cs;
 wire        prom_we, header;
@@ -381,7 +380,7 @@ jtframe_rom_2slots #(
     .SLOT0_AW(  16),
 
     .SLOT1_DW(   8),
-    .SLOT1_AW(  18),
+    .SLOT1_AW(  19),
 
     .SLOT1_OFFSET( PCM_OFFSET )
 ) u_bank1(
