@@ -256,10 +256,7 @@ jt51 u_jt51(
     .right      (           ),
     // Full resolution output
     .xleft      ( fm_left   ),
-    .xright     ( fm_right  ),
-    // unsigned outputs for sigma delta converters, full resolution
-    .dacleft    (           ),
-    .dacright   (           )
+    .xright     ( fm_right  )
 );
 
 jt7759 u_pcm(

@@ -8,8 +8,9 @@ game:
       - jtoutrun_video.v
       - jtoutrun_colmix.v
       - jtoutrun_road.v
+      - jtoutrun_snd.v
+      - jtoutrun_pcm.v
       # - jtoutrun_obj.v
-      # - jtoutrun_snd.v
   - from: s16b
     get:
       - jts16b_mapper.v
@@ -39,7 +40,7 @@ jtframe:
   - from: cpu
     get:
       - jtframe_m68k.yaml
-#      - jtframe_z80.yaml
+      - jtframe_z80.yaml
   - from: clocking
     get:
       - jtframe_frac_cen.v
@@ -55,4 +56,4 @@ jtframe:
 modules:
   jt:
     - name: jt8255
-#     - name: jt51
+    - name: jt51

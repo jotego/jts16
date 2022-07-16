@@ -146,15 +146,17 @@ wire [ 1:0] sub_dsn, sub_dswn;
 wire        sub_rnw, srom_cs, sram_cs, sub_ok,
             srom_ok, sram_ok, road_cs, sio_cs, main_br;
 // Sound CPU
-// wire [SNDW-1:0] snd_addr;
-// wire [ 7:0] snd_data;
-// wire        snd_cs, snd_ok;
-
+wire [15:0] snd_addr;
+wire [ 7:0] snd_data;
+wire        snd_cs, snd_ok;
+wire [ 7:0] sndmap_din, sndmap_dout;
+wire        sndmap_rd, sndmap_wr, sndmap_pbf;
 // PCM
-// wire [16:0] pcm_addr;
-// wire        pcm_cs;
-// wire [ 7:0] pcm_data;
-// wire        pcm_ok;
+wire [18:0] pcm_addr;
+wire        pcm_cs;
+wire [ 7:0] pcm_data;
+wire        pcm_ok;
+wire        snd_clip;
 
 // Protection
 wire        key_we, fd1089_we;
@@ -162,9 +164,6 @@ wire        dec_en, dec_type,
             fd1089_en, fd1094_en, mc8123_en;
 wire [ 7:0] key_data;
 wire [12:0] key_addr, key_mcaddr;
-
-// wire [ 7:0] snd_latch;
-// wire        snd_irqn, snd_ack;
 
 wire        flip, video_en, sound_en, line_intn;
 
@@ -176,11 +175,11 @@ wire [ 1:0] game_id;
 wire [7:0] st_video, st_main;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
-assign game_led             = 1;
 assign debug_view           = st_dout;
 assign irqn                 = 1;
 assign main_dswn            = {2{main_rnw}} | main_dsn;
 assign sub_dswn             = {2{sub_rnw }} | sub_dsn;
+assign game_led             = snd_clip;
 
 jts16_cen u_cen(
     .rst        ( rst       ),
@@ -260,11 +259,11 @@ jtoutrun_main u_main(
     .key_addr    ( key_addr   ),
     .key_data    ( key_data   ),
     // Sound communication
-    .sndmap_rd   ( 1'b0       ),
-    .sndmap_wr   ( 1'b0       ),
-    .sndmap_din  ( 8'd0       ),
-    .sndmap_dout (            ),
-    .sndmap_pbf  (            ),
+    .sndmap_rd   ( sndmap_rd  ),
+    .sndmap_wr   ( sndmap_wr  ),
+    .sndmap_din  ( sndmap_din ),
+    .sndmap_dout ( sndmap_dout),
+    .sndmap_pbf  ( sndmap_pbf ),
     .prog_addr   ( prog_addr[12:0] ),
     .prog_data   ( prog_data[ 7:0] ),
     // DIP switches
@@ -320,9 +319,41 @@ jtoutrun_sub u_sub(
     .RnW        ( sub_rnw   )
 );
 
-// no sound for now
-assign sample = 0;
-assign snd    = 0;
+jtoutrun_snd u_sound(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+
+    .cen_fm     ( cen_fm    ),   // 4MHz
+    .cen_fm2    ( cen_fm2   ),   // 2MHz
+
+    // options
+    .fxlevel    (dip_fxlevel),
+    .enable_fm  ( enable_fm ),
+    .enable_psg ( enable_psg),
+
+    // Mapper device 315-5195
+    .mapper_rd  ( sndmap_rd ),
+    .mapper_wr  ( sndmap_wr ),
+    .mapper_din ( sndmap_din),
+    .mapper_dout(sndmap_dout),
+    .mapper_pbf ( sndmap_pbf),
+
+    // ROM
+    .rom_addr   ( snd_addr  ),
+    .rom_cs     ( snd_cs    ),
+    .rom_data   ( snd_data  ),
+    .rom_ok     ( snd_ok    ),
+
+    .pcm_addr   ( pcm_addr  ),
+    .pcm_cs     ( pcm_cs    ),
+    .pcm_data   ( pcm_data  ),
+    .pcm_ok     ( pcm_ok    ),
+
+    // Sound output
+    .snd        ( snd       ),
+    .sample     ( sample    ),
+    .peak       ( snd_clip  )
+);
 
 initial st_dout = 0;
 // always @(posedge clk) begin
@@ -466,16 +497,16 @@ jtoutrun_sdram u_sdram(
     .sub_rnw    ( sub_rnw   ),
 
     // Sound CPU
-    // .snd_addr   ( snd_addr  ),
-    // .snd_cs     ( snd_cs    ),
-    // .snd_data   ( snd_data  ),
-    // .snd_ok     ( snd_ok    ),
+    .snd_addr   ( snd_addr  ),
+    .snd_cs     ( snd_cs    ),
+    .snd_data   ( snd_data  ),
+    .snd_ok     ( snd_ok    ),
 
-    // ADPCM ROM
-    // .pcm_addr   ( pcm_addr  ),
-    // .pcm_cs     ( pcm_cs    ),
-    // .pcm_data   ( pcm_data  ),
-    // .pcm_ok     ( pcm_ok    ),
+    // PCM ROM
+    .pcm_addr   ( pcm_addr  ),
+    .pcm_cs     ( pcm_cs    ),
+    .pcm_data   ( pcm_data  ),
+    .pcm_ok     ( pcm_ok    ),
 
     // Char interface
     .char_ok    ( char_ok   ),

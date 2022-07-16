@@ -44,6 +44,11 @@ module jtoutrun_sdram(
     input     [15:0] main_dout,
     input            main_rnw,
 
+    output  reg      dec_en,
+    output  reg      fd1089_en,
+    output  reg      fd1094_en,
+    output  reg      dec_type,
+
     // Sub CPU
     input            srom_cs,
     input            sram_cs,
@@ -57,21 +62,17 @@ module jtoutrun_sdram(
     input            sub_rnw,
 
     // Sound CPU
-    // input            snd_cs,
-    // output           snd_ok,
-    // input [SNDW-1:0] snd_addr,
-    // output     [7:0] snd_data,
+    input            snd_cs,
+    output           snd_ok,
+    input     [15:0] snd_addr,
+    output    [ 7:0] snd_data,
 
 
     // ADPCM ROM
-    output  reg      dec_en,
-    output  reg      fd1089_en,
-    output  reg      fd1094_en,
-    output  reg      dec_type,
-    // input     [16:0] pcm_addr,
-    // input            pcm_cs,
-    // output    [ 7:0] pcm_data,
-    // output           pcm_ok,
+    input     [18:0] pcm_addr,
+    input            pcm_cs,
+    output    [ 7:0] pcm_data,
+    output           pcm_ok,
 
     // Char
     output           char_ok,
@@ -143,11 +144,13 @@ localparam [24:0] BA1_START  = `BA1_START,
                   ROAD_START = `ROAD_START,
                   KEY_PROM   = `KEY_START,
                   FD_PROM    = `FD1089_START;
-/* verilator lint_on WIDTH */
+
 localparam [21:0] ZERO_OFFSET= 22'd0,
                   SROM_OFFSET= `SUB_START>>1,
+                  PCM_OFFSET = (`PCM_START-`BA1_START)>>1,
                   VRAM_OFFSET= 22'h10_0000,
                   SRAM_OFFSET= 22'h18_0000;
+/* verilator lint_on WIDTH */
 
 
 reg  [16:1] xram_addr;
@@ -372,14 +375,13 @@ jtframe_rom_1slot #(
     .data_read  ( data_read )
 );
 
-/*
 // Sound
 jtframe_rom_2slots #(
     .SLOT0_DW(   8),
-    .SLOT0_AW(SNDW),
+    .SLOT0_AW(  16),
 
     .SLOT1_DW(   8),
-    .SLOT1_AW(  17),
+    .SLOT1_AW(  18),
 
     .SLOT1_OFFSET( PCM_OFFSET )
 ) u_bank1(
@@ -404,8 +406,5 @@ jtframe_rom_2slots #(
     .data_rdy   ( ba_rdy[1] ),
     .data_read  ( data_read )
 );
-*/
-assign ba_rd[1]=0;
-assign ba1_addr=0;
 
 endmodule
