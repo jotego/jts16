@@ -49,8 +49,7 @@ module jtoutrun_video(
     // Other configuration
     input              flip,
     inout              ext_flip,
-    input              colscr_en,
-    input              rowscr_en,
+    input              obj_toggle,
 
     // SDRAM interface
     input              char_ok,
@@ -154,8 +153,8 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     // Other configuration
     .flip       ( flip      ),
     .ext_flip   ( ext_flip  ),
-    .colscr_en  ( colscr_en ),
-    .rowscr_en  ( rowscr_en ),
+    .colscr_en  ( 1'b0      ), // unused input on S16B tile maps
+    .rowscr_en  ( 1'b0      ), // unused input on S16B tile maps
     .alt_en     ( 1'b0      ),
 
     // SDRAM interface
@@ -196,34 +195,27 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .scr_bad    ( scr_bad   )
 );
 
-jts16_obj #(.MODEL(1)) u_obj(
-    .rst       ( rst            ),
-    .clk       ( clk            ),
-    .pxl_cen   ( pxl_cen        ),
-    .alt_bank  ( 1'b0           ),
+reg tl;
+reg msb=0;
 
-    // CPU interface
-    .cpu_obj_cs( objram_cs      ),
-    .cpu_addr  ( cpu_addr[10:1] ),
-    .cpu_dout  ( cpu_dout       ),
-    .dswn      ( main_dswn      ),
-    .cpu_din   ( obj_dout       ),
+always @(posedge clk) begin
+    tl <= obj_toggle;
+    if( !tl && obj_toggle ) msb<=~msb;
+end
 
-    // SDRAM interface
-    .obj_ok    ( obj_ok         ),
-    .obj_cs    ( obj_cs         ),
-    .obj_addr  ( obj_addr       ), // 9 addr + 3 vertical = 12 bits
-    .obj_data  ( obj_data       ),
+jtframe_ram16 #(
+    .aw(11)
+) u_dummyobj(
+    .clk   ( clk       ),
 
-    // Video signal
-    .hstart    ( hstart         ),
-    .LHBL      ( ~HS            ),
-    .flip      ( flipx          ),
-    .vrender   ( vrender        ),
-    .hdump     ( hdump          ),
-    .pxl       ( obj_pxl        ),
-    .debug_bus ( debug_bus      )
+    // CPU writes
+    .addr   ( {msb,cpu_addr[10:1]}  ),
+    .data   ( cpu_dout  ),
+    .we     ( {2{objram_cs}} & ~main_dswn    ),
+    .q      ( obj_dout  )
 );
+assign obj_cs = 0;
+assign obj_addr = 0;
 
 jtoutrun_colmix u_colmix(
     .rst       ( rst            ),

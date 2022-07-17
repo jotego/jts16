@@ -430,7 +430,7 @@ always @(posedge clk) begin
     // 8-F size registers
     // 10-11, average frequency
     if( st_addr[4] )
-        case( st_addr[2:0] )
+        case( st_addr[3:0] )
             0: st_dout <= fave[7:0];
             1: st_dout <= fave[15:8];
             2: st_dout <= fworst[7:0];
@@ -439,6 +439,9 @@ always @(posedge clk) begin
             5: st_dout <= { 1'b0, cpu_ipln, 1'b0, cpu_fc };
             6: st_dout <= sndmap_dout;
             7: st_dout <= {7'd0, sndmap_pbf};
+            8: st_dout <= {addr[7:1],1'b0};
+            9: st_dout <= addr[15:8];
+           10: st_dout <= addr[23:9];
         endcase
     else
         st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];

@@ -41,6 +41,7 @@ module jtoutrun_main(
     output             flip,
     output             video_en,
     output      [ 1:0] obj_cfg, // SG bus on page 6/7
+    output reg         obj_toggle,
 
     // RAM access
     output reg         ram_cs,
@@ -250,8 +251,9 @@ always @(posedge clk, posedge rst) begin
 end
 
 always @(*) begin
-    ppi_cs   = 0;
-    cab_dout = 8'hff;
+    ppi_cs     = 0;
+    cab_dout   = 8'hff;
+    obj_toggle = 0;
     if( io_cs ) begin
         case( A[6:4] )
             0: begin
@@ -266,11 +268,17 @@ always @(*) begin
                 default:;
             endcase
             3: case( adc_ch ) // ADC reads
-                0: cab_dout = joyana1[7:0]^8'h80; // steering wheel
-                1: cab_dout = joyana1b[15] ? ~{joyana1b[14:8], joyana1b[14]} : 8'd0; // gas pedal
-                2: cab_dout = joyana1b[15] ? 8'd0 : {joyana1b[14:8], joyana1b[14]};  // break pedal
+                0: cab_dout = !joystick1[0] ? 8'h20 :
+                              !joystick1[1] ? 8'hd0 :
+                               joyana1[7:0]^8'h80; // steering wheel
+                1: cab_dout = !joystick1[3] ? 8'hf0 :
+                               joyana1b[15] ? ~{joyana1b[14:8], joyana1b[14]} : 8'd0; // gas pedal
+                2: cab_dout = !joystick1[2] ? 8'hf0 :
+                               joyana1b[15] ? 8'd0 : {joyana1b[14:8], joyana1b[14]};  // break pedal
                 default:;
             endcase
+            // 6: watchdog
+            7: obj_toggle = 1;
             default:;
         endcase // A[6:4]
     end

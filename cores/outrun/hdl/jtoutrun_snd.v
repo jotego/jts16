@@ -108,7 +108,7 @@ always @(posedge clk ) begin
     if( !enable_psg ) pcmgain <= 0;
 end
 
-jtframe_mixer #(.W2(9)) u_mixer_left(
+jtframe_mixer u_mixer_left(
     .rst    ( rst       ),
     .clk    ( clk       ),
     .cen    ( 1'b1      ),
@@ -126,7 +126,7 @@ jtframe_mixer #(.W2(9)) u_mixer_left(
     .peak   ( peak_left )
 );
 
-jtframe_mixer #(.W2(9)) u_mixer_right(
+jtframe_mixer u_mixer_right(
     .rst    ( rst       ),
     .clk    ( clk       ),
     .cen    ( 1'b1      ),

@@ -47,7 +47,9 @@ module jtoutrun_sub(
     output reg         road_cs,
     output reg         sio_cs,
     output             RnW,
-    output     [ 1:0]  dsn
+    output     [ 1:0]  dsn,
+    input      [ 7:0]  st_addr,
+    output reg [ 7:0]  st_dout
 );
 
 wire [19:1] A;
@@ -58,7 +60,7 @@ wire        BRn, BGACKn, BGn, DTACKn;
 wire        ASn, UDSn, LDSn, BUSn, VPAn,
             cpu_UDSn, cpu_LDSn, cpu_RnW;
 reg  [15:0] cpu_din;
-wire [15:0] cpu_dout_raw, fave;
+wire [15:0] cpu_dout_raw, fave, fworst;
 wire        bus_busy, bus_cs;
 wire        cpu_cen, cpu_cenb;
 wire        inta_n;
@@ -137,7 +139,7 @@ jtframe_68kdtack #(.W(8),.MFREQ(50_347)) u_dtack( // 10 MHz
     .DTACKn     ( DTACKn    ),
     // Frequency report
     .fave       ( fave      ),
-    .fworst     (           ),
+    .fworst     ( fworst    ),
     .frst       ( rst       )
 );
 
@@ -182,5 +184,21 @@ jtframe_m68k u_cpu(
     .DTACKn     ( DTACKn      ),
     .IPLn       ( IPLn        ) // VBLANK
 );
+
+always @(posedge clk) begin
+    case( st_addr[3:0] )
+        0: st_dout <= fave[7:0];
+        1: st_dout <= fave[15:8];
+        2: st_dout <= fworst[7:0];
+        3: st_dout <= fworst[15:8];
+        4: st_dout <= { {cpu_UDSn, cpu_LDSn}, DTACKn, ASn, 1'b0, FC };
+        5: st_dout <= { 1'b0, IPLn, 1'b0, FC };
+        8: st_dout <= {cpu_A[7:1],1'b0};
+        9: st_dout <= cpu_A[15:8];
+       10: st_dout <= cpu_A[23:9];
+       11: st_dout <= { 4'd0, sio_cs, road_cs, ram_cs, rom_cs };
+       default: st_dout <= 0;
+    endcase
+end
 
 endmodule

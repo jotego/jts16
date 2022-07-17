@@ -108,7 +108,6 @@ wire    cpu_cen, cpu_cenb,
 // video signals
 wire [ 8:0] vrender;
 wire        hstart, vint;
-wire        colscr_en, rowscr_en;
 wire        scr_bad;
 
 // SDRAM interface
@@ -129,7 +128,7 @@ wire        scr1_ok, scr2_ok;
 wire [16:0] scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
 wire [31:0] scr1_data, scr2_data;
 
-wire        obj_ok, obj_cs;
+wire        obj_ok, obj_cs, obj_toggle;
 wire [19:0] obj_addr;
 wire [15:0] obj_data;
 
@@ -172,7 +171,7 @@ wire [ 7:0] dipsw_a, dipsw_b;
 wire [ 1:0] game_id;
 
 // Status report
-wire [7:0] st_video, st_main;
+wire [7:0] st_video, st_main, st_sub;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign debug_view           = st_dout;
@@ -222,7 +221,7 @@ jtoutrun_main u_main(
     .char_dout   ( char_dout  ),
     .pal_dout    ( pal_dout   ),
     .obj_dout    ( obj_dout   ),
-
+    .obj_toggle  ( obj_toggle ),
     .flip        ( flip       ),
     // RAM access
     .ram_cs      ( ram_cs     ),
@@ -315,7 +314,10 @@ jtoutrun_sub u_sub(
     .road_cs    ( road_cs   ),
     .sio_cs     ( sio_cs    ),
     .dsn        ( sub_dsn   ),
-    .RnW        ( sub_rnw   )
+    .RnW        ( sub_rnw   ),
+    .st_addr    ( st_addr   ),
+    .st_dout    ( st_sub    )
+
 );
 
 `ifndef NOSOUND
@@ -372,8 +374,9 @@ jtoutrun_snd u_sound(
 always @(posedge clk) begin
     case( st_addr[7:5] )
         0: st_dout <= st_main;
-        1: st_dout <= st_video;
-        2: case( st_addr[3:0] )
+        1: st_dout <= st_sub;
+        2: st_dout <= st_video;
+        3: case( st_addr[3:0] )
                 0: st_dout <= sndmap_dout;
                 2: st_dout <= game_id;
             endcase
@@ -413,8 +416,7 @@ jtoutrun_video u_video(
 
     .flip       ( flip      ),
     .ext_flip   ( dip_flip  ),
-    .colscr_en  ( colscr_en ),
-    .rowscr_en  ( rowscr_en ),
+    .obj_toggle ( obj_toggle),
 
     // SDRAM interface
     .char_ok    ( char_ok   ),
