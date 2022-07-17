@@ -261,15 +261,15 @@ always @(*) begin
                 cab_dout = ppi_dout;
             end
             1: case( A[2:1] )
-                0: cab_dout = { coin_input, 1'b0, joystick1[4], start_button[0], service, dip_test, 1'b1 };
+                0: cab_dout = { coin_input, ~joystick1[4], joystick1[4], start_button[0], service, dip_test, 1'b1 };
                 1: cab_dout = 8'hff;
                 2: cab_dout = dipsw_a;
                 3: cab_dout = dipsw_b;
                 default:;
             endcase
             3: case( adc_ch ) // ADC reads
-                0: cab_dout = !joystick1[0] ? 8'h20 :
-                              !joystick1[1] ? 8'hd0 :
+                0: cab_dout = !joystick1[0] ? 8'hd0 :
+                              !joystick1[1] ? 8'h20 :
                                joyana1[7:0]^8'h80; // steering wheel
                 1: cab_dout = !joystick1[3] ? 8'hf0 :
                                joyana1b[15] ? ~{joyana1b[14:8], joyana1b[14]} : 8'd0; // gas pedal
