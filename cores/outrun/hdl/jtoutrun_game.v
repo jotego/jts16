@@ -380,6 +380,8 @@ always @(posedge clk) begin
                 0: st_dout <= sndmap_dout;
                 2: st_dout <= game_id;
             endcase
+        5: st_dout <= ram_data[7:0];
+        6: st_dout <= ram_data[15:8];
         default: st_dout <= st_addr;
     endcase
 end

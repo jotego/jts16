@@ -29,7 +29,7 @@ module jtoutrun_sub(
     input              sub_br,      // bus request
     input      [15:0]  main_dout,
     input      [15:0]  road_dout,
-    output     [15:0]  sub_din,     // bus output to sub CPU
+    output reg [15:0]  sub_din,     // bus output to sub CPU
     output             sub_ok,
 
     // sub CPU bus
@@ -59,7 +59,7 @@ wire [ 2:0] FC, IPLn;
 wire        BRn, BGACKn, BGn, DTACKn;
 wire        ASn, UDSn, LDSn, BUSn, VPAn,
             cpu_UDSn, cpu_LDSn, cpu_RnW;
-reg  [15:0] cpu_din;
+reg  [15:0] cpu_din, bus_mux;
 wire [15:0] cpu_dout_raw, fave, fworst;
 wire        bus_busy, bus_cs;
 wire        cpu_cen, cpu_cenb;
@@ -72,7 +72,6 @@ wire [19:0] A_full = {A,1'b0};
 
 assign IPLn     = { irqn, 2'b11 };
 assign dsn      = { UDSn, LDSn };
-assign sub_din  = cpu_din;
 assign {UDSn, LDSn} = BGACKn ? {cpu_UDSn,cpu_LDSn} : main_dsn;
 assign RnW      = BGACKn ? cpu_RnW : main_rnw;
 assign cpu_dout = BGACKn ? cpu_dout_raw : main_dout;
@@ -113,14 +112,20 @@ always @(posedge clk, posedge rst) begin
     end
 end
 
+always @* begin
+    bus_mux <= rom_cs  ? rom_data  :
+               ram_cs  ? ram_data  :
+               road_cs ? road_dout :
+               16'hffff;
+end
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         cpu_din <= 0;
+        sub_din <= 0;
     end else begin
-        cpu_din <= rom_cs  ? rom_data  :
-                   ram_cs  ? ram_data  :
-                   road_cs ? road_dout :
-                   16'hffff;
+        cpu_din <= bus_mux;
+        if( sub_br ) sub_din <= bus_mux;
     end
 end
 
