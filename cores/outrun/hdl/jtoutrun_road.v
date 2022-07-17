@@ -48,10 +48,10 @@ always @(posedge clk, posedge rst) begin
         ctrl   <= 0;
     end else begin
         if( io_cs & ~cpu_dswn[0] )  ctrl <= cpu_dout[1:0];
-        if( v==475 && toggle ) rdsel  <= ~rdsel;
-        if( v==476 )
+        if( v==475 && toggle ) begin
+            rdsel  <= ~rdsel;
             toggle <= 0;
-        else if( io_cs && cpu_dswn==2'b11 )
+        end else if( io_cs && cpu_dswn==2'b11 )
             toggle <= 1;
     end
 end
@@ -85,6 +85,5 @@ jtframe_dual_ram16 #(.aw(11)) u_vram1(
     .we1  ( 2'd0     ),
     .q1   ( rd1_gfx  )
 );
-
 
 endmodule

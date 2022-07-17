@@ -370,13 +370,14 @@ jtoutrun_snd u_sound(
 `endif
 
 always @(posedge clk) begin
-    case( st_addr[7:4] )
-        0: st_dout <= st_video;
-        1: case( st_addr[3:0] )
+    case( st_addr[7:5] )
+        0: st_dout <= st_main;
+        1: st_dout <= st_video;
+        2: case( st_addr[3:0] )
                 0: st_dout <= sndmap_dout;
                 2: st_dout <= game_id;
             endcase
-        2,3: st_dout <= st_main;
+        default: st_dout <= st_addr;
     endcase
 end
 

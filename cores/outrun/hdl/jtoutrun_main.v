@@ -124,7 +124,7 @@ wire        cpu_RnW, dec_ok;
 
 reg  [ 7:0] cab_dout;
 wire [ 7:0] active, sys_inputs,
-            ppi_dout, ppia_dout;
+            ppi_dout, ppia_dout, ppib_dout, ppic_dout;
 wire [ 2:0] cpu_ipln, mix_ipln;
 wire        DTACKn, cpu_vpan;
 
@@ -143,10 +143,10 @@ assign dsn   = { UDSn, LDSn };
 assign LDSWn = RnW | LDSn;
 // assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
 //                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
-assign obj_cfg  = ppia_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
-assign video_en = ppia_dout[5];
-assign adc_ch   = ppia_dout[4:2];
-assign snd_rstb = ppia_dout[0];
+assign obj_cfg  = ppic_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
+assign video_en = ppic_dout[5];
+assign adc_ch   = ppic_dout[4:2];
+assign snd_rstb = ppic_dout[0];
 assign flip     = 0;
 assign addr     = A[19:1];
 assign mix_ipln = { cpu_ipln[2], line_intn, 1'b1 };
@@ -256,7 +256,7 @@ always @(*) begin
         case( A[6:4] )
             0: begin
                 ppi_cs   = 1;
-                cab_dout = ppia_dout;
+                cab_dout = ppi_dout;
             end
             1: case( A[2:1] )
                 0: cab_dout = { coin_input, 1'b0, joystick1[4], start_button[0], service, dip_test, 1'b1 };
@@ -266,9 +266,9 @@ always @(*) begin
                 default:;
             endcase
             3: case( adc_ch ) // ADC reads
-                0: cab_dout = joyana1[7:0]; // steering wheel
-                1: cab_dout = joyana1b[15:8]+8'h80; // gas pedal
-                2: cab_dout = joyana1b[15:8]+8'h80; // break pedal
+                0: cab_dout = joyana1[7:0]^8'h80; // steering wheel
+                1: cab_dout = joyana1b[15] ? ~{joyana1b[14:8], joyana1b[14]} : 8'd0; // gas pedal
+                2: cab_dout = joyana1b[15] ? 8'd0 : {joyana1b[14:8], joyana1b[14]};  // break pedal
                 default:;
             endcase
             default:;
@@ -294,8 +294,8 @@ jt8255 u_8255(
     .portc_din ( 8'hFF      ),
 
     .porta_dout( ppia_dout  ),
-    .portb_dout(            ),
-    .portc_dout(            )
+    .portb_dout( ppib_dout  ),
+    .portc_dout( ppic_dout  )
 );
 
 // Data bus input

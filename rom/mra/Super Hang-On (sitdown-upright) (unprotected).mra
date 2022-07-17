@@ -72,7 +72,12 @@
             <part name="epr-10650.56" crc="b236a403" map="0100"/>
             <part name="epr-10650.56" crc="b236a403" map="1000"/>
         </interleave>
-        <part repeat="0x20000"> FF</part>
+        <interleave output="32">
+            <part name="epr-10652.54" crc="260286f9" map="0001"/>
+            <part name="epr-10651.55" crc="c609ee7b" map="0010"/>
+            <part name="epr-10650.56" crc="b236a403" map="0100"/>
+            <part name="epr-10650.56" crc="b236a403" map="1000"/>
+        </interleave>
         <!-- sprites - starts at 0x170000 -->
         <interleave output="16">
             <part name="mpr-10794.8" crc="7c958e63" map="01"/>

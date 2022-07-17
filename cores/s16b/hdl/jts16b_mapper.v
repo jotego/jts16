@@ -291,7 +291,7 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .DTACKn     ( dtackn1   ),
     .fave       ( fave      ),
     .fworst     ( fworst    ),
-    .frst       ( debug_bus[4] )
+    .frst       ( 1'b0      )
 );
 
 // sets the number of delay clock cycles for DTACKn depending on the
@@ -425,23 +425,23 @@ jtframe_68kdma u_dma(
 );
 
 // Debug
-`ifdef MISTER
 always @(posedge clk) begin
     // 0-7 base registers
     // 8-F size registers
     // 10-11, average frequency
     if( st_addr[4] )
-        case( st_addr[1:0] )
+        case( st_addr[2:0] )
             0: st_dout <= fave[7:0];
             1: st_dout <= fave[15:8];
             2: st_dout <= fworst[7:0];
             3: st_dout <= fworst[15:8];
+            4: st_dout <= { cpu_dsn, cpu_dtackn, cpu_asn, 1'b0, cpu_fc };
+            5: st_dout <= { 1'b0, cpu_ipln, 1'b0, cpu_fc };
+            6: st_dout <= sndmap_dout;
+            7: st_dout <= {7'd0, sndmap_pbf};
         endcase
     else
         st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];
 end
-`else
-    always @* st_dout = debug_bus[0] ? fave[12:5] : fworst[12:5];
-`endif
 
 endmodule
