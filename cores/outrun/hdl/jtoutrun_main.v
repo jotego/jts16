@@ -135,6 +135,7 @@ wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din, dacana1, dacana1b;
 wire [15:0] mapper_dout, motor_pos;
+wire [ 2:0] motor_lim;
 wire        none_cs;
 reg  [ 2:0] adc_ch;
 
@@ -352,7 +353,7 @@ jt8255 u_8255(
     .csn       ( ~ppi_cs    ),
 
     // External pins to peripherals
-    .porta_din ( 8'hFF      ),  // Port A: read from motor
+    .porta_din ( {2'd0, motor_lim, 3'b111 } ),  // Port A: read from motor
     .portb_din ( 8'hFF      ),  // Port B: write to motor
     .portc_din ( 8'hFF      ),
 
@@ -366,7 +367,8 @@ jtoutrun_motor u_motor(
     .clk    ( clk       ),
     .vint   ( vint      ),
     .ctrl   ( ppib_dout ),
-    .pos    ( motor_pos )
+    .pos    ( motor_pos ),
+    .limpos ( motor_lim )
 );
 
 // Data bus input

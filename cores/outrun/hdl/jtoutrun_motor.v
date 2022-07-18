@@ -23,6 +23,7 @@ module jtoutrun_motor(
     input              clk,
     input              vint,
     input      [ 7:0]  ctrl,
+    output reg [ 2:0]  limpos,
     output reg [15:0]  pos
 );
 
@@ -42,10 +43,16 @@ end
 
 always @(posedge clk, posedge rst ) begin
     if( rst ) begin
-        pos   <= 0;
-        vintl <= 0;
+        pos    <= 0;
+        vintl  <= 0;
+        limpos <= 0;
     end else begin
         vintl <= vint;
+        limpos <= ~{
+            pos[15:8]==LEFTLIM[15:8],
+            pos[15:8]==8'h80,
+            pos[15:8]>=RIGHTLIM[15:8]-8'h1
+        };
         if( vint && !vintl )
             pos <= nx_pos;
     end
