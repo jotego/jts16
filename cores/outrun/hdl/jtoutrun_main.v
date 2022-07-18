@@ -120,7 +120,7 @@ wire        BRn, BGACKn, BGn;
 wire        ASn, UDSn, LDSn, BUSn, LDSWn;
 wire [15:0] rom_dec, cpu_dout_raw;
 
-reg         io_cs, ppi_cs, dac_wr;
+reg         io_cs, ppi_cs, adc_wr;
 wire        cpu_RnW, dec_ok;
 
 reg  [ 7:0] cab_dout, cab_ctrl;
@@ -253,7 +253,7 @@ always @(posedge clk, posedge rst) begin
         adc_ch   <= 0;
         snd_rstb <= 1;
     end else begin
-        if( dac_wr ) { dacana1, dacana1b } <= { joyana1, joyana1b };
+        if( adc_wr ) { dacana1, dacana1b } <= { joyana1, joyana1b };
         if( game_id==0 ) begin
             obj_cfg  <= ppic_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
             video_en <= ppic_dout[5];
@@ -276,7 +276,7 @@ always @(*) begin
     ppi_cs     = 0;
     cab_dout   = 8'hff;
     obj_toggle = 0;
-    dac_wr     = 0;
+    adc_wr     = 0;
     // Super Hang On
     if( io_cs && game_id==1 ) begin
         case( { A[13:12],A[5] } )
@@ -299,7 +299,7 @@ always @(*) begin
                                    dacana1b[15] ? 8'd0 : {dacana1b[14:8], dacana1b[14]};  // break pedal
                     default:;
                 endcase
-                dac_wr = !RnW;
+                adc_wr = !RnW;
             end
             default:;
         endcase
@@ -330,7 +330,7 @@ always @(*) begin
                     3: cab_dout = motor_pos[15:8];
                     default:;
                 endcase
-                dac_wr = !RnW;
+                adc_wr = !RnW;
             end
             // 6: watchdog
             7: obj_toggle = 1;
