@@ -136,7 +136,7 @@ wire [15:0] obj_data;
 // CPU interface
 wire [15:0] main_dout, char_dout, pal_dout, obj_dout;
 wire [ 1:0] main_dsn, main_dswn;
-wire        main_rnw, sub_br, irqn,
+wire        main_rnw, sub_br,
             char_cs, scr1_cs, pal_cs, objram_cs;
 
 // Sub CPU
@@ -176,7 +176,6 @@ wire [7:0] st_video, st_main, st_sub;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign debug_view           = st_dout;
-assign irqn                 = 1;
 assign main_dswn            = {2{main_rnw}} | main_dsn;
 assign sub_dswn             = {2{sub_rnw }} | sub_dsn;
 assign game_led             = snd_clip;
@@ -289,7 +288,7 @@ jtoutrun_sub u_sub(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
-    .irqn       ( irqn      ),    // common with main CPU
+    .irqn       ( ~vint     ),    // common with main CPU
 
     // From main CPU
     .main_A     ( main_addr ),
