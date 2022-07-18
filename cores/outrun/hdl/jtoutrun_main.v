@@ -275,6 +275,7 @@ always @(*) begin
                                joyana1b[15] ? ~{joyana1b[14:8], joyana1b[14]} : 8'd0; // gas pedal
                 2: cab_dout = !joystick1[2] ? 8'hf0 :
                                joyana1b[15] ? 8'd0 : {joyana1b[14:8], joyana1b[14]};  // break pedal
+                3: cab_dout = 0;
                 default:;
             endcase
             // 6: watchdog
@@ -323,6 +324,8 @@ always @(posedge clk) begin
     end
 end
 
+
+`ifndef NODEC
 // Shared by FD1094 and FD1089
 wire [12:0] key_1094, key_1089;
 wire [15:0] dec_1094, dec_1089;
@@ -332,7 +335,6 @@ assign key_addr= fd1094_en ? key_1094 : key_1089;
 assign rom_dec = fd1094_en ? dec_1094 : dec_1089;
 assign dec_ok  = fd1094_en ? ok_1094  : ok_1089;
 
-`ifndef NODEC
 jts16_fd1094 u_dec1094(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -387,10 +389,9 @@ jts16_fd1089 u_dec1089(
     .dec        ( dec_1089  )
 );
 `else
-    assign dec_1089 = rom_data;
-    assign dec_1094 = rom_data;
-    assign ok_1089  = rom_ok;
-    assign ok_1094  = rom_ok;
+    assign key_addr = 0;
+    assign rom_dec  = rom_data;
+    assign dec_ok   = rom_ok;
 `endif
 
 jtframe_m68k u_cpu(

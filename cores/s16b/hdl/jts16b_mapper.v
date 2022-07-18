@@ -441,7 +441,7 @@ always @(posedge clk) begin
             7: st_dout <= {7'd0, sndmap_pbf};
             8: st_dout <= {addr[7:1],1'b0};
             9: st_dout <= addr[15:8];
-           10: st_dout <= addr[23:9];
+           10: st_dout <= addr[23:16];
         endcase
     else
         st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];

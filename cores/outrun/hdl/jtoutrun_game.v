@@ -109,6 +109,7 @@ wire    cpu_cen, cpu_cenb,
 wire [ 8:0] vrender;
 wire        hstart, vint;
 wire        scr_bad;
+wire [ 1:0] obj_cfg;
 
 // SDRAM interface
 wire        main_cs, vram_cs, ram_cs;
@@ -162,7 +163,7 @@ wire        key_we, fd1089_we;
 wire        dec_en, dec_type,
             fd1089_en, fd1094_en, mc8123_en;
 wire [ 7:0] key_data;
-wire [12:0] key_addr, key_mcaddr;
+wire [12:0] key_addr;
 
 wire        flip, video_en, sound_en, line_intn;
 
@@ -213,6 +214,7 @@ jtoutrun_main u_main(
     .vint        ( vint       ),
     .line_intn   ( line_intn  ),
     .video_en    ( video_en   ),
+    .obj_cfg     ( obj_cfg    ),
     // Video circuitry
     .vram_cs     ( vram_cs    ),
     .char_cs     ( char_cs    ),
@@ -378,7 +380,7 @@ always @(posedge clk) begin
         2: st_dout <= st_video;
         3: case( st_addr[3:0] )
                 0: st_dout <= sndmap_dout;
-                2: st_dout <= game_id;
+                2: st_dout <= {6'd0, game_id};
             endcase
         5: st_dout <= ram_data[7:0];
         6: st_dout <= ram_data[15:8];
@@ -479,7 +481,6 @@ jtoutrun_sdram u_sdram(
     .key_we     ( key_we    ),
     .fd1089_we  ( fd1089_we ),
     .key_addr   ( key_addr  ),
-    .key_mcaddr ( key_mcaddr),
     .key_data   ( key_data  ),
 
     // Main CPU

@@ -28,7 +28,6 @@ module jtoutrun_sdram(
     output           fd1089_we,
     output           key_we,
     input     [12:0] key_addr,
-    input     [12:0] key_mcaddr,
     output    [ 7:0] key_data,
 
     // Main CPU

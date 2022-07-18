@@ -96,11 +96,11 @@ always @(posedge clk, posedge rst) begin
         BGACKnl <= BGACKn;
         if( !BUSn || !BGACKn || (!ASn && RnW) ) begin
             case( A[19:17] )
-                0,1,2: rom_cs = 1;  // <6'0000
-                3: ram_cs = ~BUSn;  //  6'0000
+                0,1,2: rom_cs <= 1;  // <6'0000
+                3: ram_cs <= ~BUSn;  //  6'0000
                 4: begin            //  8'0000
-                    road_cs = !A[16]; // 8'0000 road RAM
-                    sio_cs  =  A[16]; // 9'0000 road other
+                    road_cs <= !A[16]; // 8'0000 road RAM
+                    sio_cs  <=  A[16]; // 9'0000 road other
                 end
             endcase
         end else begin
@@ -113,7 +113,7 @@ always @(posedge clk, posedge rst) begin
 end
 
 always @* begin
-    bus_mux <= rom_cs  ? rom_data  :
+    bus_mux  = rom_cs  ? rom_data  :
                ram_cs  ? ram_data  :
                road_cs ? road_dout :
                16'hffff;
@@ -200,7 +200,7 @@ always @(posedge clk) begin
         5: st_dout <= { 1'b0, IPLn, 1'b0, FC };
         8: st_dout <= {cpu_A[7:1],1'b0};
         9: st_dout <= cpu_A[15:8];
-       10: st_dout <= cpu_A[23:9];
+       10: st_dout <= cpu_A[23:16];
        11: st_dout <= { 4'd0, sio_cs, road_cs, ram_cs, rom_cs };
        default: st_dout <= 0;
     endcase

@@ -45,6 +45,7 @@ jtframe:
   - from: clocking
     get:
       - jtframe_frac_cen.v
+      - jtframe_sync.v
   - from: video
     get:
       - jtframe_vtimer.v
