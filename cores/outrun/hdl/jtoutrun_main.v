@@ -487,13 +487,13 @@ jtframe_m68k u_cpu(
     .DTACKn     ( DTACKn      ),
     .IPLn       ( mix_ipln    ) // VBLANK
 );
-/*
+
 `ifdef SIMULATION
-always @(negedge  DTACKn ) if(sub_cs) begin
-    $display("Sub access: %X <> %X", cpu_A, cpu_din );
+always @(posedge pal_cs )  begin
+    $display("Palette access" );
 end
 `endif
-*/
+
 
 always @(posedge clk) begin
     st_dout <= st_mapper;

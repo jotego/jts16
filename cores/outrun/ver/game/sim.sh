@@ -18,5 +18,5 @@ fi
 $JTFRAME/bin/rom2sdram.sh -header 16 -swab || exit $?
 
 jtsim -mist -sysname $SYSNAME $SIMULATOR \
-	-d JTFRAME_DWNLD_PROM_ONLY \
+	-d JTFRAME_DWNLD_PROM_ONLY -d JTFRAME_SIM_DIPS=$(printf "%d" 0xfeff) \
     -d JTFRAME_SIM_ROMRQ_NOCHECK $* || exit $?

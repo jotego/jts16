@@ -43,7 +43,7 @@ end
 
 always @(posedge clk, posedge rst ) begin
     if( rst ) begin
-        pos    <= 0;
+        pos    <= 16'h8000;
         vintl  <= 0;
         limpos <= 0;
     end else begin
