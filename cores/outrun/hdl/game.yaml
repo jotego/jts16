@@ -10,6 +10,7 @@ game:
       - jtoutrun_road.v
       - jtoutrun_snd.v
       - jtoutrun_pcm.v
+      - jtoutrun_motor.v
       # - jtoutrun_obj.v
   - from: s16b
     get:

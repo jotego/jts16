@@ -97,7 +97,7 @@ module jtoutrun_main(
     // status dump
     input       [ 7:0] debug_bus,
     input       [ 7:0] st_addr,
-    output      [ 7:0] st_dout
+    output reg  [ 7:0] st_dout
 );
 
 //  Mapper regions, CSS signals in schematics
@@ -124,7 +124,7 @@ reg         io_cs, ppi_cs;
 wire        cpu_RnW, dec_ok;
 
 reg  [ 7:0] cab_dout;
-wire [ 7:0] active, sys_inputs,
+wire [ 7:0] active, sys_inputs, st_mapper,
             ppi_dout, ppia_dout, ppib_dout, ppic_dout;
 wire [ 2:0] cpu_ipln, mix_ipln;
 wire        DTACKn, cpu_vpan;
@@ -134,7 +134,7 @@ wire bus_busy  = |{ rom_cs & ~dec_ok, (ram_cs | vram_cs) & ~ram_ok, sub_cs & ~su
 wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din;
-wire [15:0] mapper_dout;
+wire [15:0] mapper_dout, motor_pos;
 wire        none_cs;
 wire [ 2:0] adc_ch;
 
@@ -212,7 +212,7 @@ jts16b_mapper u_mapper(
     .debug_bus  ( debug_bus      ),
     //.debug_bus  ( 8'd0           ),
     .st_addr    ( st_addr        ),
-    .st_dout    ( st_dout        )
+    .st_dout    ( st_mapper      )
 );
 
 // System 16B memory map
@@ -275,7 +275,7 @@ always @(*) begin
                                joyana1b[15] ? ~{joyana1b[14:8], joyana1b[14]} : 8'd0; // gas pedal
                 2: cab_dout = !joystick1[2] ? 8'hf0 :
                                joyana1b[15] ? 8'd0 : {joyana1b[14:8], joyana1b[14]};  // break pedal
-                3: cab_dout = 0;
+                3: cab_dout = motor_pos[15:8];
                 default:;
             endcase
             // 6: watchdog
@@ -305,6 +305,14 @@ jt8255 u_8255(
     .porta_dout( ppia_dout  ),
     .portb_dout( ppib_dout  ),
     .portc_dout( ppic_dout  )
+);
+
+jtoutrun_motor u_motor(
+    .rst    ( rst       ),
+    .clk    ( clk       ),
+    .vint   ( vint      ),
+    .ctrl   ( ppib_dout ),
+    .pos    ( motor_pos )
 );
 
 // Data bus input
@@ -430,4 +438,16 @@ always @(negedge  DTACKn ) if(sub_cs) begin
 end
 `endif
 */
+
+always @(posedge clk) begin
+    st_dout <= st_mapper;
+    if( st_addr[4] ) begin
+        case( st_addr[3:0] )
+            11: st_dout <= motor_pos[7:0];
+            12: st_dout <= motor_pos[15:8];
+            13: st_dout <= ppib_dout[7:0];
+        endcase
+    end
+end
+
 endmodule
