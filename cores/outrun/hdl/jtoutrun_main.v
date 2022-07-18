@@ -24,7 +24,7 @@ module jtoutrun_main(
     output             cpu_cen,
     output             cpu_cenb,
     input       [ 1:0] game_id,
-    output             snd_rstb,
+    output reg         snd_rstb,
 
     // Video
     input              vint,
@@ -39,8 +39,8 @@ module jtoutrun_main(
     input       [15:0] pal_dout,
     input       [15:0] obj_dout,
     output             flip,
-    output             video_en,
-    output      [ 1:0] obj_cfg, // SG bus on page 6/7
+    output reg         video_en,
+    output reg  [ 1:0] obj_cfg, // SG bus on page 6/7
     output reg         obj_toggle,
 
     // RAM access
@@ -120,10 +120,10 @@ wire        BRn, BGACKn, BGn;
 wire        ASn, UDSn, LDSn, BUSn, LDSWn;
 wire [15:0] rom_dec, cpu_dout_raw;
 
-reg         io_cs, ppi_cs;
+reg         io_cs, ppi_cs, dac_wr;
 wire        cpu_RnW, dec_ok;
 
-reg  [ 7:0] cab_dout;
+reg  [ 7:0] cab_dout, cab_ctrl;
 wire [ 7:0] active, sys_inputs, st_mapper,
             ppi_dout, ppia_dout, ppib_dout, ppic_dout;
 wire [ 2:0] cpu_ipln, mix_ipln;
@@ -133,10 +133,10 @@ wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_c
 wire bus_busy  = |{ rom_cs & ~dec_ok, (ram_cs | vram_cs) & ~ram_ok, sub_cs & ~sub_ok };
 wire cpu_rst, cpu_haltn, cpu_asn;
 wire [ 1:0] cpu_dsn;
-reg  [15:0] cpu_din;
+reg  [15:0] cpu_din, dacana1, dacana1b;
 wire [15:0] mapper_dout, motor_pos;
 wire        none_cs;
-wire [ 2:0] adc_ch;
+reg  [ 2:0] adc_ch;
 
 assign BUSn  = LDSn & UDSn;
 assign dsn   = { UDSn, LDSn };
@@ -144,10 +144,6 @@ assign dsn   = { UDSn, LDSn };
 assign LDSWn = RnW | LDSn;
 // assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
 //                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
-assign obj_cfg  = ppic_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
-assign video_en = ppic_dout[5];
-assign adc_ch   = ppic_dout[4:2];
-assign snd_rstb = ppic_dout[0];
 assign flip     = 0;
 assign addr     = A[19:1];
 assign mix_ipln = { cpu_ipln[2], line_intn, 1'b1 };
@@ -250,11 +246,66 @@ always @(posedge clk, posedge rst) begin
     end
 end
 
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        obj_cfg  <= 0;
+        video_en <= 1;
+        adc_ch   <= 0;
+        snd_rstb <= 1;
+    end else begin
+        if( dac_wr ) { dacana1, dacana1b } <= { joyana1, joyana1b };
+        if( game_id==0 ) begin
+            obj_cfg  <= ppic_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
+            video_en <= ppic_dout[5];
+            adc_ch   <= ppic_dout[4:2];
+            snd_rstb <= ppic_dout[0];
+        end else if( io_cs && !LDSWn ) begin
+            case( {A[13:12], A[5]} )
+                0: begin
+                    adc_ch <= {1'd0, cpu_dout[7:6] };
+                    video_en <= cpu_dout[5];
+                end
+                1: snd_rstb <= ~cpu_dout[0];
+                default:;
+            endcase
+        end
+    end
+end
+
 always @(*) begin
     ppi_cs     = 0;
     cab_dout   = 8'hff;
     obj_toggle = 0;
-    if( io_cs ) begin
+    dac_wr     = 0;
+    // Super Hang On
+    if( io_cs && game_id==1 ) begin
+        case( { A[13:12],A[5] } )
+            0: case( A[2:1] )
+                0: cab_dout = 8'hff;
+                1: cab_dout = { 2'b11, joystick1[4], start_button[0], service, dip_test, coin_input };
+                2: cab_dout = dipsw_a;
+                3: cab_dout = dipsw_b;
+                default:;
+            endcase
+            // 6: watchdog
+            7: begin
+                case( adc_ch ) // ADC reads
+                    0: cab_dout = !joystick1[0] ? 8'h20 :
+                                  !joystick1[1] ? 8'hd0 :
+                                   dacana1[7:0]^8'h80; // steering wheel
+                    1: cab_dout = !joystick1[3] ? 8'hf0 :
+                                   dacana1b[15] ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0; // gas pedal
+                    2: cab_dout = !joystick1[2] ? 8'hf0 :
+                                   dacana1b[15] ? 8'd0 : {dacana1b[14:8], dacana1b[14]};  // break pedal
+                    default:;
+                endcase
+                dac_wr = !RnW;
+            end
+            default:;
+        endcase
+    end
+    // Out Run
+    if( io_cs && game_id==0 ) begin
         case( A[6:4] )
             0: begin
                 ppi_cs   = 1;
@@ -267,17 +318,20 @@ always @(*) begin
                 3: cab_dout = dipsw_b;
                 default:;
             endcase
-            3: case( adc_ch ) // ADC reads
-                0: cab_dout = !joystick1[0] ? 8'hd0 :
-                              !joystick1[1] ? 8'h20 :
-                               joyana1[7:0]^8'h80; // steering wheel
-                1: cab_dout = !joystick1[3] ? 8'hf0 :
-                               joyana1b[15] ? ~{joyana1b[14:8], joyana1b[14]} : 8'd0; // gas pedal
-                2: cab_dout = !joystick1[2] ? 8'hf0 :
-                               joyana1b[15] ? 8'd0 : {joyana1b[14:8], joyana1b[14]};  // break pedal
-                3: cab_dout = motor_pos[15:8];
-                default:;
-            endcase
+            3: begin
+                case( adc_ch ) // ADC reads
+                    0: cab_dout = !joystick1[0] ? 8'hd0 :
+                                  !joystick1[1] ? 8'h20 :
+                                   dacana1[7:0]^8'h80; // steering wheel
+                    1: cab_dout = !joystick1[3] ? 8'hf0 :
+                                   dacana1b[15] ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0; // gas pedal
+                    2: cab_dout = !joystick1[2] ? 8'hf0 :
+                                   dacana1b[15] ? 8'd0 : {dacana1b[14:8], dacana1b[14]};  // break pedal
+                    3: cab_dout = motor_pos[15:8];
+                    default:;
+                endcase
+                dac_wr = !RnW;
+            end
             // 6: watchdog
             7: obj_toggle = 1;
             default:;

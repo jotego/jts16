@@ -30,7 +30,9 @@ dev = [
     { byte=0, dev="fd1089b", value=3 },
     { byte=0, dev="fd1094",  value=4 },
 ]
-
+data = [
+    { machine="shangon", pointer=1, data="01" }
+]
 
 
 [ROM]

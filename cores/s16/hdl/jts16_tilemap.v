@@ -37,7 +37,6 @@ module jts16_tilemap(
     input              dip_pause,
     input              char_cs,
     input              pal_cs,
-    input              objram_cs,
     input      [12:1]  cpu_addr,
     input      [15:0]  cpu_dout,
     input      [ 1:0]  dswn,
