@@ -98,6 +98,8 @@ module jtoutrun_video(
     output             scr_bad
 );
 
+localparam [9:0] OBJ_DLY = 10'd22;
+
 wire [ 8:0] hdump;
 wire        preLHBL, preLVBL;
 wire        flipx;
@@ -183,7 +185,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .vrender    ( vrender   ),
     .hdump      ( hdump     ),
     // Video layers
-    .obj_pxl    ( 12'd0     ),
+    .obj_pxl    ( obj_pxl   ),
     .pal_addr   ( pal_addr  ),
     .shadow     ( shadow    ),
     // Debug
@@ -194,27 +196,56 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .scr_bad    ( scr_bad   )
 );
 
-reg tl;
-reg msb=0;
+// reg tl;
+// reg msb=0;
 
-always @(posedge clk) begin
-    tl <= obj_toggle;
-    if( !tl && obj_toggle ) msb<=~msb;
-end
+// always @(posedge clk) begin
+//     tl <= obj_toggle;
+//     if( !tl && obj_toggle ) msb<=~msb;
+// end
 
-jtframe_ram16 #(
-    .aw(11)
-) u_dummyobj(
-    .clk   ( clk       ),
+// jtframe_ram16 #(
+//     .aw(11)
+// ) u_dummyobj(
+//     .clk   ( clk       ),
 
-    // CPU writes
-    .addr   ( {msb,cpu_addr[10:1]}  ),
-    .data   ( cpu_dout  ),
-    .we     ( {2{objram_cs}} & ~main_dswn    ),
-    .q      ( obj_dout  )
+//     // CPU writes
+//     .addr   ( {msb,cpu_addr[10:1]}  ),
+//     .data   ( cpu_dout  ),
+//     .we     ( {2{objram_cs}} & ~main_dswn    ),
+//     .q      ( obj_dout  )
+// );
+// assign obj_cs = 0;
+// assign obj_addr = 0;
+
+jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(1)) u_obj(
+    .rst       ( rst            ),
+    .clk       ( clk            ),
+    .pxl_cen   ( pxl_cen        ),
+    .alt_bank  ( 1'b0           ),
+
+    // CPU interface
+    .cpu_obj_cs( objram_cs      ),
+    .cpu_addr  ( cpu_addr[10:1] ),
+    .cpu_dout  ( cpu_dout       ),
+    .dswn      ( main_dswn      ),
+    .cpu_din   ( obj_dout       ),
+
+    // SDRAM interface
+    .obj_ok    ( obj_ok         ),
+    .obj_cs    ( obj_cs         ),
+    .obj_addr  ( obj_addr       ), // 9 addr + 3 vertical = 12 bits
+    .obj_data  ( obj_data       ),
+
+    // Video signal
+    .hstart    ( hstart         ),
+    .LHBL      ( ~HS            ),
+    .flip      ( flipx          ),
+    .vrender   ( vrender        ),
+    .hdump     ( hdump          ),
+    .pxl       ( obj_pxl        ),
+    .debug_bus ( debug_bus      )
 );
-assign obj_cs = 0;
-assign obj_addr = 0;
 
 jtoutrun_colmix u_colmix(
     .rst       ( rst            ),
