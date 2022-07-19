@@ -159,7 +159,9 @@ localparam [21:0] ZERO_OFFSET= 22'd0,
                   SROM_OFFSET= `SUB_START>>1,
                   PCM_OFFSET = (`PCM_START-`BA1_START)>>1,
                   VRAM_OFFSET= 22'h10_0000,
-                  SRAM_OFFSET= 22'h18_0000;
+                  SRAM_OFFSET= 22'h18_0000,
+                  RD0_OFFSET = (ROAD_START-BA3_START)>>1,
+                  RD1_OFFSET = RD0_OFFSET+22'h4000;
 /* verilator lint_on WIDTH */
 
 reg  [16:1] xram_addr;
@@ -367,7 +369,7 @@ jtframe_rom_3slots #(
 
 // OBJ
 
-jtframe_rom_3slot #(
+jtframe_rom_3slots #(
     .SLOT0_AW    ( 20         ),
     .SLOT0_DW    ( 16         ),
 
@@ -377,7 +379,7 @@ jtframe_rom_3slot #(
 
     .SLOT2_AW    ( 14         ),
     .SLOT2_DW    ( 16         ),
-    .SLOT2_OFFSET( RD0_OFFSET )
+    .SLOT2_OFFSET( RD1_OFFSET )
 ) u_bank3(
     .rst        ( rst       ),
     .clk        ( clk       ),

@@ -38,6 +38,7 @@ module jtoutrun_colmix(
 
     // From tile map generator
     input      [10:0]  pal_addr,
+    input      [ 7:0]  rd_pxl,
     input              shadow,
 
     output     [ 4:0]  red,

@@ -293,18 +293,20 @@ static void segaic16_road_hangon_draw(segaic16_road_device::road_info *info, bit
  *  RRC2 = !/HSYNC & IIQ
  *      | (CTRL == 3)
  *      | !CENTA & (RDA == 3) & !CENTB & (RDB == 3) & (CTRL == 2)
- *      | CENTB & (RDB == 3) & (CTRL == 2)
- *      | !CENTA & (RDA == 3) & !M2 & (CTRL == 2)
- *      | !CENTA & (RDA == 3) & !M3 & (CTRL == 2)
- *      | !M0 & (RDB == 0) & (CTRL == 2)
- *      | !M1 & (RDB == 0) & (CTRL == 2)
  *      | !CENTA & (RDA == 3) & CENTB & (RDB == 3) & (CTRL == 1)
- *      | !M0 & CENTB & (RDB == 3) & (CTRL == 1)
- *      | !M1 & CENTB & (RDB == 3) & (CTRL == 1)
- *      | !CENTA & M0 & (RDB == 0) & (CTRL == 1)
- *      | !CENTA & M1 & (RDB == 0) & (CTRL == 1)
  *      | !CENTA & (RDA == 3) & (RDB == 1) & (CTRL == 1)
  *      | !CENTA & (RDA == 3) & (RDB == 2) & (CTRL == 1)
+ *      | !CENTA & (RDA == 3) & !M2 & (CTRL == 2)
+ *      | !CENTA & (RDA == 3) & !M3 & (CTRL == 2)
+
+ *      | !CENTA & M0 & (RDB == 0) & (CTRL == 1)
+ *      | !CENTA & M1 & (RDB == 0) & (CTRL == 1)
+ *
+ *      | CENTB & (RDB == 3) & (CTRL == 2)
+ *      | CENTB & (RDB == 3) & !M0 & (CTRL == 1)
+ *      | CENTB & (RDB == 3) & !M1 & (CTRL == 1)
+ *      | !M0 & (RDB == 0) & (CTRL == 2)
+ *      | !M1 & (RDB == 0) & (CTRL == 2)
  *
  *  RRC3 =  VA11 & VB11
  *      | VA11 & (CTRL == 0)

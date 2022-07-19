@@ -30,7 +30,7 @@ module jtoutrun_road(
     output      [15:0] cpu_din,
     input       [ 1:0] cpu_dswn,
     input              road_cs,
-    input              io_cs
+    input              io_cs,
 
     // ROM access
     output      [13:0] rom0_addr,
@@ -43,21 +43,26 @@ module jtoutrun_road(
     output             rom1_cs,
     input              rom1_ok,
     // Pixel output
-    output      [ 7:0] pxl
+    output reg  [ 7:0] pxl
 );
 
-    wire [10:0] rd_addr;
+    reg  [11:0] rd_addr;
     wire [15:0] rd_gfx;
     wire [ 1:0] rd_we;
     reg         rdsel, toggle;
     reg         rdhon;
     reg  [ 1:0] ctrl;
     reg  [ 2:0] st;
+    wire [ 1:0] rd0_pxl, rd1_pxl;
+    wire [ 4:0] rrc;
+    wire        cent_a, cent_b;
 
     reg  [11:0] rd0_idx, rd1_idx,
                 rd0_scr, rd1_scr, rd_col;
 
-    assign rd_addr = 0;
+    localparam [1:0] ONLY_ROAD0=0, ROAD0_PRIO=1,
+                     ROAD1_PRIO=2, ONLY_ROAD1=3;
+
     assign rd_we   = {2{road_cs}} & ~cpu_dswn;
 
     always @(posedge clk, posedge rst) begin
@@ -90,19 +95,39 @@ module jtoutrun_road(
         .q1   ( rd_gfx   )
     );
 
+    always @* begin
+        rd_addr[11] = ~rd_sel;
+        case( st )
+            0:  rd_addr[9:0] = { 3'd0, v[7:0] };
+            1:  rd_addr[9:0] = { 3'd1, v[7:0] };
+            2:  rd_addr[9:0] = { 2'd1, rd0_idx[8:0] };
+            3:  rd_addr[9:0] = { 2'd2, rd1_idx[8:0] };
+            4:  rd_addr[9:0] = { 2'd3, rd0_idx[8:0] };
+            default:
+                rd_addr[9:0] = { 2'd3, rd1_idx[8:0] };
+        endcase
+    end
+
     always @(posedge clk, posedge rst) begin
         if( rst ) begin
-            rd_draw <= 0;
             st      <= 0;
-        end else begin
-            if( hs ) begin
-                st <= st + 3'd1;
+            rd0_idx <= 0;
+            rd1_idx <= 0;
+            rd0_scr <= 0;
+            rd1_scr <= 0;
+            rd0_col <= 0;
+            rd1_col <= 0;
+        end else if(pxl_cen) begin
+            if( !hs ) begin
+                if(st<6) st <= st + 3'd1;
                 case( st )
                     0: rd0_idx <= rd_gfx[11:0];
                     1: rd1_idx <= rd_gfx[11:0];
                     2: rd0_scr <= rd_gfx[11:0];
                     3: rd1_scr <= rd_gfx[11:0];
-                    4: rd_col  <= rd_gfx[11:0];
+                    4: rd0_col <= rd_gfx[11:0];
+                    5: rd1_col <= rd_gfx[11:0];
+                    default:;
                 endcase
             end else begin
                 st <= 0;
@@ -113,30 +138,82 @@ module jtoutrun_road(
     jtoutrun_rdrom u_rom0(
         .rst        ( rst       ),
         .clk        ( clk       ),
-        .pxl_csn    ( pxl_cen   ),
+        .pxl_cen    ( pxl_cen   ),
 
         .cfg        ( rd0_idx   ),
+        .hs         ( hs        ),
+        .hscr       ( rd0_scr   ),
 
         .rom_addr   ( rom0_addr ),
         .rom_data   ( rom0_data ),
         .rom_cs     ( rom0_cs   ),
         .rom_ok     ( rom0_ok   ),
+        .cent       ( cent_a    ),
         .pxl        ( rd0_pxl   )
     );
 
     jtoutrun_rdrom u_rom1(
         .rst        ( rst       ),
         .clk        ( clk       ),
-        .pxl_csn    ( pxl_cen   ),
+        .pxl_cen    ( pxl_cen   ),
 
         .cfg        ( rd1_idx   ),
+        .hs         ( hs        ),
+        .hscr       ( rd1_scr   ),
 
         .rom_addr   ( rom1_addr ),
         .rom_data   ( rom1_data ),
         .rom_cs     ( rom1_cs   ),
         .rom_ok     ( rom1_ok   ),
+        .cent       ( cent_b    ),
         .pxl        ( rd1_pxl   )
     );
+
+    wire only_road0 = ctrl==ONLY_ROAD0,
+         only_road1 = ctrl==ONLY_ROAD1,
+         road0_prio = ctrl==ROAD0_PRIO,
+         road1_prio = ctrl==ROAD1_PRIO;
+
+    always @* begin
+        rrc = 0;
+        // road bit 0 set
+        rrc[0] = rrc[2] ? ( rd_b==1 || (cent_b && rd_b==3) ) :
+                          ( rd_a==1 || (cent_a && rd_a==3) );
+        // road bit 1 set
+        rrc[1] = rrc[2] ? ( rd_b==2 || (cent_b && rd_b==3) ) :
+                          ( rd_a==2 || (cent_a && rd_a==3) );
+        // road active: high for rd_b, low for rd_a
+        rrc[2] = (hs && iiq) ||
+                 only_road1 ||
+                 ( !cent_a && rd_a==3 && !cent_b && rd_b==3 && road1_prio ) ||
+                 ( !cent_a && rd_a==3 &&  cent_b && rd_b==3 && road0_prio ) ||
+                 ( !cent_a && rd_a==3 &&            rd_b==1 && road0_prio ) ||
+                 ( !cent_a && rd_a==3 &&            rd_b==2 && road0_prio ) ||
+                 ( !cent_a && rd_a==3 &&           !rd_b[0] && road1_prio ) ||
+                 ( !cent_a && rd_a==3 &&           !rd_b[1] && road1_prio ) ||
+                 ( !cent_a && rd_a[0] &&            rd_b==0 && road0_prio ) ||
+                 ( !cent_a && rd_a[1] &&            rd_b==0 && road0_prio ) ||
+                 (  cent_b && rd_b==3             && road1_prio ) ||
+                 (  cent_b && rd_b==3 && !rd_a[0] && road0_prio ) ||
+                 (  cent_b && rd_b==3 && !rd_a[1] && road0_prio ) ||
+                 ( !rd_a[0] && rd_b==0 && road1_prio ) ||
+                 ( !rd_a[1] && rd_b==0 && road1_prio );
+
+        // road not from ROM
+        rrc[3] = (rd0_idx[11] && rd1_idx[11]) ||
+                 (rd0_idx[11] && only_road0 ) ||
+                 (rd1_idx[11] && only_road1 );
+        // road not from ROM or blank pixel
+        rrc[4] = rrc[3] ||
+                ( !cent_a && rd_a==3 && !cent_b && rd_b==3 ) ||
+                ( !cent_b && rd_b==3 && only_road1 ) ||
+                ( !cent_a && rd_a==3 && only_road0 );
+    end
+
+    always @(posedge clk) begin
+        pxl <= !rrc[4] ? {4'd0, rrc[2:0], rd_col[ {1'b0, rrc[2:0]}] } :
+                rrc[3] ? { 1'b1, }
+    end
 
 endmodule
 
@@ -151,8 +228,9 @@ module jtoutrun_rdrom(
 
     output      [13:0] rom_addr,
     input       [15:0] rom_data,
-    output             rom_cs,
+    output reg         rom_cs,
     input              rom_ok,
+    output reg         cent,
     output      [ 1:0] pxl
 );
 
@@ -160,24 +238,26 @@ module jtoutrun_rdrom(
     reg  [15:0] pxl_data;
     wire        en;
 
-    assign pxl = { pxl_data[15], pxl_data[7] };
+    assign pxl  = { pxl_data[15], pxl_data[7] };
     assign rom_addr = { cfg[8:1], hpos[8:3] };
-    assign en  = !cfg[11] && hpos[11:9]==3'b011;
+    assign en   = !cfg[11] && hpos[11:9]==3'b011;
 
     always @(posedge clk, posedge rst) begin
         if( rst ) begin
             rom_cs   <= 0;
-            rom_addr <= 0;
             pxl_data <= 0;
+            hpos     <= 0;
+            cent     <= 0;
         end else begin
             if( hs ) begin
                 rom_cs   <= 0;
-                rom_addr <= 0;
                 hpos     <= hscr;
                 pxl_data <= 16'hffff;
+                cent     <= 0;
             end else if( pxl_cen ) begin
                 rom_cs <= en;
                 hpos   <= hpos + 11'd1;
+                if( hpos[11:9]!=3'b011 || hpos[8:0]==9'hff ) cent <= 1;
                 if( hpos[2:0]==0 ) begin
                     pxl_data <= !en ? 16'hffff : rom_data;
                 end else begin

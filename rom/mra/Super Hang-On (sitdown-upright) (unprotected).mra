@@ -92,7 +92,8 @@
         </interleave>
         <!-- segaic16road - starts at 0x270000 -->
         <interleave output="16">
-            <part name="epr-10642.47" crc="7836bcc3" map="12"/>
+            <part name="epr-10642.47" crc="7836bcc3" map="01" length="0x4000"/>
+            <part name="epr-10642.47" crc="7836bcc3" map="10" length="0x4000" offset="0x4000"/>
         </interleave>
         <!-- Total 0x278000 bytes - 2528 kBytes -->
     </rom>

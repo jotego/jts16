@@ -295,6 +295,7 @@ jtoutrun_colmix u_colmix(
     .preLVBL   ( preLVBL        ),
     .preLHBL   ( preLHBL        ),
 
+    .rd_pxl    ( rd_pxl         ),
     //.obj_pxl   ( obj_pxl        ),
 
     .LHBL      ( LHBL           ),
