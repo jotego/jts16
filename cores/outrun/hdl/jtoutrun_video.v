@@ -53,29 +53,39 @@ module jtoutrun_video(
 
     // SDRAM interface
     input              char_ok,
-    output     [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    output     [12:0]  char_addr,
     input      [31:0]  char_data,
 
     input              map1_ok,
-    output     [14:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output     [14:0]  map1_addr,
     input      [15:0]  map1_data,
 
     input              scr1_ok,
-    output     [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output     [16:0]  scr1_addr,
     input      [31:0]  scr1_data,
 
     input              map2_ok,
-    output     [14:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output     [14:0]  map2_addr,
     input      [15:0]  map2_data,
 
     input              scr2_ok,
-    output     [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output     [16:0]  scr2_addr,
     input      [31:0]  scr2_data,
 
     input              obj_ok,
     output             obj_cs,
     output     [19:0]  obj_addr,
     input      [15:0]  obj_data,
+
+    output      [13:0] rd0_addr,
+    input       [15:0] rd0_data,
+    output             rd0_cs,
+    input              rd0_ok,
+
+    output      [13:0] rd1_addr,
+    input       [15:0] rd1_data,
+    output             rd1_cs,
+    input              rd1_ok,
 
     // Video signal
     output             HS,
@@ -106,6 +116,7 @@ wire        flipx;
 
 // video layers
 wire [11:0] obj_pxl;
+wire [ 7:0] rd_pxl;
 wire [10:0] pal_addr;
 wire        shadow;
 reg         LHBLl;
@@ -126,14 +137,31 @@ end
 jtoutrun_road u_road(
     .rst        ( rst       ),
     .clk        ( clk       ),
+    .pxl_cen    ( pxl_cen   ),
+    .hs         ( HS        ),
     .v          ( vdump     ),
+    .vint       ( vint      ),
+
     // CPU interface
     .cpu_addr   ( sub_addr  ),
     .cpu_dout   ( sub_dout  ),
     .cpu_din    ( road_dout ),
-    .cpu_dswn   ( sub_dswn   ),
+    .cpu_dswn   ( sub_dswn  ),
     .road_cs    ( road_cs   ),
-    .io_cs      ( sub_io_cs )
+    .io_cs      ( sub_io_cs ),
+
+    // ROMs
+    .rom0_cs    ( rd0_cs    ),
+    .rom0_ok    ( rd0_ok    ),
+    .rom0_addr  ( rd0_addr  ),
+    .rom0_data  ( rd0_data  ),
+
+    .rom1_addr  ( rd1_addr  ),
+    .rom1_data  ( rd1_data  ),
+    .rom1_cs    ( rd1_cs    ),
+    .rom1_ok    ( rd1_ok    ),
+
+    .pxl        ( rd_pxl    )
 );
 
 jts16_tilemap #(.MODEL(1)) u_tilemap(

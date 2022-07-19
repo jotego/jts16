@@ -97,10 +97,21 @@ module jtoutrun_sdram(
     output   [31:0]  scr2_data,
 
     // Obj
-    output           obj_ok,
     input            obj_cs,
+    output           obj_ok,
     input    [19:0]  obj_addr,
     output   [15:0]  obj_data,
+
+    // Roads
+    input            rd0_cs,
+    output           rd0_ok,
+    input     [13:0] rd0_addr,
+    output    [15:0] rd0_data,
+
+    input            rd1_cs,
+    output           rd1_ok,
+    input     [13:0] rd1_addr,
+    output    [15:0] rd1_data,
 
     // Bank 0: allows R/W
     output    [21:0] ba0_addr,
@@ -356,9 +367,17 @@ jtframe_rom_3slots #(
 
 // OBJ
 
-jtframe_rom_1slot #(
-    .SLOT0_DW(16),
-    .SLOT0_AW(20)
+jtframe_rom_3slot #(
+    .SLOT0_AW    ( 20         ),
+    .SLOT0_DW    ( 16         ),
+
+    .SLOT1_AW    ( 14         ),
+    .SLOT1_DW    ( 16         ),
+    .SLOT1_OFFSET( RD0_OFFSET ),
+
+    .SLOT2_AW    ( 14         ),
+    .SLOT2_DW    ( 16         ),
+    .SLOT2_OFFSET( RD0_OFFSET )
 ) u_bank3(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -367,6 +386,16 @@ jtframe_rom_1slot #(
     .slot0_dout ( obj_data  ),
     .slot0_cs   ( obj_cs    ),
     .slot0_ok   ( obj_ok    ),
+
+    .slot1_addr ( rd0_addr  ),
+    .slot1_dout ( rd0_data  ),
+    .slot1_cs   ( rd0_cs    ),
+    .slot1_ok   ( rd0_ok    ),
+
+    .slot2_addr ( rd1_addr  ),
+    .slot2_dout ( rd1_data  ),
+    .slot2_cs   ( rd1_cs    ),
+    .slot2_ok   ( rd1_ok    ),
 
     // SDRAM controller interface
     .sdram_addr ( ba3_addr  ),

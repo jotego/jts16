@@ -151,12 +151,19 @@ wire [ 7:0] snd_data;
 wire        snd_cs, snd_ok;
 wire [ 7:0] sndmap_din, sndmap_dout;
 wire        sndmap_rd, sndmap_wr, sndmap_pbf, snd_rstb;
+
 // PCM
 wire [18:0] pcm_addr;
 wire        pcm_cs;
 wire [ 7:0] pcm_data;
 wire        pcm_ok;
 wire        snd_clip;
+
+// Road ROMs
+wire        rd0_cs,   rd1_cs,
+            rd0_ok,   rd1_ok;
+wire [13:0] rd0_addr, rd1_addr;
+wire [15:0] rd0_data, rd1_data;
 
 // Protection
 wire        key_we, fd1089_we;
@@ -553,6 +560,17 @@ jtoutrun_sdram u_sdram(
     .obj_cs     ( obj_cs    ),
     .obj_addr   ( obj_addr  ),
     .obj_data   ( obj_data  ),
+
+    // Road ROMs
+    .rd0_ok     ( rd0_ok     ),
+    .rd0_cs     ( rd0_cs     ),
+    .rd0_addr   ( rd0_addr   ),
+    .rd0_data   ( rd0_data   ),
+
+    .rd1_ok     ( rd1_ok     ),
+    .rd1_cs     ( rd1_cs     ),
+    .rd1_addr   ( rd1_addr   ),
+    .rd1_data   ( rd1_data   ),
 
     // Bank 0: allows R/W
     .ba0_addr   ( ba0_addr   ),

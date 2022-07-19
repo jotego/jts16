@@ -238,26 +238,26 @@ static void segaic16_road_hangon_draw(segaic16_road_device::road_info *info, bit
  *                            3 = road 1 only visible
  *
  *  Road RAM:
- *      Offset   Bits               Usage
- *      000-1FF  ----s--- --------  Road 0: Solid fill (1) or ROM fill
- *               -------- -ccccccc  Road 0: Solid color (if solid fill)
- *               -------i iiiiiiii  Road 0: Index for other tables (if in indirect mode)
- *               -------r rrrrrrr-  Road 0: Road ROM line select
- *      200-3FF  ----s--- --------  Road 1: Solid fill (1) or ROM fill
- *               -------- -ccccccc  Road 1: Solid color (if solid fill)
- *               -------i iiiiiiii  Road 1: Index for other tables (if in indirect mode)
- *               -------r rrrrrrr-  Road 1: Road ROM line select
- *      400-7FF  ----hhhh hhhhhhhh  Road 0: horizontal scroll
- *      800-BFF  ----hhhh hhhhhhhh  Road 1: horizontal scroll
- *      C00-FFF  ----bbbb --------  Background color index
- *               -------- s-------  Road 1: stripe color index
- *               -------- -a------  Road 1: pixel value 2 color index
- *               -------- --b-----  Road 1: pixel value 1 color index
- *               -------- ---c----  Road 1: pixel value 0 color index
- *               -------- ----s---  Road 0: stripe color index
- *               -------- -----a--  Road 0: pixel value 2 color index
- *               -------- ------b-  Road 0: pixel value 1 color index
- *               -------- -------c  Road 0: pixel value 0 color index
+ *          Offset   Bits               Usage
+ * 000-0FF  000-1FF  ----s--- --------  Road 0: Solid fill (1) or ROM fill
+ *                   -------- -ccccccc  Road 0: Solid color (if solid fill)
+ *                   -------i iiiiiiii  Road 0: Index for other tables (if in indirect mode)
+ *                   -------r rrrrrrr-  Road 0: Road ROM line select
+ * 100-1FF  200-3FF  ----s--- --------  Road 1: Solid fill (1) or ROM fill
+ *                   -------- -ccccccc  Road 1: Solid color (if solid fill)
+ *                   -------i iiiiiiii  Road 1: Index for other tables (if in indirect mode)
+ *                   -------r rrrrrrr-  Road 1: Road ROM line select
+ * 200-3FF  400-7FF  ----hhhh hhhhhhhh  Road 0: horizontal scroll
+ * 400-5FF  800-BFF  ----hhhh hhhhhhhh  Road 1: horizontal scroll
+ * 600-7FF  C00-FFF  ----bbbb --------  Background color index
+ *                   -------- s-------  Road 1: stripe color index
+ *                   -------- -a------  Road 1: pixel value 2 color index
+ *                   -------- --b-----  Road 1: pixel value 1 color index
+ *                   -------- ---c----  Road 1: pixel value 0 color index
+ *                   -------- ----s---  Road 0: stripe color index
+ *                   -------- -----a--  Road 0: pixel value 2 color index
+ *                   -------- ------b-  Road 0: pixel value 1 color index
+ *                   -------- -------c  Road 0: pixel value 0 color index
  *
  *  Logic:
  *      First, the scanline is used to index into the tables at 000-1FF/200-3FF
