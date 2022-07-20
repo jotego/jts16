@@ -177,6 +177,7 @@ wire        flip, video_en, sound_en, line_intn;
 // Cabinet inputs
 wire [ 7:0] dipsw_a, dipsw_b;
 wire [ 1:0] game_id;
+wire [ 3:0] controller_type = { 1'b0, status[22:20] };
 
 // Status report
 wire [7:0] st_video, st_main, st_sub;
@@ -243,10 +244,11 @@ jtoutrun_main u_main(
     .sub_ok      ( sub_ok     ),
     .sub_din     ( sub_din    ),
     // cabinet I/O
-    .joystick1   ( joystick1  ),
-    .joystick2   ( joystick2  ),
-    .joyana1     ( joyana_l1  ),
-    .joyana1b    ( joyana_r1  ),
+    .controller_type ( controller_type ),
+    .joystick1       ( joystick1       ),
+    .joystick2       ( joystick2       ),
+    .joyana1         ( joyana_l1       ),
+    .joyana1b        ( joyana_r1       ),
     .start_button(start_button),
     .coin_input  ( coin_input ),
     .service     ( service    ),
