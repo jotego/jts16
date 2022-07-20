@@ -116,8 +116,9 @@ wire        flipx;
 
 // video layers
 wire [11:0] obj_pxl;
+wire [ 4:3] rc;
 wire [ 7:0] rd_pxl;
-wire [10:0] pal_addr;
+wire [10:0] tmap_addr;
 wire        shadow;
 reg         LHBLl;
 
@@ -161,7 +162,8 @@ jtoutrun_road u_road(
     .rom1_cs    ( rd1_cs    ),
     .rom1_ok    ( rd1_ok    ),
 
-    .pxl        ( rd_pxl    )
+    .pxl        ( rd_pxl    ),
+    .rc         ( rc        )
 );
 
 jts16_tilemap #(.MODEL(1)) u_tilemap(
@@ -214,7 +216,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .hdump      ( hdump     ),
     // Video layers
     .obj_pxl    ( obj_pxl   ),
-    .pal_addr   ( pal_addr  ),
+    .pal_addr   ( tmap_addr ),
     .shadow     ( shadow    ),
     // Debug
     .gfx_en     ( gfx_en    ),
@@ -283,7 +285,7 @@ jtoutrun_colmix u_colmix(
 
     //.video_en  ( video_en       ),
     .video_en  ( 1'b1           ),
-    .pal_addr  ( pal_addr       ),
+    .tmap_addr ( tmap_addr      ),
     .shadow    ( shadow         ),
     // CPU interface
     .pal_cs    ( pal_cs         ),
@@ -296,13 +298,15 @@ jtoutrun_colmix u_colmix(
     .preLHBL   ( preLHBL        ),
 
     .rd_pxl    ( rd_pxl         ),
+    .rc        ( rc             ),
     //.obj_pxl   ( obj_pxl        ),
 
     .LHBL      ( LHBL           ),
     .LVBL      ( LVBL           ),
     .red       ( red            ),
     .green     ( green          ),
-    .blue      ( blue           )
+    .blue      ( blue           ),
+    .debug_bus ( debug_bus      )
 );
 
 endmodule
