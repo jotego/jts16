@@ -51,7 +51,8 @@ parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 localparam LAST_IDX = MODEL ? 5 : 4;
 localparam STW = MODEL ? 4 : 3;
 localparam ST_SCRATCH = MODEL ? 7 : 6,
-           ST_ZOOM    = 8,
+           ST_PREZOOM = MODEL ? 6 /*Ok for S16B*/: 9 /* Unreachable for S16A*/,
+           ST_ZOOM    = 8, // Unreachable for S16A
            ST_DRAW    = MODEL ? 9 : 7;
 
 reg  [6:0] cur_obj;  // current object
@@ -83,9 +84,10 @@ reg  [7:0] top, bottom;
 wire       inzone = vrender[7:0]>=top && bottom>vrender[7:0];
 wire       badobj = top >= bottom;
 
-`ifndef S16B
-    initial zoom = 0;
-`endif
+generate
+     if( MODEL==0 )
+        initial zoom = 0;
+endgenerate
 
 `ifdef SIMULATION
     wire hide = MODEL && st==3 && tbl_dout[14];
@@ -184,23 +186,19 @@ always @(posedge clk, posedge rst) begin
                     prio <= tbl_dout[1:0];
                 end
             end
-        `ifdef S16B
-            6: begin
+            ST_PREZOOM: begin
                 zoom <= next_zoom;
             end
-        `endif
             ST_SCRATCH: begin
                 offset   <= next_offset;
                 tbl_we   <= 1;
                 zoom_sel <= 0;
             end
-        `ifdef S16B
             ST_ZOOM: begin
                 tbl_we  <= 1;
                 zoom_sel<= 1;
                 idx     <= 5;
             end
-        `endif
             ST_DRAW: begin
                 if( !dr_busy ) begin
                     dr_xpos   <= xpos; //+PXL_DLY;

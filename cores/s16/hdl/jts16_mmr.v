@@ -81,29 +81,29 @@ endfunction
     initial begin
         $readmemh( "mmr.hex", sim_cfg );
 
-    `ifndef S16B
-        scr1_pages_flip = sim_cfg[9'h08e>>1];
-        scr1_pages_nofl = sim_cfg[9'h09e>>1];
-        scr2_pages_flip = sim_cfg[9'h08c>>1];
-        scr2_pages_nofl = sim_cfg[9'h09c>>1];
-        scr1_vpos       = sim_cfg[9'h124>>1];
-        scr2_vpos       = sim_cfg[9'h126>>1];
-        scr1_hpos       = sim_cfg[9'h1f8>>1];
-        scr2_hpos       = sim_cfg[9'h1fa>>1];
-    `else
-        scr1_pages_std  = sim_cfg[9'h080>>1];
-        scr2_pages_std  = sim_cfg[9'h082>>1];
-        scr1_pages_alt  = sim_cfg[9'h084>>1];
-        scr2_pages_alt  = sim_cfg[9'h086>>1];
-        scr1_vpos_std   = sim_cfg[9'h090>>1];
-        scr2_vpos_std   = sim_cfg[9'h092>>1];
-        scr1_vpos_alt   = sim_cfg[9'h094>>1];
-        scr2_vpos_alt   = sim_cfg[9'h096>>1];
-        scr1_hpos_std   = sim_cfg[9'h098>>1];
-        scr2_hpos_std   = sim_cfg[9'h09a>>1];
-        scr1_hpos_alt   = sim_cfg[9'h09c>>1];
-        scr2_hpos_alt   = sim_cfg[9'h09e>>1];
-    `endif
+        if( MODEL==0 ) begin
+            scr1_pages_flip = sim_cfg[9'h08e>>1];
+            scr1_pages_nofl = sim_cfg[9'h09e>>1];
+            scr2_pages_flip = sim_cfg[9'h08c>>1];
+            scr2_pages_nofl = sim_cfg[9'h09c>>1];
+            scr1_vpos       = sim_cfg[9'h124>>1];
+            scr2_vpos       = sim_cfg[9'h126>>1];
+            scr1_hpos       = sim_cfg[9'h1f8>>1];
+            scr2_hpos       = sim_cfg[9'h1fa>>1];
+        end else begin
+            scr1_pages_std  = sim_cfg[9'h080>>1];
+            scr2_pages_std  = sim_cfg[9'h082>>1];
+            scr1_pages_alt  = sim_cfg[9'h084>>1];
+            scr2_pages_alt  = sim_cfg[9'h086>>1];
+            scr1_vpos_std   = sim_cfg[9'h090>>1];
+            scr2_vpos_std   = sim_cfg[9'h092>>1];
+            scr1_vpos_alt   = sim_cfg[9'h094>>1];
+            scr2_vpos_alt   = sim_cfg[9'h096>>1];
+            scr1_hpos_std   = sim_cfg[9'h098>>1];
+            scr2_hpos_std   = sim_cfg[9'h09a>>1];
+            scr1_hpos_alt   = sim_cfg[9'h09c>>1];
+            scr2_hpos_alt   = sim_cfg[9'h09e>>1];
+        end
     end
 `endif
 
