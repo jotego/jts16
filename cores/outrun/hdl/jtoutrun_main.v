@@ -333,8 +333,8 @@ always @(*) begin
                     // Gas ADC
                     1: begin
                         case( ctrl_type )
-                            0,2: cab_dout = dacana1b[15]  ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0;  // gas pedal dual analog stick/logitech steering wheel
-                            1: cab_dout = dacana1b[7]   ?  8'd0 : {dacana1b[6:0],   dacana1b[6]};     // gas pedal analog trigger
+                            0,2: cab_dout = dacana1b[15] ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0;  // gas pedal dual analog stick/logitech steering wheel
+                            1:   cab_dout = dacana1b[ 7] ?  8'd0 : {dacana1b[6:0],   dacana1b[6]};     // gas pedal analog trigger
                             default: cab_dout = 0;
                         endcase
                         if( !joystick1[5] ) cab_dout = 8'hff;
@@ -342,8 +342,8 @@ always @(*) begin
                     // Brake ADC
                     2: begin
                         case( ctrl_type )
-                            0,1: cab_dout = dacana1b[15]  ?  8'd0 : {dacana1b[14:8], dacana1b[14]};     // brake pedal dual analog stick/analog trigger
-                            2: cab_dout = dacana1b[15]  ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0;     // brake logictech steering wheel
+                            0,1: cab_dout = dacana1b[15] ?  8'd0 : {dacana1b[14:8], dacana1b[14]};     // brake pedal dual analog stick/analog trigger
+                            2:   cab_dout = dacana1b[15] ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0;     // brake logictech steering wheel
                             default: cab_dout = 0;
                         endcase
                         if( !joystick1[6] ) cab_dout = 8'hff;

@@ -51,7 +51,7 @@ module jtoutrun_road(
     wire [15:0] rd_gfx;
     wire [ 1:0] rd_we;
     reg         ram_half, toggle;
-    reg         viq;
+    reg         viq, vintl;
     reg  [ 1:0] ctrl;
     reg  [ 2:0] st;
     wire [ 1:0] rd_a, rd_b;
@@ -72,9 +72,11 @@ module jtoutrun_road(
             ram_half  <= 0;
             toggle <= 0;
             ctrl   <= 0;
+            vintl  <= 0;
         end else begin
+            vintl <= vint;
             if( io_cs & ~cpu_dswn[0] )  ctrl <= cpu_dout[1:0];
-            if( vint && toggle ) begin
+            if( vint && !vintl && toggle ) begin
                 ram_half  <= ~ram_half;
                 toggle <= 0;
             end else if( io_cs && cpu_dswn==2'b11 )

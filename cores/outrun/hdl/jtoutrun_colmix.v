@@ -98,6 +98,12 @@ endfunction
 
 reg [14:0] gated;
 
+// Super Hang On Equations
+// muxel ==0 selects tile mapper output, ==1 selects road
+// muxsel = obj0 & obj1 & obj2 & obj3 & FIX & !rc3q #
+//       obj0 & obj1 & obj2 & obj3 & sa_n & sb_n & FIX #
+//       !obj0 & obj1 & !obj2 & obj3 & obj10 & !obj11 & FIX;
+
 always @(*) begin
     rd_mux[3:0] = rd_pxl[3:0];
     case( rc[4:3] )
@@ -107,7 +113,7 @@ always @(*) begin
     endcase
     rd_mux[10:6] = {5{rc[4]}};
 
-    pal_addr = rc[4:3]==3 ? tmap_addr : rd_mux;
+    pal_addr = rc[3] ? tmap_addr : rd_mux;
 
     gated = (shadow & ~pal[15]) ? { dim(rpal), dim(gpal), dim(bpal) } :
                                   {     rpal,      gpal,      bpal  };
