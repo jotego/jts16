@@ -24,7 +24,7 @@ JTFRAME_STATUS
 JTFRAME_CLK24
 
 # OSD options
-CORE_OSD=OKM,Control Type,A.Stick,A.Triggers,A.Wheel,Digital / Key;
+CORE_OSD=OKM,Control Type,A.Stick,A.Triggers,A.Wheel,Digital/Key;
 JTFRAME_OSD_VOL
 JTFRAME_OSD_SND_EN
 JTFRAME_OSD_TEST
