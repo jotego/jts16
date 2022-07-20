@@ -282,15 +282,25 @@ jtoutrun_main u_main(
     .st_dout     ( st_main    )
 );
 `else
-    assign flip      = 0;
-    assign main_cs   = 0;
-    assign ram_cs    = 0;
-    assign vram_cs   = 0;
-    assign main_rnw  = 1;
-    assign main_dout = 0;
-    assign video_en  = 1;
+    assign flip        = 0;
+    assign sndmap_dout = 0;
+    assign main_cs     = 0;
+    assign main_addr   = 0;
+    assign obj_toggle  = 0;
+    assign main_dsn    = 3;
+    assign char_cs     = 0;
+    assign pal_cs      = 0;
+    assign objram_cs   = 0;
+    assign ram_cs      = 0;
+    assign vram_cs     = 0;
+    assign main_rnw    = 1;
+    assign main_dout   = 0;
+    assign video_en    = 1;
+    assign key_addr    = 0;
+    assign st_main     = 0;
 `endif
 
+`ifndef NOSUB
 jtoutrun_sub u_sub(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -327,6 +337,19 @@ jtoutrun_sub u_sub(
     .st_dout    ( st_sub    )
 
 );
+`else
+    assign sub_addr = 0;
+    assign sub_dout = 0;
+    assign srom_cs  = 0;
+    assign sram_cs  = 0;
+    assign road_cs  = 0;
+    assign sio_cs   = 0;
+    assign sub_dsn  = 3;
+    assign sub_rnw  = 1;
+    assign sub_din  = 0;
+    assign sub_ok   = 1;
+    assign st_sub   = 0;
+`endif
 
 `ifndef NOSOUND
 jtoutrun_snd u_sound(

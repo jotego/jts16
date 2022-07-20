@@ -82,11 +82,12 @@ module jtoutrun_road(
         end
     end
 
-    jtframe_dual_ram16 #(.aw(12)) u_vram0(
+    jtframe_dual_ram16 #(.aw(12),.simfile_lo("rdram_lo.bin"),.simfile_hi("rdram_hi.bin"))
+    u_vram0(
         // CPU
         .clk0 ( clk      ),
         .data0( cpu_dout ),
-        .addr0( {ram_half, cpu_addr } ),
+        .addr0( {~ram_half, cpu_addr } ),
         .we0  ( rd_we    ),
         .q0   ( cpu_din  ),
         // Road engine
@@ -98,7 +99,7 @@ module jtoutrun_road(
     );
 
     always @* begin
-        rd_addr[11] = ~ram_half;
+        rd_addr[11] = ram_half;
         case( st )
             0:  rd_addr[10:0] = { 3'd0, v[7:0] };
             1:  rd_addr[10:0] = { 3'd1, v[7:0] };
@@ -120,7 +121,7 @@ module jtoutrun_road(
             rd0_col <= 0;
             rd1_col <= 0;
         end else if(pxl_cen) begin
-            if( !hs ) begin
+            if( hs ) begin
                 if(st<6) st <= st + 3'd1;
                 case( st )
                     0: rd0_idx <= rd_gfx[11:0];

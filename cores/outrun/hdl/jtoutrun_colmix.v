@@ -60,9 +60,15 @@ assign { red, green, blue } = rgb;
 
 wire [4:0] rpal, gpal, bpal;
 
+`ifndef GRAY
 assign rpal  = { pal[ 3:0], pal[12] };
 assign gpal  = { pal[ 7:4], pal[13] };
 assign bpal  = { pal[11:8], pal[14] };
+`else
+assign rpal  = { pal_addr[3:0], pal_addr[3] };
+assign gpal  = { pal_addr[3:0], pal_addr[3] };
+assign bpal  = { pal_addr[3:0], pal_addr[3] };
+`endif
 
 jtframe_dual_ram16 #(
     .aw        (13          ),
@@ -101,7 +107,7 @@ always @(*) begin
     endcase
     rd_mux[10:6] = {5{rc[4]}};
 
-    pal_addr = rc[4:3]==debug_bus[1:0] ? tmap_addr : rd_mux;
+    pal_addr = rc[4:3]==3 ? tmap_addr : rd_mux;
 
     gated = (shadow & ~pal[15]) ? { dim(rpal), dim(gpal), dim(bpal) } :
                                   {     rpal,      gpal,      bpal  };
