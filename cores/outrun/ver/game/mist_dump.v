@@ -67,6 +67,8 @@ module mist_dump(
                 $shm_probe(UUT.u_game.u_sound,"A");
             `endif
             //$shm_probe(UUT.u_game.u_video,"A");
+            $shm_probe(UUT.u_game.u_video.u_road,"AS");
+            $shm_probe(UUT.u_game.u_video.u_colmix,"A");
         `endif
     end
 `endif
