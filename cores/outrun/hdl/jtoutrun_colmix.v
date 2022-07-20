@@ -37,20 +37,23 @@ module jtoutrun_colmix(
     output     [15:0]  cpu_din,
 
     // From tile map generator
-    input      [10:0]  pal_addr,
+    input      [10:0]  tmap_addr,
     input      [ 7:0]  rd_pxl,
+    input      [ 4:3]  rc,
     input              shadow,
 
     output     [ 4:0]  red,
     output     [ 4:0]  green,
     output     [ 4:0]  blue,
     output             LVBL,
-    output             LHBL
+    output             LHBL,
+    input      [ 7:0]  debug_bus
 );
 
 wire [ 1:0] we;
 wire [15:0] pal;
 wire [14:0] rgb;
+reg  [10:0] rd_mux, pal_addr;
 
 assign we = ~dswn & {2{pal_cs}};
 assign { red, green, blue } = rgb;
@@ -90,6 +93,16 @@ endfunction
 reg [14:0] gated;
 
 always @(*) begin
+    rd_mux[3:0] = rd_pxl[3:0];
+    case( rc[4:3] )
+        0,1: rd_mux[5:4] = 2'b11;
+        2: rd_mux[5:4] = {1'b0, rd_pxl[4]};
+        3: rd_mux[5:4] = rd_pxl[5:4];
+    endcase
+    rd_mux[10:6] = {5{rc[4]}};
+
+    pal_addr = rc[4:3]==debug_bus[1:0] ? tmap_addr : rd_mux;
+
     gated = (shadow & ~pal[15]) ? { dim(rpal), dim(gpal), dim(bpal) } :
                                   {     rpal,      gpal,      bpal  };
     if( !video_en ) gated = 0;
