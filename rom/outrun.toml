@@ -17,7 +17,7 @@ core=4 # max number of buttons supported by the core
 Names = [
     { machine="outrun",  names="Accelerate,Brake,Gear (Low / High)"},
     { machine="toutrun", names="Accelerate,Brake,Gear (Low / High), Nitro"},
-    { machine="shangon", names="Accelerate,Brake,Supercharger"},
+    { machine="shangon", names="Accelerate,Brake,-,Supercharger"},
 ]
 
 [rbf]
