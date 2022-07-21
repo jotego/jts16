@@ -47,7 +47,7 @@ module jtoutrun_road(
     output reg  [ 4:3] rc
 );
 
-    reg  [11:0] rd_addr;
+    reg  [10:0] rd_addr;
     wire [15:0] rd_gfx;
     wire [ 1:0] rd_we;
     reg         ram_half, toggle;
@@ -95,21 +95,20 @@ module jtoutrun_road(
         // Road engine
         .clk1 ( clk      ),
         .data1(          ),
-        .addr1( rd_addr  ),
+        .addr1( { ram_half, rd_addr } ),
         .we1  ( 2'd0     ),
         .q1   ( rd_gfx   )
     );
 
     always @* begin
-        rd_addr[11] = ram_half;
         case( st )
-            0:  rd_addr[10:0] = { 3'd0, v[7:0] };
-            1:  rd_addr[10:0] = { 3'd1, v[7:0] };
-            2:  rd_addr[10:0] = { 2'd1, rd0_idx[8:0] };
-            3:  rd_addr[10:0] = { 2'd2, rd1_idx[8:0] };
-            4:  rd_addr[10:0] = { 2'd3, rd0_idx[8:0] };
+            0:  rd_addr = { 3'd0, v[7:0] };
+            1:  rd_addr = { 3'd1, v[7:0] };
+            2:  rd_addr = { 2'd1, rd0_idx[8:0] };
+            3:  rd_addr = { 2'd2, rd1_idx[8:0] };
+            4:  rd_addr = { 2'd3, rd0_idx[8:0] };
             default:
-                rd_addr[10:0] = { 2'd3, rd1_idx[8:0] };
+                rd_addr = { 2'd3, rd1_idx[8:0] };
         endcase
     end
 
