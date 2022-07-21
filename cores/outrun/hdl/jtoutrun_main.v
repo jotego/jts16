@@ -261,11 +261,11 @@ always @(posedge clk, posedge rst) begin
             video_en <= ppic_dout[5];
             adc_ch   <= ppic_dout[4:2];
             snd_rstb <= ppic_dout[0];
-        end else if( io_cs && !LDSWn ) begin
+        end else if( io_cs && !LDSWn ) begin // shangon
             case( {A[13:12], A[5]} )
                 0: begin
                     adc_ch <= {1'd0, cpu_dout[7:6] };
-                    video_en <= cpu_dout[5];
+                    video_en <= cpu_dout[4];
                 end
                 1: snd_rstb <= ~cpu_dout[0];
                 default:;
@@ -282,7 +282,7 @@ always @(*) begin
     // Super Hang On
     if( io_cs && game_id==1 ) begin
         case( { A[13:12],A[5] } )
-            0: case( A[2:1] )
+            2: case( A[2:1] )
                 0: cab_dout = 8'hff;
                 1: cab_dout = { 2'b11, joystick1[4], start_button[0], service, dip_test, coin_input };
                 2: cab_dout = dipsw_a;
