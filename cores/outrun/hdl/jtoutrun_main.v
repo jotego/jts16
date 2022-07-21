@@ -314,7 +314,7 @@ always @(*) begin
                 cab_dout = ppi_dout;
             end
             1: case( A[2:1] )
-                0: cab_dout = { coin_input, ~joystick1[7], joystick1[7], start_button[0], service, dip_test, 1'b1 };
+                0: cab_dout = { coin_input, ~joystick1[7], joystick1[6], start_button[0], service, dip_test, 1'b1 };
                 1: cab_dout = 8'hff;
                 2: cab_dout = dipsw_a;
                 3: cab_dout = dipsw_b;
@@ -337,7 +337,7 @@ always @(*) begin
                             1:   cab_dout = dacana1b[ 7] ?  8'd0 : {dacana1b[6:0],   dacana1b[6]};     // gas pedal analog trigger
                             default: cab_dout = 0;
                         endcase
-                        if( !joystick1[5] ) cab_dout = 8'hff;
+                        if( !joystick1[4] ) cab_dout = 8'hff;
                     end
                     // Brake ADC
                     2: begin
@@ -346,7 +346,7 @@ always @(*) begin
                             2:   cab_dout = dacana1b[15] ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0;     // brake logictech steering wheel
                             default: cab_dout = 0;
                         endcase
-                        if( !joystick1[6] ) cab_dout = 8'hff;
+                        if( !joystick1[5] ) cab_dout = 8'hff;
                     end
                     // Motor ADC
                     3: cab_dout = motor_pos[15:8];
