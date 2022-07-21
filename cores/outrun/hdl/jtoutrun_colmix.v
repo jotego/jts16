@@ -113,7 +113,7 @@ always @(*) begin
     endcase
     rd_mux[10:6] = {5{rc[4]}};
 
-    pal_addr = rc[3] ? tmap_addr : rd_mux;
+    pal_addr = !debug_bus[0] /*!rc[3]**/ ? tmap_addr : rd_mux;
 
     gated = (shadow & ~pal[15]) ? { dim(rpal), dim(gpal), dim(bpal) } :
                                   {     rpal,      gpal,      bpal  };
