@@ -528,8 +528,14 @@ jtframe_m68k u_cpu(
 );
 
 `ifdef SIMULATION
-always @(posedge pal_cs )  begin
+/*always @(posedge pal_cs )  begin
     $display("Palette access" );
+end*/
+wire main_over = cpu_dsn==3 && sub_cs;
+always @(posedge main_over) if(A_full==24'h2607fc) begin
+    $display("Main->Sub %X (%X) %s",
+            A_full, cpu_RnW ? cpu_din : cpu_dout_raw, cpu_RnW ? "RD" : "WR"
+        );
 end
 `endif
 
