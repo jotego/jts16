@@ -94,7 +94,7 @@ always @(posedge clk, posedge rst) begin
         BGACKnl <= 0;
     end else begin
         BGACKnl <= BGACKn;
-        if( !BUSn || !BGACKn || (!ASn && RnW) ) begin
+        if( (!BGACKn && sub_br) || (!ASn && FC!=7) ) begin
             case( A[19:17] )
                 0,1,2: rom_cs <= 1;  // <6'0000
                 3: ram_cs <= ~BUSn;  //  6'0000

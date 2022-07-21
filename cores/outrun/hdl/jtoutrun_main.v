@@ -225,7 +225,7 @@ always @(posedge clk, posedge rst) begin
             io_cs     <= 0;
             sub_cs    <= 0;
     end else begin
-        if( !BUSn || (!ASn && RnW) ) begin
+        if( !ASn && FC!=7 ) begin
             rom_cs    <= active[REG_MEM] && A[18:17]!=2'b11;
             ram_cs    <= active[REG_MEM] && A[18:17]==2'b11 && !BUSn; // $60000
             sub_cs    <= active[REG_SUB];
