@@ -292,14 +292,32 @@ always @(*) begin
             // 6: watchdog
             7: begin
                 case( adc_ch ) // ADC reads
-                    0: cab_dout = !joystick1[0] ? 8'h20 :
-                                  !joystick1[1] ? 8'hd0 :
-                                   dacana1[7:0]^8'h80; // steering wheel
-                    1: cab_dout = !joystick1[3] ? 8'hf0 :
-                                   dacana1b[15] ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0; // gas pedal
-                    2: cab_dout = !joystick1[2] ? 8'hf0 :
-                                   dacana1b[15] ? 8'd0 : {dacana1b[14:8], dacana1b[14]};  // break pedal
-                    default:;
+                    // Wheel ADC
+                    0: begin
+                        cab_dout = dacana1[7:0]^8'h80;
+                        if( !joystick1[1] )
+                            cab_dout = 8'he0;
+                        if( !joystick1[0] )
+                            cab_dout = 8'h20;
+                    end
+                    // Gas ADC
+                    1: begin
+                        case( ctrl_type )
+                            0,2: cab_dout = dacana1b[15] ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0;  // gas pedal dual analog stick/logitech steering wheel
+                            1:   cab_dout = dacana1b[ 7] ?  8'd0 : {dacana1b[6:0],   dacana1b[6]};     // gas pedal analog trigger
+                            default: cab_dout = 0;
+                        endcase
+                        if( !joystick1[5] ) cab_dout = 8'hff;
+                    end
+                    // Brake ADC
+                    2: begin
+                        case( ctrl_type )
+                            0,1: cab_dout = dacana1b[15] ?  8'd0 : {dacana1b[14:8], dacana1b[14]};     // brake pedal dual analog stick/analog trigger
+                            2:   cab_dout = dacana1b[15] ? ~{dacana1b[14:8], dacana1b[14]} : 8'd0;     // brake logictech steering wheel
+                            default: cab_dout = 0;
+                        endcase
+                        if( !joystick1[6] ) cab_dout = 8'hff;
+                    end                    default:;
                 endcase
                 adc_wr = !RnW;
             end
