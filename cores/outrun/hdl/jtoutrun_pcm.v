@@ -45,15 +45,27 @@ module jtoutrun_pcm(
     output               sample
 );
 
-wire       we = cpu_cs & ~cpu_rnw;
-reg  [8:0] cen_cnt=0;
-reg  [3:0] st;
-wire [7:0] cfg_data;
-reg        sample_cen=0, pipe_cen=0;
-reg  [2:0] cur_ch;
-reg  [3:0] cfg_addr;
+wire        we = cpu_cs & ~cpu_rnw;
+reg  [ 8:0] cen_cnt=0;
+reg  [ 3:0] st;
+wire [ 7:0] cfg_data;
+reg         sample_cen=0, pipe_cen=0;
+reg  [ 2:0] cur_ch;
+reg  [ 3:0] cfg_addr;
+reg  [23: 0] cur_addr;
+reg  [23: 8] loop_addr;
+reg  [23:16] end_addr;
+reg  [ 1: 0] cfg_en;
+reg  [ 7: 0] delta, cfg_din;
+reg          cfg_we;
+
+reg  signed [ 7:0] vol_left, vol_right, vol_mux;
+wire signed [ 7:0] pcm_data;
+reg  signed [15:0] mul_data;
+reg  signed [15:0] acc_l, acc_r, buf_r;
 
 assign sample   = sample_cen;
+assign pcm_data = rom_data - 8'h80;
 
 jtframe_dual_ram #(.aw(7)) u_ram(
     // Port 0: CPU
@@ -75,20 +87,6 @@ always @(posedge clk) begin
     sample_cen <= cen_cnt==0 && cen;
     pipe_cen   <= cen_cnt[0]==0 && cen;
 end
-
-reg  [23: 0] cur_addr;
-reg  [23: 8] loop_addr;
-reg  [23:16] end_addr;
-reg  [ 1: 0] cfg_en;
-reg  [ 7: 0] delta, cfg_din;
-reg          cfg_we;
-
-reg  signed [ 7:0] vol_left, vol_right, vol_mux;
-wire signed [ 7:0] pcm_data;
-reg  signed [15:0] mul_data;
-reg  signed [15:0] acc_l, acc_r, buf_r;
-
-assign pcm_data = rom_data - 8'h80;
 
 function signed [15:0] clip_sum( input signed [15:0] a, b );
     reg signed [16:0] full;
