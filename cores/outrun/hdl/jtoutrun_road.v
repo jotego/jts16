@@ -184,7 +184,7 @@ module jtoutrun_road(
     end
 
     always @(posedge clk) if(pxl_cen) begin
-        pxl <= !rrc[4] ? {4'd0, rrc[2:0], rds_col[ {1'b0, rrc[2:0]}] } :
+        pxl <= !rrc[4] ? {4'd0, rrc[2:0], rds_col[ {2'b0, rrc[2:0]}] } :
                 rrc[3] ? { 1'b1, rrc[2] ? rd0_idx[6:0] : rd1_idx[6:0] } :
                 { 3'b1, rrc[2], rds_col[11:8] };
         rc[4:3] <= rrc[4:3];
