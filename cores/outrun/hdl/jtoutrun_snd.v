@@ -23,6 +23,7 @@ module jtoutrun_snd(
 
     input                cen_fm,    // 4MHz
     input                cen_fm2,   // 2MHz
+    input         [ 1:0] game_id,
 
     // options
     input         [ 1:0] fxlevel,
@@ -65,6 +66,7 @@ wire        nmi_n, wr_n, rd_n, m1_n;
 reg  [ 5:0] rom_msb;
 wire        peak_left, peak_right;
 wire        mix_rst, pcm_sample;
+wire [18:0] pcm_pre;
 
 wire signed [15:0] fm_left, fm_right, mixed, pcm_left, pcm_right;
 wire        [ 7:0] fmgain;
@@ -76,6 +78,9 @@ assign mapper_wr  = mapper_cs && !wr_n;
 assign mapper_din = cpu_dout;
 assign nmi_n      = ~mapper_pbf;
 assign mix_rst    = rst | ~snd_rstb;
+assign pcm_addr   =
+    game_id != 2 ? // Games other than Turbo Out Run use 32kB ROMs
+    { pcm_pre[18:16], 1'b0, pcm_pre[14:0] } : pcm_pre;
 
 always @(*) begin
     ram_cs = !mreq_n && &A[15:11]; // 0xf8~
@@ -205,7 +210,7 @@ jtoutrun_pcm u_pcm(
     .cpu_cs     ( pcm_ce        ),
 
     // ROM interface
-    .rom_addr   ( pcm_addr      ),
+    .rom_addr   ( pcm_pre       ),
     .rom_data   ( pcm_data      ),
     .rom_ok     ( pcm_ok        ),
     .rom_cs     ( pcm_cs        ),

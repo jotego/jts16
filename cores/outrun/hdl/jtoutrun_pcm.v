@@ -146,7 +146,7 @@ always @(posedge clk, posedge rst) begin
         cfg_en    <= 0;
         vol_left  <= 0;
         vol_right <= 0;
-    end else if(pipe_cen) begin
+    end else if(cen) begin
         st <= st + 1'd1;
         case( st )
             0: begin

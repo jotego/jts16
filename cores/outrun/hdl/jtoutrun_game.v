@@ -361,6 +361,7 @@ jtoutrun_snd u_sound(
 
     .cen_fm     ( cen_fm    ),   // 4MHz
     .cen_fm2    ( cen_fm2   ),   // 2MHz
+    .game_id    ( game_id   ),
 
     // options
     .fxlevel    (dip_fxlevel),

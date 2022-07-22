@@ -61,12 +61,17 @@
         <part repeat="0x8000"> FF</part>
         <!-- pcm - starts at 0xD0000 -->
         <part name="opr-10193.66" crc="bcd10dde"/>
+        <part repeat="0x8000"> FF</part>
         <part name="opr-10192.67" crc="770f1270"/>
+        <part repeat="0x8000"> FF</part>
         <part name="opr-10191.68" crc="20a284ab"/>
+        <part repeat="0x8000"> FF</part>
         <part name="opr-10190.69" crc="7cab70e2"/>
+        <part repeat="0x8000"> FF</part>
         <part name="opr-10189.70" crc="01366b54"/>
+        <part repeat="0x8000"> FF</part>
         <part name="opr-10188.71" crc="bad30ad9"/>
-        <part repeat="0x30000"> FF</part>
+        <part repeat="0x8000"> FF</part>
         <!-- gfx1 - starts at 0x130000 -->
         <interleave output="32">
             <part name="opr-10268.99" crc="95344b04" map="0001"/>
@@ -169,5 +174,5 @@
         <dip name="Time Adj." bits="12,13" ids="Hardest,Hard,Easy,Normal"/>
         <dip name="Difficulty" bits="14,15" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="button 1,button 2,-,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="2"/>
+    <buttons names="-,Accelerate,Brake,Gear (Low / High),Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>
