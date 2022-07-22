@@ -69,17 +69,17 @@ assign bank     = cfg_en[6:4];
 assign sample   = sample_cen;
 assign pcm_data = rom_data - 8'h80;
 
-jtframe_dual_ram #(.aw(7)) u_ram(
+jtframe_dual_ram #(.aw(8)) u_ram(
     // Port 0: CPU
     .clk0   ( clk       ),
     .data0  ( cpu_dout  ),
-    .addr0  ( { cpu_addr[7], cpu_addr[5:0] } ),
+    .addr0  ( cpu_addr  ),
     .we0    ( we        ),
     .q0     ( cpu_din   ),
     // Port 1
     .clk1   ( clk       ),
     .data1  ( cfg_din   ),
-    .addr1  ( { cfg_addr[3], cur_ch, cfg_addr[2:0] } ),
+    .addr1  ( { cfg_addr[3], 1'b0, cur_ch, cfg_addr[2:0] } ),
     .we1    ( cfg_we    ),
     .q1     ( cfg_data  )
 );
