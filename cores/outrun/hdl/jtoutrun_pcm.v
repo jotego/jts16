@@ -45,15 +45,29 @@ module jtoutrun_pcm(
     output               sample
 );
 
-wire       we = cpu_cs & ~cpu_rnw;
-reg  [8:0] cen_cnt=0;
-reg  [3:0] st;
-wire [7:0] cfg_data;
-reg        sample_cen=0, pipe_cen=0;
-reg  [2:0] cur_ch;
-reg  [3:0] cfg_addr;
+wire        we = cpu_cs & ~cpu_rnw;
+reg  [ 8:0] cen_cnt=0;
+reg  [ 3:0] st;
+wire [ 2:0] bank;
+wire [ 7:0] cfg_data;
+reg         sample_cen=0, pipe_cen=0;
+reg  [ 2:0] cur_ch;
+reg  [ 3:0] cfg_addr;
+reg  [23: 0] cur_addr;
+reg  [23: 8] loop_addr;
+reg  [23:16] end_addr;
+reg  [ 7: 0] cfg_en;
+reg  [ 7: 0] delta, cfg_din;
+reg          cfg_we;
 
+reg  signed [ 7:0] vol_left, vol_right, vol_mux;
+wire signed [ 7:0] pcm_data;
+reg  signed [15:0] mul_data;
+reg  signed [15:0] acc_l, acc_r, buf_r;
+
+assign bank     = cfg_en[6:4];
 assign sample   = sample_cen;
+assign pcm_data = rom_data - 8'h80;
 
 jtframe_dual_ram #(.aw(7)) u_ram(
     // Port 0: CPU
@@ -76,20 +90,6 @@ always @(posedge clk) begin
     pipe_cen   <= cen_cnt[0]==0 && cen;
 end
 
-reg  [23: 0] cur_addr;
-reg  [23: 8] loop_addr;
-reg  [23:16] end_addr;
-reg  [ 1: 0] cfg_en;
-reg  [ 7: 0] delta, cfg_din;
-reg          cfg_we;
-
-reg  signed [ 7:0] vol_left, vol_right, vol_mux;
-wire signed [ 7:0] pcm_data;
-reg  signed [15:0] mul_data;
-reg  signed [15:0] acc_l, acc_r, buf_r;
-
-assign pcm_data = rom_data - 8'h80;
-
 function signed [15:0] clip_sum( input signed [15:0] a, b );
     reg signed [16:0] full;
     full = { a[15],a } + {b[15],b};
@@ -108,15 +108,22 @@ always @* begin
          6: cfg_addr = 4'o05; // loop addr 23-16
          7: cfg_addr = 4'o06; // end addr
          8: cfg_addr = 4'o16; // enable (wr)
-         9: cfg_addr = 4'o13; // addr 7-0 (wr)
-        10: cfg_addr = 4'o02; // vol. left
-        11: cfg_addr = 4'o03; // vol. right
+         9: cfg_addr = 4'o13; // addr  7- 0 (wr)
+        10: cfg_addr = 4'o14; // addr 15- 8 (wr)
+        11: cfg_addr = 4'o15; // addr 23-16 (wr)
+        12: cfg_addr = 4'o02; // vol. left
+        13: cfg_addr = 4'o03; // vol. right
         default: cfg_addr = 0;
     endcase
 
     vol_mux = st[0] ? vol_left : vol_right;
-    cfg_we  = st==8 || st==9;
-    cfg_din = st==8 ? { 6'd0, cfg_en } : cur_addr[7:0];
+    cfg_we  = st>=8 && st<=11;
+    case( st )
+         8: cfg_din = cfg_en;
+         9: cfg_din = cur_addr[7:0];
+        10: cfg_din = cur_addr[15:8];
+        default: cfg_din = cur_addr[23:16];
+    endcase
 end
 
 always @(posedge clk) begin
@@ -143,7 +150,7 @@ always @(posedge clk, posedge rst) begin
         st <= st + 1'd1;
         case( st )
             0: begin
-                cfg_en <= cfg_data[1:0];
+                cfg_en <= cfg_data;
                 if( cur_ch==0 ) begin
                     snd_left  <= acc_l;
                     snd_right <= acc_r;
@@ -158,18 +165,19 @@ always @(posedge clk, posedge rst) begin
             5: loop_addr[15: 8] <= cfg_data;
             6: loop_addr[23:16] <= cfg_data;
             7: if( cur_addr[23:16] == cfg_data ) begin
-                if( cfg_en[1] )
+                if( cfg_en[1] ) begin
                     cfg_en[0] <= 1; // no loop
-                else
+                    cur_addr[7:0] <= 0;
+                end else
                     cur_addr <= {loop_addr,8'd0}; // loop around
             end
             8: begin
-                rom_addr <= cur_addr[18:0];
-                rom_cs   <= 1;
-                cur_addr <= cur_addr + {16'd0, delta };
+                rom_addr <= { bank, cur_addr[23:8] };
+                rom_cs   <= ~cfg_en[0];
+                cur_addr <= cur_addr + { 16'd0, delta };
             end
-            10: vol_left  <= {1'b0, cfg_data[6:0]};
-            11: vol_right <= {1'b0, cfg_data[6:0]};
+            12: vol_left  <= {1'b0, cfg_data[6:0]};
+            13: vol_right <= {1'b0, cfg_data[6:0]};
             14: begin
                 rom_cs <= 0; // ROM data must be good by now
                 buf_r  <= mul_data;
