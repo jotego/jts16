@@ -50,8 +50,8 @@ reg  [ 8:0] cen_cnt=0;
 reg  [ 3:0] st;
 wire [ 2:0] bank;
 wire [ 7:0] cfg_data;
-reg         sample_cen=0, pipe_cen=0;
-reg  [ 2:0] cur_ch;
+reg         sample_cen=0;
+reg  [ 3:0] cur_ch;
 reg  [ 3:0] cfg_addr;
 reg  [23: 0] cur_addr;
 reg  [23: 8] loop_addr;
@@ -79,7 +79,7 @@ jtframe_dual_ram #(.aw(8)) u_ram(
     // Port 1
     .clk1   ( clk       ),
     .data1  ( cfg_din   ),
-    .addr1  ( { cfg_addr[3], 1'b0, cur_ch, cfg_addr[2:0] } ),
+    .addr1  ( { cfg_addr[3], cur_ch, cfg_addr[2:0] } ),
     .we1    ( cfg_we    ),
     .q1     ( cfg_data  )
 );
@@ -87,7 +87,6 @@ jtframe_dual_ram #(.aw(8)) u_ram(
 always @(posedge clk) begin
     if(cen) cen_cnt <= cen_cnt + 9'd1;
     sample_cen <= cen_cnt==0 && cen;
-    pipe_cen   <= cen_cnt[0]==0 && cen;
 end
 
 function signed [15:0] clip_sum( input signed [15:0] a, b );
@@ -183,7 +182,7 @@ always @(posedge clk, posedge rst) begin
                 buf_r  <= mul_data;
             end
             15: begin
-                cur_ch <= cur_ch + 3'd1;
+                cur_ch <= cur_ch + 1'd1;
                 if( !cfg_en[0] ) begin
                     acc_r <= clip_sum( acc_r, buf_r);
                     acc_l <= clip_sum( acc_l, mul_data);

@@ -23,6 +23,7 @@ module jtoutrun_snd(
 
     input                cen_fm,    // 4MHz
     input                cen_fm2,   // 2MHz
+    input                cen_pcm,   // 8MHz
     input         [ 1:0] game_id,
 
     // options
@@ -37,6 +38,7 @@ module jtoutrun_snd(
     input  [7:0]         mapper_dout,
     input                mapper_pbf, // pbf signal == buffer full ?
 
+    input         [ 7:0] debug_bus,
     // ROM
     output        [15:0] rom_addr,
     output    reg        rom_cs,
@@ -200,7 +202,7 @@ jt51 u_jt51(
 jtoutrun_pcm u_pcm(
     .rst        ( mix_rst       ),
     .clk        ( clk           ),
-    .cen        ( cen_fm        ),
+    .cen        ( cen_pcm       ),
 
     // CPU interface
     .cpu_addr   ( A[7:0]        ),
