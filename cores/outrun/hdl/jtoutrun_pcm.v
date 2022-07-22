@@ -117,7 +117,7 @@ always @* begin
     endcase
 
     vol_mux = st[0] ? vol_left : vol_right;
-    cfg_we  = st>=8 || st<=11;
+    cfg_we  = st>=8 && st<=11;
     case( st )
          8: cfg_din = cfg_en;
          9: cfg_din = cur_addr[7:0];
@@ -173,7 +173,7 @@ always @(posedge clk, posedge rst) begin
             end
             8: begin
                 rom_addr <= { bank, cur_addr[23:8] };
-                rom_cs   <= 1;
+                rom_cs   <= ~cfg_en[0];
                 cur_addr <= cur_addr + { 16'd0, delta };
             end
             12: vol_left  <= {1'b0, cfg_data[6:0]};
