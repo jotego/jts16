@@ -17,11 +17,14 @@
     Date: 16-7-2022 */
 
 // This module represents the 315-5218
+// Clock input 16.000MHz on pin 80
+// Clock outputs: pin 2 - 4.000MHz, pin 80 - 500.000kHz, pin 89 - 62.500KHz
+// Sample rate = clk/4/128 = 31.25 kHz
 
 module jtoutrun_pcm(
     input              rst,
     input              clk,
-    input              cen,
+    input              cen, // original clock was 16MHz
 
     // CPU interface
     input        [7:0] cpu_addr,
@@ -31,30 +34,155 @@ module jtoutrun_pcm(
     input              cpu_cs,
 
     // ROM interface
-    output      [18:0] rom_addr,
+    output reg  [18:0] rom_addr,
     input       [ 7:0] rom_data,
     input              rom_ok,
-    output             rom_cs
+    output reg         rom_cs,
+
+    // sound output
+    output reg signed [15:0] snd_left,
+    output reg signed [15:0] snd_right,
+    output               sample
 );
 
-wire we = cpu_cs & ~cpu_rnw;
+wire       we = cpu_cs & ~cpu_rnw;
+reg  [8:0] cen_cnt=0;
+reg  [3:0] st;
+wire [7:0] cfg_data;
+reg        sample_cen=0, pipe_cen=0;
+reg  [2:0] cur_ch;
+reg  [3:0] cfg_addr;
 
-assign rom_addr = 0;
-assign rom_cs = 0;
+assign sample   = sample_cen;
 
-jtframe_dual_ram #(.aw(8)) u_ram(
+jtframe_dual_ram #(.aw(7)) u_ram(
     // Port 0: CPU
     .clk0   ( clk       ),
     .data0  ( cpu_dout  ),
-    .addr0  ( cpu_addr  ),
+    .addr0  ( { cpu_addr[7], cpu_addr[5:0] } ),
     .we0    ( we        ),
     .q0     ( cpu_din   ),
     // Port 1
     .clk1   ( clk       ),
-    .data1  (           ),
-    .addr1  (           ),
-    .we1    ( 1'b0      ),
-    .q1     (           )
+    .data1  ( cfg_din   ),
+    .addr1  ( { cfg_addr[3], cur_ch, cfg_addr[2:0] } ),
+    .we1    ( cfg_we    ),
+    .q1     ( cfg_data  )
 );
+
+always @(posedge clk) begin
+    if(cen) cen_cnt <= cen_cnt + 9'd1;
+    sample_cen <= cen_cnt==0 && cen;
+    pipe_cen   <= cen_cnt[0]==0 && cen;
+end
+
+reg  [23: 0] cur_addr;
+reg  [23: 8] loop_addr;
+reg  [23:16] end_addr;
+reg  [ 1: 0] cfg_en;
+reg  [ 7: 0] delta, cfg_din;
+reg          cfg_we;
+
+reg  signed [ 7:0] vol_left, vol_right, vol_mux;
+wire signed [ 7:0] pcm_data;
+reg  signed [15:0] mul_data;
+reg  signed [15:0] acc_l, acc_r, buf_r;
+
+assign pcm_data = rom_data - 8'h80;
+
+function signed [15:0] clip_sum( input signed [15:0] a, b );
+    reg signed [16:0] full;
+    full = { a[15],a } + {b[15],b};
+    clip_sum = full[16]==full[15] ? full[15:0] :
+        full[16] ? 16'h8000 : 16'h7fff; // clip
+endfunction
+
+always @* begin
+    case( st )
+         0: cfg_addr = 4'o16; // enable
+         1: cfg_addr = 4'o13; // addr 7-0
+         2: cfg_addr = 4'o14; // addr 15-8
+         3: cfg_addr = 4'o15; // addr 23-16
+         4: cfg_addr = 4'o07; // addr delta
+         5: cfg_addr = 4'o04; // loop addr 15-8
+         6: cfg_addr = 4'o05; // loop addr 23-16
+         7: cfg_addr = 4'o06; // end addr
+         8: cfg_addr = 4'o16; // enable (wr)
+         9: cfg_addr = 4'o13; // addr 7-0 (wr)
+        10: cfg_addr = 4'o02; // vol. left
+        11: cfg_addr = 4'o03; // vol. right
+        default: cfg_addr = 0;
+    endcase
+
+    vol_mux = st[0] ? vol_left : vol_right;
+    cfg_we  = st==8 || st==9;
+    cfg_din = st==8 ? { 6'd0, cfg_en } : cur_addr[7:0];
+end
+
+always @(posedge clk) begin
+    mul_data <= vol_mux * pcm_data;
+end
+
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        st        <= 0;
+        cur_ch    <= 0;
+        rom_cs    <= 0;
+        rom_addr  <= 0;
+        snd_left  <= 0;
+        snd_right <= 0;
+        acc_l     <= 0;
+        acc_r     <= 0;
+        cur_addr  <= 0;
+        delta     <= 0;
+        loop_addr <= 0;
+        cfg_en    <= 0;
+        vol_left  <= 0;
+        vol_right <= 0;
+    end else if(pipe_cen) begin
+        st <= st + 1'd1;
+        case( st )
+            0: begin
+                cfg_en <= cfg_data[1:0];
+                if( cur_ch==0 ) begin
+                    snd_left  <= acc_l;
+                    snd_right <= acc_r;
+                    acc_l     <= 0;
+                    acc_r     <= 0;
+                end
+            end
+            1: cur_addr[ 7: 0]  <= cfg_data;
+            2: cur_addr[15: 8]  <= cfg_data;
+            3: cur_addr[23:16]  <= cfg_data;
+            4: delta            <= cfg_data;
+            5: loop_addr[15: 8] <= cfg_data;
+            6: loop_addr[23:16] <= cfg_data;
+            7: if( cur_addr[23:16] == cfg_data ) begin
+                if( cfg_en[1] )
+                    cfg_en[0] <= 1; // no loop
+                else
+                    cur_addr <= {loop_addr,8'd0}; // loop around
+            end
+            8: begin
+                rom_addr <= cur_addr[18:0];
+                rom_cs   <= 1;
+                cur_addr <= cur_addr + {16'd0, delta };
+            end
+            10: vol_left  <= {1'b0, cfg_data[6:0]};
+            11: vol_right <= {1'b0, cfg_data[6:0]};
+            14: begin
+                rom_cs <= 0; // ROM data must be good by now
+                buf_r  <= mul_data;
+            end
+            15: begin
+                cur_ch <= cur_ch + 3'd1;
+                if( !cfg_en[0] ) begin
+                    acc_r <= clip_sum( acc_r, buf_r);
+                    acc_l <= clip_sum( acc_l, mul_data);
+                end
+            end
+        endcase
+    end
+end
 
 endmodule

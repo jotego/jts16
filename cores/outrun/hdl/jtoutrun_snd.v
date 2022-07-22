@@ -64,9 +64,9 @@ wire [ 7:0] cpu_dout, fm_dout, ram_dout, pcm_dout;
 wire        nmi_n, wr_n, rd_n, m1_n;
 reg  [ 5:0] rom_msb;
 wire        peak_left, peak_right;
-wire        mix_rst;
+wire        mix_rst, pcm_sample;
 
-wire signed [15:0] fm_left, fm_right, mixed;
+wire signed [15:0] fm_left, fm_right, mixed, pcm_left, pcm_right;
 wire        [ 7:0] fmgain;
 
 assign fmgain     = enable_fm ? FMGAIN : 8'h0;
@@ -113,14 +113,14 @@ jtframe_mixer u_mixer_left(
     .clk    ( clk       ),
     .cen    ( 1'b1      ),
     // input signals
-    .ch0    ( fm_left   ),
-    .ch1    ( 16'd0     ),
+    .ch0    ( pcm_left  ),
+    .ch1    ( fm_left   ),
     .ch2    ( 16'd0     ),
     .ch3    ( 16'd0     ),
     // gain for each channel in 4.4 fixed point format
-    .gain0  ( fmgain    ),
+    .gain0  ( pcmgain   ),
     .gain1  ( fmgain    ),
-    .gain2  ( pcmgain   ),
+    .gain2  ( 8'h00     ),
     .gain3  ( 8'h00     ),
     .mixed  ( snd_left  ),
     .peak   ( peak_left )
@@ -131,14 +131,14 @@ jtframe_mixer u_mixer_right(
     .clk    ( clk       ),
     .cen    ( 1'b1      ),
     // input signals
-    .ch0    ( 16'd0     ),
+    .ch0    ( pcm_right ),
     .ch1    ( fm_right  ),
     .ch2    ( 16'd0     ),
     .ch3    ( 16'd0     ),
     // gain for each channel in 4.4 fixed point format
-    .gain0  ( fmgain    ),
+    .gain0  ( pcmgain   ),
     .gain1  ( fmgain    ),
-    .gain2  ( pcmgain   ),
+    .gain2  ( 8'h00     ),
     .gain3  ( 8'h00     ),
     .mixed  ( snd_right ),
     .peak   ( peak_right)
@@ -208,7 +208,11 @@ jtoutrun_pcm u_pcm(
     .rom_addr   ( pcm_addr      ),
     .rom_data   ( pcm_data      ),
     .rom_ok     ( pcm_ok        ),
-    .rom_cs     ( pcm_cs        )
+    .rom_cs     ( pcm_cs        ),
+
+    .snd_left   ( pcm_left      ),
+    .snd_right  ( pcm_right     ),
+    .sample     ( pcm_sample    )
 );
 
 endmodule
