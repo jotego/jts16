@@ -48,7 +48,7 @@ module jtoutrun_pcm(
 wire        we = cpu_cs & ~cpu_rnw;
 reg  [ 8:0] cen_cnt=0;
 reg  [ 3:0] st;
-reg  [ 2:0] bank;
+wire [ 2:0] bank;
 wire [ 7:0] cfg_data;
 reg         sample_cen=0, pipe_cen=0;
 reg  [ 2:0] cur_ch;
@@ -56,7 +56,7 @@ reg  [ 3:0] cfg_addr;
 reg  [23: 0] cur_addr;
 reg  [23: 8] loop_addr;
 reg  [23:16] end_addr;
-reg  [ 1: 0] cfg_en;
+reg  [ 7: 0] cfg_en;
 reg  [ 7: 0] delta, cfg_din;
 reg          cfg_we;
 
@@ -65,6 +65,7 @@ wire signed [ 7:0] pcm_data;
 reg  signed [15:0] mul_data;
 reg  signed [15:0] acc_l, acc_r, buf_r;
 
+assign bank     = cfg_en[6:4];
 assign sample   = sample_cen;
 assign pcm_data = rom_data - 8'h80;
 
@@ -118,7 +119,7 @@ always @* begin
     vol_mux = st[0] ? vol_left : vol_right;
     cfg_we  = st>=8 || st<=11;
     case( st )
-         8: cfg_din = { 6'd0, cfg_en };
+         8: cfg_din = cfg_en;
          9: cfg_din = cur_addr[7:0];
         10: cfg_din = cur_addr[15:8];
         default: cfg_din = cur_addr[23:16];
@@ -145,13 +146,11 @@ always @(posedge clk, posedge rst) begin
         cfg_en    <= 0;
         vol_left  <= 0;
         vol_right <= 0;
-        bank      <= 0;
     end else if(pipe_cen) begin
         st <= st + 1'd1;
         case( st )
             0: begin
-                cfg_en <= cfg_data[1:0];
-                bank   <= cfg_data[6:4];
+                cfg_en <= cfg_data;
                 if( cur_ch==0 ) begin
                     snd_left  <= acc_l;
                     snd_right <= acc_r;
