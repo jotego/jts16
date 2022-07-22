@@ -356,7 +356,7 @@ jtoutrun_sub u_sub(
 `ifndef NOSOUND
 jtoutrun_snd u_sound(
     .rst        ( rst       ),
-    .clk        ( clk       ),
+    .clk        ( clk24     ),
     .snd_rstb   ( snd_rstb  ),
 
     .cen_fm     ( cen_fm    ),   // 4MHz
