@@ -48,6 +48,7 @@ module jtoutrun_pcm(
 wire        we = cpu_cs & ~cpu_rnw;
 reg  [ 8:0] cen_cnt=0;
 reg  [ 3:0] st;
+reg  [ 2:0] bank;
 wire [ 7:0] cfg_data;
 reg         sample_cen=0, pipe_cen=0;
 reg  [ 2:0] cur_ch;
@@ -137,11 +138,13 @@ always @(posedge clk, posedge rst) begin
         cfg_en    <= 0;
         vol_left  <= 0;
         vol_right <= 0;
+        bank      <= 0;
     end else if(pipe_cen) begin
         st <= st + 1'd1;
         case( st )
             0: begin
                 cfg_en <= cfg_data[1:0];
+                bank   <= cfg_data[6:4];
                 if( cur_ch==0 ) begin
                     snd_left  <= acc_l;
                     snd_right <= acc_r;
@@ -162,9 +165,9 @@ always @(posedge clk, posedge rst) begin
                     cur_addr <= {loop_addr,8'd0}; // loop around
             end
             8: begin
-                rom_addr <= cur_addr[18:0];
+                rom_addr <= { bank, cur_addr[23:8] };
                 rom_cs   <= 1;
-                cur_addr <= cur_addr + {16'd0, delta };
+                cur_addr <= cur_addr + { 16'd0, delta };
             end
             10: vol_left  <= {1'b0, cfg_data[6:0]};
             11: vol_right <= {1'b0, cfg_data[6:0]};
