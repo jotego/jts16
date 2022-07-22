@@ -107,15 +107,22 @@ always @* begin
          6: cfg_addr = 4'o05; // loop addr 23-16
          7: cfg_addr = 4'o06; // end addr
          8: cfg_addr = 4'o16; // enable (wr)
-         9: cfg_addr = 4'o13; // addr 7-0 (wr)
-        10: cfg_addr = 4'o02; // vol. left
-        11: cfg_addr = 4'o03; // vol. right
+         9: cfg_addr = 4'o13; // addr  7- 0 (wr)
+        10: cfg_addr = 4'o14; // addr 15- 8 (wr)
+        11: cfg_addr = 4'o15; // addr 23-16 (wr)
+        12: cfg_addr = 4'o02; // vol. left
+        13: cfg_addr = 4'o03; // vol. right
         default: cfg_addr = 0;
     endcase
 
     vol_mux = st[0] ? vol_left : vol_right;
-    cfg_we  = st==8 || st==9;
-    cfg_din = st==8 ? { 6'd0, cfg_en } : cur_addr[7:0];
+    cfg_we  = st>=8 || st<=11;
+    case( st )
+         8: cfg_din = { 6'd0, cfg_en };
+         9: cfg_din = cur_addr[7:0];
+        10: cfg_din = cur_addr[15:8];
+        default: cfg_din = cur_addr[23:16];
+    endcase
 end
 
 always @(posedge clk) begin
@@ -159,9 +166,10 @@ always @(posedge clk, posedge rst) begin
             5: loop_addr[15: 8] <= cfg_data;
             6: loop_addr[23:16] <= cfg_data;
             7: if( cur_addr[23:16] == cfg_data ) begin
-                if( cfg_en[1] )
+                if( cfg_en[1] ) begin
                     cfg_en[0] <= 1; // no loop
-                else
+                    cur_addr[7:0] <= 0;
+                end else
                     cur_addr <= {loop_addr,8'd0}; // loop around
             end
             8: begin
@@ -169,8 +177,8 @@ always @(posedge clk, posedge rst) begin
                 rom_cs   <= 1;
                 cur_addr <= cur_addr + { 16'd0, delta };
             end
-            10: vol_left  <= {1'b0, cfg_data[6:0]};
-            11: vol_right <= {1'b0, cfg_data[6:0]};
+            12: vol_left  <= {1'b0, cfg_data[6:0]};
+            13: vol_right <= {1'b0, cfg_data[6:0]};
             14: begin
                 rom_cs <= 0; // ROM data must be good by now
                 buf_r  <= mul_data;
