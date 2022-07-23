@@ -50,8 +50,8 @@ reg  [ 8:0] cen_cnt=0;
 reg  [ 3:0] st;
 wire [ 2:0] bank;
 wire [ 7:0] cfg_data;
-reg         sample_cen=0, pipe_cen=0;
-reg  [ 2:0] cur_ch;
+reg         sample_cen=0;
+reg  [ 3:0] cur_ch;
 reg  [ 3:0] cfg_addr;
 reg  [23: 0] cur_addr;
 reg  [23: 8] loop_addr;
@@ -69,11 +69,11 @@ assign bank     = cfg_en[6:4];
 assign sample   = sample_cen;
 assign pcm_data = rom_data - 8'h80;
 
-jtframe_dual_ram #(.aw(7)) u_ram(
+jtframe_dual_ram #(.aw(8)) u_ram(
     // Port 0: CPU
     .clk0   ( clk       ),
     .data0  ( cpu_dout  ),
-    .addr0  ( { cpu_addr[7], cpu_addr[5:0] } ),
+    .addr0  ( cpu_addr  ),
     .we0    ( we        ),
     .q0     ( cpu_din   ),
     // Port 1
@@ -87,7 +87,6 @@ jtframe_dual_ram #(.aw(7)) u_ram(
 always @(posedge clk) begin
     if(cen) cen_cnt <= cen_cnt + 9'd1;
     sample_cen <= cen_cnt==0 && cen;
-    pipe_cen   <= cen_cnt[0]==0 && cen;
 end
 
 function signed [15:0] clip_sum( input signed [15:0] a, b );
@@ -120,7 +119,7 @@ always @* begin
     cfg_we  = st>=8 && st<=11;
     case( st )
          8: cfg_din = cfg_en;
-         9: cfg_din = cur_addr[7:0];
+         9: cfg_din = cfg_en[0] ? 8'd0 : cur_addr[7:0];
         10: cfg_din = cur_addr[15:8];
         default: cfg_din = cur_addr[23:16];
     endcase
@@ -146,7 +145,7 @@ always @(posedge clk, posedge rst) begin
         cfg_en    <= 0;
         vol_left  <= 0;
         vol_right <= 0;
-    end else if(pipe_cen) begin
+    end else if(cen) begin
         st <= st + 1'd1;
         case( st )
             0: begin
@@ -164,7 +163,7 @@ always @(posedge clk, posedge rst) begin
             4: delta            <= cfg_data;
             5: loop_addr[15: 8] <= cfg_data;
             6: loop_addr[23:16] <= cfg_data;
-            7: if( cur_addr[23:16] == cfg_data ) begin
+            7: if( cur_addr[23:16] > cfg_data ) begin
                 if( cfg_en[1] ) begin
                     cfg_en[0] <= 1; // no loop
                     cur_addr[7:0] <= 0;
@@ -183,7 +182,7 @@ always @(posedge clk, posedge rst) begin
                 buf_r  <= mul_data;
             end
             15: begin
-                cur_ch <= cur_ch + 3'd1;
+                cur_ch <= cur_ch + 1'd1;
                 if( !cfg_en[0] ) begin
                     acc_r <= clip_sum( acc_r, buf_r);
                     acc_l <= clip_sum( acc_l, mul_data);

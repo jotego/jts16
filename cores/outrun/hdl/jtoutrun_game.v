@@ -103,7 +103,7 @@ module jtoutrun_game(
 // clock enable signals
 wire    cpu_cen, cpu_cenb,
         cen_fm,  cen_fm2, cen_snd,
-        cen_pcm, cen_pcmb;
+        cen_pcm;
 
 // video signals
 wire [ 8:0] vrender;
@@ -198,12 +198,12 @@ jts16_cen u_cen(
     .cpu_cenb   (           ),
 
     .clk24      ( clk24     ),
-    .mcu_cen    (           ),
-    .fm2_cen    ( cen_fm2   ),
+    .mcu_cen    ( cen_pcm   ), // 8 MHz
+    .fm2_cen    ( cen_fm2   ), // 4 MHz
     .fm_cen     ( cen_fm    ),
     .snd_cen    ( cen_snd   ),
-    .pcm_cen    ( cen_pcm   ),
-    .pcm_cenb   ( cen_pcmb  )
+    .pcm_cen    (           ),
+    .pcm_cenb   (           )
 );
 
 `ifndef NOMAIN
@@ -361,6 +361,8 @@ jtoutrun_snd u_sound(
 
     .cen_fm     ( cen_fm    ),   // 4MHz
     .cen_fm2    ( cen_fm2   ),   // 2MHz
+    .cen_pcm    ( cen_pcm   ),   // 2MHz
+    .game_id    ( game_id   ),
 
     // options
     .fxlevel    (dip_fxlevel),
@@ -389,7 +391,8 @@ jtoutrun_snd u_sound(
     .snd_left   ( snd_left  ),
     .snd_right  ( snd_right ),
     .sample     ( sample    ),
-    .peak       ( snd_clip  )
+    .peak       ( snd_clip  ),
+    .debug_bus  ( debug_bus )
 );
 `else
     assign snd_cs    = 0;
