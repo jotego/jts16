@@ -37,7 +37,8 @@ module jtoutrun_video(
     input      [15:0]  cpu_dout,
     input      [15:0]  sub_dout,
     input      [ 1:0]  main_dswn,
-    input      [ 1:0]  sub_dswn,
+    input      [ 1:0]  sub_dsn,
+    input              sub_rnw,
 
     output     [15:0]  char_dout,
     output     [15:0]  pal_dout,
@@ -147,7 +148,8 @@ jtoutrun_road u_road(
     .cpu_addr   ( sub_addr  ),
     .cpu_dout   ( sub_dout  ),
     .cpu_din    ( road_dout ),
-    .cpu_dswn   ( sub_dswn  ),
+    .cpu_dsn    ( sub_dsn   ),
+    .cpu_rnw    ( sub_rnw   ),
     .road_cs    ( road_cs   ),
     .io_cs      ( sub_io_cs ),
 

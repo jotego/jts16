@@ -142,7 +142,7 @@ wire        main_rnw, sub_br,
 // Sub CPU
 wire [18:1] sub_addr;
 wire [15:0] sub_din, sub_dout, sram_data, srom_data, road_dout;
-wire [ 1:0] sub_dsn, sub_dswn;
+wire [ 1:0] sub_dsn;
 wire        sub_rnw, srom_cs, sram_cs, sub_ok,
             srom_ok, sram_ok, road_cs, sio_cs, main_br;
 // Sound CPU
@@ -185,7 +185,6 @@ wire [7:0] st_video, st_main, st_sub;
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign debug_view           = st_dout;
 assign main_dswn            = {2{main_rnw}} | main_dsn;
-assign sub_dswn             = {2{sub_rnw }} | sub_dsn;
 assign game_led             = snd_clip;
 
 jts16_cen u_cen(
@@ -447,7 +446,8 @@ jtoutrun_video u_video(
 
     .cpu_dout   ( main_dout ),
     .main_dswn  ( main_dswn ),
-    .sub_dswn   ( sub_dswn  ),
+    .sub_dsn    ( sub_dsn   ),
+    .sub_rnw    ( sub_rnw   ),
     .sub_dout   ( sub_dout  ),
     .char_dout  ( char_dout ),
     .pal_dout   ( pal_dout  ),

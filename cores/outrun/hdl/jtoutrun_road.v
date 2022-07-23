@@ -28,7 +28,8 @@ module jtoutrun_road(
     input       [11:1] cpu_addr,
     input       [15:0] cpu_dout,
     output      [15:0] cpu_din,
-    input       [ 1:0] cpu_dswn,
+    input       [ 1:0] cpu_dsn,
+    input              cpu_rnw,
     input              road_cs,
     input              io_cs,
 
@@ -65,7 +66,7 @@ module jtoutrun_road(
     localparam [1:0] ONLY_ROAD0=0, ROAD0_PRIO=1,
                      ROAD1_PRIO=2, ONLY_ROAD1=3;
 
-    assign rd_we   = {2{road_cs}} & ~cpu_dswn;
+    assign rd_we   = {2{road_cs & ~cpu_rnw}} & ~cpu_dsn;
 
     always @(posedge clk, posedge rst) begin
         if( rst ) begin
@@ -75,11 +76,11 @@ module jtoutrun_road(
             vintl  <= 0;
         end else begin
             vintl <= vint;
-            if( io_cs & ~cpu_dswn[0] )  ctrl <= cpu_dout[1:0];
+            if( io_cs & ~cpu_dsn[0] & ~cpu_rnw )  ctrl <= cpu_dout[1:0];
             if( vint && !vintl && toggle ) begin
                 ram_half  <= ~ram_half;
                 toggle <= 0;
-            end else if( io_cs && cpu_dswn==2'b11 )
+            end else if( io_cs && cpu_rnw )
                 toggle <= 1;
         end
     end
