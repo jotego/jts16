@@ -23,7 +23,7 @@
     <name>Super Hang-On (sitdown/upright) (unprotected)</name>
     <setname>shangon</setname>
     <rbf>jtoutrun</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0245</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>1</players>
@@ -106,7 +106,7 @@
     <rom index="1">
         <part>00</part>
     </rom>
-    <switches base="16" default="ff,fe">
+    <switches page_id="1" page_name="Switches" base="16" default="ff,fe">
         <!-- COINAGE -->
         <dip name="Coin A" bits="0,3" ids="Free Play or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <dip name="Coin B" bits="4,7" ids="Free Play or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
@@ -115,5 +115,5 @@
         <dip name="Difficulty" bits="9,10" ids="Hardest,Hard,Easy,Normal"/>
         <dip name="Time Adj." bits="11,12" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Accelerate,Brake,Supercharger,-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="4"/>
+    <buttons names="Accelerate,Brake,-,Supercharger,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>
