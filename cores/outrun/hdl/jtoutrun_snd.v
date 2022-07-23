@@ -109,8 +109,8 @@ always @(posedge clk ) begin
     case( fxlevel )
         2'd0: pcmgain <= 8'h04;
         2'd1: pcmgain <= 8'h08;
-        2'd2: pcmgain <= 8'h10;
-        2'd3: pcmgain <= 8'h14;
+        2'd2: pcmgain <= 8'h0C;
+        2'd3: pcmgain <= 8'h10;
     endcase
     if( !enable_psg ) pcmgain <= 0;
 end
