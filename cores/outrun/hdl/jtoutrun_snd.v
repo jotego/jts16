@@ -30,6 +30,7 @@ module jtoutrun_snd(
     input         [ 1:0] fxlevel,
     input                enable_fm,
     input                enable_psg,
+    input                mute,
 
     // Mapper device 315-5195
     output               mapper_rd,
@@ -62,7 +63,7 @@ localparam [7:0] FMGAIN=8'h08;
 wire [15:0] A;
 reg         fm_cs, mapper_cs, ram_cs, pcm_ce;
 wire        mreq_n, iorq_n, int_n;
-reg  [ 7:0] cpu_din, pcmgain;
+reg  [ 7:0] cpu_din, pcmgain, fmgain;
 wire [ 7:0] cpu_dout, fm_dout, ram_dout, pcm_dout;
 wire        nmi_n, wr_n, rd_n, m1_n;
 reg  [ 5:0] rom_msb;
@@ -71,9 +72,7 @@ wire        mix_rst, pcm_sample;
 wire [18:0] pcm_pre;
 
 wire signed [15:0] fm_left, fm_right, mixed, pcm_left, pcm_right;
-wire        [ 7:0] fmgain;
 
-assign fmgain     = enable_fm ? FMGAIN : 8'h0;
 assign rom_addr   = A;
 assign mapper_rd  = mapper_cs && !rd_n;
 assign mapper_wr  = mapper_cs && !wr_n;
@@ -104,8 +103,9 @@ always @(posedge clk) begin
                     8'hff;
 end
 
-// PCM volume
+// Volume control
 always @(posedge clk ) begin
+    fmgain <= enable_fm ? FMGAIN : 8'h0;
     case( fxlevel )
         2'd0: pcmgain <= 8'h04;
         2'd1: pcmgain <= 8'h08;
@@ -113,6 +113,10 @@ always @(posedge clk ) begin
         2'd3: pcmgain <= 8'h10;
     endcase
     if( !enable_psg ) pcmgain <= 0;
+    if( mute ) begin
+        pcmgain <= 0;
+        fmgain  <= 0;
+    end
 end
 
 jtframe_mixer u_mixer_left(

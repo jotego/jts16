@@ -263,6 +263,9 @@ always @(posedge clk, posedge rst) begin
             video_en <= ppic_dout[5];
             adc_ch   <= ppic_dout[4:2];
             snd_rstb <= ppic_dout[0];
+            if( io_cs && !LDSWn && A[6:4]==2 ) begin
+                mute <= ~cpu_dout[7]; // via ULN2203 device (darlington inverters)
+            end
         end else if( io_cs && !LDSWn ) begin // shangon
             case( {A[13:12], A[5]} )
                 0: begin

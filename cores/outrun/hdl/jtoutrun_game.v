@@ -369,6 +369,7 @@ jtoutrun_snd u_sound(
     .fxlevel    (dip_fxlevel),
     .enable_fm  ( enable_fm ),
     .enable_psg ( enable_psg),
+    .mute       ( mute      ),
 
     // Mapper device 315-5195
     .mapper_rd  ( sndmap_rd ),
