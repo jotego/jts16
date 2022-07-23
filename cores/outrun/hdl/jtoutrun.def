@@ -24,7 +24,6 @@ JTFRAME_STATUS
 JTFRAME_CLK24
 
 # OSD options
-CORE_OSD=OKM,Control Type,A.Stick,A.Triggers,A.Wheel;
 JTFRAME_OSD_VOL
 JTFRAME_OSD_SND_EN
 JTFRAME_OSD_TEST
@@ -41,6 +40,8 @@ FD1089_START = 0x29A000
 JTFRAME_OSD_NOLOGO
 
 [mister]
+# Controller options have only been tested on MiSTer
+CORE_OSD=OKM,Control Type,A.Stick,A.Triggers,A.Wheel;
 # MiSTer has enough memory for decryption
 -NODEC
 -JTFRAME_OSD_NOLOGO

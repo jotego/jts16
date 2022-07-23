@@ -49,7 +49,7 @@ module jts16_tilemap(
     inout              ext_flip,
     input              colscr_en,
     input              rowscr_en,
-    input              alt_en,
+    input              alt_en, // I think this is actually set in the register map, I don't see any signal in the chip that could control it
 
     // SDRAM interface
     input              char_ok,

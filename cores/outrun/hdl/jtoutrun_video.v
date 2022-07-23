@@ -186,7 +186,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .ext_flip   ( ext_flip  ),
     .colscr_en  ( 1'b0      ), // unused input on S16B tile maps
     .rowscr_en  ( 1'b0      ), // unused input on S16B tile maps
-    .alt_en     ( 1'b0      ),
+    .alt_en     ( game_id==1), // Super Hang On uses the alternative character layout
 
     // SDRAM interface
     .char_ok    ( char_ok   ),
