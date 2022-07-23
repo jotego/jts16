@@ -49,7 +49,8 @@ module jts16_tilemap(
     inout              ext_flip,
     input              colscr_en,
     input              rowscr_en,
-    input              alt_en, // I think this is actually set in the register map, I don't see any signal in the chip that could control it
+    input              alt_en, // This might be controlled by pin 77, named K8 in sch.
+                               // That pin seems to be ~alt_en in Super Hang On sch.
 
     // SDRAM interface
     input              char_ok,
