@@ -156,7 +156,7 @@ jtframe_sysz80 #(.RAM_AW(11)) u_cpu(
     .clk        ( clk         ),
     .cen        ( cen_fm      ),
     .cpu_cen    (             ),
-    .int_n      ( int_n       ),
+    .int_n      ( int_n       ),  // this connection seems irrelevant. The schematics have it, MAME doesn't
     .nmi_n      ( nmi_n       ),
     .busrq_n    ( 1'b1        ),
     .m1_n       ( m1_n        ),

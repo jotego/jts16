@@ -150,7 +150,7 @@ wire [15:0] snd_addr;
 wire [ 7:0] snd_data;
 wire        snd_cs, snd_ok;
 wire [ 7:0] sndmap_din, sndmap_dout;
-wire        sndmap_rd, sndmap_wr, sndmap_pbf, snd_rstb;
+wire        sndmap_rd, sndmap_wr, sndmap_pbf, snd_rstb, mute;
 
 // PCM
 wire [18:0] pcm_addr;
@@ -217,6 +217,7 @@ jtoutrun_main u_main(
     .game_id     ( game_id    ),
     .LHBL        ( LHBL       ),
     .snd_rstb    ( snd_rstb   ),
+    .mute        ( mute       ),
     // Video
     .vint        ( vint       ),
     .line_intn   ( line_intn  ),
@@ -244,11 +245,11 @@ jtoutrun_main u_main(
     .sub_ok      ( sub_ok     ),
     .sub_din     ( sub_din    ),
     // cabinet I/O
-    .ctrl_type ( ctrl_type ),
-    .joystick1       ( joystick1       ),
-    .joystick2       ( joystick2       ),
-    .joyana1         ( joyana_l1       ),
-    .joyana1b        ( joyana_r1       ),
+    .ctrl_type   ( ctrl_type  ),
+    .joystick1   ( joystick1  ),
+    .joystick2   ( joystick2  ),
+    .joyana1     ( joyana_l1  ),
+    .joyana1b    ( joyana_r1  ),
     .start_button(start_button),
     .coin_input  ( coin_input ),
     .service     ( service    ),
@@ -414,7 +415,7 @@ always @(posedge clk) begin
         2: st_dout <= st_video;
         3: case( st_addr[3:0] )
                 0: st_dout <= sndmap_dout;
-                2: st_dout <= {6'd0, game_id};
+                2: st_dout <= {obj_cfg, mute, video_en, 1'b0, snd_rstb, game_id};
             endcase
         5: st_dout <= ram_data[7:0];
         6: st_dout <= ram_data[15:8];

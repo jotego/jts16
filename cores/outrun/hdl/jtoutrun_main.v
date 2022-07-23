@@ -40,6 +40,7 @@ module jtoutrun_main(
     input       [15:0] obj_dout,
     output             flip,
     output reg         video_en,
+    output reg         mute,
     output reg  [ 1:0] obj_cfg, // SG bus on page 6/7
     output reg         obj_toggle,
 
@@ -254,9 +255,10 @@ always @(posedge clk, posedge rst) begin
         video_en <= 1;
         adc_ch   <= 0;
         snd_rstb <= 1;
+        mute     <= 0;
     end else begin
         if( adc_wr ) { dacana1, dacana1b } <= { joyana1, joyana1b };
-        if( game_id==0 ) begin
+        if( game_id!=1 ) begin
             obj_cfg  <= ppic_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
             video_en <= ppic_dout[5];
             adc_ch   <= ppic_dout[4:2];
@@ -264,10 +266,11 @@ always @(posedge clk, posedge rst) begin
         end else if( io_cs && !LDSWn ) begin // shangon
             case( {A[13:12], A[5]} )
                 0: begin
-                    adc_ch <= {1'd0, cpu_dout[7:6] };
+                    adc_ch   <= {1'd0, cpu_dout[7:6] };
                     video_en <= cpu_dout[4];
+                    mute     <= ~cpu_dout[5];
                 end
-                1: snd_rstb <= ~cpu_dout[0];
+                1: snd_rstb <= cpu_dout[0];
                 default:;
             endcase
         end
@@ -325,8 +328,8 @@ always @(*) begin
             default:;
         endcase
     end
-    // Out Run
-    if( io_cs && game_id==0 ) begin
+    // (Turbo) Out Run
+    if( io_cs && game_id!=1 ) begin
         case( A[6:4] )
             0: begin
                 ppi_cs   = 1;
