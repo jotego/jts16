@@ -16,7 +16,7 @@ sourcefile="segaorun.cpp"
 core=4 # max number of buttons supported by the core
 Names = [
     { machine="outrun",  names="Accelerate,Brake,Gear (Low / High)"},
-    { machine="toutrun", names="Accelerate,Brake,Gear (Low / High), Nitro"},
+    { machine="toutrun", names="Accelerate,Brake,Gear (Low / High),Nitro"},
     { machine="shangon", names="Accelerate,Brake,-,Supercharger"},
 ]
 
@@ -36,7 +36,8 @@ dev = [
     { byte=0, dev="fd1094",  value=4 },
 ]
 data = [
-    { machine="shangon", pointer=1, data="01" }
+    { machine="shangon", pointer=1, data="01" },
+    { machine="toutrun", pointer=1, data="02" }
 ]
 
 
@@ -47,7 +48,7 @@ regions = [
     { name="maincpu",     width=16, reverse=true },
     { name="subcpu",      start=$SUB_START, width=16, reverse=true },
     { name="soundcpu",    start=$BA1_START },
-    { name="pcm",         start=$PCM_START, No_offset=true },
+    { name="pcm",         start=$PCM_START, No_offset=true, Rom_len=0x10000 },
     { name="gfx1",        start=$BA2_START, frac={ bytes=1, parts=4}, sort_byext=true },
     { name="sprites",     start=$BA3_START, width=16, reverse=true },
     { name="segaic16road",start=$ROAD_START, width=16, reverse=true },

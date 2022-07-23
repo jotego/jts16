@@ -61,10 +61,14 @@
         <part repeat="0x8000"> FF</part>
         <!-- pcm - starts at 0xD0000 -->
         <part name="epr-10643.66" crc="06f55364"/>
+        <part repeat="0x8000"> FF</part>
         <part name="epr-10644.67" crc="b41d541d"/>
+        <part repeat="0x8000"> FF</part>
         <part name="epr-10645.68" crc="a60dabff"/>
+        <part repeat="0x8000"> FF</part>
         <part name="epr-10646.69" crc="473cc411"/>
-        <part repeat="0x40000"> FF</part>
+        <part repeat="0x8000"> FF</part>
+        <part repeat="0x20000"> FF</part>
         <!-- gfx1 - starts at 0x130000 -->
         <interleave output="32">
             <part name="epr-10652.54" crc="260286f9" map="0001"/>
@@ -115,7 +119,7 @@
     <rom index="1">
         <part>00</part>
     </rom>
-    <switches page_id="1" page_name="Switches" base="16" default="ff,fe">
+    <switches base="16" default="ff,fe">
         <!-- COINAGE -->
         <dip name="Coin A" bits="0,3" ids="Free Play or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
         <dip name="Coin B" bits="4,7" ids="Free Play or 1/1,1/1 2/3,1/1 4/5,1/1 5/6,2/1 4/3,2/1 5/3 6/4,2/3,4/1,3/1,2/1,1/6,1/5,1/4,1/3,1/2,1/1"/>
@@ -124,5 +128,5 @@
         <dip name="Difficulty" bits="9,10" ids="Hardest,Hard,Easy,Normal"/>
         <dip name="Time Adj." bits="11,12" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Accelerate,Brake,-,Supercharger,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="4"/>
+    <buttons names="-,Accelerate,Brake,Supercharger,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>
