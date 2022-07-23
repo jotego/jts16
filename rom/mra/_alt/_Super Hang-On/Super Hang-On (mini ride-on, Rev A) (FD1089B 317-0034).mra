@@ -23,7 +23,7 @@
     <name>Super Hang-On (mini ride-on, Rev A) (FD1089B 317-0034)</name>
     <setname>shangon2</setname>
     <rbf>jtoutrun</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0245</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>1</players>
@@ -150,5 +150,5 @@
         <dip name="Difficulty" bits="9,10" ids="Hardest,Hard,Easy,Normal"/>
         <dip name="Time Adj." bits="11,12" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="-,Accelerate,Brake,Supercharger,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
+    <buttons names="Accelerate,Brake,-,Supercharger,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>
