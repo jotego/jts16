@@ -1,4 +1,4 @@
-<!--          FPGA compatible core for Sunsoft / Sega arcade hardware by Jotego
+<!--          FPGA arcade hardware by Jotego
 
               This core is available for hardware compatible with MiST and MiSTer
               Other FPGA systems may be supported by the time you read this.
@@ -9,8 +9,9 @@
               Patreon: https://patreon.com/topapate
 
               The author does not endorse or participate in illegal distribution
-              of copyrighted material. This work can be used with legally
-              obtained ROM dumps or with compatible homebrew software.
+              of copyrighted material. This work can be used with compatible
+              software. This software can be homebrew projects or legally
+              obtained memory dumps of compatible games.
 
               This file license is GNU GPLv2.
               You can read the whole license file in
