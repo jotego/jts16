@@ -175,5 +175,5 @@
         <dip name="Time Adj." bits="12,13" ids="Hardest,Hard,Easy,Normal"/>
         <dip name="Difficulty" bits="14,15" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="-,Accelerate,Brake,Gear (Low / High),Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
+    <buttons names="Accelerate,Brake,Gear (Low / High),-,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="3"/>
 </misterromdescription>

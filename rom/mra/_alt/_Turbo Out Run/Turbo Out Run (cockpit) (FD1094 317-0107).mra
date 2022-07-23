@@ -136,5 +136,5 @@
         <dip name="Credits" bits="12,13" ids="2 to Start/2 to Continue,1 to Start/1 to Continue,3 to Start/2 to Continue,2 to Start/1 to Continue"/>
         <dip name="Difficulty" bits="14,15" ids="Hardest,Hard,Easy,Normal"/>
     </switches>
-    <buttons names="Accelerate,Brake,Gear (Low / High), Nitro,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="4"/>
+    <buttons names="Accelerate,Brake,Gear (Low / High),Nitro,Start,Coin,Core credits" default="Y,X,B,A,Start,Select,-" count="4"/>
 </misterromdescription>
