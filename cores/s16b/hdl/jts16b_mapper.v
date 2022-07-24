@@ -272,8 +272,6 @@ always @(addr_out,cpu_fc,mmr) begin
 end
 
 // DTACK generation
-wire dtackn1;
-reg  dtackn2, dtackn3;
 wire [15:0] fave, fworst;
 
 jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
@@ -288,25 +286,13 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .DSn        ( cpu_dsn   ),
     .num        ( 7'd29     ),  // numerator
     .den        ( 8'd146    ),  // denominator
-    .DTACKn     ( dtackn1   ),
+    .DTACKn     ( cpu_dtackn ),
+    .wait2      ( dtack_cyc==2 ),
+    .wait3      ( dtack_cyc==3 ),
     .fave       ( fave      ),
     .fworst     ( fworst    ),
     .frst       ( 1'b0      )
 );
-
-// sets the number of delay clock cycles for DTACKn depending on the
-// mapper configuration
-assign cpu_dtackn = dtack_cyc==3 ? dtackn3 : (dtack_cyc==2 ? dtackn2 : dtackn1);
-
-always @(posedge clk) begin
-    if( cpu_asn ) begin
-        dtackn2 <= 1;
-        dtackn3 <= 1;
-    end else if(cpu_cen) begin
-        dtackn2 <= dtackn1;
-        dtackn3 <= dtackn2;
-    end
-end
 
 // select between CPU or MCU access to registers
 wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
