@@ -582,6 +582,8 @@ jtframe_68kdtack #(.W(8),.MFREQ(50_347)) u_dtack(
     .num        ( 7'd29     ),  // numerator
     .den        ( 8'd146    ),  // denominator
     .DTACKn     ( DTACKn    ),
+    .wait2      ( 1'b0      ),
+    .wait3      ( 1'b0      ),
     // Frequency report
     .fave       ( fave      ),
     .fworst     ( fworst    ),
