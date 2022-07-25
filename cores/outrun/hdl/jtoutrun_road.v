@@ -280,7 +280,7 @@ module jtoutrun_rdrom(
                     2:  cent <= 1;
                     3:  cent <= ~cent;
                 endcase
-                if( hpos[2:0]==0 ) begin
+                if( hpos[2:0]==3 ) begin // 3 pixel delay, to give time to the SDRAM
                     pxl_data <= !en ? 16'hffff : rom_data;
                 end else begin
                     pxl_data <= pxl_data << 1;
