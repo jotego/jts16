@@ -165,7 +165,8 @@ jtoutrun_road u_road(
     .rom1_ok    ( rd1_ok    ),
 
     .pxl        ( rd_pxl    ),
-    .rc         ( rc        )
+    .rc         ( rc        ),
+    .debug_bus  ( debug_bus )
 );
 
 jts16_tilemap #(.MODEL(1)) u_tilemap(

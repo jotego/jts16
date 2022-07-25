@@ -44,6 +44,7 @@ module jtoutrun_road(
     output             rom1_cs,
     input              rom1_ok,
     // Pixel output
+    input       [ 7:0] debug_bus,
     output reg  [ 7:0] pxl,
     output reg  [ 4:3] rc
 );
@@ -64,6 +65,7 @@ module jtoutrun_road(
     reg  [11:0] rd0_idx, rd1_idx,
                 rd0_scr, rd1_scr, rds_col,
                 rd0_col, rd1_col;
+    reg  [ 6:0] solid;
 
     localparam [1:0] ONLY_ROAD0=0, ROAD0_PRIO=1,
                      ROAD1_PRIO=2, ONLY_ROAD1=3;
@@ -107,8 +109,8 @@ module jtoutrun_road(
             0:  rd_addr = { 3'd0, v[7:0] };
             1:  rd_addr = { 3'd1, v[7:0] };
             2:  rd_addr = { 2'd1, rd0_idx[8:0] };
-            3:  rd_addr = { 2'd2, rd1_idx[8:0] };
-            4:  rd_addr = { 2'd3, rd0_idx[8:0] };
+            3:  rd_addr = { 2'd3, rd0_idx[8:0] };
+            4:  rd_addr = { 2'd2, rd1_idx[8:0] };
             default:
                 rd_addr = { 2'd3, rd1_idx[8:0] };
         endcase
@@ -130,8 +132,8 @@ module jtoutrun_road(
                     0: rd0_idx <= rd_gfx[11:0];
                     1: rd1_idx <= rd_gfx[11:0];
                     2: rd0_scr <= rd_gfx[11:0];
-                    3: rd1_scr <= rd_gfx[11:0];
-                    4: rd0_col <= rd_gfx[11:0];
+                    3: rd0_col <= rd_gfx[11:0];
+                    4: rd1_scr <= rd_gfx[11:0];
                     5: rd1_col <= rd_gfx[11:0];
                     default:;
                 endcase
@@ -141,10 +143,10 @@ module jtoutrun_road(
         end
     end
 
-    wire only_road0 = ctrl==ONLY_ROAD0,
-         only_road1 = ctrl==ONLY_ROAD1,
-         road0_prio = ctrl==ROAD0_PRIO,
-         road1_prio = ctrl==ROAD1_PRIO;
+    wire only_road0 = ctrl==ONLY_ROAD0 || debug_bus[0],
+         only_road1 = ctrl==ONLY_ROAD1 && !debug_bus[0],
+         road0_prio = ctrl==ROAD0_PRIO && !debug_bus[0],
+         road1_prio = ctrl==ROAD1_PRIO && !debug_bus[0];
 
     always @* begin
         viq = ~hs | (hs & ( ~rrc[3] | ~rrc[4] ));
@@ -165,6 +167,7 @@ module jtoutrun_road(
                  ( !cent_a && rd_a==3 &&            rd_b==2 && road0_prio ) ||
                  ( !cent_a && rd_a==3 &&           !rd_b[0] && road1_prio ) ||
                  ( !cent_a && rd_a==3 &&           !rd_b[1] && road1_prio ) ||
+
                  ( !cent_a && rd_a[0] &&            rd_b==0 && road0_prio ) ||
                  ( !cent_a && rd_a[1] &&            rd_b==0 && road0_prio ) ||
                  (  cent_b && rd_b==3             && road1_prio ) ||
@@ -173,7 +176,7 @@ module jtoutrun_road(
                  ( !rd_a[0] && rd_b==0 && road1_prio ) ||
                  ( !rd_a[1] && rd_b==0 && road1_prio );
 
-        // road not from ROM
+        // road not from ROM -solid color-
         rrc[3] = (rd0_idx[11] && rd1_idx[11]) ||
                  (rd0_idx[11] && only_road0 ) ||
                  (rd1_idx[11] && only_road1 );
@@ -183,11 +186,12 @@ module jtoutrun_road(
                 ( !cent_b && rd_b==3 && only_road1 ) ||
                 ( !cent_a && rd_a==3 && only_road0 );
         rds_col = rrc[2] ? rd1_col : rd0_col;
+        solid   = rrc[2] ? rd1_idx[6:0] : rd0_idx[6:0];
     end
 
     always @(posedge clk) if(pxl_cen) begin
-        pxl <= !rrc[4] ? {4'd0, rrc[2:0], rds_col[ {1'b0, rrc[2:0]}] } :
-                rrc[3] ? { 1'b1, rrc[2] ? rd0_idx[6:0] : rd1_idx[6:0] } :
+        pxl <= !rrc[4] ? {4'd0, rrc[2:0], rds_col[{1'b0, rrc[2:0]}] } :
+                rrc[3] ? { 1'b1, solid } :
                 { 3'b1, rrc[2], rds_col[11:8] };
         rc[4:3] <= rrc[4:3];
     end
@@ -197,8 +201,8 @@ module jtoutrun_road(
         .clk        ( clk       ),
         .pxl_cen    ( pxl_cen   ),
 
-        .cfg        ( rd0_idx   ),
         .hs         ( hs        ),
+        .cfg        ( rd0_idx   ),
         .hscr       ( rd0_scr   ),
 
         .rom_addr   ( rom0_addr ),
@@ -214,8 +218,8 @@ module jtoutrun_road(
         .clk        ( clk       ),
         .pxl_cen    ( pxl_cen   ),
 
-        .cfg        ( rd1_idx   ),
         .hs         ( hs        ),
+        .cfg        ( rd1_idx   ),
         .hscr       ( rd1_scr   ),
 
         .rom_addr   ( rom1_addr ),
