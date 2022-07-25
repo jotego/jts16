@@ -104,12 +104,16 @@
             <part name="mpr-10376.15" crc="f3b8f318" map="10"/>
         </interleave>
         <!-- segaic16road - starts at 0x270000 -->
-        <part repeat="0x8000"> FF</part>
+        <!-- Singleton region. The files are merged with themselves. -->
         <interleave output="16">
-            <part name="opr-10185.11" crc="22794426" map="01"/>
-            <part name="opr-10186.47" crc="22794426" map="10"/>
+            <part name="opr-10186.47" crc="22794426" map="01" length="0x4000"/>
+            <part name="opr-10186.47" crc="22794426" map="10" length="0x4000" offset="0x4000"/>
         </interleave>
-        <part repeat="0x10000"> FF</part>
+        <interleave output="16">
+            <part name="opr-10185.11" crc="22794426" map="10" length="0x4000"/>
+            <part name="opr-10185.11" crc="22794426" map="01" length="0x4000" offset="0x4000"/>
+        </interleave>
+        <part repeat="0x28000"> FF</part>
         <!-- maincpu:key - starts at 0x298000 -->
         <part name="317-0019.key" crc="8ffbed98"/>
         <!-- FD1089 base table starts at 0x29A000 -->

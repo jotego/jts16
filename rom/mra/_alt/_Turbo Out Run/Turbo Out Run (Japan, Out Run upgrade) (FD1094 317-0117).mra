@@ -94,12 +94,16 @@
             <part name="mpr-12366.15" crc="385cb3ab" map="10"/>
         </interleave>
         <!-- segaic16road - starts at 0x270000 -->
-        <part repeat="0x8000"> FF</part>
+        <!-- Singleton region. The files are merged with themselves. -->
         <interleave output="16">
-            <part name="epr-12298.11" crc="fc9bc41b" map="01"/>
-            <part name="epr-12299.47" crc="fc9bc41b" map="10"/>
+            <part name="epr-12299.47" crc="fc9bc41b" map="01" length="0x4000"/>
+            <part name="epr-12299.47" crc="fc9bc41b" map="10" length="0x4000" offset="0x4000"/>
         </interleave>
-        <part repeat="0x10000"> FF</part>
+        <interleave output="16">
+            <part name="epr-12298.11" crc="fc9bc41b" map="10" length="0x4000"/>
+            <part name="epr-12298.11" crc="fc9bc41b" map="01" length="0x4000" offset="0x4000"/>
+        </interleave>
+        <part repeat="0x28000"> FF</part>
         <!-- maincpu:key - starts at 0x298000 -->
         <part name="317-0117.key" crc="dcac383e"/>
         <!-- Total 0x29A000 bytes - 2664 kBytes -->

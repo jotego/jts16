@@ -152,12 +152,16 @@
             <part name="epr-10219.59" crc="e73b9224" map="10"/>
         </interleave>
         <!-- segaic16road - starts at 0x270000 -->
-        <part repeat="0x8000"> FF</part>
+        <!-- Singleton region. The files are merged with themselves. -->
         <interleave output="16">
-            <part name="opr-10185.11" crc="22794426" map="01"/>
-            <part name="opr-10186.47" crc="22794426" map="10"/>
+            <part name="opr-10186.47" crc="22794426" map="01" length="0x4000"/>
+            <part name="opr-10186.47" crc="22794426" map="10" length="0x4000" offset="0x4000"/>
         </interleave>
-        <!-- Total 0x288000 bytes - 2592 kBytes -->
+        <interleave output="16">
+            <part name="opr-10185.11" crc="22794426" map="10" length="0x4000"/>
+            <part name="opr-10185.11" crc="22794426" map="01" length="0x4000" offset="0x4000"/>
+        </interleave>
+        <!-- Total 0x270000 bytes - 2496 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>
