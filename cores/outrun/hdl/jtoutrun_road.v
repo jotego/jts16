@@ -56,8 +56,10 @@ module jtoutrun_road(
     reg  [ 1:0] ctrl;
     reg  [ 2:0] st;
     wire [ 1:0] rd_a, rd_b;
-    reg  [ 4:0] rrc;
     wire        cent_a, cent_b;
+/* verilator lint_off UNOPTFLAT */
+    reg  [ 4:0] rrc;
+/* verilator lint_on  UNOPTFLAT */
 
     reg  [11:0] rd0_idx, rd1_idx,
                 rd0_scr, rd1_scr, rds_col,
@@ -184,7 +186,7 @@ module jtoutrun_road(
     end
 
     always @(posedge clk) if(pxl_cen) begin
-        pxl <= !rrc[4] ? {4'd0, rrc[2:0], rds_col[ {2'b0, rrc[2:0]}] } :
+        pxl <= !rrc[4] ? {4'd0, rrc[2:0], rds_col[ {1'b0, rrc[2:0]}] } :
                 rrc[3] ? { 1'b1, rrc[2] ? rd0_idx[6:0] : rd1_idx[6:0] } :
                 { 3'b1, rrc[2], rds_col[11:8] };
         rc[4:3] <= rrc[4:3];
@@ -236,20 +238,23 @@ module jtoutrun_rdrom(
     input       [11:0] hscr,
 
     output      [13:0] rom_addr,
-    input       [15:0] rom_data,
+    input       [15:0] rom_data, // 2 bpp data, 8 pixels in 16 bits
     output reg         rom_cs,
     input              rom_ok,
-    output reg         cent,
+    output reg         cent, // this seems to mean the road central 8 pixels
     output      [ 1:0] pxl
 );
 
     reg  [11:0] hpos;
     reg  [15:0] pxl_data;
     wire        en;
+    wire        j, k;
 
     assign pxl  = { pxl_data[15], pxl_data[7] };
     assign rom_addr = { cfg[8:1], hpos[8:3] };
     assign en   = !cfg[11] && hpos[11:9]==3'b011;
+    assign j    = &hpos[2:0];
+    assign k    = hpos[11:9]==3'b011 && hpos[8:0] == 9'hff;
 
     always @(posedge clk, posedge rst) begin
         if( rst ) begin
@@ -266,7 +271,11 @@ module jtoutrun_rdrom(
             end else if( pxl_cen ) begin
                 rom_cs <= en;
                 hpos   <= hpos + 11'd1;
-                if( hpos[11:9]!=3'b011 || hpos[8:0]==9'hff ) cent <= 1;
+                case( {j,k} )
+                    1:  cent <= 0;
+                    2:  cent <= 1;
+                    3:  cent <= ~cent;
+                endcase
                 if( hpos[2:0]==0 ) begin
                     pxl_data <= !en ? 16'hffff : rom_data;
                 end else begin

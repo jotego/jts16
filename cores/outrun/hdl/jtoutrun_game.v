@@ -300,6 +300,9 @@ jtoutrun_main u_main(
     assign video_en    = 1;
     assign key_addr    = 0;
     assign st_main     = 0;
+    assign obj_cfg     = 0;
+    assign snd_rstb    = 0;
+    assign mute        = 0;
 `endif
 
 `ifndef NOSUB
