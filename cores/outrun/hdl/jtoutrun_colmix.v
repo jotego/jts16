@@ -38,9 +38,13 @@ module jtoutrun_colmix(
 
     // From tile map generator
     input      [10:0]  tmap_addr,
+    input      [11:0]  obj_pxl,
     input      [ 7:0]  rd_pxl,
     input      [ 4:3]  rc,
     input              shadow,
+    input              sa,
+    input              sb,
+    input              fix,
 
     output     [ 4:0]  red,
     output     [ 4:0]  green,
@@ -54,6 +58,7 @@ wire [ 1:0] we;
 wire [15:0] pal;
 wire [14:0] rgb;
 reg  [10:0] rd_mux, pal_addr;
+reg         muxsel;
 
 assign we = ~dswn & {2{pal_cs}};
 assign { red, green, blue } = rgb;
@@ -98,7 +103,7 @@ endfunction
 
 reg [14:0] gated;
 
-// Super Hang On Equations
+// Super Hang On Equations 315-5251
 // muxel ==0 selects tile mapper output, ==1 selects road
 // muxsel = obj0 & obj1 & obj2 & obj3 & FIX & !rc3q #
 //       obj0 & obj1 & obj2 & obj3 & sa_n & sb_n & FIX #
@@ -113,7 +118,13 @@ always @(*) begin
     endcase
     rd_mux[10:6] = {5{rc[4]}};
 
-    pal_addr = rc[3] ? tmap_addr : rd_mux;
+    muxsel = (obj_pxl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
+             (obj_pxl[11:10]==2'b01 && obj_pxl[3:0]==4'b1010 && !fix );
+    if( debug_bus[1:0]==3 ) muxsel=1;
+    `ifdef FORCE_ROAD
+    muxsel=1;
+    `endif
+    pal_addr = muxsel ? rd_mux : tmap_addr;
 
     gated = (shadow & ~pal[15]) ? { dim(rpal), dim(gpal), dim(bpal) } :
                                   {     rpal,      gpal,      bpal  };

@@ -26,6 +26,9 @@ module jts16_prio(
     input      [10:0]  scr1_pxl,
     input      [10:0]  scr2_pxl,
     input      [11:0]   obj_pxl,
+    output reg         sa,
+    output reg         sb,
+    output reg         fix,
 
     output reg [10:0]  pal_addr,
     output reg         shadow,
@@ -33,7 +36,8 @@ module jts16_prio(
 );
 
 wire [ 1:0] we;
-reg  [11:0] lyr0, lyr1, lyr2, lyr3;
+reg  [13:0] lyr0, lyr1, lyr2, lyr3;
+reg  [ 1:0] lyrsel;
 wire [15:0] pal;
 wire [ 1:0] obj_prio;
 
@@ -69,14 +73,21 @@ always @(*) begin
 end
 
 always @(posedge clk) if( pxl_cen ) begin
-    lyr0 <= tile_or_obj( obj_g[9:0], {4'd0, char_g[5:0] }, char_g[ 6], obj_prio==2'd3 );
-    lyr1 <= tile_or_obj( obj_g[9:0],        scr1_g[9:0]  , scr1_g[10], obj_prio>=2'd2 );
-    lyr2 <= tile_or_obj( obj_g[9:0],        scr2_g[9:0]  , scr2_g[10], obj_prio>=2'd1 );
-    lyr3 <= tile_or_obj( obj_g[9:0], {scr2_g[9:3], 3'd0 },       1'b0, 1'b1           );
+    lyr0 <= { 2'd0, tile_or_obj( obj_g[9:0], {4'd0, char_g[5:0] }, char_g[ 6], obj_prio==2'd3 ) };
+    lyr1 <= { 2'd1, tile_or_obj( obj_g[9:0],        scr1_g[9:0]  , scr1_g[10], obj_prio>=2'd2 ) };
+    lyr2 <= { 2'd2, tile_or_obj( obj_g[9:0],        scr2_g[9:0]  , scr2_g[10], obj_prio>=2'd1 ) };
+    lyr3 <= { 2'd2, tile_or_obj( obj_g[9:0], {scr2_g[9:3], 3'd0 },       1'b0, 1'b1           ) };
+    casez( {pal_addr[10], lyrsel} )
+        3'b1??: { fix, sa, sb } <= 0;
+        3'b000: { fix, sa, sb } <= 3'b100;
+        3'b001: { fix, sa, sb } <= 3'b010;
+        3'b010: { fix, sa, sb } <= 3'b001;
+        default: { fix, sa, sb } <= 0;
+    endcase
 end
 
 always @(*) begin
-    { shadow, pal_addr } =
+    { shadow, lyrsel, pal_addr } =
                (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? lyr0 : (
                (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1 : (
                (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? lyr2 : (

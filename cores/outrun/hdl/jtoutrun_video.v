@@ -114,6 +114,7 @@ localparam [9:0] OBJ_DLY = 10'd22;
 wire [ 8:0] hdump;
 wire        preLHBL, preLVBL;
 wire        flipx;
+wire        sa, sb, fix;
 
 // video layers
 wire [11:0] obj_pxl;
@@ -221,6 +222,9 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .obj_pxl    ( obj_pxl   ),
     .pal_addr   ( tmap_addr ),
     .shadow     ( shadow    ),
+    .sa         ( sa        ),
+    .sb         ( sb        ),
+    .fix        ( fix       ),
     // Debug
     .gfx_en     ( gfx_en    ),
     .debug_bus  ( debug_bus ),
@@ -302,7 +306,10 @@ jtoutrun_colmix u_colmix(
 
     .rd_pxl    ( rd_pxl         ),
     .rc        ( rc             ),
-    //.obj_pxl   ( obj_pxl        ),
+    .obj_pxl   ( obj_pxl        ),
+    .sa        ( sa             ),
+    .sb        ( sb             ),
+    .fix       ( fix            ),
 
     .LHBL      ( LHBL           ),
     .LVBL      ( LVBL           ),

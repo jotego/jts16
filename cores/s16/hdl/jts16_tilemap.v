@@ -88,9 +88,14 @@ module jts16_tilemap(
     input       [11:0] obj_pxl,
     output      [10:0] pal_addr,
     output             shadow,
-    input       [ 3:0] gfx_en,
+    // These are output pins in the original chip
+    // but their function is unknown
+    output             sa,      // SCR1 selected (?)
+    output             sb,      // SCR2 selected (?)
+    output             fix,     // CHAR selected (?)
 
     // Debug
+    input       [ 3:0] gfx_en,
     input       [ 7:0] debug_bus,
     input       [ 7:0] st_addr,
     output      [ 7:0] st_dout,
