@@ -423,8 +423,8 @@ always @(posedge clk) begin
     if(rst) begin
         cpu_din <= 0;
     end else begin
-        cpu_din <= (ram_cs | vram_cs ) ? ram_data  :
-                    rom_cs             ? rom_dec   :
+        cpu_din <=  ((~A[21] & ram_cs) | vram_cs)  ? ram_data  :
+                    ( ~A[21] & rom_cs )? rom_dec   :
                     char_cs            ? char_dout :
                     pal_cs             ? pal_dout  :
                     objram_cs          ? obj_dout  :

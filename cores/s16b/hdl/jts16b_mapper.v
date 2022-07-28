@@ -244,7 +244,7 @@ function check(input [2:0] region );
     endcase
 endfunction
 
-always @(addr_out,cpu_fc,mmr) begin
+always @(addr_out,cpu_fc,mmr,inta_n) begin
     active[0] = check(0);
     active[1] = check(1) && active[0]==0;
     active[2] = check(2) && active[1:0]==0;
@@ -354,7 +354,7 @@ always @(posedge clk) begin
         if( none || !bus_mcu || mmr[4][3] || &cpu_fc[2:0]) status_msb<=1;
         if( wredge_mcu || (wredge_cpu && cpu_sel) ) begin
             case( asel )
-                4: mmr[4] <= din | { 7'd0, {3{cpu_sel}}};
+                4: mmr[4] <= din | { 5'd0, {3{cpu_sel}}};
                 default: mmr[ asel ] <= din;
             endcase
             if( asel == 3 )
