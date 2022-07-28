@@ -164,7 +164,7 @@ assign {dtack7, size7 } = mmr[ {1'b1, 3'd7, 1'b0 }];
 
 assign addr_out  = bus_mcu ? (rdmem ? rdaddr : wraddr ) : addr;
 assign bus_din   = bus_mcu ? wrdata : cpu_dout;
-assign mapper_dout = {mmr[5'hd], mmr[5'he]};
+assign mapper_dout = {mmr[5'd0], mmr[5'd1]}; // for test the output is {mmr[5'hd], mmr[5'he]} (or is it the other way around)
 
 assign cpu_haltn = ~mmr[2][1];
 assign cpu_berrn = 1;
