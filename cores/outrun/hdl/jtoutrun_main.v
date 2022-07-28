@@ -145,8 +145,6 @@ assign BUSn  = LDSn & UDSn;
 assign dsn   = { UDSn, LDSn };
 // assign UDSWn = RnW | UDSn;
 assign LDSWn = RnW | LDSn;
-// assign BERRn = !(!ASn && BGACKn && !rom_cs && !char_cs && !objram_cs  && !pal_cs
-//                               && !io_cs  && !wdog_cs && vram_cs && ram_cs);
 assign flip     = 0;
 assign addr     = A[19:1];
 assign mix_ipln = { cpu_ipln[2], line_intn, 1'b1 };
@@ -418,6 +416,8 @@ jtoutrun_motor u_motor(
     .limpos ( motor_lim )
 );
 
+wire bad_cs = ~|{ram_cs, vram_cs, rom_cs, char_cs, pal_cs, objram_cs, sub_cs, io_cs, none_cs} & ~ASn;
+
 // Data bus input
 always @(posedge clk) begin
     if(rst) begin
@@ -555,6 +555,7 @@ always @(posedge clk) begin
             11: st_dout <= motor_pos[7:0];
             12: st_dout <= motor_pos[15:8];
             13: st_dout <= ppib_dout[7:0];
+            14: st_dout <= { 7'd0, bad_cs };
         endcase
     end
 end
