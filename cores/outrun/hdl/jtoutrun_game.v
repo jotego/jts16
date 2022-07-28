@@ -412,17 +412,14 @@ jtoutrun_snd u_sound(
 `endif
 
 always @(posedge clk) begin
-    case( st_addr[7:5] )
+    case( st_addr[7:6] )
         0: st_dout <= st_main;
         1: st_dout <= st_sub;
         2: st_dout <= st_video;
         3: case( st_addr[3:0] )
-                0: st_dout <= sndmap_dout;
-                2: st_dout <= {obj_cfg, mute, video_en, 1'b0, snd_rstb, game_id};
-            endcase
-        5: st_dout <= ram_data[7:0];
-        6: st_dout <= ram_data[15:8];
-        default: st_dout <= st_addr;
+            0: st_dout <= sndmap_dout;
+            2: st_dout <= {obj_cfg, mute, video_en, 1'b0, snd_rstb, game_id};
+        endcase
     endcase
 end
 

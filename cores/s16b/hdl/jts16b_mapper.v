@@ -254,7 +254,7 @@ always @(addr_out,cpu_fc,mmr) begin
     active[6] = check(6) && active[5:0]==0;
     active[7] = check(7) && active[6:0]==0;
     none = active==0;
-    if( &cpu_fc ) begin
+    if( !inta_n ) begin
         active = 0; // irq ack or end of bus cycle
         none   = 0;
     end
@@ -353,7 +353,10 @@ always @(posedge clk) begin
         // not really sure about status_msb
         if( none || !bus_mcu || mmr[4][3] || &cpu_fc[2:0]) status_msb<=1;
         if( wredge_mcu || (wredge_cpu && cpu_sel) ) begin
-            mmr[ asel ] <= din;
+            case( asel )
+                4: mmr[4] <= din | { 7'd0, {3{cpu_sel}}};
+                default: mmr[ asel ] <= din;
+            endcase
             if( asel == 3 )
                 sndmap_pbf <= 1;
             if( asel==5 && !bus_rq ) begin
@@ -369,7 +372,7 @@ always @(posedge clk) begin
         end
         if( sndmap_rd )
             sndmap_pbf <= 0;
-        if( !inta_n )
+        if( !inta_n || cpu_sel )
             mmr[4][2:0] <= 3'b111;
     end
 end
@@ -412,10 +415,9 @@ jtframe_68kdma u_dma(
 
 // Debug
 always @(posedge clk) begin
-    // 0-7 base registers
-    // 8-F size registers
-    // 10-11, average frequency
-    if( st_addr[4] )
+    // 0-31: MMR readings
+    // 32- : Some signals
+    if( st_addr[5] )
         case( st_addr[3:0] )
             0: st_dout <= fave[7:0];
             1: st_dout <= fave[15:8];
@@ -430,7 +432,7 @@ always @(posedge clk) begin
            10: st_dout <= addr[23:16];
         endcase
     else
-        st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];
+        st_dout <= mmr[ st_addr[4:0] ];
 end
 
 endmodule

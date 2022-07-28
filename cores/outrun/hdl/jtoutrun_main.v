@@ -550,7 +550,7 @@ end
 
 always @(posedge clk) begin
     st_dout <= st_mapper;
-    if( st_addr[4] ) begin
+    if( st_addr[5] ) begin
         case( st_addr[3:0] )
             11: st_dout <= motor_pos[7:0];
             12: st_dout <= motor_pos[15:8];
