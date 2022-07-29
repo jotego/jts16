@@ -49,8 +49,9 @@ module jts16_tilemap(
     inout              ext_flip,
     input              colscr_en,
     input              rowscr_en,
-    input              alt_en, // This might be controlled by pin 77, named K8 in sch.
-                               // That pin seems to be ~alt_en in Super Hang On sch.
+    input              alt_en, // This is controlled by pin 77, named K8 in sch.
+                               // pin 77 was set with a jumper on the ROM board
+                               // That pin corresponds to ~alt_en in Super Hang On sch.
 
     // SDRAM interface
     input              char_ok,
@@ -90,9 +91,11 @@ module jts16_tilemap(
     output             shadow,
     // These are output pins in the original chip
     // but their function is unknown
+    // they seem to toggle every 8 pixels
+    // sa and sb don't toggle if only characters (the fix layer) is used
+    output             fix,     // CHAR selected (?)
     output             sa,      // SCR1 selected (?)
     output             sb,      // SCR2 selected (?)
-    output             fix,     // CHAR selected (?)
 
     // Debug
     input       [ 3:0] gfx_en,
