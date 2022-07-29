@@ -122,18 +122,12 @@ wire [ 4:3] rc;
 wire [ 7:0] rd_pxl;
 wire [10:0] tmap_addr;
 wire        shadow;
-reg         LHBLl;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         line_intn <= 1;
-        LHBLl <= 0;
     end else begin
-        LHBLl <= LHBL;
-        if( !LHBL && LHBLl && (vdump==64 || vdump==128 || vdump==192))
-            line_intn <= 0;
-        if( LHBL )
-            line_intn <= 1;
+        line_intn <= !(vdump==64 || vdump==128 || vdump==192);
     end
 end
 
@@ -232,28 +226,6 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .st_dout    ( st_dout   ),
     .scr_bad    ( scr_bad   )
 );
-
-// reg tl;
-// reg msb=0;
-
-// always @(posedge clk) begin
-//     tl <= obj_toggle;
-//     if( !tl && obj_toggle ) msb<=~msb;
-// end
-
-// jtframe_ram16 #(
-//     .aw(11)
-// ) u_dummyobj(
-//     .clk   ( clk       ),
-
-//     // CPU writes
-//     .addr   ( {msb,cpu_addr[10:1]}  ),
-//     .data   ( cpu_dout  ),
-//     .we     ( {2{objram_cs}} & ~main_dswn    ),
-//     .q      ( obj_dout  )
-// );
-// assign obj_cs = 0;
-// assign obj_addr = 0;
 
 jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(1)) u_obj(
     .rst       ( rst            ),
