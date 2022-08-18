@@ -111,9 +111,7 @@ module jts16b_mapper(
 reg  [ 1:0] dtack_cyc;    // number of DTACK cycles
 reg  [ 7:0] mmr[0:31];
 reg         bus_rq;
-wire        mcu_cen;
 reg         cpu_sel;
-reg         irqn; // VBLANK
 reg         rdmem, wrmem;
 reg         mcu_vintn, mcu_snd_intn;
 reg  [ 2:0] bus_wait;
@@ -166,7 +164,7 @@ assign {dtack7, size7 } = mmr[ {1'b1, 3'd7, 1'b0 }];
 
 assign addr_out  = bus_mcu ? (rdmem ? rdaddr : wraddr ) : addr;
 assign bus_din   = bus_mcu ? wrdata : cpu_dout;
-assign mapper_dout = {mmr[5'hd], mmr[5'he]};
+assign mapper_dout = {mmr[5'd0], mmr[5'd1]}; // for test the output is {mmr[5'hd], mmr[5'he]} (or is it the other way around)
 
 assign cpu_haltn = ~mmr[2][1];
 assign cpu_berrn = 1;
@@ -181,6 +179,16 @@ end
 wire [15:0] mcu_addr_s;
 wire [ 7:0] mcu_dout_s;
 wire        mcu_wr_s, mcu_acc_s, mcu_rd_s;
+
+// select between CPU or MCU access to registers
+wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
+wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout_s;
+wire       wren_cpu = ~cpu_asn & ~cpu_dswn[0] & none;
+wire       wren_mcu = mcu_en & mcu_wr_s;
+wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
+reg        wren_cpu_l, wren_mcu_l, bus_busy_l;
+wire       wredge_cpu = wren_cpu & ~wren_cpu_l;
+wire       wredge_mcu = wren_mcu & ~wren_mcu_l;
 
 assign mcu_rd_s = mcu_en & mcu_acc_s & ~mcu_wr_s;
 
@@ -246,7 +254,7 @@ function check(input [2:0] region );
     endcase
 endfunction
 
-always @(addr_out,cpu_fc,mmr) begin
+always @(addr_out,cpu_fc,mmr,inta_n) begin
     active[0] = check(0);
     active[1] = check(1) && active[0]==0;
     active[2] = check(2) && active[1:0]==0;
@@ -256,7 +264,7 @@ always @(addr_out,cpu_fc,mmr) begin
     active[6] = check(6) && active[5:0]==0;
     active[7] = check(7) && active[6:0]==0;
     none = active==0;
-    if( &cpu_fc ) begin
+    if( !inta_n ) begin
         active = 0; // irq ack or end of bus cycle
         none   = 0;
     end
@@ -274,8 +282,6 @@ always @(addr_out,cpu_fc,mmr) begin
 end
 
 // DTACK generation
-wire dtackn1;
-reg  dtackn2, dtackn3;
 wire [15:0] fave, fworst;
 
 jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
@@ -290,35 +296,13 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .DSn        ( cpu_dsn   ),
     .num        ( 7'd29     ),  // numerator
     .den        ( 8'd146    ),  // denominator
-    .DTACKn     ( dtackn1   ),
+    .DTACKn     ( cpu_dtackn ),
+    .wait2      ( dtack_cyc==2 ),
+    .wait3      ( dtack_cyc==3 ),
     .fave       ( fave      ),
     .fworst     ( fworst    ),
-    .frst       ( debug_bus[4] )
+    .frst       ( 1'b0      )
 );
-
-// sets the number of delay clock cycles for DTACKn depending on the
-// mapper configuration
-assign cpu_dtackn = dtack_cyc==3 ? dtackn3 : (dtack_cyc==2 ? dtackn2 : dtackn1);
-
-always @(posedge clk) begin
-    if( cpu_asn ) begin
-        dtackn2 <= 1;
-        dtackn3 <= 1;
-    end else if(cpu_cen) begin
-        dtackn2 <= dtackn1;
-        dtackn3 <= dtackn2;
-    end
-end
-
-// select between CPU or MCU access to registers
-wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
-wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout_s;
-wire       wren_cpu = ~cpu_asn & ~cpu_dswn[0] & none;
-wire       wren_mcu = mcu_en & mcu_wr_s;
-wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
-reg        wren_cpu_l, wren_mcu_l, bus_busy_l;
-wire       wredge_cpu = wren_cpu & ~wren_cpu_l;
-wire       wredge_mcu = wren_mcu & ~wren_mcu_l;
 
 always @(posedge clk) begin
     if( rst ) begin
@@ -369,7 +353,10 @@ always @(posedge clk) begin
         // not really sure about status_msb
         if( none || !bus_mcu || mmr[4][3] || &cpu_fc[2:0]) status_msb<=1;
         if( wredge_mcu || (wredge_cpu && cpu_sel) ) begin
-            mmr[ asel ] <= din;
+            case( asel )
+                4: mmr[4] <= din | { 5'd0, {3{cpu_sel}}};
+                default: mmr[ asel ] <= din;
+            endcase
             if( asel == 3 )
                 sndmap_pbf <= 1;
             if( asel==5 && !bus_rq ) begin
@@ -385,7 +372,7 @@ always @(posedge clk) begin
         end
         if( sndmap_rd )
             sndmap_pbf <= 0;
-        if( !inta_n )
+        if( !inta_n || cpu_sel )
             mmr[4][2:0] <= 3'b111;
     end
 end
@@ -394,13 +381,12 @@ end
 reg        last_vint;
 
 assign cpu_vpan = inta_n;
-assign cpu_ipln = cpu_sel ? { irqn, 2'b11 } : mmr[4][2:0];
+assign cpu_ipln = cpu_sel ? { ~vint, 2'b11 } : mmr[4][2:0];
 
 reg [8:0] mcu_cnt;
 
 always @(posedge clk) begin
     if( rst ) begin
-        irqn <= 1;
         mcu_vintn <= 1;
     end else begin
         last_vint <= vint;
@@ -408,10 +394,7 @@ always @(posedge clk) begin
         if( mcu_cnt!=0 && pxl_cen ) mcu_cnt   <= mcu_cnt-1'd1;
         if( mcu_cnt==0 ) mcu_vintn <= 1;
 
-        if( !inta_n ) begin
-            irqn <= 1;
-        end else if( vint && !last_vint ) begin
-            irqn <= 0;
+        if( vint && !last_vint ) begin
             mcu_vintn <= 0;
             mcu_cnt  <= ~9'd0;
         end
@@ -431,23 +414,25 @@ jtframe_68kdma u_dma(
 );
 
 // Debug
-`ifdef MISTER
 always @(posedge clk) begin
-    // 0-7 base registers
-    // 8-F size registers
-    // 10-11, average frequency
-    if( st_addr[4] )
-        case( st_addr[1:0] )
+    // 0-31: MMR readings
+    // 32- : Some signals
+    if( st_addr[5] )
+        case( st_addr[3:0] )
             0: st_dout <= fave[7:0];
             1: st_dout <= fave[15:8];
             2: st_dout <= fworst[7:0];
             3: st_dout <= fworst[15:8];
+            4: st_dout <= { cpu_dsn, cpu_dtackn, cpu_asn, 1'b0, cpu_fc };
+            5: st_dout <= { 1'b0, cpu_ipln, 1'b0, cpu_fc };
+            6: st_dout <= sndmap_dout;
+            7: st_dout <= {7'd0, sndmap_pbf};
+            8: st_dout <= {addr[7:1],1'b0};
+            9: st_dout <= addr[15:8];
+           10: st_dout <= addr[23:16];
         endcase
     else
-        st_dout <= mmr[ {1'b1, st_addr[2:0], st_addr[3]} ];
+        st_dout <= mmr[ st_addr[4:0] ];
 end
-`else
-    always @* st_dout = debug_bus[0] ? fave[12:5] : fworst[12:5];
-`endif
 
 endmodule

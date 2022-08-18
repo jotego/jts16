@@ -26,7 +26,7 @@ module jts16_obj(
     input              cpu_obj_cs,
     input      [10:1]  cpu_addr,
     input      [15:0]  cpu_dout,
-    input      [ 1:0]  dsn,
+    input      [ 1:0]  dswn,
     output     [15:0]  cpu_din,
 
     // SDRAM interface
@@ -78,7 +78,7 @@ jts16_obj_ram u_ram(
     .obj_cs    ( cpu_obj_cs     ),
     .cpu_addr  ( cpu_addr       ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
+    .dswn      ( dswn           ),
     .cpu_din   ( cpu_din        ),
     // Scan
     .tbl_addr  ( tbl_addr       ),

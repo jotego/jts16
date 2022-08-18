@@ -13,7 +13,7 @@
             315-5012       -- sprite generator control
             315-5049 (x2)  -- tilemaps
             315-5107 (PAL x2) -- horizontal timing control
-            315-5108       -- vertical timing control
+            315-5108       -- vertical 315-5197 control
             315-5122 (PAL) -- timing
 
     Enduro Racer

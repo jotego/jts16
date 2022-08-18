@@ -1,4 +1,4 @@
-<!--          FPGA compatible core for Sega arcade hardware by Jotego
+<!--          FPGA arcade hardware by Jotego
 
               This core is available for hardware compatible with MiST and MiSTer
               Other FPGA systems may be supported by the time you read this.
@@ -6,11 +6,12 @@
               core author for issues and updates.
 
               (c) Jose Tejada, 2022. Please support this research
-              Patreon: https://patreon.com/topapate
+              Patreon: https://patreon.com/jotego
 
               The author does not endorse or participate in illegal distribution
-              of copyrighted material. This work can be used with legally
-              obtained ROM dumps or with compatible homebrew software.
+              of copyrighted material. This work can be used with compatible
+              software. This software can be homebrew projects or legally
+              obtained memory dumps of compatible games.
 
               This file license is GNU GPLv2.
               You can read the whole license file in
@@ -19,7 +20,7 @@
 -->
 
 <misterromdescription>
-    <about author="jotego" webpage="https://patreon.com/topapate" source="https://github.com/jotego" twitter="@topapate"/>
+    <about author="jotego" webpage="https://patreon.com/jotego" source="https://github.com/jotego" twitter="@topapate"/>
     <name>Dunk Shot (Rev C, FD1089A 317-0022)</name>
     <setname>dunkshot</setname>
     <rbf>jts16b</rbf>

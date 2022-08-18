@@ -93,234 +93,84 @@ module jts16_video(
 );
 
 localparam MODEL = `ifdef S16B 1; `else 0; `endif
-
-localparam [9:0] SCR2_DLY= MODEL ? 10'd9 : 10'd17;
-localparam [9:0] SCR1_DLY= SCR2_DLY;
 localparam [9:0] OBJ_DLY = MODEL ? 10'd22 : 10'd17;
 
-wire [ 8:0] hdump, vrender1;
+wire [ 8:0] hdump;
 wire        preLHBL, preLVBL;
-wire        alt_en, alt_objbank; // 171-5358 boards have a different GFX layout
-wire        rowscr1_en, rowscr2_en,
-            colscr1_en, colscr2_en,
-            altscr1_en, altscr2_en;
-wire [ 8:0] scr1_hscan, scr2_hscan;
-
-// Scroll
-wire [ 9:0] rowscr1, rowscr2;
-wire [ 8:0] colscr1, colscr2;
-wire        scr_start;
-wire        col_busy1, col_busy2;
-wire        scr1_bad, scr2_bad;
+reg         alt_en, alt_objbank; // 171-5358 boards have a different GFX layout
+wire        flipx;
 
 // video layers
-wire [ 6:0] char_pxl;
-wire [10:0] scr1_pxl, scr2_pxl;
 wire [11:0] obj_pxl;
+wire [10:0] pal_addr;
+wire        shadow;
 
-// MMR
-wire [15:0] scr1_pages,      scr2_pages,
-            scr1_hpos,       scr1_vpos,
-            scr2_hpos,       scr2_vpos;
+always @(posedge clk) begin
+    // Dunkshot, Sukeban and Time Scanner use a different
+    // encoding for in tile map bytes.
+    alt_en      <= MODEL && (game_id==8'h1b || game_id==8'h1c || game_id==8'h14);
+    alt_objbank <= MODEL && game_id[4];
+end
 
-`ifdef JTFRAME_OSD_FLIP
-    wire flipx = ext_flip ^ flip;
-`else
-    wire flipx = flip;
-    assign ext_flip = ~flip;
-`endif
-// Frame rate and horizontal frequency as the original
-// "The sprite X position defines the starting location of the sprite. The
-//  leftmost pixel of the screen is $00B6, and the rightmost is $1F5."
+jts16_tilemap #(.MODEL(MODEL)) u_tilemap(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+    .pxl2_cen   ( pxl2_cen  ),
+    .pxl_cen    ( pxl_cen   ),
 
-parameter [8:0] HB_END = 9'h0bf;
+    .dip_pause  ( dip_pause ),
+    .char_cs    ( char_cs   ),
+    .pal_cs     ( pal_cs    ),
+    .cpu_addr   ( cpu_addr  ),
+    .cpu_dout   ( cpu_dout  ),
+    .dswn       ( dsn       ),
+    .char_dout  ( char_dout ),
+    .vint       ( vint      ),
 
-assign vint = vdump==223 && dip_pause;
-assign scr_bad = scr1_bad | scr2_bad;
-
-`ifndef S16B
-    assign rowscr1_en = rowscr_en;
-    assign rowscr2_en = rowscr_en;
-    assign colscr1_en = colscr_en;
-    assign colscr2_en = colscr_en;
-`endif
-
-jtframe_vtimer #(
-    .HB_START  ( 9'h1ff ),
-    .HB_END    ( HB_END ),
-    .HCNT_START( 9'h70  ), // it should be 'h50
-    .HCNT_END  ( 9'h1FF ),
-    .VB_START  ( 9'h0DF ),
-    .VB_END    ( 9'h105 ),
-    .VCNT_END  ( 9'h105 ), // 262 lines
-    //.VS_START ( 9'h0   ),
-    .VS_START ( 9'hF0   ),
-    //.VS_END   ( 9'h8   ),
-    .HS_START ( 9'h080 )
-) u_timer(
-    .clk       ( clk      ),
-    .pxl_cen   ( pxl_cen  ),
-    .vdump     ( vdump    ),
-    .H         ( hdump    ),
-    .Hinit     ( hstart   ),
-    .LHBL      ( preLHBL  ),
-    .LVBL      ( preLVBL  ),
-    .HS        ( HS       ),
-    .VS        ( VS       ),
-    .Vinit     (          ),
-    .vrender   ( vrender  ),
-    .vrender1  ( vrender1 )
-);
-
-jts16_mmr #(.MODEL(MODEL)) u_mmr(
-    .rst       ( rst            ),
-    .clk       ( clk            ),
-
-    .flip      ( flip           ),
-    // CPU interface
-    .char_cs   ( char_cs        ),
-    .cpu_addr  ( cpu_addr[11:1] ),
-    .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
-
-    // Video registers
-    .scr1_pages ( scr1_pages    ),
-    .scr2_pages ( scr2_pages    ),
-    .scr1_hpos  ( scr1_hpos     ),
-    .scr1_vpos  ( scr1_vpos     ),
-    .scr2_hpos  ( scr2_hpos     ),
-    .scr2_vpos  ( scr2_vpos     ),
-
-    .rowscr1_en ( rowscr1_en    ),
-    .rowscr2_en ( rowscr2_en    ),
-    .colscr1_en ( colscr1_en    ),
-    .colscr2_en ( colscr2_en    ),
-    .altscr1_en ( altscr1_en    ),
-    .altscr2_en ( altscr2_en    ),
-
-    .st_addr    ( st_addr       ),
-    .st_dout    ( st_dout       )
-);
-
-jts16_char #(.MODEL(MODEL)) u_char(
-    .rst       ( rst            ),
-    .clk       ( clk            ),
-    .pxl2_cen  ( pxl2_cen       ),
-    .pxl_cen   ( pxl_cen        ),
-
-    .game_id   ( game_id        ),
-    .alt_en    ( alt_en         ),
-    .alt_objbank(alt_objbank    ),
-    // CPU interface
-    .char_cs   ( char_cs        ),
-    .cpu_addr  ( cpu_addr[11:1] ),
-    .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
-    .cpu_din   ( char_dout      ),
+    // Other configuration
+    .flip       ( flip      ),
+    .ext_flip   ( ext_flip  ),
+    .colscr_en  ( colscr_en ),
+    .rowscr_en  ( rowscr_en ),
+    .alt_en     ( alt_en    ),
 
     // SDRAM interface
-    .char_ok   ( char_ok        ),
-    .char_addr ( char_addr      ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    .char_data ( char_data      ),
-
-    // In-RAM data
-    .scr_start ( scr_start      ),
-    .rowscr1   ( rowscr1        ),
-    .rowscr2   ( rowscr2        ),
-    .altscr1   ( altscr1_en     ),
-    .altscr2   ( altscr2_en     ),
-
-    .scr1_hscan( scr1_hscan     ),
-    .scr2_hscan( scr2_hscan     ),
-    .colscr1   ( colscr1        ),
-    .colscr2   ( colscr2        ),
-
-    .col_busy1 ( col_busy1      ),
-    .col_busy2 ( col_busy2      ),
+    .char_ok    ( char_ok   ),
+    .char_addr  ( char_addr ),
+    .char_data  ( char_data ),
+    .map1_ok    ( map1_ok   ),
+    .map1_addr  ( map1_addr ),
+    .map1_data  ( map1_data ),
+    .scr1_ok    ( scr1_ok   ),
+    .scr1_addr  ( scr1_addr ),
+    .scr1_data  ( scr1_data ),
+    .map2_ok    ( map2_ok   ),
+    .map2_addr  ( map2_addr ),
+    .map2_data  ( map2_data ),
+    .scr2_ok    ( scr2_ok   ),
+    .scr2_addr  ( scr2_addr ),
+    .scr2_data  ( scr2_data ),
 
     // Video signal
-    .flip      ( flipx          ),
-    .vrender   ( vrender        ),
-    .vdump     ( vdump          ),
-    .hdump     ( hdump          ),
-    .pxl       ( char_pxl       ),
-    .debug_bus ( debug_bus      )
-);
-
-jts16_scr #(.PXL_DLY(SCR1_DLY),.HB_END(HB_END),.MODEL(MODEL)) u_scr1(
-    .rst       ( rst            ),
-    .clk       ( clk            ),
-    .pxl2_cen  ( pxl2_cen       ),
-    .pxl_cen   ( pxl_cen        ),
-    //.LHBL      ( LHBL           ),
-    .LHBL      ( ~scr_start     ),
-    .alt_en    ( alt_en         ),
-
-    .pages     ( scr1_pages     ),
-    .hscr      ( scr1_hpos      ),
-    .vscr      ( scr1_vpos      ),
-    .rowscr_en ( rowscr1_en     ),
-    .rowscr    ( rowscr1        ),
-
-    .hcolscr   ( scr1_hscan     ),
-    .colscr_en ( colscr1_en     ),
-    .colscr    ( colscr1        ),
-    .col_busy  ( col_busy1      ),
-
-    // SDRAM interface
-    .map_ok    ( map1_ok        ),
-    .map_addr  ( map1_addr      ), // 3 pages + 11 addr = 14 (32 kB)
-    .map_data  ( map1_data      ),
-
-    .scr_ok    ( scr1_ok        ),
-    .scr_addr  ( scr1_addr      ), // 1 bank + 12 addr + 3 vertical = 15 bits
-    .scr_data  ( scr1_data      ),
-
-    // Video signal
-    .flip      ( flipx          ),
-    .vrender   ( vrender        ),
-    .hdump     ( hdump          ),
-    .pxl       ( scr1_pxl       ),
-    .debug_bus ( debug_bus      ),
-    .bad       ( scr1_bad       )
-);
-
-jts16_scr #(.PXL_DLY(SCR2_DLY[8:0]),.MODEL(MODEL)) u_scr2(
-    .rst       ( rst            ),
-    .clk       ( clk            ),
-    .pxl2_cen  ( pxl2_cen       ),
-    .pxl_cen   ( pxl_cen        ),
-    //.LHBL      ( LHBL           ),
-    .LHBL      ( ~scr_start     ),
-    .alt_en    ( alt_en         ),
-
-    .pages     ( scr2_pages     ),
-    .hscr      ( scr2_hpos      ),
-    .vscr      ( scr2_vpos      ),
-    .rowscr_en ( rowscr2_en     ),
-    .rowscr    ( rowscr2        ),
-
-    .hcolscr   ( scr2_hscan     ),
-    .colscr_en ( colscr2_en     ),
-    .colscr    ( colscr2        ),
-    .col_busy  ( col_busy2      ),
-
-    // SDRAM interface
-    .map_ok    ( map2_ok        ),
-    .map_addr  ( map2_addr      ), // 3 pages + 11 addr = 14 (32 kB)
-    .map_data  ( map2_data      ),
-
-    .scr_ok    ( scr2_ok        ),
-    .scr_addr  ( scr2_addr      ), // 1 bank + 12 addr + 3 vertical = 15 bits
-    .scr_data  ( scr2_data      ),
-
-    // Video signal
-    .flip      ( flipx          ),
-    .vrender   ( vrender        ),
-    .hdump     ( hdump          ),
-    .pxl       ( scr2_pxl       ),
-    .debug_bus ( debug_bus      ),
-    .bad       ( scr2_bad       )
+    .HS         ( HS        ),
+    .VS         ( VS        ),
+    .preLHBL    ( preLHBL   ),
+    .preLVBL    ( preLVBL   ),
+    .hstart     ( hstart    ),
+    .flipx      ( flipx     ),
+    .vdump      ( vdump     ),
+    .vrender    ( vrender   ),
+    .hdump      ( hdump     ),
+    // Video layers
+    .obj_pxl    ( obj_pxl   ),
+    .pal_addr   ( pal_addr  ),
+    .shadow     ( shadow    ),
+    // Debug
+    .gfx_en     ( gfx_en    ),
+    .debug_bus  ( debug_bus ),
+    .st_addr    ( st_addr   ),
+    .st_dout    ( st_dout   ),
+    .scr_bad    ( scr_bad   )
 );
 
 jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
@@ -333,7 +183,7 @@ jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
     .cpu_obj_cs( objram_cs      ),
     .cpu_addr  ( cpu_addr[10:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
+    .dswn      ( dsn            ),
     .cpu_din   ( obj_dout       ),
 
     // SDRAM interface
@@ -357,25 +207,20 @@ jts16_colmix u_colmix(
     .clk       ( clk            ),
     .pxl2_cen  ( pxl2_cen       ),
     .pxl_cen   ( pxl_cen        ),
-    .gfx_en    ( gfx_en         ),
 
     .video_en  ( video_en       ),
+
+    .pal_addr  ( pal_addr       ),
+    .shadow    ( shadow         ),
     // CPU interface
     .pal_cs    ( pal_cs         ),
     .cpu_addr  ( cpu_addr[11:1] ),
     .cpu_dout  ( cpu_dout       ),
-    .dsn       ( dsn            ),
+    .dswn      ( dsn            ),
     .cpu_din   ( pal_dout       ),
-
 
     .preLVBL   ( preLVBL        ),
     .preLHBL   ( preLHBL        ),
-
-    .char_pxl  ( char_pxl       ),
-    .scr1_pxl  ( scr1_pxl       ),
-    //.scr1_pxl  ( 11'd0       ),
-    .scr2_pxl  ( scr2_pxl       ),
-    .obj_pxl   ( obj_pxl        ),
 
     .LHBL      ( LHBL           ),
     .LVBL      ( LVBL           ),

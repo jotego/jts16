@@ -5,11 +5,8 @@ game:
       - jts16_main.v
       - jts16_shadow.v
       - jts16_snd.v
-      - jts16_mmr.v
       - jts16_cen.v
-      - jts16_video.v
-      - jts16_char.v
-      - jts16_scr.v
+      - tilemap.yaml
       - jts16_sdram.v
       - jts16_colmix.v
       - jts16_obj.v

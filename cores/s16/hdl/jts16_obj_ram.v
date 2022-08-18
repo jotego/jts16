@@ -24,7 +24,7 @@ module jts16_obj_ram(
     input              obj_cs,
     input      [10:1]  cpu_addr,
     input      [15:0]  cpu_dout,
-    input      [ 1:0]  dsn,
+    input      [ 1:0]  dswn,
     output     [15:0]  cpu_din,
 
     // Object scan
@@ -34,7 +34,7 @@ module jts16_obj_ram(
     input      [15:0]  tbl_din
 );
 
-wire [ 1:0] cpu_we = ~dsn & {2{obj_cs}};
+wire [ 1:0] cpu_we = ~dswn & {2{obj_cs}};
 
 jtframe_dual_ram16 #(
     .aw(10),
