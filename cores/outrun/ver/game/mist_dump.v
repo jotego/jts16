@@ -56,12 +56,12 @@ module mist_dump(
             $display("NC Verilog: will dump selected signals");
             $shm_probe(frame_cnt);
             //$shm_probe(UUT.u_game,"A");
-            //$shm_probe(UUT.u_game.u_main,"A");
-            //$shm_probe(UUT.u_game.u_main.u_mapper,"A");
-            //$shm_probe(UUT.u_game.u_sub,"A");
-            //$shm_probe(UUT.u_game.u_sub.u_dma,"A");
-            //$shm_probe(UUT.u_game.u_sub.u_dtack,"A");
-            //$shm_probe(UUT.u_game.u_sdram,"A");
+            $shm_probe(UUT.u_game.u_main,"A");
+            $shm_probe(UUT.u_game.u_main.u_mapper,"A");
+            $shm_probe(UUT.u_game.u_sub,"A");
+            $shm_probe(UUT.u_game.u_sub.u_dma,"A");
+            $shm_probe(UUT.u_game.u_sub.u_dtack,"A");
+            $shm_probe(UUT.u_game.u_sdram,"A");
             //$shm_probe(UUT.u_game.u_sdram.u_bank1,"AS");
             `ifndef NOSOUND
                 $shm_probe(UUT.u_game.u_sound,"A");
@@ -70,7 +70,7 @@ module mist_dump(
                 $shm_probe(UUT.u_game.u_sound.u_jt51.u_timers,"AS");
             `endif
             //$shm_probe(UUT.u_game.u_video,"A");
-            //$shm_probe(UUT.u_game.u_video.u_road,"AS");
+            $shm_probe(UUT.u_game.u_video.u_road,"A");
             //$shm_probe(UUT.u_game.u_video.u_colmix,"A");
         `endif
     end

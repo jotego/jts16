@@ -180,6 +180,16 @@ wire [15:0] mcu_addr_s;
 wire [ 7:0] mcu_dout_s;
 wire        mcu_wr_s, mcu_acc_s, mcu_rd_s;
 
+// select between CPU or MCU access to registers
+wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
+wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout_s;
+wire       wren_cpu = ~cpu_asn & ~cpu_dswn[0] & none;
+wire       wren_mcu = mcu_en & mcu_wr_s;
+wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
+reg        wren_cpu_l, wren_mcu_l, bus_busy_l;
+wire       wredge_cpu = wren_cpu & ~wren_cpu_l;
+wire       wredge_mcu = wren_mcu & ~wren_mcu_l;
+
 assign mcu_rd_s = mcu_en & mcu_acc_s & ~mcu_wr_s;
 
 jtframe_sync #(.W(2+16+8)) u_sync(
@@ -293,16 +303,6 @@ jtframe_68kdtack #(.W(8),.RECOVERY(1),.MFREQ(50_349)) u_dtack(
     .fworst     ( fworst    ),
     .frst       ( 1'b0      )
 );
-
-// select between CPU or MCU access to registers
-wire [4:0] asel   = cpu_sel ? addr[5:1] : mcu_addr_s[4:0];
-wire [7:0] din    = cpu_sel ? cpu_dout[7:0] : mcu_dout_s;
-wire       wren_cpu = ~cpu_asn & ~cpu_dswn[0] & none;
-wire       wren_mcu = mcu_en & mcu_wr_s;
-wire       inta_n = ~&{ cpu_fc, ~cpu_asn }; // interrupt ack.
-reg        wren_cpu_l, wren_mcu_l, bus_busy_l;
-wire       wredge_cpu = wren_cpu & ~wren_cpu_l;
-wire       wredge_mcu = wren_mcu & ~wren_mcu_l;
 
 always @(posedge clk) begin
     if( rst ) begin
