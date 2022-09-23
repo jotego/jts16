@@ -18,6 +18,7 @@
 
 module jtoutrun_sub(
     input              rst,
+    input              creset,
     input              clk,
 
     input              irqn,    // common with main CPU
@@ -164,7 +165,7 @@ jtframe_68kdma u_dma(
 
 jtframe_m68k u_cpu(
     .clk        ( clk         ),
-    .rst        ( rst         ),
+    .rst        ( rst | creset),
     .cpu_cen    ( cpu_cen     ),
     .cpu_cenb   ( cpu_cenb    ),
 
@@ -183,7 +184,7 @@ jtframe_m68k u_cpu(
 
     .BERRn      ( 1'b1        ),
     // Bus arbitrion
-    .HALTn      ( 1'b1        ),
+    .HALTn      ( ~creset     ),
     .BRn        ( BRn         ),
     .BGACKn     ( BGACKn      ),
     .BGn        ( BGn         ),
