@@ -14,6 +14,7 @@
 *.nvm
 *.lst
 *.raw
+.DS_Store
 game_test.v
 waiver
 *.F
