@@ -1,4 +1,4 @@
-include ../../s16/hdl/jts16.def
+include ../../s16/cfg/macros.def
 
 [mist]
 -JTFRAME_CREDITS
