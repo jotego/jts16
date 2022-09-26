@@ -4,6 +4,7 @@ mraauthor=["jotego","atrac17"]
 info=[
     {tag="platform", value="SEGA S16A"}
 ]
+platform="jts16"
 
 [features]
 # ddr = true
