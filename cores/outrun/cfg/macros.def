@@ -39,6 +39,9 @@ KEY_START    = 0x298000
 FD1089_START = 0x29A000
 JTFRAME_OSD_NOLOGO
 
+# Make it the same as KEY_START
+JTFRAME_PROM_START=0x298000
+
 [mister]
 # Controller options have only been tested on MiSTer
 CORE_OSD=OKM,Control Type,A.Stick,A.Triggers,A.Wheel;
