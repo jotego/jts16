@@ -59,6 +59,7 @@ wire [15:0] pal;
 wire [14:0] rgb;
 reg  [10:0] rd_mux, pal_addr;
 reg         muxsel;
+reg  [ 1:0] blink;
 
 assign we = ~dswn & {2{pal_cs}};
 assign { red, green, blue } = rgb;
@@ -118,17 +119,31 @@ always @(*) begin
     endcase
     rd_mux[10:6] = {5{rc[4]}};
 
-    muxsel = (obj_pxl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
-             (obj_pxl[11:10]==2'b01 && obj_pxl[3:0]==4'b1010 && !fix );
-    if( debug_bus[1:0]==3 ) muxsel=1;
+    // muxsel = obj_pxl[3:0] == debug_bus[3:0];
+    muxsel = (obj_pxl[3:0]==4'h0 && !fix && (!rc[3] || (!sa && !sb) ));
+    // muxsel = (obj_pxl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
+    //          (obj_pxl[11:10]==2'b01 && obj_pxl[3:0]==4'b1010 && !fix );
+    //if( debug_bus[7] ) muxsel=0;
     `ifdef FORCE_ROAD
     muxsel=1;
     `endif
-    pal_addr = muxsel ? rd_mux : tmap_addr;
+    pal_addr = muxsel ? ( debug_bus[7] ? 11'd0 : rd_mux) : tmap_addr;
+    if( debug_bus[6] ) pal_addr = {11{
+            ( debug_bus[1:0]==0 ? fix :
+              debug_bus[1:0]==1 ?  sa :
+              debug_bus[1:0]==2 ?  sb : rc[3] )
+        & blink[1]}};
 
     gated = (shadow & ~pal[15]) ? { dim(rpal), dim(gpal), dim(bpal) } :
                                   {     rpal,      gpal,      bpal  };
     if( !video_en ) gated = 0;
+end
+
+reg LVBLl;
+
+always @(posedge clk) begin
+    LVBLl <= LVBL;
+    if( LVBLl && !LVBL ) blink <= blink+2'd1;
 end
 
 jtframe_blank #(.DLY(2),.DW(15)) u_blank(

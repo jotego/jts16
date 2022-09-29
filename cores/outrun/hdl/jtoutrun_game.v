@@ -281,7 +281,8 @@ jtoutrun_main u_main(
     .dipsw_a     ( dipsw_a    ),
     .dipsw_b     ( dipsw_b    ),
     // Status report
-    .debug_bus   ( debug_bus  ),
+    //.debug_bus   ( debug_bus  ),
+    .debug_bus   ( 8'd0  ),
     .st_addr     ( st_addr    ),
     .st_dout     ( st_main    )
 );
