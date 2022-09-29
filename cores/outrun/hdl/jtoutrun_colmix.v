@@ -57,7 +57,8 @@ module jtoutrun_colmix(
 wire [ 1:0] we;
 wire [15:0] pal;
 wire [14:0] rgb;
-reg  [10:0] rd_mux, pal_addr;
+reg  [10:0] rd_mux;
+reg  [11:0] pal_addr;
 reg         muxsel;
 reg  [ 1:0] blink;
 
@@ -76,27 +77,6 @@ assign gpal  = { pal_addr[3:0], pal_addr[3] };
 assign bpal  = { pal_addr[3:0], pal_addr[3] };
 `endif
 
-jtframe_dual_ram16 #(
-    .aw        (13          ),
-    .simfile_lo("pal_lo.bin"),
-    .simfile_hi("pal_hi.bin")
-) u_ram(
-    .clk0   ( clk       ),
-    .clk1   ( clk       ),
-
-    // CPU writes
-    .addr0  ( cpu_addr  ),
-    .data0  ( cpu_dout  ),
-    .we0    ( we        ),
-    .q0     ( cpu_din   ),
-
-    // Video reads
-    .addr1  ( { 2'd0, pal_addr }  ),
-    .data1  (           ),
-    .we1    ( 2'b0      ),
-    .q1     ( pal       )
-);
-
 function [4:0] dim;
     input [4:0] a;
     dim = a - (a>>2);
@@ -112,15 +92,24 @@ reg [14:0] gated;
 
 always @(*) begin
     rd_mux[3:0] = rd_pxl[3:0];
+    // This mux only appears in Super Hang On
     case( rc[4:3] )
         0,1: rd_mux[5:4] = 2'b11;
         2: rd_mux[5:4] = {1'b0, rd_pxl[4]};
         3: rd_mux[5:4] = rd_pxl[5:4];
     endcase
     rd_mux[10:6] = {5{rc[4]}};
+// rd_mux[10:6] = {5{debug_bus[3]}};
+// rd_mux[5:3]=debug_bus[2:0];
+    //rd_mux[10:6] = {5{debug_bus[6]}};
+    //rd_mux[10:6] = { 2'b01,{3{rd_pxl[7]}},rd_pxl[6] };
+    // if(debug_bus[5]) begin
+    //     rd_mux[10:6] = {5{debug_bus[1]}};
+    //     rd_mux[4] = debug_bus[0];
+    // end
 
     // muxsel = obj_pxl[3:0] == debug_bus[3:0];
-    muxsel = (obj_pxl[3:0]==4'h0 && !fix && (!rc[3] || (!sa && !sb) )) ||
+    muxsel = (obj_pxl[3:0]==4'h0 && !fix && (!(rc[3]^debug_bus[0]) || (!sa && !sb) )) ||
              (obj_pxl[11:10]==~2'b01 && obj_pxl[3:0]==~4'b1010 && !fix );
     // muxsel = (obj_pxl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
     //          (obj_pxl[11:10]==2'b01 && obj_pxl[3:0]==4'b1010 && !fix );
@@ -128,12 +117,13 @@ always @(*) begin
     `ifdef FORCE_ROAD
     muxsel=1;
     `endif
-    pal_addr = muxsel ? ( debug_bus[7] ? 11'd0 : rd_mux) : tmap_addr;
-    if( debug_bus[6] ) pal_addr = {11{
-            ( debug_bus[1:0]==0 ? fix :
-              debug_bus[1:0]==1 ?  sa :
-              debug_bus[1:0]==2 ?  sb : rc[3] )
-        & blink[1]}};
+    pal_addr[10:0] = muxsel ? ( /*debug_bus[7] ? 11'd0 :*/ rd_mux) : tmap_addr;
+    pal_addr[11] = 0; // Super Hang On
+    // if( debug_bus[6] ) pal_addr = {11{
+    //         ( debug_bus[1:0]==0 ? fix :
+    //           debug_bus[1:0]==1 ?  sa :
+    //           debug_bus[1:0]==2 ?  sb : rc[3] )
+    //     & blink[1]}};
 
     gated = (shadow & ~pal[15]) ? { dim(rpal), dim(gpal), dim(bpal) } :
                                   {     rpal,      gpal,      bpal  };
@@ -146,6 +136,27 @@ always @(posedge clk) begin
     LVBLl <= LVBL;
     if( LVBLl && !LVBL ) blink <= blink+2'd1;
 end
+
+jtframe_dual_ram16 #(
+    .aw        (13          ),
+    .simfile_lo("pal_lo.bin"),
+    .simfile_hi("pal_hi.bin")
+) u_ram(
+    .clk0   ( clk       ),
+    .clk1   ( clk       ),
+
+    // CPU writes
+    .addr0  ( cpu_addr  ),
+    .data0  ( cpu_dout  ),
+    .we0    ( we        ),
+    .q0     ( cpu_din   ),
+
+    // Video reads
+    .addr1  ( { 1'd0, pal_addr }  ),
+    .data1  (           ),
+    .we1    ( 2'b0      ),
+    .q1     ( pal       )
+);
 
 jtframe_blank #(.DLY(2),.DW(15)) u_blank(
     .clk        ( clk       ),
