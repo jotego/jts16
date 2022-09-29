@@ -143,22 +143,16 @@ module jtoutrun_road(
         end
     end
 
-    wire only_road0 = ctrl==ONLY_ROAD0 || debug_bus[0],
-         only_road1 = ctrl==ONLY_ROAD1 && !debug_bus[0],
-         road0_prio = ctrl==ROAD0_PRIO && !debug_bus[0],
-         road1_prio = ctrl==ROAD1_PRIO && !debug_bus[0];
+    wire only_road0 = ctrl==ONLY_ROAD0,// || debug_bus[0],
+         only_road1 = ctrl==ONLY_ROAD1,// && !debug_bus[0],
+         road0_prio = ctrl==ROAD0_PRIO,// && !debug_bus[0],
+         road1_prio = ctrl==ROAD1_PRIO;// && !debug_bus[0];
 
     always @* begin
         viq = ~hs | (hs & ( ~rrc[3] | ~rrc[4] ));
 
         rrc = 0;
-        // road bit 0 set
-        rrc[0] = rrc[2] ? ( rd_b==1 || (cent_b && rd_b==3) ) :
-                          ( rd_a==1 || (cent_a && rd_a==3) );
-        // road bit 1 set
-        rrc[1] = rrc[2] ? ( rd_b==2 || (cent_b && rd_b==3) ) :
-                          ( rd_a==2 || (cent_a && rd_a==3) );
-        // road active: high for rd_b, low for rd_a
+        // active road: high for rd_b, low for rd_a
         rrc[2] = (hs && viq) ||
                  only_road1 ||
                  ( !cent_a && rd_a==3 && !cent_b && rd_b==3 && road1_prio ) ||
@@ -175,7 +169,12 @@ module jtoutrun_road(
                  (  cent_b && rd_b==3 && !rd_a[1] && road0_prio ) ||
                  ( !rd_a[0] && rd_b==0 && road1_prio ) ||
                  ( !rd_a[1] && rd_b==0 && road1_prio );
-
+        // road bit 0 set
+        rrc[0] = rrc[2] ? ( rd_b==1 || (cent_b && rd_b==3) ) :
+                          ( rd_a==1 || (cent_a && rd_a==3) );
+        // road bit 1 set
+        rrc[1] = rrc[2] ? ( rd_b==2 || (cent_b && rd_b==3) ) :
+                          ( rd_a==2 || (cent_a && rd_a==3) );
         // road not from ROM -solid color-
         rrc[3] = (rd0_idx[11] && rd1_idx[11]) ||
                  (rd0_idx[11] && only_road0 ) ||
@@ -185,14 +184,14 @@ module jtoutrun_road(
                 ( !cent_a && rd_a==3 && !cent_b && rd_b==3 ) ||
                 ( !cent_b && rd_b==3 && only_road1 ) ||
                 ( !cent_a && rd_a==3 && only_road0 );
-        rds_col = rrc[2] ? rd1_col : rd0_col;
-        solid   = rrc[2] ? rd1_idx[6:0] : rd0_idx[6:0];
+        rds_col = rrc[2] ? rd1_col : rd0_col;           // stripes in the road
+        solid   = rrc[2] ? rd1_idx[6:0] : rd0_idx[6:0]; // stripes in the sky
     end
 
     always @(posedge clk) if(pxl_cen) begin
-        pxl <= !rrc[4] ? {4'd0, rrc[2:0], rds_col[{1'b0, rrc[2:0]}] } :
-                rrc[3] ? { 1'b1, solid } :
-                { 3'b1, rrc[2], rds_col[11:8] };
+        pxl <= !rrc[4] ? {4'd0, rrc[2:0], rds_col[{1'b0, rrc[2:0]} /* road stripes */ ] } :
+                rrc[3] ? { 1'b1, solid } :          // sky stripes
+                { 3'b001, rrc[2], rds_col[11:8] };  // road stripes
         rc[4:3] <= rrc[4:3];
     end
 
@@ -248,6 +247,7 @@ module jtoutrun_rdrom(
     output reg         cent, // this seems to mean the road central 8 pixels
     output      [ 1:0] pxl
 );
+    parameter HOFF = 12'h18;
 
     reg  [11:0] hpos;
     reg  [15:0] pxl_data;
@@ -269,7 +269,7 @@ module jtoutrun_rdrom(
         end else begin
             if( hs ) begin
                 rom_cs   <= 0;
-                hpos     <= hscr;
+                hpos     <= hscr - HOFF;
                 pxl_data <= 16'hffff;
                 cent     <= 0;
             end else if( pxl_cen ) begin
