@@ -120,7 +120,8 @@ always @(*) begin
     rd_mux[10:6] = {5{rc[4]}};
 
     // muxsel = obj_pxl[3:0] == debug_bus[3:0];
-    muxsel = (obj_pxl[3:0]==4'h0 && !fix && (!rc[3] || (!sa && !sb) ));
+    muxsel = (obj_pxl[3:0]==4'h0 && !fix && (!rc[3] || (!sa && !sb) )) ||
+             (obj_pxl[11:10]==~2'b01 && obj_pxl[3:0]==~4'b1010 && !fix );
     // muxsel = (obj_pxl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
     //          (obj_pxl[11:10]==2'b01 && obj_pxl[3:0]==4'b1010 && !fix );
     //if( debug_bus[7] ) muxsel=0;
