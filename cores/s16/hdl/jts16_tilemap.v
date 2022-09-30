@@ -341,6 +341,11 @@ jts16_prio u_prio(
     .scr2_pxl  ( scr2_pxl       ),
     .obj_pxl   ( obj_pxl        ),
 
+    // Selected layer
+    .sa        ( sa             ),
+    .sb        ( sb             ),
+    .fix       ( fix            ),
+
     .pal_addr  ( pal_addr       ),
     .shadow    ( shadow         ),
     .gfx_en    ( gfx_en         )

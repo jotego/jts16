@@ -26,6 +26,8 @@ module jts16_prio(
     input      [10:0]  scr1_pxl,
     input      [10:0]  scr2_pxl,
     input      [11:0]   obj_pxl,
+
+    // Selected layer
     output reg         sa,
     output reg         sb,
     output reg         fix,
@@ -60,6 +62,7 @@ endfunction
 reg  [ 6:0] char_g;
 reg  [10:0] scr1_g, scr2_g;
 reg  [11:0] obj_g;
+reg  [ 3:0] active;
 
 always @(*) begin
     char_g = char_pxl;
@@ -77,13 +80,6 @@ always @(posedge clk) if( pxl_cen ) begin
     lyr1 <= { 2'd1, tile_or_obj( obj_g[9:0],        scr1_g[9:0]  , scr1_g[10], obj_prio>=2'd2 ) };
     lyr2 <= { 2'd2, tile_or_obj( obj_g[9:0],        scr2_g[9:0]  , scr2_g[10], obj_prio>=2'd1 ) };
     lyr3 <= { 2'd2, tile_or_obj( obj_g[9:0], {scr2_g[9:3], 3'd0 },       1'b0, 1'b1           ) };
-    casez( {pal_addr[10], lyrsel} )
-        3'b1??: { fix, sa, sb } <= 0;
-        3'b000: { fix, sa, sb } <= 3'b100;
-        3'b001: { fix, sa, sb } <= 3'b010;
-        3'b010: { fix, sa, sb } <= 3'b001;
-        default: { fix, sa, sb } <= 0;
-    endcase
 end
 
 always @(*) begin
@@ -92,18 +88,12 @@ always @(*) begin
                (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? lyr1 : (
                (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? lyr2 : (
                 lyr3 )));
-end
-
-`ifdef SIMULATION
-reg [3:0] active;
-
-always @(*) begin
     active   = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? 4'b001 : (
                (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? 4'b010 : (
                (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? 4'b100 : (
                 0 )));
     if( pal_addr[10] ) active=4'b1000; // OBJ
+    { sb, sa, fix } = active[2:0];
 end
-`endif
 
 endmodule

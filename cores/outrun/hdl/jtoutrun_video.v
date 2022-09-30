@@ -221,7 +221,8 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .fix        ( fix       ),
     // Debug
     .gfx_en     ( gfx_en    ),
-    .debug_bus  ( debug_bus ),
+    //.debug_bus  ( debug_bus ),
+    .debug_bus  ( 8'd0 ),
     .st_addr    ( st_addr   ),
     .st_dout    ( st_dout   ),
     .scr_bad    ( scr_bad   )
@@ -253,7 +254,8 @@ jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(1)) u_obj(
     .vrender   ( vrender        ),
     .hdump     ( hdump          ),
     .pxl       ( obj_pxl        ),
-    .debug_bus ( debug_bus      )
+    //.debug_bus ( debug_bus      )
+    .debug_bus ( 8'd0      )
 );
 
 jtoutrun_colmix u_colmix(
@@ -279,6 +281,9 @@ jtoutrun_colmix u_colmix(
     .rd_pxl    ( rd_pxl         ),
     .rc        ( rc             ),
     .obj_pxl   ( obj_pxl        ),
+    // .sa        ( debug_bus[0]   ),
+    // .sb        ( debug_bus[1]   ),
+    // .fix       ( debug_bus[2]   ),
     .sa        ( sa             ),
     .sb        ( sb             ),
     .fix       ( fix            ),

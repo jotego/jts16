@@ -134,6 +134,7 @@ wire [19:0] obj_addr;
 wire [15:0] obj_data;
 
 // CPU interface
+wire        creset;
 wire [15:0] main_dout, char_dout, pal_dout, obj_dout;
 wire [ 1:0] main_dsn, main_dswn;
 wire        main_rnw, sub_br,
@@ -243,6 +244,7 @@ jtoutrun_main u_main(
     .sub_cs      ( sub_br     ),
     .sub_ok      ( sub_ok     ),
     .sub_din     ( sub_din    ),
+    .creset      ( creset     ),
     // cabinet I/O
     .ctrl_type   ( ctrl_type  ),
     .joystick1   ( joystick1  ),
@@ -279,7 +281,8 @@ jtoutrun_main u_main(
     .dipsw_a     ( dipsw_a    ),
     .dipsw_b     ( dipsw_b    ),
     // Status report
-    .debug_bus   ( debug_bus  ),
+    //.debug_bus   ( debug_bus  ),
+    .debug_bus   ( 8'd0  ),
     .st_addr     ( st_addr    ),
     .st_dout     ( st_main    )
 );
@@ -308,6 +311,7 @@ jtoutrun_main u_main(
 `ifndef NOSUB
 jtoutrun_sub u_sub(
     .rst        ( rst       ),
+    .creset     ( creset    ),
     .clk        ( clk       ),
 
     .irqn       ( ~vint     ),    // common with main CPU

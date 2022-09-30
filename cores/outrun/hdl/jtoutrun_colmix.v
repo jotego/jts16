@@ -55,10 +55,12 @@ module jtoutrun_colmix(
 );
 
 wire [ 1:0] we;
-wire [15:0] pal;
+wire [15:0] pal_out;
 wire [14:0] rgb;
-reg  [10:0] rd_mux, pal_addr;
+reg  [10:0] rd_mux;
+reg  [11:0] pal_addr, pre_addr, objl;
 reg         muxsel;
+// reg  [ 1:0] blink;
 
 assign we = ~dswn & {2{pal_cs}};
 assign { red, green, blue } = rgb;
@@ -66,14 +68,65 @@ assign { red, green, blue } = rgb;
 wire [4:0] rpal, gpal, bpal;
 
 `ifndef GRAY
-assign rpal  = { pal[ 3:0], pal[12] };
-assign gpal  = { pal[ 7:4], pal[13] };
-assign bpal  = { pal[11:8], pal[14] };
+assign rpal  = { pal_out[ 3:0], pal_out[12] };
+assign gpal  = { pal_out[ 7:4], pal_out[13] };
+assign bpal  = { pal_out[11:8], pal_out[14] };
 `else
 assign rpal  = { pal_addr[3:0], pal_addr[3] };
 assign gpal  = { pal_addr[3:0], pal_addr[3] };
 assign bpal  = { pal_addr[3:0], pal_addr[3] };
 `endif
+
+function [4:0] dim;
+    input [4:0] a;
+    dim = a - (a>>2);
+endfunction
+
+reg [14:0] gated;
+
+// Super Hang On Equations 315-5251
+// muxel ==0 selects tile mapper output, ==1 selects road
+// muxsel = obj0 & obj1 & obj2 & obj3 & FIX & !rc3q #
+//       obj0 & obj1 & obj2 & obj3 & sa_n & sb_n & FIX #
+//       !obj0 & obj1 & !obj2 & obj3 & obj10 & !obj11 & FIX;
+
+always @(posedge clk) if(pxl_cen) begin
+    pal_addr <= pre_addr;
+    objl     <= obj_pxl;
+
+    gated <= /*!video_en ? 15'd0 :
+        ((shadow & ~pal_out[15])&~debug_bus[0]) ? { dim(rpal), dim(gpal), dim(bpal) } :*/
+        { rpal, gpal, bpal };
+end
+
+always @(*) begin
+    rd_mux[3:0] = rd_pxl[3:0];
+    // This mux only appears in Super Hang On
+    case( rc[4:3] )
+        0,1: rd_mux[5:4] = 2'b11;
+        2: rd_mux[5:4] = {1'b0, rd_pxl[4]};
+        3: rd_mux[5:4] = rd_pxl[5:4];
+    endcase
+    rd_mux[10:6] = {5{rc[4]}};
+    muxsel = !fix && (
+            (objl[3:0]==4'h0  && (!rc[3] || (!sa && !sb) )) ||
+            (objl[11:10]==~2'b01 && objl[3:0]==~4'b1010 ));
+    // muxsel = (objl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
+    //          (objl[11:10]==2'b01 && objl[3:0]==4'b1010 && !fix );
+    //if( debug_bus[7] ) muxsel=0;
+    `ifdef FORCE_ROAD
+    muxsel=1;
+    `endif
+    pre_addr[10:0] = muxsel ? ( /*debug_bus[7] ? 11'd0 :*/ rd_mux) : tmap_addr;
+    pre_addr[11] = 0; // Super Hang On
+end
+
+// reg LVBLl;
+
+// always @(posedge clk) begin
+//     LVBLl <= LVBL;
+//     if( LVBLl && !LVBL ) blink <= blink+2'd1;
+// end
 
 jtframe_dual_ram16 #(
     .aw        (13          ),
@@ -90,48 +143,13 @@ jtframe_dual_ram16 #(
     .q0     ( cpu_din   ),
 
     // Video reads
-    .addr1  ( { 2'd0, pal_addr }  ),
+    .addr1  ( { 1'd0, pal_addr } ),
     .data1  (           ),
     .we1    ( 2'b0      ),
-    .q1     ( pal       )
+    .q1     ( pal_out   )
 );
 
-function [4:0] dim;
-    input [4:0] a;
-    dim = a - (a>>2);
-endfunction
-
-reg [14:0] gated;
-
-// Super Hang On Equations 315-5251
-// muxel ==0 selects tile mapper output, ==1 selects road
-// muxsel = obj0 & obj1 & obj2 & obj3 & FIX & !rc3q #
-//       obj0 & obj1 & obj2 & obj3 & sa_n & sb_n & FIX #
-//       !obj0 & obj1 & !obj2 & obj3 & obj10 & !obj11 & FIX;
-
-always @(*) begin
-    rd_mux[3:0] = rd_pxl[3:0];
-    case( rc[4:3] )
-        0,1: rd_mux[5:4] = 2'b11;
-        2: rd_mux[5:4] = {1'b0, rd_pxl[4]};
-        3: rd_mux[5:4] = rd_pxl[5:4];
-    endcase
-    rd_mux[10:6] = {5{rc[4]}};
-
-    muxsel = (obj_pxl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
-             (obj_pxl[11:10]==2'b01 && obj_pxl[3:0]==4'b1010 && !fix );
-    if( debug_bus[1:0]==3 ) muxsel=1;
-    `ifdef FORCE_ROAD
-    muxsel=1;
-    `endif
-    pal_addr = muxsel ? rd_mux : tmap_addr;
-
-    gated = (shadow & ~pal[15]) ? { dim(rpal), dim(gpal), dim(bpal) } :
-                                  {     rpal,      gpal,      bpal  };
-    if( !video_en ) gated = 0;
-end
-
-jtframe_blank #(.DLY(2),.DW(15)) u_blank(
+jtframe_blank #(.DLY(3),.DW(15)) u_blank(
     .clk        ( clk       ),
     .pxl_cen    ( pxl_cen   ),
     .preLHBL    ( preLHBL   ),

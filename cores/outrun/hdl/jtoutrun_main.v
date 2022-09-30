@@ -56,6 +56,7 @@ module jtoutrun_main(
     input              sub_ok,
     input       [15:0] sub_din,
     output      [ 1:0] dsn,
+    output             creset,
 
     // cabinet I/O
     input       [ 2:0] ctrl_type,
@@ -133,7 +134,7 @@ wire        DTACKn, cpu_vpan;
 
 wire bus_cs    = pal_cs | char_cs | vram_cs | ram_cs | rom_cs | objram_cs | io_cs | sub_cs;
 wire bus_busy  = |{ rom_cs & ~dec_ok, (ram_cs | vram_cs) & ~ram_ok, sub_cs & ~sub_ok };
-wire cpu_rst, cpu_haltn, cpu_asn;
+wire cpu_rst, cpu_haltn, cpu_asn, cpu_oresetn;
 wire [ 1:0] cpu_dsn;
 reg  [15:0] cpu_din, dacana1, dacana1b;
 wire [15:0] mapper_dout, motor_pos;
@@ -148,6 +149,7 @@ assign LDSWn = RnW | LDSn;
 assign flip     = 0;
 assign addr     = A[19:1];
 assign mix_ipln = { cpu_ipln[2], line_intn, 1'b1 };
+assign creset = cpu_rst | ~cpu_oresetn;
 
 jts16b_mapper u_mapper(
     .rst        ( rst            ),
@@ -527,6 +529,7 @@ jtframe_m68k u_cpu(
     .FC         ( FC          ),
 
     .BERRn      ( BERRn       ),
+    .RESETn     ( cpu_oresetn ),
     // Bus arbitrion
     .HALTn      ( cpu_haltn   ),
     .BRn        ( BRn         ),

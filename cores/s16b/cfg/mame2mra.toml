@@ -5,6 +5,7 @@ zip = { alt="s16mcu_alt.zip" }
 info=[
     {tag="platform", value="SEGA S16B"}
 ]
+platform="jts16b"
 
 [features]
 # ddr = true

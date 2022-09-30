@@ -1,4 +1,4 @@
-include ../../s16/hdl/jts16.def
+include ../../s16/cfg/macros.def
 
 [mist]
 -JTFRAME_CREDITS
@@ -21,6 +21,9 @@ MAINKEY_START=0x442000
 N7751_START  =0x444000
 FD1089_START =0x44A000
 SNDKEY_START =0x448000
+
+# Make it the same as MCU_START
+JTFRAME_PROM_START=0x440000
 
 # Redefine memory size
 VRAMW=19
