@@ -80,7 +80,6 @@ always @(posedge clk) if( pxl_cen ) begin
     lyr1 <= { 2'd1, tile_or_obj( obj_g[9:0],        scr1_g[9:0]  , scr1_g[10], obj_prio>=2'd2 ) };
     lyr2 <= { 2'd2, tile_or_obj( obj_g[9:0],        scr2_g[9:0]  , scr2_g[10], obj_prio>=2'd1 ) };
     lyr3 <= { 2'd2, tile_or_obj( obj_g[9:0], {scr2_g[9:3], 3'd0 },       1'b0, 1'b1           ) };
-    { sb, sa, fix } <= active[2:0];
 end
 
 always @(*) begin
@@ -94,6 +93,7 @@ always @(*) begin
                (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? 4'b100 : (
                 0 )));
     if( pal_addr[10] ) active=4'b1000; // OBJ
+    { sb, sa, fix } = active[2:0];
 end
 
 endmodule
