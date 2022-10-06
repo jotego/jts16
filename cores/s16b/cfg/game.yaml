@@ -14,7 +14,7 @@ game:
 jtframe:
   - from: cpu
     get:
-      - 8051/mc8051.qip
+      - 8051/mc8051.yaml
   - from: clocking
     get:
       - jtframe_sync.v

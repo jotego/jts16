@@ -8,9 +8,7 @@ HEXDUMP=-nohex
 # SIMULATOR=-verilator
 SDRAM_SNAP=
 
-AUXTMP=/tmp/$RANDOM$RANDOM
-jtcfgstr -target=mist -output=bash -core s16 |grep _START > $AUXTMP
-source $AUXTMP
+eval `jtframe cfgstr s16 --target=mist --output=bash`
 
 while [ $# -gt 0 ]; do
     case $1 in
@@ -80,8 +78,7 @@ jtsim_sdram $HEXDUMP -header 32 \
 jtsim_sdram -header 32 -dumpbin fd1094.bin 0x182000 8192
 
 jtsim -mist -sysname $SYSNAME $SIMULATOR \
-	-videow 320 -videoh 224 \
-    -def ../../hdl/jts16.def -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER || exit $?
+        -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER || exit $?
 
 if [[ ! -z "$SCENE" && -e frame_1.jpg ]]; then
 	eom frame_1.jpg 2> /dev/null
