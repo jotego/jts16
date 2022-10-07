@@ -3,11 +3,6 @@ name: outrun for mist
 
 on:
   push:
-    branches:
-      - build
-      - mist
-      - build_outrun
-      - master
 
   workflow_dispatch:
 

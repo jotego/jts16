@@ -3,11 +3,6 @@ name: s16 for mist
 
 on:
   push:
-    branches:
-      - build
-      - mist
-      - build_s16
-      - master
 
   workflow_dispatch:
 
