@@ -96,6 +96,8 @@ module jts16_tilemap(
     output             fix,     // CHAR selected (?)
     output             sa,      // SCR1 selected (?)
     output             sb,      // SCR2 selected (?)
+    // Set top priority
+    input              set_fix,
 
     // Debug
     input       [ 3:0] gfx_en,
@@ -340,6 +342,9 @@ jts16_prio u_prio(
     .scr1_pxl  ( scr1_pxl       ),
     .scr2_pxl  ( scr2_pxl       ),
     .obj_pxl   ( obj_pxl        ),
+
+    // Set top priority
+    .set_fix   ( set_fix        ),
 
     // Selected layer
     .sa        ( sa             ),

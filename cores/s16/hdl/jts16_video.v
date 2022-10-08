@@ -165,6 +165,7 @@ jts16_tilemap #(.MODEL(MODEL)) u_tilemap(
     .obj_pxl    ( obj_pxl   ),
     .pal_addr   ( pal_addr  ),
     .shadow     ( shadow    ),
+    .set_fix    ( 1'b0      ),
     // Debug
     .gfx_en     ( gfx_en    ),
     .debug_bus  ( debug_bus ),

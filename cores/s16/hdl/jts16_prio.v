@@ -27,6 +27,8 @@ module jts16_prio(
     input      [10:0]  scr2_pxl,
     input      [11:0]   obj_pxl,
 
+    // Set top priority
+    input              set_fix,   // I think this is what some of the input pins do, but I need to check on the board
     // Selected layer
     output reg         sa,
     output reg         sb,
@@ -75,7 +77,7 @@ always @(*) begin
 end
 
 always @(posedge clk) if( pxl_cen ) begin
-    lyr0 <= tile_or_obj( obj_g[9:0], {4'd0, char_g[5:0] }, char_g[ 6], obj_prio==2'd3 );
+    lyr0 <= tile_or_obj( obj_g[9:0], {4'd0, char_g[5:0] }, char_g[ 6], !set_fix && obj_prio==2'd3 );    // set_fix will prevent the objects from overlaying the text layer
     lyr1 <= tile_or_obj( obj_g[9:0],        scr1_g[9:0]  , scr1_g[10], obj_prio>=2'd2 );
     lyr2 <= tile_or_obj( obj_g[9:0],        scr2_g[9:0]  , scr2_g[10], obj_prio>=2'd1 );
     lyr3 <= tile_or_obj( obj_g[9:0], {scr2_g[9:3], 3'd0 },       1'b0, 1'b1           );

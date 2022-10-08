@@ -216,6 +216,8 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .obj_pxl    ( obj_pxl   ),
     .pal_addr   ( tmap_addr ),
     .shadow     ( shadow    ),
+    .set_fix    ( 1'b1      ),  // fixed layer always on top
+    // Selected layer
     .sa         ( sa        ),
     .sb         ( sb        ),
     .fix        ( fix       ),
