@@ -11,7 +11,7 @@ beta=true
 
 [parse]
 sourcefile="segaorun.cpp"
-skip.descriptions=[ "Super Hang-On" ]
+skip.descriptions=[ "Out Run" ]
 
 [buttons]
 core=4 # max number of buttons supported by the core
@@ -20,7 +20,6 @@ Names = [
     { machine="toutrun", names="Accelerate,Brake,Gear (Low / High),Nitro"},
     { machine="shangon", names="Accelerate,Brake,-,Supercharger"},
 ]
-
 
 [dipsw]
 delete = [ "Unused", "Unknown" ]

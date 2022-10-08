@@ -230,6 +230,8 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .scr_bad    ( scr_bad   )
 );
 
+`ifdef SHANON
+// Super Hang On uses the System 16 object chip
 jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(1)) u_obj(
     .rst       ( rst            ),
     .clk       ( clk            ),
@@ -259,6 +261,7 @@ jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(1)) u_obj(
     //.debug_bus ( debug_bus      )
     .debug_bus ( 8'd0      )
 );
+`endif
 
 jtoutrun_colmix u_colmix(
     .rst       ( rst            ),
