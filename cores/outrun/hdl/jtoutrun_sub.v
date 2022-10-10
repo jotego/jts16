@@ -166,6 +166,7 @@ jtframe_68kdma u_dma(
 jtframe_m68k u_cpu(
     .clk        ( clk         ),
     .rst        ( rst | creset),
+    .RESETn     (             ),
     .cpu_cen    ( cpu_cen     ),
     .cpu_cenb   ( cpu_cenb    ),
 

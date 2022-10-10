@@ -23,7 +23,8 @@ module jtoutrun_video(
     input              pxl_cen,   // pixel clock enable
 
     input              video_en,
-    input [1:0]        game_id,
+    input              obj_half,
+    // input [1:0]        game_id,
 
     // CPU interface
     input              dip_pause,
@@ -50,7 +51,6 @@ module jtoutrun_video(
     // Other configuration
     input              flip,
     inout              ext_flip,
-    input              obj_toggle,
 
     // SDRAM interface
     input              char_ok,
@@ -109,7 +109,7 @@ module jtoutrun_video(
     output             scr_bad
 );
 
-localparam [9:0] OBJ_DLY = 10'd22;
+localparam [8:0] OBJ_DLY = 22;
 
 wire [ 8:0] hdump;
 wire        preLHBL, preLVBL;
@@ -184,7 +184,11 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .ext_flip   ( ext_flip  ),
     .colscr_en  ( 1'b0      ), // unused input on S16B tile maps
     .rowscr_en  ( 1'b0      ), // unused input on S16B tile maps
-    .alt_en     ( game_id==1), // Super Hang On uses the alternative character layout
+`ifdef SHANON
+    .alt_en     ( 1'b1      ), // Super Hang On uses the alternative character layout
+`else
+    .alt_en     ( 1'b0      ), // I used to have game_id==1 here when Out Run and SHANON where a single core
+`endif
 
     // SDRAM interface
     .char_ok    ( char_ok   ),
@@ -231,36 +235,67 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
 );
 
 `ifdef SHANON
-// Super Hang On uses the System 16 object chip
-jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(1)) u_obj(
-    .rst       ( rst            ),
-    .clk       ( clk            ),
-    .pxl_cen   ( pxl_cen        ),
-    .alt_bank  ( 1'b0           ),
+    // Super Hang On uses the System 16 object chip
+    jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(1)) u_obj(
+        .rst       ( rst            ),
+        .clk       ( clk            ),
+        .pxl_cen   ( pxl_cen        ),
+        .alt_bank  ( 1'b0           ),
 
-    // CPU interface
-    .cpu_obj_cs( objram_cs      ),
-    .cpu_addr  ( cpu_addr[10:1] ),
-    .cpu_dout  ( cpu_dout       ),
-    .dswn      ( main_dswn      ),
-    .cpu_din   ( obj_dout       ),
+        // CPU interface
+        .cpu_obj_cs( objram_cs      ),
+        .cpu_addr  ( cpu_addr[10:1] ),
+        .cpu_dout  ( cpu_dout       ),
+        .dswn      ( main_dswn      ),
+        .cpu_din   ( obj_dout       ),
 
-    // SDRAM interface
-    .obj_ok    ( obj_ok         ),
-    .obj_cs    ( obj_cs         ),
-    .obj_addr  ( obj_addr       ), // 9 addr + 3 vertical = 12 bits
-    .obj_data  ( obj_data       ),
+        // SDRAM interface
+        .obj_ok    ( obj_ok         ),
+        .obj_cs    ( obj_cs         ),
+        .obj_addr  ( obj_addr       ), // 9 addr + 3 vertical = 12 bits
+        .obj_data  ( obj_data       ),
 
-    // Video signal
-    .hstart    ( hstart         ),
-    .LHBL      ( ~HS            ),
-    .flip      ( flipx          ),
-    .vrender   ( vrender        ),
-    .hdump     ( hdump          ),
-    .pxl       ( obj_pxl        ),
-    //.debug_bus ( debug_bus      )
-    .debug_bus ( 8'd0      )
-);
+        // Video signal
+        .hstart    ( hstart         ),
+        .LHBL      ( ~HS            ),
+        .flip      ( flipx          ),
+        .vrender   ( vrender        ),
+        .hdump     ( hdump          ),
+        .pxl       ( obj_pxl        ),
+        //.debug_bus ( debug_bus      )
+        .debug_bus ( 8'd0      )
+    );
+`else
+    // Super Hang On uses the System 16 object chip
+    jtoutrun_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
+        .rst       ( rst            ),
+        .clk       ( clk            ),
+        .pxl_cen   ( pxl_cen        ),
+        .obj_half  ( obj_half       ),
+
+        // CPU interface
+        .cpu_obj_cs( objram_cs      ),
+        .cpu_addr  ( cpu_addr[10:1] ),
+        .cpu_dout  ( cpu_dout       ),
+        .dswn      ( main_dswn      ),
+        .cpu_din   ( obj_dout       ),
+
+        // SDRAM interface
+        .obj_ok    ( obj_ok         ),
+        .obj_cs    ( obj_cs         ),
+        .obj_addr  ( obj_addr       ), // 9 addr + 3 vertical = 12 bits
+        .obj_data  ( obj_data       ),
+
+        // Video signal
+        .hstart    ( hstart         ),
+        .LHBL      ( ~HS            ),
+        .flip      ( flipx          ),
+        .vrender   ( vrender        ),
+        .hdump     ( hdump          ),
+        .pxl       ( obj_pxl        ),
+        //.debug_bus ( debug_bus      )
+        .debug_bus ( 8'd0      )
+    );
 `endif
 
 jtoutrun_colmix u_colmix(

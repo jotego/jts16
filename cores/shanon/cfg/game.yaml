@@ -6,6 +6,5 @@ game:
     get:
       - jts16_obj.v
       - jts16_obj_ram.v
-      - jts16_obj_draw.v
       - jts16_obj_scan.v
       - ../cfg/tilemap.yaml

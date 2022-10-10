@@ -129,7 +129,7 @@ wire        scr1_ok, scr2_ok;
 wire [16:0] scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
 wire [31:0] scr1_data, scr2_data;
 
-wire        obj_ok, obj_cs, obj_toggle;
+wire        obj_ok, obj_cs, obj_half;
 wire [19:0] obj_addr;
 wire [15:0] obj_data;
 
@@ -231,7 +231,7 @@ jtoutrun_main u_main(
     .char_dout   ( char_dout  ),
     .pal_dout    ( pal_dout   ),
     .obj_dout    ( obj_dout   ),
-    .obj_toggle  ( obj_toggle ),
+    .obj_half    ( obj_half   ),
     .flip        ( flip       ),
     // RAM access
     .ram_cs      ( ram_cs     ),
@@ -291,7 +291,7 @@ jtoutrun_main u_main(
     assign sndmap_dout = 0;
     assign main_cs     = 0;
     assign main_addr   = 0;
-    assign obj_toggle  = 0;
+    assign obj_half    = 0;
     assign main_dsn    = 3;
     assign char_cs     = 0;
     assign pal_cs      = 0;
@@ -435,7 +435,7 @@ jtoutrun_video u_video(
     .gfx_en     ( gfx_en    ),
 
     .video_en   ( video_en  ),
-    .game_id    ( game_id   ),
+    // .game_id    ( game_id   ),
     // CPU interface
     .cpu_addr   ( main_addr[13:1]),
     .sub_addr   ( sub_addr[11:1] ),
@@ -460,7 +460,7 @@ jtoutrun_video u_video(
 
     .flip       ( flip      ),
     .ext_flip   ( dip_flip  ),
-    .obj_toggle ( obj_toggle),
+    .obj_half   ( obj_half  ),
 
     // SDRAM interface
     .char_ok    ( char_ok   ),

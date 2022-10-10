@@ -42,7 +42,7 @@ module jtoutrun_main(
     output reg         video_en,
     output reg         mute,
     output reg  [ 1:0] obj_cfg, // SG bus on page 6/7
-    output reg         obj_toggle,
+    output reg         obj_half,
 
     // RAM access
     output reg         ram_cs,
@@ -281,10 +281,10 @@ always @(posedge clk, posedge rst) begin
 end
 
 always @(*) begin
-    ppi_cs     = 0;
-    cab_dout   = 8'hff;
-    obj_toggle = 0;
-    adc_wr     = 0;
+    ppi_cs   = 0;
+    cab_dout = 8'hff;
+    obj_half = 0;
+    adc_wr   = 0;
     // Super Hang On
     if( io_cs && game_id==1 ) begin
         case( { A[13:12],A[5] } )
@@ -383,7 +383,7 @@ always @(*) begin
                 adc_wr = !RnW;
             end
             // 6: watchdog
-            7: obj_toggle = 1;
+            7: obj_half = 1;
             default:;
         endcase // A[6:4]
     end

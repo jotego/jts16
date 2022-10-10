@@ -1055,31 +1055,31 @@ void sega_outrun_sprite_device::draw(bitmap_ind16 &bitmap, const rectangle &clip
 {
 	//
 	//  Out Run/X-Board-style sprites
-	//
+	//    16-bit
 	//      Offs  Bits               Usage
 	//       +0   e------- --------  Signify end of sprite list
 	//       +0   -h-h---- --------  Hide this sprite if either bit is set
 	//       +0   ----bbb- --------  Sprite bank
 	//       +0   -------t tttttttt  Top scanline of sprite + 256
-	//       +2   oooooooo oooooooo  Offset within selected sprite bank
-	//       +4   ppppppp- --------  Signed 7-bit pitch value between scanlines
-	//       +4   -------x xxxxxxxx  X position of sprite (position $BE is screen position 0)
-	//       +6   -s------ --------  Enable shadows
-	//       +6   --pp---- --------  Sprite priority, relative to tilemaps
-	//       +6   ------vv vvvvvvvv  Vertical zoom factor (0x200 = full size, 0x100 = half size, 0x300 = 2x size)
-	//       +8   y------- --------  Render from top-to-bottom (1) or bottom-to-top (0) on screen
-	//       +8   -f------ --------  Horizontal flip: read the data backwards if set
-	//       +8   --x----- --------  Render from left-to-right (1) or right-to-left (0) on screen
-	//       +8   ------hh hhhhhhhh  Horizontal zoom factor (0x200 = full size, 0x100 = half size, 0x300 = 2x size)
-	//       +E   dddddddd dddddddd  Scratch space for current address
+	//       +1   oooooooo oooooooo  Offset within selected sprite bank
+	//       +2   ppppppp- --------  Signed 7-bit pitch value between scanlines
+	//       +2   -------x xxxxxxxx  X position of sprite (position $BE is screen position 0)
+	//       +3   -s------ --------  Enable shadows
+	//       +3   --pp---- --------  Sprite priority, relative to tilemaps
+	//       +3   ------vv vvvvvvvv  Vertical zoom factor (0x200 = full size, 0x100 = half size, 0x300 = 2x size)
+	//       +4   y------- --------  Render from top-to-bottom (1) or bottom-to-top (0) on screen
+	//       +4   -f------ --------  Horizontal flip: read the data backwards if set
+	//       +4   --x----- --------  Render from left-to-right (1) or right-to-left (0) on screen
+	//       +4   ------hh hhhhhhhh  Horizontal zoom factor (0x200 = full size, 0x100 = half size, 0x300 = 2x size)
+	//       +7   dddddddd dddddddd  Scratch space for current address
 	//
 	//  Out Run only:
-	//       +A   hhhhhhhh --------  Height in scanlines - 1
-	//       +A   -------- -ccccccc  Sprite color palette
+	//       +5   hhhhhhhh --------  Height in scanlines - 1
+	//       +5   -------- -ccccccc  Sprite color palette
 	//
 	//  X-Board only:
-	//       +A   ----hhhh hhhhhhhh  Height in scanlines - 1
-	//       +C   -------- cccccccc  Sprite color palette
+	//       +5   ----hhhh hhhhhhhh  Height in scanlines - 1
+	//       +6   -------- cccccccc  Sprite color palette
 	//
 	//  Final bitmap format:
 	//

@@ -27,7 +27,7 @@ module jts16_obj_draw(
     input      [15:0]  offset,  // MSB is also used as the flip bit
     input      [ 3:0]  bank,
     input      [ 1:0]  prio,
-    input      [ 5:0]  pal,
+    input      [ 6:0]  pal,
     input      [ 4:0]  hzoom,
     input              hflipb,
 
@@ -38,7 +38,7 @@ module jts16_obj_draw(
     input      [15:0]  obj_data,
 
     // Buffer
-    output     [11:0]  bf_data,
+    output     [12:0]  bf_data,
     output reg         bf_we,
     output reg [ 8:0]  bf_addr,
     input      [ 7:0]  debug_bus
