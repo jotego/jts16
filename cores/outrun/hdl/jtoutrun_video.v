@@ -117,11 +117,14 @@ wire        flipx;
 wire        sa, sb, fix;
 
 // video layers
-wire [11:0] obj_pxl;
+wire [12:0] obj_pxl;
+wire [11:0] obj2tile;
 wire [ 4:3] rc;
 wire [ 7:0] rd_pxl;
 wire [10:0] tmap_addr;
 wire        shadow;
+
+assign obj2tile = { obj_pxl[5:4], {2{obj_pxl[6]}}, {2{obj_pxl[3:0]}}^8'ha0 }; // schematics video 1/7
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -217,7 +220,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .vrender    ( vrender   ),
     .hdump      ( hdump     ),
     // Video layers
-    .obj_pxl    ( obj_pxl   ),
+    .obj_pxl    ( obj2tile  ),
     .pal_addr   ( tmap_addr ),
     .shadow     ( shadow    ),
     .set_fix    ( 1'b1      ),  // fixed layer always on top

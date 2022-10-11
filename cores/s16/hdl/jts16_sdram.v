@@ -136,12 +136,12 @@ module jts16_sdram #(
 
 localparam [21:0] ZERO_OFFSET=0,
                   VRAM_OFFSET=22'h10_0000,
-                  PCM_OFFSET =(`PCM_START-`BA1_START)>>1;
+                  PCM_OFFSET =(`PCM_START-`JTFRAME_BA1_START)>>1;
 
 /* verilator lint_off WIDTH */
-localparam [24:0] BA1_START  = `BA1_START,
-                  BA2_START  = `BA2_START,
-                  BA3_START  = `BA3_START,
+localparam [24:0] BA1_START  = `JTFRAME_BA1_START,
+                  BA2_START  = `JTFRAME_BA2_START,
+                  BA3_START  = `JTFRAME_BA3_START,
                   MCU_PROM   = `MCU_START,
                   N7751_PROM = `N7751_START,
                   KEY_PROM   = `MAINKEY_START,

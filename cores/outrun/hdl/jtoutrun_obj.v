@@ -112,7 +112,7 @@ jtoutrun_obj_scan #(.PXL_DLY(0)) u_scan(
     .vrender   ( vrender        )
 );
 
-jts16_obj_draw #(.MODEL(1)) u_draw(
+jts16_obj_draw #(.MODEL(2)) u_draw(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .hstart    ( hstart         ),

@@ -18,7 +18,10 @@
 
 // Video board, schematic sheet 5 of 7
 
-module jtoutrun_colmix(
+module jtoutrun_colmix #(
+    parameter MODEL = 3, // 2 = Out Run, 3 = Super Hang-On
+              PXLW  = MODEL==3 ? 13 : 14
+) (
     input              rst,
     input              clk,
     input              pxl2_cen,  // pixel clock enable (2x)
@@ -38,7 +41,7 @@ module jtoutrun_colmix(
 
     // From tile map generator
     input      [10:0]  tmap_addr,
-    input      [11:0]  obj_pxl,
+    input      [PXLW-1:0]  obj_pxl,
     input      [ 7:0]  rd_pxl,
     input      [ 4:3]  rc,
     input              shadow,
@@ -58,7 +61,8 @@ wire [ 1:0] we;
 wire [15:0] pal_out;
 wire [14:0] rgb;
 reg  [10:0] rd_mux;
-reg  [11:0] pal_addr, pre_addr, objl;
+reg  [11:0] pal_addr, pre_addr;
+reg  [PXLW-1:0] objl;
 reg         muxsel;
 // reg  [ 1:0] blink;
 

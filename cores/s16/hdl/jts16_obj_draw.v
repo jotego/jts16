@@ -16,7 +16,9 @@
     Version: 1.0
     Date: 12-3-2021 */
 
-module jts16_obj_draw(
+module jts16_obj_draw#(
+    parameter MODEL=0  // 0 = S16A, 1 = S16B, 2 = OUTRUN
+)(
     input              rst,
     input              clk,
     input              hstart,
@@ -27,7 +29,7 @@ module jts16_obj_draw(
     input      [15:0]  offset,  // MSB is also used as the flip bit
     input      [ 3:0]  bank,
     input      [ 1:0]  prio,
-    input      [ 6:0]  pal,
+    input      [(MODEL==2?6:5):0]  pal,
     input      [ 4:0]  hzoom,
     input              hflipb,
 
@@ -38,13 +40,12 @@ module jts16_obj_draw(
     input      [15:0]  obj_data,
 
     // Buffer
-    output     [12:0]  bf_data,
+    output     [(MODEL==2?12:11):0]  bf_data,
     output reg         bf_we,
     output reg [ 8:0]  bf_addr,
     input      [ 7:0]  debug_bus
 );
 
-parameter       MODEL=0;  // 0 = S16A, 1 = S16B
 
 reg  [15:0] pxl_data, cur;
 reg  [ 3:0] cnt;
@@ -58,10 +59,10 @@ wire        hzov;
 assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[15:12];
 assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[11: 8];
 //assign obj_addr = MODEL ? { bank[2:1], bank[3], bank[0], cur[15:0] } :
-assign obj_addr = MODEL ? { bank, cur[15:0] } :
+assign obj_addr = MODEL==1 ? { bank, cur[15:0] } :
                           { 2'b0,    bank[1:0], bank[2], cur[14:0] };
-assign bf_data  = { prio, pal, cur_pxl };
-assign hflip    = MODEL ? hflipb : cur[15];
+assign bf_data  = MODEL==2 ? { pal, prio, cur_pxl } : { prio, pal, cur_pxl };
+assign hflip    = MODEL==1 ? hflipb : cur[15];
 
 // Sprite scaling
 assign hzsum = {1'b0, hzacc} + {2'd0, hzoom};

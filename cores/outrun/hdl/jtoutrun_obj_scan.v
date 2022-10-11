@@ -99,7 +99,7 @@ always @(posedge clk, posedge rst) begin
         dr_start <= 0;
         tbl_we   <= 0;
         case( st )
-            default: begin
+            0: begin
                 cur_obj  <= 0;
                 stop     <= 0;
                 dr_start <= 0;
@@ -111,18 +111,17 @@ always @(posedge clk, posedge rst) begin
             1: if( !stop ) begin
                 top     <= tbl_dout[ 8:0] ^ 9'h100;
                 visible <= !tbl_dout[14] && !tbl_dout[12];
-                bank <= tbl_dout[11:9];
+                bank    <= tbl_dout[11:9];
+                first   <= 0;
                 if( tbl_dout[15] ) begin
                     st <= 0; // Done
-                end else begin // draw this one
-                    first <= top == vrender[8:0]; // first line
                 end
             end
             2: begin
                 offset <= tbl_dout;
             end
             3: begin
-                pitch <= { {9{tbl_dout[15]}}, tbl_dout[15:9]};
+                pitch[6:0] <= tbl_dout[15:9];
                 xpos  <= tbl_dout[8:0];
             end
             4: begin
@@ -133,6 +132,7 @@ always @(posedge clk, posedge rst) begin
             5: begin
                 vflip  <= tbl_dout[15];
                 hflipb <= tbl_dout[14];
+                pitch[15:7] <= {9{tbl_dout[12]}};
                 //  <= tbl_dout[13]; // flip what?
                 hzoom  <= tbl_dout[9:0];
             end
@@ -146,6 +146,7 @@ always @(posedge clk, posedge rst) begin
                 pal    <= tbl_dout[6:0];
             end
             7: begin
+                first <= top == vrender[8:0]; // first line
                 if( !visible || top > vrender || bottom < vrender ) begin // skip this sprite
                     cur_obj <= cur_obj + 1'd1;
                     idx     <= 0;

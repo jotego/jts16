@@ -148,16 +148,16 @@ module jtoutrun_sdram(
 );
 
 /* verilator lint_off WIDTH */
-localparam [24:0] BA1_START  = `BA1_START,
-                  BA2_START  = `BA2_START,
-                  BA3_START  = `BA3_START,
+localparam [24:0] BA1_START  = `JTFRAME_BA1_START,
+                  BA2_START  = `JTFRAME_BA2_START,
+                  BA3_START  = `JTFRAME_BA3_START,
                   ROAD_START = `ROAD_START,
                   KEY_PROM   = `KEY_START,
                   FD_PROM    = `FD1089_START;
 
 localparam [21:0] ZERO_OFFSET= 22'd0,
                   SROM_OFFSET= `SUB_START>>1,
-                  PCM_OFFSET = (`PCM_START-`BA1_START)>>1,
+                  PCM_OFFSET = (`PCM_START-BA1_START)>>1,
                   VRAM_OFFSET= 22'h10_0000,
                   SRAM_OFFSET= 22'h18_0000,
                   RD0_OFFSET = (ROAD_START-BA3_START)>>1,
@@ -328,6 +328,38 @@ jtframe_ram2_6slots #(
     .data_read   ( data_read )
 );
 
+// Sound
+jtframe_rom_2slots #(
+    .SLOT0_DW(   8),
+    .SLOT0_AW(  16),
+
+    .SLOT1_DW(   8),
+    .SLOT1_AW(  19),
+
+    .SLOT1_OFFSET( PCM_OFFSET )
+) u_bank1(
+    .rst        ( rst       ),
+    .clk        ( clk       ),
+
+    .slot0_addr ( snd_addr  ),
+    .slot0_dout ( snd_data  ),
+    .slot0_cs   ( snd_cs    ),
+    .slot0_ok   ( snd_ok    ),
+
+    .slot1_addr ( pcm_addr  ),
+    .slot1_dout ( pcm_data  ),
+    .slot1_cs   ( pcm_cs    ),
+    .slot1_ok   ( pcm_ok    ),
+
+    // SDRAM controller interface
+    .sdram_addr ( ba1_addr  ),
+    .sdram_req  ( ba_rd[1]  ),
+    .sdram_ack  ( ba_ack[1] ),
+    .data_dst   ( ba_dst[1] ),
+    .data_rdy   ( ba_rdy[1] ),
+    .data_read  ( data_read )
+);
+
 jtframe_rom_3slots #(
     .SLOT0_DW(32),
     .SLOT0_AW(13),
@@ -405,38 +437,6 @@ jtframe_rom_3slots #(
     .sdram_ack  ( ba_ack[3] ),
     .data_dst   ( ba_dst[3] ),
     .data_rdy   ( ba_rdy[3] ),
-    .data_read  ( data_read )
-);
-
-// Sound
-jtframe_rom_2slots #(
-    .SLOT0_DW(   8),
-    .SLOT0_AW(  16),
-
-    .SLOT1_DW(   8),
-    .SLOT1_AW(  19),
-
-    .SLOT1_OFFSET( PCM_OFFSET )
-) u_bank1(
-    .rst        ( rst       ),
-    .clk        ( clk       ),
-
-    .slot0_addr ( snd_addr  ),
-    .slot0_dout ( snd_data  ),
-    .slot0_cs   ( snd_cs    ),
-    .slot0_ok   ( snd_ok    ),
-
-    .slot1_addr ( pcm_addr  ),
-    .slot1_dout ( pcm_data  ),
-    .slot1_cs   ( pcm_cs    ),
-    .slot1_ok   ( pcm_ok    ),
-
-    // SDRAM controller interface
-    .sdram_addr ( ba1_addr  ),
-    .sdram_req  ( ba_rd[1]  ),
-    .sdram_ack  ( ba_ack[1] ),
-    .data_dst   ( ba_dst[1] ),
-    .data_rdy   ( ba_rdy[1] ),
     .data_read  ( data_read )
 );
 
