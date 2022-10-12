@@ -93,7 +93,7 @@ module jts16_video(
 );
 
 localparam MODEL = `ifdef S16B 1; `else 0; `endif
-localparam [9:0] OBJ_DLY = MODEL ? 10'd22 : 10'd17;
+localparam [8:0] OBJ_DLY = MODEL ? 9'd22 : 9'd17;
 
 wire [ 8:0] hdump;
 wire        preLHBL, preLVBL;

@@ -121,8 +121,7 @@ always @(posedge clk, posedge rst) begin
                 offset <= tbl_dout;
             end
             3: begin
-                pitch[6:0] <= tbl_dout[15:9];
-                xpos  <= tbl_dout[8:0];
+                { pitch[6:0], xpos } <= tbl_dout[8:0];
             end
             4: begin
                 shadow <= tbl_dout[14];

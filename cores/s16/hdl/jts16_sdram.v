@@ -176,7 +176,7 @@ assign fd1089_we  = prom_we && prog_addr[21: 8]==FD_PROM    [21: 8];
 assign mcu_we     = prom_we && prog_addr[21:12]==MCU_PROM   [21:12];
 assign mc8123_we  = prom_we && prog_addr[21:13]==MC8123_PROM[21:13];
 assign key_we     = mc8123_en ? mc8123_we : fd_we;
-assign key_din    = prog_data^{8{mc8123_en}}; // the data is inverted for the MC8123
+assign key_din    = prog_data[7:0]^{8{mc8123_en}}; // the data is inverted for the MC8123
 assign key_mux    = mc8123_en ? key_mcaddr : key_addr;
 
 `ifdef S16B

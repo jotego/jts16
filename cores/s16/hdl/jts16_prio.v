@@ -92,7 +92,7 @@ always @(*) begin
     active   = (lyr0[10] ? lyr0[3:0]!=0 : lyr0[2:0]!=0) ? 4'b001 : (
                (lyr1[10] ? lyr1[3:0]!=0 : lyr1[2:0]!=0) ? 4'b010 : (
                (lyr2[10] ? lyr2[3:0]!=0 : lyr2[2:0]!=0) ? 4'b100 : (
-                0 )));
+                4'b0 )));
     if( pal_addr[10] ) active=4'b1000; // OBJ
     { sb, sa, fix } = active[2:0];
 end
