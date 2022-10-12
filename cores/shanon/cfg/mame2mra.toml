@@ -45,10 +45,10 @@ data = [
 regions = [
     { name="maincpu",     width=16, reverse=true },
     { name="subcpu",      start=$SUB_START, width=16, reverse=true },
-    { name="soundcpu",    start=$BA1_START },
+    { name="soundcpu",    start=$JTFRAME_BA1_START },
     { name="pcm",         start=$PCM_START, No_offset=true, Rom_len=0x10000 },
-    { name="gfx1",        start=$BA2_START, frac={ bytes=1, parts=4}, sort_byext=true },
-    { name="sprites",     start=$BA3_START, width=16, reverse=true },
+    { name="gfx1",        start=$JTFRAME_BA2_START, frac={ bytes=1, parts=4}, sort_byext=true },
+    { name="sprites",     start=$JTFRAME_BA3_START, width=16, reverse=true },
     { name="segaic16road",start=$ROAD_START, width=16, No_offset=true, singleton=true },
     { name="maincpu:key", start=$KEY_START, len=0x2000 },
     { name="fd1089",      start=$FD1089_START },
