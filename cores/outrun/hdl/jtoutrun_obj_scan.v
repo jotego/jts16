@@ -35,7 +35,8 @@ module jtoutrun_obj_scan(
     output reg [ 1:0]  dr_prio,
     output reg [ 6:0]  dr_pal,
     output reg [ 9:0]  dr_hzoom,
-    output reg         dr_hflipb,
+    output reg         dr_hflip,
+    output reg         dr_backwd,
 
     // Video signal
     input              flip,
@@ -52,7 +53,7 @@ reg  [6:0] cur_obj;  // current object
 reg  [2:0] idx;
 reg  [STW-1:0] st;
 reg [15:0] zoom;
-reg        first, stop, visible;
+reg        first, stop, visible, backwd;
 
 // Object data
 reg        [ 8:0] bottom, top;
@@ -63,7 +64,7 @@ reg        [15:0] offset;
 reg        [ 2:0] bank;
 reg        [ 1:0] prio;
 reg        [ 6:0] pal;
-reg               zoom_sel, hflipb, vflip, shadow;
+reg               zoom_sel, hflip, vflip, shadow;
 wire       [15:0] next_offset;
 wire       [10:0] next_zoom;
 reg        [ 9:0] vzoom, hzoom;
@@ -134,11 +135,11 @@ always @(posedge clk, posedge rst) begin
                 vzoom  <= tbl_dout[9:0];
             end
             5: begin
-                vflip  <= tbl_dout[15];
-                hflipb <= tbl_dout[14];
+                vflip  <= ~tbl_dout[15]; // swap top & bottom when vflip is set
+                hflip  <=  tbl_dout[14]; // regular hflip
+                backwd <=  tbl_dout[13]; // the xpos sets the end position, instead of the start
+                hzoom  <=  tbl_dout[9:0];
                 pitch[15:7] <= {9{tbl_dout[12]}};
-                //  <= tbl_dout[13]; // flip what?
-                hzoom  <= tbl_dout[9:0];
             end
             6: begin
                 if( vflip ) begin
@@ -187,7 +188,8 @@ always @(posedge clk, posedge rst) begin
                     dr_pal    <= pal;
                     dr_prio   <= prio;
                     dr_start  <= 1;
-                    dr_hflipb <= hflipb;
+                    dr_hflip  <= hflip;
+                    dr_backwd <= backwd;
                     dr_hzoom  <= hzoom;
                     dr_bank   <= bank;
                     // next
