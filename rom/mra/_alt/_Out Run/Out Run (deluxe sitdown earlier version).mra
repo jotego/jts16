@@ -103,69 +103,53 @@
             <part name="opr-10230.104" crc="686f5e50" map="1000"/>
         </interleave>
         <!-- sprites - starts at 0x170000 -->
-        <interleave output="16">
-            <part name="epr-10203.38" crc="8445a622" map="01"/>
-            <part name="epr-10194.26" crc="f0eda3bd" map="10"/>
+        <interleave output="32">
+            <part name="epr-10194.26" crc="f0eda3bd" map="0001"/>
+            <part name="epr-10203.38" crc="8445a622" map="0010"/>
+            <part name="epr-10212.52" crc="dee7e731" map="0100"/>
+            <part name="epr-10221.66" crc="43431387" map="1000"/>
         </interleave>
-        <interleave output="16">
-            <part name="epr-10221.66" crc="43431387" map="01"/>
-            <part name="epr-10212.52" crc="dee7e731" map="10"/>
+        <interleave output="32">
+            <part name="epr-10195.27" crc="0de75cdd" map="0001"/>
+            <part name="epr-10204.39" crc="5f4b5abb" map="0010"/>
+            <part name="epr-10213.53" crc="1d1b22f0" map="0100"/>
+            <part name="epr-10222.67" crc="a254c706" map="1000"/>
         </interleave>
-        <interleave output="16">
-            <part name="epr-10204.39" crc="5f4b5abb" map="01"/>
-            <part name="epr-10195.27" crc="0de75cdd" map="10"/>
+        <interleave output="32">
+            <part name="epr-10196.28" crc="8688bb59" map="0001"/>
+            <part name="epr-10205.40" crc="74bd93ca" map="0010"/>
+            <part name="epr-10214.54" crc="57527e18" map="0100"/>
+            <part name="epr-10223.68" crc="3850690e" map="1000"/>
         </interleave>
-        <interleave output="16">
-            <part name="epr-10222.67" crc="a254c706" map="01"/>
-            <part name="epr-10213.53" crc="1d1b22f0" map="10"/>
+        <interleave output="32">
+            <part name="epr-10197.29" crc="009165a6" map="0001"/>
+            <part name="epr-10206.41" crc="954542c5" map="0010"/>
+            <part name="epr-10215.55" crc="69be5a6c" map="0100"/>
+            <part name="epr-10224.69" crc="5cffc346" map="1000"/>
         </interleave>
-        <interleave output="16">
-            <part name="epr-10205.40" crc="74bd93ca" map="01"/>
-            <part name="epr-10196.28" crc="8688bb59" map="10"/>
+        <interleave output="32">
+            <part name="epr-10198.30" crc="d894992e" map="0001"/>
+            <part name="epr-10207.42" crc="ca61cea4" map="0010"/>
+            <part name="epr-10216.56" crc="d394134d" map="0100"/>
+            <part name="epr-10225.70" crc="0a5d1f2b" map="1000"/>
         </interleave>
-        <interleave output="16">
-            <part name="epr-10223.68" crc="3850690e" map="01"/>
-            <part name="epr-10214.54" crc="57527e18" map="10"/>
+        <interleave output="32">
+            <part name="epr-10199.31" crc="86376af6" map="0001"/>
+            <part name="epr-10208.43" crc="6830b7fa" map="0010"/>
+            <part name="epr-10217.57" crc="bf2c9b76" map="0100"/>
+            <part name="epr-10226.71" crc="5a452474" map="1000"/>
         </interleave>
-        <interleave output="16">
-            <part name="epr-10206.41" crc="954542c5" map="01"/>
-            <part name="epr-10197.29" crc="009165a6" map="10"/>
+        <interleave output="32">
+            <part name="epr-10200.32" crc="1e5d4f73" map="0001"/>
+            <part name="epr-10209.44" crc="5c15419e" map="0010"/>
+            <part name="epr-10218.58" crc="db4bdb39" map="0100"/>
+            <part name="epr-10227.72" crc="c7def392" map="1000"/>
         </interleave>
-        <interleave output="16">
-            <part name="epr-10224.69" crc="5cffc346" map="01"/>
-            <part name="epr-10215.55" crc="69be5a6c" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="epr-10207.42" crc="ca61cea4" map="01"/>
-            <part name="epr-10198.30" crc="d894992e" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="epr-10225.70" crc="0a5d1f2b" map="01"/>
-            <part name="epr-10216.56" crc="d394134d" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="epr-10208.43" crc="6830b7fa" map="01"/>
-            <part name="epr-10199.31" crc="86376af6" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="epr-10226.71" crc="5a452474" map="01"/>
-            <part name="epr-10217.57" crc="bf2c9b76" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="epr-10209.44" crc="5c15419e" map="01"/>
-            <part name="epr-10200.32" crc="1e5d4f73" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="epr-10227.72" crc="c7def392" map="01"/>
-            <part name="epr-10218.58" crc="db4bdb39" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="epr-10210.45" crc="39422931" map="01"/>
-            <part name="epr-10201.33" crc="1d9d4b9c" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="epr-10228.73" crc="25803978" map="01"/>
-            <part name="epr-10219.59" crc="e73b9224" map="10"/>
+        <interleave output="32">
+            <part name="epr-10201.33" crc="1d9d4b9c" map="0001"/>
+            <part name="epr-10210.45" crc="39422931" map="0010"/>
+            <part name="epr-10219.59" crc="e73b9224" map="0100"/>
+            <part name="epr-10228.73" crc="25803978" map="1000"/>
         </interleave>
         <!-- segaic16road - starts at 0x270000 -->
         <!-- Singleton region. The files are merged with themselves. -->

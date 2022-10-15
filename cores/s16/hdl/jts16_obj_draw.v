@@ -46,6 +46,9 @@ module jts16_obj_draw#(
     input      [ 7:0]  debug_bus
 );
 
+localparam S16A   = 0,
+           S16B   = 1,
+           OUTRUN = 2;
 
 reg  [15:0] pxl_data, cur;
 reg  [ 3:0] cnt;
@@ -58,11 +61,10 @@ wire        hzov;
 
 assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[15:12];
 assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[11: 8];
-//assign obj_addr = MODEL ? { bank[2:1], bank[3], bank[0], cur[15:0] } :
-assign obj_addr = MODEL==1 ? { bank, cur[15:0] } :
-                          { 2'b0,    bank[1:0], bank[2], cur[14:0] };
-assign bf_data  = MODEL==2 ? { pal, prio, cur_pxl } : { prio, pal, cur_pxl };
-assign hflip    = MODEL==1 ? hflipb : cur[15];
+assign obj_addr = MODEL==S16A ? { 2'b0, bank[1:0], bank[2], cur[14:0] } :
+                                { bank, cur[15:0] };
+assign bf_data  = MODEL==OUTRUN ? { pal, prio, cur_pxl } : { prio, pal, cur_pxl };
+assign hflip    = MODEL==S16A   ? cur[15] : hflipb;
 
 // Sprite scaling
 assign hzsum = {1'b0, hzacc} + {2'd0, hzoom};

@@ -13,9 +13,9 @@ if which ncverilog >/dev/null; then
 fi
 
 if [ -e obj.bin ]; then
-    drop1   < obj.bin > obj_hi.bin
-    drop1   < obj.bin >> obj_hi.bin
-    drop1 -l < obj.bin > obj_lo.bin
+    drop1    < obj.bin >  obj_hi.bin
+    drop1    < obj.bin >> obj_hi.bin
+    drop1 -l < obj.bin >  obj_lo.bin
     drop1 -l < obj.bin >> obj_lo.bin
 fi
 

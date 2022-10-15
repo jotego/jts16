@@ -77,21 +77,17 @@
             <part name="opr-12325.104" crc="1405137a" map="1000"/>
         </interleave>
         <!-- sprites - starts at 0x170000 -->
-        <interleave output="16">
-            <part name="mpr-12337.10" crc="828233d1" map="01"/>
-            <part name="mpr-12336.9" crc="dda465c7" map="10"/>
+        <interleave output="32">
+            <part name="mpr-12336.9" crc="dda465c7" map="0001"/>
+            <part name="mpr-12337.10" crc="828233d1" map="0010"/>
+            <part name="mpr-12338.11" crc="46b4b5f4" map="0100"/>
+            <part name="mpr-12339.12" crc="0d7e3bab" map="1000"/>
         </interleave>
-        <interleave output="16">
-            <part name="mpr-12339.12" crc="0d7e3bab" map="01"/>
-            <part name="mpr-12338.11" crc="46b4b5f4" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="mpr-12365.14" crc="4a80b2a9" map="01"/>
-            <part name="mpr-12364.13" crc="a4b83e65" map="10"/>
-        </interleave>
-        <interleave output="16">
-            <part name="mpr-12367.16" crc="4930254a" map="01"/>
-            <part name="mpr-12366.15" crc="385cb3ab" map="10"/>
+        <interleave output="32">
+            <part name="mpr-12364.13" crc="a4b83e65" map="0001"/>
+            <part name="mpr-12365.14" crc="4a80b2a9" map="0010"/>
+            <part name="mpr-12366.15" crc="385cb3ab" map="0100"/>
+            <part name="mpr-12367.16" crc="4930254a" map="1000"/>
         </interleave>
         <!-- segaic16road - starts at 0x270000 -->
         <!-- Singleton region. The files are merged with themselves. -->
