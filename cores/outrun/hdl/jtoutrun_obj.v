@@ -21,7 +21,7 @@ module jtoutrun_obj(
     input              clk,
     input              pxl_cen,   // pixel clock enable
 
-    input              obj_half,
+    input              obj_swap,
     // CPU interface
     input              cpu_obj_cs,
     input      [10:1]  cpu_addr,
@@ -71,7 +71,7 @@ wire        buf_we;
 jtoutrun_obj_ram u_ram(
     .rst       ( rst            ),
     .clk       ( clk            ),
-    .half      ( obj_half       ),
+    .swap      ( obj_swap       ),
     // CPU interface
     .obj_cs    ( cpu_obj_cs     ),
     .cpu_addr  ( cpu_addr       ),

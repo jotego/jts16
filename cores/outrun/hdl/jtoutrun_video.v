@@ -23,7 +23,7 @@ module jtoutrun_video(
     input              pxl_cen,   // pixel clock enable
 
     input              video_en,
-    input              obj_half,
+    input              obj_swap,
     // input [1:0]        game_id,
 
     // CPU interface
@@ -109,7 +109,7 @@ module jtoutrun_video(
     input      [ 7:0]  debug_bus,
     // status dump
     input      [ 7:0]  st_addr,
-    output     [ 7:0]  st_dout,
+    output reg [ 7:0]  st_dout,
     output             scr_bad
 );
 
@@ -127,8 +127,15 @@ wire [ 4:3] rc;
 wire [ 7:0] rd_pxl;
 wire [10:0] tmap_addr;
 wire        shadow;
+wire [ 7:0] st_tile;
 
 assign obj2tile = { obj_pxl[5:4], {2{obj_pxl[6]}}, {2{obj_pxl[3:0]}}^8'ha0 }; // schematics video 1/7
+always @(posedge clk) begin
+    case(st_addr[5])
+        0: st_dout <= st_tile;
+        1: st_dout <= obj_pxl[7:0];
+    endcase
+end
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -193,8 +200,10 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .rowscr_en  ( 1'b0      ), // unused input on S16B tile maps
 `ifdef SHANON
     .alt_en     ( 1'b1      ), // Super Hang On uses the alternative character layout
+    .obj_pxl    ( obj_pxl   ),
 `else
     .alt_en     ( 1'b0      ), // I used to have game_id==1 here when Out Run and SHANON where a single core
+    .obj_pxl    ( obj2tile  ),
 `endif
 
     // SDRAM interface
@@ -224,7 +233,6 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     .vrender    ( vrender   ),
     .hdump      ( hdump     ),
     // Video layers
-    .obj_pxl    ( obj2tile  ),
     .pal_addr   ( tmap_addr ),
     .shadow     ( shadow    ),
     .set_fix    ( 1'b1      ),  // fixed layer always on top
@@ -237,7 +245,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     //.debug_bus  ( debug_bus ),
     .debug_bus  ( 8'd0 ),
     .st_addr    ( st_addr   ),
-    .st_dout    ( st_dout   ),
+    .st_dout    ( st_tile   ),
     .scr_bad    ( scr_bad   )
 );
 
@@ -278,7 +286,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         .rst       ( rst            ),
         .clk       ( clk            ),
         .pxl_cen   ( pxl_cen        ),
-        .obj_half  ( obj_half       ),
+        .obj_swap  ( obj_swap       ),
 
         // CPU interface
         .cpu_obj_cs( objram_cs      ),
@@ -306,7 +314,11 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     assign obj_addr[1] = 0;
 `endif
 
+`ifdef SHANON
+jtshanon_colmix u_colmix(
+`else
 jtoutrun_colmix u_colmix(
+`endif
     .rst       ( rst            ),
     .clk       ( clk            ),
     .pxl_cen   ( pxl_cen        ),

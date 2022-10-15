@@ -11,7 +11,11 @@ module mist_dump(
     initial begin
         // #(200*100*1000*1000);
         $display("iverilog: DUMP enabled");
+`ifdef IVERILOG
         $dumpfile("test.lxt");
+`else
+        $dumpfile("test.vcd");
+`endif
     end
     `ifdef LOADROM
     //always @(negedge led) if( $time > 20000 ) begin // led = downloading signal
@@ -33,10 +37,11 @@ module mist_dump(
                 $dumpvars(1,mist_test.UUT.u_game.u_main);
                 $dumpvars(0,mist_test.UUT.u_game.u_main.u_mapper);
                 $dumpvars(1,mist_test.UUT.u_game.u_sub);
-                $dumpvars(1,mist_test.UUT.u_game.u_sdram);
-                $dumpvars(1,mist_test.UUT.u_game.u_sdram.u_dwnld);
+                // $dumpvars(1,mist_test.UUT.u_game.u_sdram);
+                // $dumpvars(1,mist_test.UUT.u_game.u_sdram.u_dwnld);
                 //$dumpvars(1,mist_test.UUT.u_game.u_sound);
-                //$dumpvars(1,mist_test.UUT.u_game.u_video);
+                $dumpvars(1,mist_test.UUT.u_game.u_video);
+                $dumpvars(1,mist_test.UUT.u_game.u_video.u_obj);
                 $dumpvars(1,mist_test.frame_cnt);
             `endif
             $dumpon;

@@ -20,7 +20,7 @@ module jtoutrun_obj_ram(
     input              rst,
     input              clk,
 
-    input              half,
+    input              swap,
     // CPU interface
     input              obj_cs,
     input      [10:1]  cpu_addr,
@@ -35,7 +35,14 @@ module jtoutrun_obj_ram(
     input      [15:0]  tbl_din
 );
 
-wire [ 1:0] cpu_we = ~dswn & {2{obj_cs}};
+wire [1:0] cpu_we = ~dswn & {2{obj_cs}};
+reg  half, swap_l;
+
+always @(posedge clk) begin
+    swap_l <= swap;
+    if ( swap && !swap_l )
+        half <= ~half;
+end
 
 jtframe_dual_ram16 #(
     .aw(11),

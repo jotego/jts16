@@ -129,7 +129,7 @@ wire        scr1_ok, scr2_ok;
 wire [16:0] scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
 wire [31:0] scr1_data, scr2_data;
 
-wire        obj_ok, obj_cs, obj_half;
+wire        obj_ok, obj_cs, obj_swap;
 wire [19:1] obj_addr;
 `ifdef SHANON
     wire [15:0] obj_data;
@@ -218,7 +218,6 @@ jtoutrun_main u_main(
     .cpu_cen     ( cpu_cen    ),
     .cpu_cenb    ( cpu_cenb   ),
     .pxl_cen     ( pxl_cen    ),
-    .game_id     ( game_id    ),
     .LHBL        ( LHBL       ),
     .snd_rstb    ( snd_rstb   ),
     .mute        ( mute       ),
@@ -235,7 +234,7 @@ jtoutrun_main u_main(
     .char_dout   ( char_dout  ),
     .pal_dout    ( pal_dout   ),
     .obj_dout    ( obj_dout   ),
-    .obj_half    ( obj_half   ),
+    .obj_swap    ( obj_swap   ),
     .flip        ( flip       ),
     // RAM access
     .ram_cs      ( ram_cs     ),
@@ -295,7 +294,7 @@ jtoutrun_main u_main(
     assign sndmap_dout = 0;
     assign main_cs     = 0;
     assign main_addr   = 0;
-    assign obj_half    = 0;
+    assign obj_swap    = 0;
     assign main_dsn    = 3;
     assign char_cs     = 0;
     assign pal_cs      = 0;
@@ -426,6 +425,7 @@ always @(posedge clk) begin
         2: st_dout <= st_video;
         3: case( st_addr[3:0] )
             0: st_dout <= sndmap_dout;
+            1: st_dout <= { 2'd0, obj_cfg, 3'b0, obj_swap };
             2: st_dout <= {obj_cfg, mute, video_en, 1'b0, snd_rstb, game_id};
         endcase
     endcase
@@ -439,7 +439,6 @@ jtoutrun_video u_video(
     .gfx_en     ( gfx_en    ),
 
     .video_en   ( video_en  ),
-    // .game_id    ( game_id   ),
     // CPU interface
     .cpu_addr   ( main_addr[13:1]),
     .sub_addr   ( sub_addr[11:1] ),
@@ -464,7 +463,7 @@ jtoutrun_video u_video(
 
     .flip       ( flip      ),
     .ext_flip   ( dip_flip  ),
-    .obj_half   ( obj_half  ),
+    .obj_swap   ( obj_swap  ),
 
     // SDRAM interface
     .char_ok    ( char_ok   ),

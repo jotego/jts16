@@ -2,6 +2,7 @@ game:
   - from: outrun
     get:
       - ../cfg/common.yaml
+      - jtoutrun_colmix.v
       - jtoutrun_obj.v
       - jtoutrun_obj_ram.v
       - jtoutrun_obj_draw.v

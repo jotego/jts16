@@ -90,10 +90,12 @@ always @(posedge clk) begin
 end
 
 function signed [15:0] clip_sum( input signed [15:0] a, b );
-    reg signed [16:0] full;
-    full = { a[15],a } + {b[15],b};
-    clip_sum = full[16]==full[15] ? full[15:0] :
-        full[16] ? 16'h8000 : 16'h7fff; // clip
+    begin : clip_sum_func
+        reg signed [16:0] full;
+        full = { a[15],a } + {b[15],b};
+        clip_sum = full[16]==full[15] ? full[15:0] :
+            full[16] ? 16'h8000 : 16'h7fff; // clip
+    end
 endfunction
 
 always @* begin

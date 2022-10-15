@@ -23,7 +23,6 @@ module jtoutrun_main(
     input              pxl_cen,
     output             cpu_cen,
     output             cpu_cenb,
-    input       [ 1:0] game_id,
     output reg         snd_rstb,
 
     // Video
@@ -42,7 +41,7 @@ module jtoutrun_main(
     output reg         video_en,
     output reg         mute,
     output reg  [ 1:0] obj_cfg, // SG bus on page 6/7
-    output reg         obj_half,
+    output reg         obj_swap,
 
     // RAM access
     output reg         ram_cs,
@@ -258,15 +257,8 @@ always @(posedge clk, posedge rst) begin
         mute     <= 0;
     end else begin
         if( adc_wr ) { dacana1, dacana1b } <= { joyana1, joyana1b };
-        if( game_id!=1 ) begin
-            obj_cfg  <= ppic_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
-            video_en <= ppic_dout[5];
-            adc_ch   <= ppic_dout[4:2];
-            snd_rstb <= ppic_dout[0];
-            if( io_cs && !LDSWn && A[6:4]==2 ) begin
-                mute <= ~cpu_dout[7]; // via ULN2203 device (darlington inverters)
-            end
-        end else if( io_cs && !LDSWn ) begin // shangon
+`ifdef SHANON // super hang-on
+        if( io_cs && !LDSWn ) begin
             case( {A[13:12], A[5]} )
                 0: begin
                     adc_ch   <= {1'd0, cpu_dout[7:6] };
@@ -277,16 +269,25 @@ always @(posedge clk, posedge rst) begin
                 default:;
             endcase
         end
+`else // (Turbo) Out Run
+        obj_cfg  <= ppic_dout[7:6]; // obj_cfg[1] -> object engine, obj_cfg[0] -> colmix
+        video_en <= ppic_dout[5];
+        adc_ch   <= ppic_dout[4:2];
+        snd_rstb <= ppic_dout[0];
+        if( io_cs && !LDSWn && A[6:4]==2 ) begin
+            mute <= ~cpu_dout[7]; // via ULN2203 device (darlington inverters)
+        end
+`endif
     end
 end
 
 always @(*) begin
     ppi_cs   = 0;
     cab_dout = 8'hff;
-    obj_half = 0;
+    obj_swap = 0;
     adc_wr   = 0;
-    // Super Hang On
-    if( io_cs && game_id==1 ) begin
+    if( io_cs ) begin
+`ifdef SHANON        // Super Hang On
         case( { A[13:12],A[5] } )
             2: case( A[2:1] )
                 0: cab_dout = 8'hff;
@@ -331,9 +332,7 @@ always @(*) begin
             end
             default:;
         endcase
-    end
-    // (Turbo) Out Run
-    if( io_cs && game_id!=1 ) begin
+`else     // (Turbo) Out Run
         case( A[6:4] )
             0: begin
                 ppi_cs   = 1;
@@ -383,9 +382,10 @@ always @(*) begin
                 adc_wr = !RnW;
             end
             // 6: watchdog
-            7: obj_half = 1;
+            7: obj_swap = !RnW;
             default:;
         endcase // A[6:4]
+`endif
     end
 end
 

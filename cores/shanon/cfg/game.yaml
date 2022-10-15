@@ -1,4 +1,7 @@
 game:
+  - from: shanon
+    get:
+      - jtshanon_colmix.v
   - from: outrun
     get:
       - ../cfg/common.yaml
