@@ -136,8 +136,8 @@ always @(posedge clk, posedge rst) begin
             end
             5: begin
                 vflip  <= ~tbl_dout[15]; // swap top & bottom when vflip is set
-                hflip  <=  tbl_dout[14]; // regular hflip
-                backwd <=  tbl_dout[13]; // the xpos sets the end position, instead of the start
+                hflip  <= ~tbl_dout[14]; // regular hflip
+                backwd <= ~tbl_dout[13]; // the xpos sets the end position, instead of the start
                 hzoom  <=  tbl_dout[9:0];
                 pitch[15:7] <= {9{tbl_dout[12]}};
             end

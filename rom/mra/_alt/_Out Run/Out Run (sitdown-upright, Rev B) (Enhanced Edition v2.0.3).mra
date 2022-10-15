@@ -88,16 +88,16 @@
         </interleave>
         <!-- sprites - starts at 0x170000 -->
         <interleave output="32">
-            <part name="mpr-10371.9" crc="7cc86208" map="0001"/>
-            <part name="mpr-10373.10" crc="b0d26ac9" map="0010"/>
-            <part name="mpr-10375.11" crc="59b60bd7" map="0100"/>
-            <part name="mpr-10377.12" crc="17a1b04a" map="1000"/>
+            <part name="mpr-10377.12" crc="17a1b04a" map="0001"/>
+            <part name="mpr-10375.11" crc="59b60bd7" map="0010"/>
+            <part name="mpr-10373.10" crc="b0d26ac9" map="0100"/>
+            <part name="mpr-10371.9" crc="7cc86208" map="1000"/>
         </interleave>
         <interleave output="32">
-            <part name="mpr-10372.13" crc="b557078c" map="0001"/>
-            <part name="mpr-10374.14" crc="8051e517" map="0010"/>
-            <part name="mpr-10376.15" crc="f3b8f318" map="0100"/>
-            <part name="mpr-10378.16" crc="a1062984" map="1000"/>
+            <part name="mpr-10378.16" crc="a1062984" map="0001"/>
+            <part name="mpr-10376.15" crc="f3b8f318" map="0010"/>
+            <part name="mpr-10374.14" crc="8051e517" map="0100"/>
+            <part name="mpr-10372.13" crc="b557078c" map="1000"/>
         </interleave>
         <!-- segaic16road - starts at 0x270000 -->
         <!-- Singleton region. The files are merged with themselves. -->
