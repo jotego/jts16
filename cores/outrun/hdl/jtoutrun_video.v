@@ -75,8 +75,12 @@ module jtoutrun_video(
 
     input              obj_ok,
     output             obj_cs,
-    output     [19:0]  obj_addr,
+    output     [19:1]  obj_addr,
+`ifdef SHANON
     input      [15:0]  obj_data,
+`else
+    input      [31:0]  obj_data,
+`endif
 
     output      [13:0] rd0_addr,
     input       [15:0] rd0_data,
@@ -238,6 +242,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
 );
 
 `ifdef SHANON
+    wire nc;
     // Super Hang On uses the System 16 object chip
     jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(1)) u_obj(
         .rst       ( rst            ),
@@ -255,7 +260,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         // SDRAM interface
         .obj_ok    ( obj_ok         ),
         .obj_cs    ( obj_cs         ),
-        .obj_addr  ( obj_addr       ), // 9 addr + 3 vertical = 12 bits
+        .obj_addr  ({nc, obj_addr } ), // 9 addr + 3 vertical = 12 bits
         .obj_data  ( obj_data       ),
 
         // Video signal
@@ -269,7 +274,6 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         .debug_bus ( 8'd0      )
     );
 `else
-    // Super Hang On uses the System 16 object chip
     jtoutrun_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
         .rst       ( rst            ),
         .clk       ( clk            ),
@@ -286,7 +290,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         // SDRAM interface
         .obj_ok    ( obj_ok         ),
         .obj_cs    ( obj_cs         ),
-        .obj_addr  ( obj_addr       ), // 9 addr + 3 vertical = 12 bits
+        .obj_addr  ( obj_addr[19:2] ), // 9 addr + 3 vertical = 12 bits
         .obj_data  ( obj_data       ),
 
         // Video signal
@@ -299,6 +303,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         //.debug_bus ( debug_bus      )
         .debug_bus ( 8'd0      )
     );
+    assign obj_addr[1] = 0;
 `endif
 
 jtoutrun_colmix u_colmix(

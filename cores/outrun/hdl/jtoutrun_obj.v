@@ -32,8 +32,8 @@ module jtoutrun_obj(
     // SDRAM interface
     input              obj_ok,
     output             obj_cs,
-    output     [19:0]  obj_addr, // 3(+1) bank + 15 offset = 18
-    input      [15:0]  obj_data,
+    output     [19:2]  obj_addr,
+    input      [31:0]  obj_data,
 
     // Video signal
     input              flip,
@@ -112,7 +112,7 @@ jtoutrun_obj_scan #(.PXL_DLY(0)) u_scan(
     .vrender   ( vrender        )
 );
 
-jts16_obj_draw #(.MODEL(2)) u_draw(
+jtoutrun_obj_draw u_draw(
     .rst       ( rst            ),
     .clk       ( clk            ),
     .hstart    ( hstart         ),
@@ -123,10 +123,10 @@ jts16_obj_draw #(.MODEL(2)) u_draw(
     .xpos      ( dr_xpos        ),
     .offset    ( dr_offset      ),
     //.bank      ( bank_aux       ),
-    .bank      ( {1'd0,dr_bank} ),
+    .bank      ( dr_bank        ),
     .prio      ( dr_prio        ),
     .pal       ( dr_pal         ),
-    .hflipb    ( dr_hflipb      ),
+    .hflip     ( dr_hflipb      ),
     //.hzoom     ( dr_hzoom       ),
     .hzoom     ( 5'd0           ),
 

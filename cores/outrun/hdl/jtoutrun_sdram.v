@@ -16,7 +16,9 @@
     Version: 1.0
     Date: 10-3-2021 */
 
-module jtoutrun_sdram(
+module jtoutrun_sdram #(
+    parameter OBJDW = 16
+) (
     input            rst,
     input            clk,
 
@@ -99,8 +101,12 @@ module jtoutrun_sdram(
     // Obj
     input            obj_cs,
     output           obj_ok,
-    input    [19:0]  obj_addr,
+    input    [19:1]  obj_addr,
+`ifdef SHANON
     output   [15:0]  obj_data,
+`else
+    output   [31:0]  obj_data,
+`endif
 
     // Roads
     input            rd0_cs,
@@ -402,8 +408,12 @@ jtframe_rom_3slots #(
 // OBJ
 
 jtframe_rom_3slots #(
-    .SLOT0_AW    ( 20         ),
+    .SLOT0_AW    ( 19         ),
+`ifdef SHANON
     .SLOT0_DW    ( 16         ),
+`else
+    .SLOT0_DW    ( 32         ),
+`endif
 
     .SLOT1_AW    ( 14         ),
     .SLOT1_DW    ( 16         ),

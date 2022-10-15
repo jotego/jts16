@@ -130,8 +130,12 @@ wire [16:0] scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) 
 wire [31:0] scr1_data, scr2_data;
 
 wire        obj_ok, obj_cs, obj_half;
-wire [19:0] obj_addr;
-wire [15:0] obj_data;
+wire [19:1] obj_addr;
+`ifdef SHANON
+    wire [15:0] obj_data;
+`else
+    wire [31:0] obj_data;
+`endif
 
 // CPU interface
 wire        creset;
