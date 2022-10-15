@@ -3,10 +3,10 @@
 		"magic": "APF_VER_1",
 		"data_slots": [
 			{
-				"name": "Game JSON Setup",
+				"name": "Arcade Game",
 				"id": 0,
 				"required": true,
-				"parameters": "0x12",
+				"parameters": "0x113",
 				"extensions": [
 					"json"
 				],
