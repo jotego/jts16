@@ -106,6 +106,11 @@ always @(posedge clk, posedge rst) begin
                 if( !hstart || vrender>223 ) begin // holds the state
                     st  <= 0;
                     idx <= 0;
+`ifdef SIMULATION
+                end else begin
+                    $display("--------- line %0d -----------", vrender);
+`endif
+
                 end
             end
             1: if( !stop ) begin
@@ -121,7 +126,7 @@ always @(posedge clk, posedge rst) begin
                 offset <= tbl_dout;
             end
             3: begin
-                { pitch[6:0], xpos } <= tbl_dout[8:0];
+                { pitch[6:0], xpos } <= tbl_dout;
             end
             4: begin
                 shadow <= tbl_dout[14];
@@ -168,6 +173,15 @@ always @(posedge clk, posedge rst) begin
             // end
             10: begin
                 if( !dr_busy ) begin
+`ifdef SIMULATION
+                    $display("Object %0d. From %0d to %0d (vflip=%0d)",cur_obj, top, bottom, vflip );
+                    $display("offset 0x%4X. Pitch=%0d (0x%X)",offset,pitch, pitch);
+                    if( pitch==0 && vrender<224 ) begin
+                        $display("Assertion failed: object drawn with pitch==0 (%m)");
+                        $finish;
+                    end
+
+`endif
                     dr_xpos   <= xpos; //+PXL_DLY;
                     dr_offset <= offset;
                     dr_pal    <= pal;

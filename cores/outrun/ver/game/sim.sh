@@ -19,7 +19,7 @@ if [ -e obj.bin ]; then
     drop1 -l < obj.bin >> obj_lo.bin
 fi
 
-if [ -e obj.bin ]; then
+if [ -e rdram.bin ]; then
     drop1    < rdram.bin > rdram_lo.bin
     drop1 -l < rdram.bin > rdram_hi.bin
 fi
