@@ -30,7 +30,7 @@ module jts16_prio(
     // Set top priority
     input              set_fix,   // I think this is what some of the input pins do, but I need to check on the board
     // Selected layer
-    output reg         sa,
+    output reg         sa,        // active high
     output reg         sb,
     output reg         fix,
 

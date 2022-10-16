@@ -33,6 +33,7 @@ module jtoutrun_obj_scan(
     output reg [15:0]  dr_offset,  // MSB is also used as the flip bit
     output reg [ 2:0]  dr_bank,
     output reg [ 1:0]  dr_prio,
+    output reg         dr_shadow,
     output reg [ 6:0]  dr_pal,
     output reg [ 9:0]  dr_hzoom,
     output reg         dr_hflip,
@@ -187,6 +188,7 @@ always @(posedge clk, posedge rst) begin
                     dr_offset <= offset;
                     dr_pal    <= pal;
                     dr_prio   <= prio;
+                    dr_shadow <= shadow;
                     dr_start  <= 1;
                     dr_hflip  <= hflip;
                     dr_backwd <= backwd;

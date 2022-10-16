@@ -41,7 +41,7 @@ module jtoutrun_obj(
     input              LHBL,
     input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
-    output     [12:0]  pxl,
+    output     [13:0]  pxl,
     input      [ 7:0]  debug_bus
 );
 
@@ -61,10 +61,10 @@ wire [ 2:0] dr_bank;
 wire [ 1:0] dr_prio;
 wire [ 6:0] dr_pal;
 wire [ 9:0] dr_hzoom;
-wire        dr_hflip, dr_backwd;
+wire        dr_hflip, dr_backwd, dr_shadow;
 
 // Line buffer
-wire [12:0] buf_data;
+wire [13:0] buf_data;
 wire [ 8:0] buf_addr;
 wire        buf_we;
 
@@ -102,6 +102,7 @@ jtoutrun_obj_scan #(.PXL_DLY(0)) u_scan(
     .dr_offset ( dr_offset      ),
     .dr_bank   ( dr_bank        ),
     .dr_prio   ( dr_prio        ),
+    .dr_shadow ( dr_shadow      ),
     .dr_pal    ( dr_pal         ),
     .dr_hflip  ( dr_hflip       ),
     .dr_backwd ( dr_backwd      ),
@@ -123,9 +124,9 @@ jtoutrun_obj_draw u_draw(
     .busy      ( dr_busy        ),
     .xpos      ( dr_xpos        ),
     .offset    ( dr_offset      ),
-    //.bank      ( bank_aux       ),
     .bank      ( dr_bank        ),
     .prio      ( dr_prio        ),
+    .shadow    ( dr_shadow      ),
     .pal       ( dr_pal         ),
     .hflip     ( dr_hflip       ),
     .backwd    ( dr_backwd      ),
@@ -155,7 +156,7 @@ always @(posedge clk) begin
 end
 
 jtframe_obj_buffer #(
-    .DW     (   13   ),
+    .DW     (   14   ),
     .AW     (    9    ),
     .ALPHA  (    0    )
 ) u_line(

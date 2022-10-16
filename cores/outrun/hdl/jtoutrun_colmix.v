@@ -18,10 +18,7 @@
 
 // Video board, schematic sheet 5 of 7
 
-module jtoutrun_colmix #(
-    parameter MODEL = 3, // 2 = Out Run, 3 = Super Hang-On
-              PXLW  = MODEL==3 ? 13 : 14
-) (
+module jtoutrun_colmix(
     input              rst,
     input              clk,
     input              pxl2_cen,  // pixel clock enable (2x)
@@ -41,7 +38,7 @@ module jtoutrun_colmix #(
 
     // From tile map generator
     input      [10:0]  tmap_addr,
-    input      [PXLW-1:0]  obj_pxl,
+    input      [13:0]  obj_pxl,
     input      [ 7:0]  rd_pxl,
     input      [ 4:3]  rc,
     input              shadow,
@@ -62,7 +59,7 @@ wire [15:0] pal_out;
 wire [14:0] rgb;
 reg  [10:0] rd_mux;
 reg  [11:0] pal_addr, pre_addr;
-reg  [PXLW-1:0] objl;
+reg  [13:0] objl;
 reg         muxsel;
 // reg  [ 1:0] blink;
 
@@ -121,8 +118,9 @@ always @(*) begin
     `ifdef FORCE_ROAD
     muxsel=1;
     `endif
-    pre_addr[10:0] = muxsel ? ( /*debug_bus[7] ? 11'd0 :*/ rd_mux) : tmap_addr;
-    pre_addr[11] = 0; // Super Hang On
+    pre_addr = muxsel ? { 2'b01, {3{rd_pxl[7]}}, rd_pxl[6:0] } :
+          (sa | sb | fix ) ? { 1'b0, tmap_addr }:
+                              { 1'b1, obj_pxl[13:7], obj_pxl[3:0]}; // skips the shadow and priority bits
 end
 
 // reg LVBLl;
@@ -147,7 +145,7 @@ jtframe_dual_ram16 #(
     .q0     ( cpu_din   ),
 
     // Video reads
-    .addr1  ( { 1'd0, pal_addr } ),
+    .addr1  ( { debug_bus[0], pal_addr } ),
     .data1  (           ),
     .we1    ( 2'b0      ),
     .q1     ( pal_out   )

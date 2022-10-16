@@ -121,15 +121,22 @@ wire        flipx;
 wire        sa, sb, fix;
 
 // video layers
-wire [12:0] obj_pxl;
-wire [11:0] obj2tile;
 wire [ 4:3] rc;
 wire [ 7:0] rd_pxl;
 wire [10:0] tmap_addr;
 wire        shadow;
 wire [ 7:0] st_tile;
+wire [11:0] obj2tile;   // object pixel going into the tile mapper
+`ifdef SHANON
+wire [11:0] obj_pxl;
 
-assign obj2tile = { obj_pxl[5:4], {2{obj_pxl[6]}}, {2{obj_pxl[3:0]}}^8'ha0 }; // schematics video 1/7
+assign obj2tile = obj_pxl;
+`else
+wire [13:0] obj_pxl;
+
+assign obj2tile = { obj_pxl[5:4], {2{obj_pxl[6]}}, {2{obj_pxl[3:0]}}^8'h50 }; // schematics video 1/7
+`endif
+
 always @(posedge clk) begin
     case(st_addr[5])
         0: st_dout <= st_tile;

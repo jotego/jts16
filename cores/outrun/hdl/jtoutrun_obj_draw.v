@@ -27,6 +27,7 @@ module jtoutrun_obj_draw(
     input      [15:0]  offset,  // MSB is also used as the flip bit
     input      [ 2:0]  bank,
     input      [ 1:0]  prio,
+    input              shadow,
     input      [ 6:0]  pal,
     input      [ 4:0]  hzoom,
     input              hflip,
@@ -39,7 +40,7 @@ module jtoutrun_obj_draw(
     input      [31:0]  obj_data,
 
     // Buffer
-    output     [12:0]  bf_data,
+    output     [13:0]  bf_data,
     output reg         bf_we,
     output reg [ 8:0]  bf_addr,
     input      [ 7:0]  debug_bus
@@ -57,7 +58,7 @@ wire        hzov;
 assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[31-:4];
 assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[(31-4)-:4];
 assign obj_addr = { bank[1:0], cur };
-assign bf_data  = { pal, prio, cur_pxl };
+assign bf_data  = { pal, shadow, prio, cur_pxl }; // 14 bits,
 
 // Sprite scaling
 assign hzsum = {1'b0, hzacc} + {2'd0, hzoom};
