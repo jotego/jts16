@@ -220,6 +220,10 @@ always @(posedge clk, posedge rst) begin
                 end else begin
                     if(!hstart) begin
                         st <= st;
+                    end else begin
+                        st      <= 1;
+                        cur_obj <= 0;
+                        stop    <= 1;
 `ifdef SIMULATION
                         $display("Assertion failed: objects not parsed within one scanline");
                         $finish;
