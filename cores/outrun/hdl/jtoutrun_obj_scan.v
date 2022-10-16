@@ -105,7 +105,7 @@ always @(posedge clk, posedge rst) begin
         dr_prio   <= 0;
         dr_pal    <= 0;
     end else begin
-        if( idx < 3'd7 ) idx <= idx + 3'd1;
+        if( idx < 7 ) idx <= idx + 3'd1;
         if( !stop ) begin
             st <= st+1'd1;
         end
@@ -162,6 +162,7 @@ always @(posedge clk, posedge rst) begin
                     bottom <= endline;
                 end
                 pal <= tbl_dout[6:0];
+                if( tbl_dout[15:8]==0 ) visible <= 0; // zero height
             end
             7: begin
                 first <= is_first; // first line
@@ -217,7 +218,13 @@ always @(posedge clk, posedge rst) begin
                         stop    <= 1;
                     end
                 end else begin
-                    if(!hstart) st <= st;
+                    if(!hstart) begin
+                        st <= st;
+`ifdef SIMULATION
+                        $display("Assertion failed: objects not parsed within one scanline");
+                        $finish;
+`endif
+                    end
                 end
             end
         endcase
