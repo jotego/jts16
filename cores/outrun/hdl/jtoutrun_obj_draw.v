@@ -107,7 +107,14 @@ always @(posedge clk, posedge rst) begin
                         bf_we    <= ~hzov & ~&nxt_pxl;
                     end
                     pxl_data <= hflip ? pxl_data>>4 : pxl_data<<4;
-                    if( !hzov ) bf_addr <= bf_addr + { {8{backwd}}, 1'd1 }; // if backwd, then -1; else +1
+                    if( !hzov ) begin
+                        bf_addr <= bf_addr + { {8{backwd}}, 1'd1 }; // if backwd, then -1; else +1
+                        if( backwd ? bf_addr<9'h94 : bf_addr==9'h1ff ) begin // Do not draw past the limits
+                            busy  <= 0;
+                            draw  <= 0;
+                            bf_we <= 0;
+                        end
+                    end
                 end else if(!halted) begin
                     if( obj_cs && obj_ok ) begin
                         // Get new data
