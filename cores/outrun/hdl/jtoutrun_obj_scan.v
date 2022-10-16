@@ -47,7 +47,6 @@ module jtoutrun_obj_scan(
 
 parameter [8:0] PXL_DLY=8;
 
-localparam LAST_IDX = 5; // last LUT position set by the CPU
 localparam STW = 4;
 
 reg  [6:0] cur_obj;  // current object
@@ -66,18 +65,31 @@ reg        [ 2:0] bank;
 reg        [ 1:0] prio;
 reg        [ 6:0] pal;
 reg               zoom_sel, hflip, vflip, shadow;
-wire       [15:0] next_offset;
-wire       [10:0] next_zoom;
+reg        [15:0] nx_offset;
+reg        [10:0] vacc;
+wire       [10:0] nx_vacc;
 reg        [ 9:0] vzoom, hzoom;
+wire              is_first;
 
-assign tbl_addr    = { cur_obj, idx };
-assign tbl_din     = offset; //zoom_sel ? {1'b0, zoom[14:0] } : offset;
-assign next_offset = first ? offset : tbl_dout + pitch;
-assign endline     = vflip ? top - {1'd0,tbl_dout[15:8]} : top + {1'd0,tbl_dout[15:8]};
-
-// wire       inzone = { 1'd0, vrender[7:0] } >=top && bottom>vrender[7:0];
+assign tbl_addr  = { cur_obj, idx };
+assign tbl_din   = zoom_sel ? {7'd0, vacc[8:0]} : offset;
+assign endline   = vflip ? top - {1'd0,tbl_dout[15:8]} : top + {1'd0,tbl_dout[15:8]};
+assign is_first  = top == vrender[8:0];
+assign nx_vacc   = {1'b0, vzoom} + {2'd0, is_first ? 9'd0 : tbl_dout[8:0]};
 
 initial zoom = 0;
+
+always @* begin
+    nx_offset = offset;
+    if( !first ) begin
+        case( vacc[10:9] )
+            0: nx_offset = offset;
+            1: nx_offset = tbl_dout + pitch;
+            2: nx_offset = tbl_dout + (pitch<<1);
+            3: nx_offset = tbl_dout + (pitch<<1) + pitch;
+        endcase
+    end
+end
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -93,7 +105,7 @@ always @(posedge clk, posedge rst) begin
         dr_prio   <= 0;
         dr_pal    <= 0;
     end else begin
-        idx <= idx>=LAST_IDX ? 3'd7 : (idx + 3'd1); // 7 is the scratch location
+        if( idx < 3'd7 ) idx <= idx + 3'd1;
         if( !stop ) begin
             st <= st+1'd1;
         end
@@ -149,10 +161,10 @@ always @(posedge clk, posedge rst) begin
                 end else begin
                     bottom <= endline;
                 end
-                pal    <= tbl_dout[6:0];
+                pal <= tbl_dout[6:0];
             end
             7: begin
-                first <= top == vrender[8:0]; // first line
+                first <= is_first; // first line
                 if( !visible || top > vrender || bottom < vrender ) begin // skip this sprite
                     cur_obj <= cur_obj + 1'd1;
                     idx     <= 0;
@@ -161,23 +173,24 @@ always @(posedge clk, posedge rst) begin
                     if( &cur_obj )
                         st <= 0; // we're done
                 end
-            //     zoom <= next_zoom;
+                vacc <= nx_vacc;
             end
             8: begin
-                offset   <= next_offset;
+                offset   <= nx_offset;
                 tbl_we   <= 1;
                 zoom_sel <= 0;
+                idx      <= 7; // idx would be 7 anyway, but I make it explicit for clarity
             end
-            // 9: begin
-            //     tbl_we  <= 1;
-            //     zoom_sel<= 1;
-            //     idx     <= 5;
-            // end
+            9: begin
+                tbl_we   <= 1;
+                zoom_sel <= 1;
+                idx      <= 6;
+            end
             10: begin
                 if( !dr_busy ) begin
 `ifdef SIMULATION
                     $display("Object %0d. From %0d to %0d (vflip=%0d)",cur_obj, top, bottom, vflip );
-                    $display("offset 0x%4X. Pitch=%0d (0x%X)",offset,pitch, pitch);
+                    $display("offset 0x%4X. Pitch=%0d (0x%X). V-zoom 0x%X / 0x%x",offset,pitch, pitch, vzoom, vacc );
                     if( pitch==0 && vrender<224 ) begin
                         $display("Assertion failed: object drawn with pitch==0 (%m)");
                         $finish;
