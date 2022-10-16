@@ -83,6 +83,15 @@ function [4:0] dim;
     dim = a - (a>>2);
 endfunction
 
+function [4:0] light;
+    input [4:0] a;
+    begin : fn_light
+        reg [5:0] aux;
+        aux = {1'b0, a } + ( {1'b0, a } >>2);
+        light = aux[5] ? 5'h1f : aux;
+    end
+endfunction
+
 reg [14:0] gated;
 
 // Super Hang On Equations 315-5251
@@ -95,9 +104,10 @@ always @(posedge clk) if(pxl_cen) begin
     pal_addr <= pre_addr;
     objl     <= obj_pxl;
 
-    gated <= /*!video_en ? 15'd0 :
-        ((shadow & ~pal_out[15])&~debug_bus[0]) ? { dim(rpal), dim(gpal), dim(bpal) } :*/
-        { rpal, gpal, bpal };
+    gated <= //!video_en ? 15'd0 :
+         !shadow                      ? { rpal, gpal, bpal }                      : // no shade effect
+         (pal_out[15] | debug_bus[2]) ? { light(rpal), light(gpal), light(bpal) } : // brighter
+                                        { dim(rpal), dim(gpal), dim(bpal) };        // dimmer
 end
 
 always @(*) begin
@@ -115,9 +125,6 @@ always @(*) begin
     // muxsel = (objl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
     //          (objl[11:10]==2'b01 && objl[3:0]==4'b1010 && !fix );
     //if( debug_bus[7] ) muxsel=0;
-    `ifdef FORCE_ROAD
-    muxsel=1;
-    `endif
     pre_addr = muxsel ? { 2'b01, {3{rd_pxl[7]}}, rd_pxl[6:0] } :
           (sa | sb | fix ) ? { 1'b0, tmap_addr }:
                               { 1'b1, obj_pxl[13:7], obj_pxl[3:0]}; // skips the shadow and priority bits
