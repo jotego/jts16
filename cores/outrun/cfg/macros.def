@@ -10,6 +10,9 @@ JTFRAME_STEREO
 # omitted by default to save BRAM
 NODEC
 
+# Use 64-bit bursts on bank 3
+# JTFRAME_BA3_LEN=64
+
 # Screen parameters
 JTFRAME_PLL=jtframe_pll6293
 JTFRAME_COLORW=5

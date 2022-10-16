@@ -422,6 +422,9 @@ jtframe_rom_3slots #(
     .SLOT2_AW    ( 14         ),
     .SLOT2_DW    ( 16         ),
     .SLOT2_OFFSET( RD1_OFFSET )
+    // ,.SLOT0_DOUBLE(  1         )
+    // ,.SLOT1_DOUBLE(  1         )
+    // ,.SLOT2_DOUBLE(  1         )
 ) u_bank3(
     .rst        ( rst       ),
     .clk        ( clk       ),

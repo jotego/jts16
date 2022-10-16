@@ -225,8 +225,8 @@ always @(posedge clk, posedge rst) begin
                         cur_obj <= 0;
                         stop    <= 1;
 `ifdef SIMULATION
-                        $display("Assertion failed: objects not parsed within one scanline");
-                        $finish;
+                        $display("Assertion failed: objects not parsed within one scanline. vrender=0x%0x,cur_obj=0x%0x\n",vrender,cur_obj);
+                        // $finish;
 `endif
                     end
                 end

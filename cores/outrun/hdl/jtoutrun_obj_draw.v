@@ -90,6 +90,11 @@ always @(posedge clk, posedge rst) begin
             if(obj_ok) halted <= 0;
             if( busy ) begin
                 if( draw ) begin
+                    if( !obj_cs ) begin // request the next 8 pixels from the SDRAM
+                        cur    <= cur + (hflip ? -16'd1 : 16'd1);
+                        obj_cs <= 1;
+                        halted <= 1;
+                    end
                     cnt <= cnt + 1'b1;
                     hzacc <= hzsum[5:0];
                     if( cnt==7 ) last_data <= &cur_pxl;
@@ -111,10 +116,6 @@ always @(posedge clk, posedge rst) begin
                         cnt      <= 1;
                         draw     <= 1;
                         obj_cs   <= 0;
-                    end else begin // request the next 8 pixels from the SDRAM
-                        cur    <= cur + (hflip ? -16'd1 : 16'd1);
-                        obj_cs <= 1;
-                        halted <= 1;
                     end
                 end
             end
