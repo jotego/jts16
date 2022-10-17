@@ -42,7 +42,8 @@ module jtoutrun_obj_scan(
     // Video signal
     input              flip,
     input              hstart,
-    input      [ 8:0]  vrender
+    input      [ 8:0]  vrender,
+    input      [ 7:0]  debug_bus
 );
 
 parameter [8:0] PXL_DLY=8;
@@ -83,13 +84,17 @@ always @* begin
     nx_offset = offset;
     if( !first ) begin
         case( vacc[10:9] )
-            0: nx_offset = offset;
+            0: nx_offset = tbl_dout;
             1: nx_offset = tbl_dout + pitch;
             2: nx_offset = tbl_dout + (pitch<<1);
             3: nx_offset = tbl_dout + (pitch<<1) + pitch;
         endcase
     end
 end
+
+`ifdef SIMULATION
+reg late;
+`endif
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -122,6 +127,7 @@ always @(posedge clk, posedge rst) begin
                     idx <= 0;
 `ifdef SIMULATION
                 end else begin
+                    late <= 0;
                     $display("--------- line %0d -----------", vrender);
 `endif
 
@@ -190,13 +196,14 @@ always @(posedge clk, posedge rst) begin
             10: begin
                 if( !dr_busy ) begin
 `ifdef SIMULATION
-                    $display("Object %0d. From %0d to %0d (vflip=%0d)",cur_obj, top, bottom, vflip );
-                    $display("offset 0x%4X. Pitch=%0d (0x%X). V-zoom 0x%X / 0x%x",offset,pitch, pitch, vzoom, vacc );
+                    if( /*cur_obj == 7'h2e*/ 1 ) begin
+                        $display("Object 0x%0x.From %0d to %0d (hflip=%0d, vflip=%0d) x=%d %s",cur_obj, top, bottom, hflip, vflip, xpos, first ? "FIRST" : "" );
+                        $display("offset 0x%4X. Pitch=%0d (0x%X). V-zoom 0x%X / 0x%x",offset,pitch, pitch, vzoom, vacc );
+                    end
                     if( pitch==0 && vrender<224 ) begin
                         $display("Assertion failed: object drawn with pitch==0 (%m)");
                         $finish;
                     end
-
 `endif
                     dr_xpos   <= xpos; //+PXL_DLY;
                     dr_offset <= offset;
@@ -218,20 +225,22 @@ always @(posedge clk, posedge rst) begin
                         stop    <= 1;
                     end
                 end else begin
-                    if(!hstart) begin
-                        st <= st;
-                    end else begin
-                        st      <= 1;
-                        cur_obj <= 0;
-                        stop    <= 1;
-`ifdef SIMULATION
-                        $display("Assertion failed: objects not parsed within one scanline. vrender=0x%0x,cur_obj=0x%0x\n",vrender,cur_obj);
-                        // $finish;
-`endif
-                    end
+                    st <= st;
                 end
             end
         endcase
+        if( hstart && cur_obj!=0 ) begin
+            cur_obj  <= 0;
+            stop     <= 1;
+            dr_start <= 0;
+            idx      <= 0;
+            st       <= 1;
+`ifdef SIMULATION
+            late     <= 1;
+            $display("Assertion failed: objects not parsed within one scanline. vrender=0x%0x,cur_obj=0x%0x\n",vrender,cur_obj);
+            // $finish;
+`endif
+        end
     end
 end
 

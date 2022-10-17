@@ -88,7 +88,7 @@ function [4:0] light;
     begin : fn_light
         reg [5:0] aux;
         aux = {1'b0, a } + ( {1'b0, a } >>2);
-        light = aux[5] ? 5'h1f : aux;
+        light = aux[5] ? 5'h1f : aux[4:0];
     end
 endfunction
 
@@ -152,7 +152,7 @@ jtframe_dual_ram16 #(
     .q0     ( cpu_din   ),
 
     // Video reads
-    .addr1  ( { debug_bus[0], pal_addr } ),
+    .addr1  ( {1'b0, pal_addr } ),
     .data1  (           ),
     .we1    ( 2'b0      ),
     .q1     ( pal_out   )

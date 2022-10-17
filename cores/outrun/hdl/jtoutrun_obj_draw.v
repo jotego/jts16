@@ -64,6 +64,9 @@ assign bf_data  = { pal, shadow, prio, cur_pxl }; // 14 bits,
 assign hzsum = {1'b0, hzacc} + {2'd0, hzoom};
 assign hzov  = hzsum[6];
 
+integer pxlcnt;
+reg late;
+
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         busy   <= 0;
@@ -72,21 +75,24 @@ always @(posedge clk, posedge rst) begin
         bf_we  <= 0;
         cur    <= 0;
     end else begin
-        if( hstart ) begin
-            busy <= 0;
-            draw <= 0;
-        end else
+        bf_we <= 0;
+        late <= 0;
         if( start ) begin
             cur      <= offset;
             obj_cs   <= 1;
             busy     <= 1;
             draw     <= 0;
-            bf_we    <= 0;
             halted   <= 1;
             bf_addr  <= xpos;
             hzacc    <= { hzoom[3:0], 2'd0 };
+`ifdef SIMULATION
+            pxlcnt <= 0;
+            if( busy || bf_we ) begin
+                $display("Assertion failed: obj draw start requested while busy");
+                $finish;
+            end
+`endif
         end else begin
-            bf_we <= 0;
             if(obj_ok) halted <= 0;
             if( busy ) begin
                 if( draw ) begin
@@ -98,11 +104,12 @@ always @(posedge clk, posedge rst) begin
                     cnt <= cnt + 1'b1;
                     hzacc <= hzsum[5:0];
                     if( cnt==7 ) last_data <= &cur_pxl;
-                    if(cnt[3]) begin
-                        draw  <= 0;
-                        bf_we <= 0;
-                        if( last_data )
+                    if( cnt[3] ) begin
+                        draw <= 0;
+                        if( last_data ) begin
                             busy <= 0;  // done
+                            $display("\tdrawn %d pixels",pxlcnt);
+                        end
                     end else begin
                         bf_we    <= ~hzov & ~&nxt_pxl;
                     end
@@ -112,9 +119,9 @@ always @(posedge clk, posedge rst) begin
                         if( backwd ? bf_addr<9'h94 : bf_addr==9'h1ff ) begin // Do not draw past the limits
                             busy  <= 0;
                             draw  <= 0;
-                            bf_we <= 0;
                         end
                     end
+                    pxlcnt <= pxlcnt+1;
                 end else if(!halted) begin
                     if( obj_cs && obj_ok ) begin
                         // Get new data
@@ -126,6 +133,12 @@ always @(posedge clk, posedge rst) begin
                     end
                 end
             end
+        end
+        if( hstart ) begin
+            busy   <= 0;
+            draw   <= 0;
+            obj_cs <= 0;
+            late   <= busy | bf_we;
         end
     end
 end

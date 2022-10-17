@@ -315,8 +315,8 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         .vrender   ( vrender        ),
         .hdump     ( hdump          ),
         .pxl       ( obj_pxl        ),
-        //.debug_bus ( debug_bus      )
-        .debug_bus ( 8'd0      )
+        .debug_bus ( debug_bus      )
+        //.debug_bus ( 8'd0      )
     );
     assign obj_addr[1] = 0;
 `endif

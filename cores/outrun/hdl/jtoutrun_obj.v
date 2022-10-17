@@ -111,7 +111,8 @@ jtoutrun_obj_scan #(.PXL_DLY(0)) u_scan(
     // Video signal
     .flip      ( flip           ),
     .hstart    ( hstart         ),
-    .vrender   ( vrender        )
+    .vrender   ( vrender        ),
+    .debug_bus ( debug_bus      )
 );
 
 jtoutrun_obj_draw u_draw(
