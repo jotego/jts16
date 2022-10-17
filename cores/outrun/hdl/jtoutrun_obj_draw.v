@@ -29,7 +29,7 @@ module jtoutrun_obj_draw(
     input      [ 1:0]  prio,
     input              shadow,
     input      [ 6:0]  pal,
-    input      [ 4:0]  hzoom,
+    input      [ 9:0]  hzoom,
     input              hflip,
     input              backwd,
 
@@ -51,8 +51,8 @@ reg  [15:0] cur;
 reg  [ 3:0] cnt;
 reg         draw, halted, last_data;
 wire [ 3:0] cur_pxl, nxt_pxl;
-reg  [ 5:0] hzacc;
-wire [ 6:0] hzsum;
+reg  [10:0] hzacc;
+wire [11:0] hzsum;
 wire        hzov;
 
 assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[31-:4];
@@ -62,7 +62,7 @@ assign bf_data  = { pal, shadow, prio, cur_pxl }; // 14 bits,
 
 // Sprite scaling
 assign hzsum = {1'b0, hzacc} + {2'd0, hzoom};
-assign hzov  = hzsum[6];
+assign hzov  = hzsum[11:9]>2;
 
 integer pxlcnt;
 reg late;
@@ -84,7 +84,7 @@ always @(posedge clk, posedge rst) begin
             draw     <= 0;
             halted   <= 1;
             bf_addr  <= xpos;
-            hzacc    <= { hzoom[3:0], 2'd0 };
+            hzacc    <= 0;
 `ifdef SIMULATION
             pxlcnt <= 0;
             if( busy || bf_we ) begin
@@ -102,7 +102,7 @@ always @(posedge clk, posedge rst) begin
                         halted <= 1;
                     end
                     cnt <= cnt + 1'b1;
-                    hzacc <= hzsum[5:0];
+                    hzacc <= { 1'd0, hzsum[9:0] };
                     if( cnt==7 ) last_data <= &cur_pxl;
                     if( cnt[3] ) begin
                         draw <= 0;

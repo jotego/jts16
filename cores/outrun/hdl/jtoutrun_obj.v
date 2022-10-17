@@ -131,8 +131,7 @@ jtoutrun_obj_draw u_draw(
     .pal       ( dr_pal         ),
     .hflip     ( dr_hflip       ),
     .backwd    ( dr_backwd      ),
-    //.hzoom     ( dr_hzoom       ),
-    .hzoom     ( 5'd0           ),
+    .hzoom     ( dr_hzoom       ),
 
     // SDRAM interface
     .obj_ok    ( obj_ok         ),
