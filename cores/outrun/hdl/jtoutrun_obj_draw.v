@@ -51,20 +51,31 @@ reg  [15:0] cur;
 reg  [ 3:0] cnt;
 reg         first, halted, last_data;
 wire [ 3:0] cur_pxl; // , nxt_pxl;
-reg  [10:0] hzacc;
-wire [11:0] hzsum;
-wire        hzov, data_ok;
+reg  [12:0] hzacc, nx_hzacc;
+reg         count_up, move_on;
+wire        data_ok;
 
 assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[31-:4];
 // assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[(31-4)-:4];
 assign obj_addr = { bank[1:0], cur };
 assign bf_data  = { pal, shadow, prio, cur_pxl }; // 14 bits,
 
-// Sprite scaling
-assign hzsum   = {1'b0, hzacc} + {2'd0, hzoom};
-assign hzov    = hzsum[11:9]>2;
-assign bf_we   = busy & ~first & data_ok & ~&cur_pxl;
+assign bf_we   = busy & ~first & move_on & data_ok & ~&cur_pxl;
 assign data_ok = obj_ok || cnt[2:0]!=0;
+
+// Sprite scaling
+always @(hzacc,hzoom) begin
+    count_up = 0;
+    move_on  = hzacc < 13'h200;
+    nx_hzacc = hzacc;
+    if( move_on ) begin
+        nx_hzacc = hzacc + {2'd0,hzoom};
+    end
+    else begin
+        count_up = 1;
+        nx_hzacc = hzacc - 13'h200;
+    end
+end
 
 integer ticks;
 reg late;
@@ -96,16 +107,23 @@ always @(posedge clk, posedge rst) begin
 `endif
         end else if(!halted) begin
             if( busy && data_ok ) begin
-                if( cnt[2:0]==0 ) obj_cs <= 0;
-                if( cnt==1 ) begin // request the next 8 pixels from the SDRAM
-                    cur    <= cur + (hflip ? -16'd1 : 16'd1);
-                    obj_cs <= 1;
-                end
                 // hzacc <= { 1'd0, hzsum[9:0] };
                 if( cnt==7 ) last_data <= &cur_pxl;
-                cnt <= first ? 4'd0 : cnt + 1'b1;
-                pxl_data <= cnt[2:0]==0 ? obj_data :
-                                         hflip ? pxl_data>>4 : pxl_data<<4;
+                hzacc <= nx_hzacc;
+                if( count_up ) begin
+                    if( cnt[2:0]==0 ) obj_cs <= 0;
+                    if( cnt==1 ) begin // request the next 8 pixels from the SDRAM
+                        cur    <= cur + (hflip ? -16'd1 : 16'd1);
+                        obj_cs <= 1;
+                    end
+                    cnt <= first ? 4'd0 : cnt + 1'b1;
+                    pxl_data <= cnt[2:0]==0 ? obj_data :
+                                             hflip ? pxl_data>>4 : pxl_data<<4;
+                end
+                if( first ) begin
+                    cnt <= 0;
+                    first <= 0;
+                end
                 if( cnt[3] ) begin
                     cnt[3]   <= 0;
                     if( last_data ) begin
@@ -113,13 +131,12 @@ always @(posedge clk, posedge rst) begin
                         $display("\tdrawing for %d ticks",ticks);
                     end
                 end
-                if( !first ) begin
+                if( !first && move_on ) begin
                     bf_addr <= bf_addr + { {8{backwd}}, 1'd1 }; // if backwd, then -1; else +1
                     if( backwd ? bf_addr<9'h94 : bf_addr==9'h1ff ) begin // Do not draw past the limits
                         busy  <= 0;
                     end
                 end
-                first <= 0;
             end
             ticks <= ticks+1;
         end
