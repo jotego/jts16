@@ -41,7 +41,7 @@ module jtoutrun_obj_draw(
 
     // Buffer
     output     [13:0]  bf_data,
-    output reg         bf_we,
+    output             bf_we,
     output reg [ 8:0]  bf_addr,
     input      [ 7:0]  debug_bus
 );
@@ -49,94 +49,82 @@ module jtoutrun_obj_draw(
 reg  [31:0] pxl_data;
 reg  [15:0] cur;
 reg  [ 3:0] cnt;
-reg         draw, halted, last_data;
-wire [ 3:0] cur_pxl, nxt_pxl;
+reg         first, halted, last_data;
+wire [ 3:0] cur_pxl; // , nxt_pxl;
 reg  [10:0] hzacc;
 wire [11:0] hzsum;
-wire        hzov;
+wire        hzov, data_ok;
 
 assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[31-:4];
-assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[(31-4)-:4];
+// assign nxt_pxl  = hflip ? pxl_data[7:4] : pxl_data[(31-4)-:4];
 assign obj_addr = { bank[1:0], cur };
 assign bf_data  = { pal, shadow, prio, cur_pxl }; // 14 bits,
 
 // Sprite scaling
-assign hzsum = {1'b0, hzacc} + {2'd0, hzoom};
-assign hzov  = hzsum[11:9]>2;
+assign hzsum   = {1'b0, hzacc} + {2'd0, hzoom};
+assign hzov    = hzsum[11:9]>2;
+assign bf_we   = busy & ~first & data_ok & ~&cur_pxl;
+assign data_ok = obj_ok || cnt[2:0]!=0;
 
-integer pxlcnt;
+integer ticks;
 reg late;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
         busy   <= 0;
-        draw   <= 0;
         obj_cs <= 0;
-        bf_we  <= 0;
         cur    <= 0;
     end else begin
-        bf_we <= 0;
-        late <= 0;
+        late   <= 0;
+        halted <= 0;
         if( start ) begin
             cur      <= offset;
             obj_cs   <= 1;
+            halted   <= obj_ok;
+            first    <= 1;
             busy     <= 1;
-            draw     <= 0;
-            halted   <= 1;
+            cnt      <= 0;
             bf_addr  <= xpos;
             hzacc    <= 0;
+            last_data<= 0;
 `ifdef SIMULATION
-            pxlcnt <= 0;
+            ticks <= 0;
             if( busy || bf_we ) begin
                 $display("Assertion failed: obj draw start requested while busy");
                 $finish;
             end
 `endif
-        end else begin
-            if(obj_ok) halted <= 0;
-            if( busy ) begin
-                if( draw ) begin
-                    if( !obj_cs ) begin // request the next 8 pixels from the SDRAM
-                        cur    <= cur + (hflip ? -16'd1 : 16'd1);
-                        obj_cs <= 1;
-                        halted <= 1;
-                    end
-                    cnt <= cnt + 1'b1;
-                    hzacc <= { 1'd0, hzsum[9:0] };
-                    if( cnt==7 ) last_data <= &cur_pxl;
-                    if( cnt[3] ) begin
-                        draw <= 0;
-                        if( last_data ) begin
-                            busy <= 0;  // done
-                            $display("\tdrawn %d pixels",pxlcnt);
-                        end
-                    end else begin
-                        bf_we    <= ~hzov & ~&nxt_pxl;
-                    end
-                    pxl_data <= hflip ? pxl_data>>4 : pxl_data<<4;
-                    if( !hzov ) begin
-                        bf_addr <= bf_addr + { {8{backwd}}, 1'd1 }; // if backwd, then -1; else +1
-                        if( backwd ? bf_addr<9'h94 : bf_addr==9'h1ff ) begin // Do not draw past the limits
-                            busy  <= 0;
-                            draw  <= 0;
-                        end
-                    end
-                    pxlcnt <= pxlcnt+1;
-                end else if(!halted) begin
-                    if( obj_cs && obj_ok ) begin
-                        // Get new data
-                        pxl_data <= obj_data;
-                        bf_we    <= ~&(hflip ? obj_data[3:0] : obj_data[31-:4]); // $F must not be drawn
-                        cnt      <= 1;
-                        draw     <= 1;
-                        obj_cs   <= 0;
+        end else if(!halted) begin
+            if( busy && data_ok ) begin
+                if( cnt[2:0]==0 ) obj_cs <= 0;
+                if( cnt==1 ) begin // request the next 8 pixels from the SDRAM
+                    cur    <= cur + (hflip ? -16'd1 : 16'd1);
+                    obj_cs <= 1;
+                end
+                // hzacc <= { 1'd0, hzsum[9:0] };
+                if( cnt==7 ) last_data <= &cur_pxl;
+                cnt <= first ? 4'd0 : cnt + 1'b1;
+                pxl_data <= cnt[2:0]==0 ? obj_data :
+                                         hflip ? pxl_data>>4 : pxl_data<<4;
+                if( cnt[3] ) begin
+                    cnt[3]   <= 0;
+                    if( last_data ) begin
+                        busy <= 0;  // done
+                        $display("\tdrawing for %d ticks",ticks);
                     end
                 end
+                if( !first ) begin
+                    bf_addr <= bf_addr + { {8{backwd}}, 1'd1 }; // if backwd, then -1; else +1
+                    if( backwd ? bf_addr<9'h94 : bf_addr==9'h1ff ) begin // Do not draw past the limits
+                        busy  <= 0;
+                    end
+                end
+                first <= 0;
             end
+            ticks <= ticks+1;
         end
         if( hstart ) begin
             busy   <= 0;
-            draw   <= 0;
             obj_cs <= 0;
             late   <= busy | bf_we;
         end
