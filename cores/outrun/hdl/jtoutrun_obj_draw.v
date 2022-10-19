@@ -52,7 +52,7 @@ reg  [ 3:0] cnt;
 reg         first, halted, last_data;
 wire [ 3:0] cur_pxl; // , nxt_pxl;
 reg  [12:0] hzacc, nx_hzacc;
-reg         count_up, move_on;
+reg         count_up, draw;
 wire        data_ok;
 
 assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[31-:4];
@@ -60,15 +60,15 @@ assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[31-:4];
 assign obj_addr = { bank[1:0], cur };
 assign bf_data  = { pal, shadow, prio, cur_pxl }; // 14 bits,
 
-assign bf_we   = busy & ~first & move_on & data_ok & ~&cur_pxl;
+assign bf_we   = busy & ~first & draw & data_ok & ~&cur_pxl;
 assign data_ok = obj_ok || cnt[2:0]!=0 || last_data;
 
 // Sprite scaling
 always @(hzacc,hzoom) begin
     count_up = 0;
-    move_on  = hzacc < 13'h200;
+    draw  = hzacc < 13'h200;
     nx_hzacc = hzacc;
-    if( move_on ) begin
+    if( draw ) begin
         nx_hzacc = hzacc + {2'd0,hzoom};
     end
     else begin
@@ -108,8 +108,10 @@ always @(posedge clk, posedge rst) begin
         end else if(!halted) begin
             if( busy && data_ok ) begin
                 // hzacc <= { 1'd0, hzsum[9:0] };
-                if( cnt==0 )
+                if( cnt==0 ) begin
                     last_data <= &(hflip ? obj_data[27-:4] : obj_data[7:4]);
+                    if( first ) pxl_data <= obj_data;
+                end
                 hzacc <= nx_hzacc;
                 if( count_up ) begin
                     if( cnt[2:0]==0 ) obj_cs <= 0;
@@ -122,7 +124,7 @@ always @(posedge clk, posedge rst) begin
                                              hflip ? pxl_data>>4 : pxl_data<<4;
                 end
                 if( first ) begin
-                    cnt <= 0;
+                    cnt   <= 0;
                     first <= 0;
                 end
                 if( cnt[3] ) begin
@@ -132,7 +134,7 @@ always @(posedge clk, posedge rst) begin
                         $display("\tdrawing for %d ticks",ticks);
                     end
                 end
-                if( !first && move_on ) begin
+                if( !first && draw ) begin
                     bf_addr <= bf_addr + { {8{backwd}}, 1'd1 }; // if backwd, then -1; else +1
                     if( backwd ? bf_addr<9'h94 : bf_addr==9'h1ff ) begin // Do not draw past the limits
                         busy  <= 0;
