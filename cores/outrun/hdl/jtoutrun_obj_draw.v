@@ -107,10 +107,8 @@ always @(posedge clk, posedge rst) begin
 `endif
         end else if(!halted) begin
             if( busy && data_ok ) begin
-                // hzacc <= { 1'd0, hzsum[9:0] };
-                if( cnt==0 ) begin
+                if( cnt[2:0]==0 ) begin
                     last_data <= &(hflip ? obj_data[27-:4] : obj_data[7:4]);
-                    if( first ) pxl_data <= obj_data;
                 end
                 hzacc <= nx_hzacc;
                 if( count_up ) begin
@@ -121,11 +119,12 @@ always @(posedge clk, posedge rst) begin
                     end
                     cnt <= first ? 4'd0 : cnt + 1'b1;
                     pxl_data <= cnt[2:0]==0 ? obj_data :
-                                             hflip ? pxl_data>>4 : pxl_data<<4;
+                                      hflip ? pxl_data>>4 : pxl_data<<4;
                 end
                 if( first ) begin
-                    cnt   <= 0;
-                    first <= 0;
+                    pxl_data <= obj_data;
+                    cnt      <= 0;
+                    first    <= 0;
                 end
                 if( cnt[3] ) begin
                     cnt[3]   <= 0;
