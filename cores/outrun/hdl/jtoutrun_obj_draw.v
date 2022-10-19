@@ -61,7 +61,7 @@ assign obj_addr = { bank[1:0], cur };
 assign bf_data  = { pal, shadow, prio, cur_pxl }; // 14 bits,
 
 assign bf_we   = busy & ~first & move_on & data_ok & ~&cur_pxl;
-assign data_ok = obj_ok || cnt[2:0]!=0;
+assign data_ok = obj_ok || cnt[2:0]!=0 || last_data;
 
 // Sprite scaling
 always @(hzacc,hzoom) begin
@@ -108,13 +108,14 @@ always @(posedge clk, posedge rst) begin
         end else if(!halted) begin
             if( busy && data_ok ) begin
                 // hzacc <= { 1'd0, hzsum[9:0] };
-                if( cnt==7 ) last_data <= &cur_pxl;
+                if( cnt==0 )
+                    last_data <= &(hflip ? obj_data[27-:4] : obj_data[7:4]);
                 hzacc <= nx_hzacc;
                 if( count_up ) begin
                     if( cnt[2:0]==0 ) obj_cs <= 0;
                     if( cnt==1 ) begin // request the next 8 pixels from the SDRAM
                         cur    <= cur + (hflip ? -16'd1 : 16'd1);
-                        obj_cs <= 1;
+                        obj_cs <= ~last_data;
                     end
                     cnt <= first ? 4'd0 : cnt + 1'b1;
                     pxl_data <= cnt[2:0]==0 ? obj_data :
