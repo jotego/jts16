@@ -57,7 +57,6 @@ module jtoutrun_colmix(
 wire [ 1:0] we;
 wire [15:0] pal_out;
 wire [14:0] rgb;
-reg  [10:0] rd_mux;
 reg  [11:0] pal_addr, pre_addr;
 reg  [13:0] objl;
 reg         muxsel;
@@ -111,14 +110,6 @@ always @(posedge clk) if(pxl_cen) begin
 end
 
 always @(*) begin
-    rd_mux[3:0] = rd_pxl[3:0];
-    // This mux only appears in Super Hang On
-    case( rc[4:3] )
-        0,1: rd_mux[5:4] = 2'b11;
-        2: rd_mux[5:4] = {1'b0, rd_pxl[4]};
-        3: rd_mux[5:4] = rd_pxl[5:4];
-    endcase
-    rd_mux[10:6] = {5{rc[4]}};
     muxsel = !fix && (
             (objl[3:0]==4'h0  && (!rc[3] || (!sa && !sb) )) ||
             (objl[11:10]==~2'b01 && objl[3:0]==~4'b1010 ));

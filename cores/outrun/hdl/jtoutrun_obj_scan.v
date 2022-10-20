@@ -42,8 +42,7 @@ module jtoutrun_obj_scan(
     // Video signal
     input              flip,
     input              hstart,
-    input      [ 8:0]  vrender,
-    input      [ 7:0]  debug_bus
+    input      [ 8:0]  vrender
 );
 
 parameter [8:0] PXL_DLY=8;

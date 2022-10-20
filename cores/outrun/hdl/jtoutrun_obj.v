@@ -41,8 +41,8 @@ module jtoutrun_obj(
     input              LHBL,
     input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
-    output     [13:0]  pxl,
-    input      [ 7:0]  debug_bus
+    output     [13:0]  pxl
+    // input      [ 7:0]  debug_bus
 );
 
 parameter [8:0] PXL_DLY=8;
@@ -111,8 +111,8 @@ jtoutrun_obj_scan #(.PXL_DLY(0)) u_scan(
     // Video signal
     .flip      ( flip           ),
     .hstart    ( hstart         ),
-    .vrender   ( vrender        ),
-    .debug_bus ( debug_bus      )
+    .vrender   ( vrender        )
+    // .debug_bus ( debug_bus      )
 );
 
 jtoutrun_obj_draw u_draw(
@@ -142,8 +142,8 @@ jtoutrun_obj_draw u_draw(
     // Buffer
     .bf_data   ( buf_data       ),
     .bf_we     ( buf_we         ),
-    .bf_addr   ( buf_addr       ),
-    .debug_bus ( debug_bus      )
+    .bf_addr   ( buf_addr       )
+    // .debug_bus ( debug_bus      )
 );
 
 reg [8:0] hobj;

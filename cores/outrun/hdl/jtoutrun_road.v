@@ -143,8 +143,8 @@ module jtoutrun_road(
         end
     end
 
-    wire only_road0 = ctrl==ONLY_ROAD0,// || debug_bus[0],
-         only_road1 = ctrl==ONLY_ROAD1,// && !debug_bus[0],
+    wire only_road0 = ctrl==ONLY_ROAD0 || debug_bus[0],
+         only_road1 = ctrl==ONLY_ROAD1 || debug_bus[1],
          road0_prio = ctrl==ROAD0_PRIO,// && !debug_bus[0],
          road1_prio = ctrl==ROAD1_PRIO;// && !debug_bus[0];
 

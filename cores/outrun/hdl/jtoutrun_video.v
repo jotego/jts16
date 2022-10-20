@@ -250,7 +250,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     // Debug
     .gfx_en     ( gfx_en    ),
     //.debug_bus  ( debug_bus ),
-    .debug_bus  ( 8'd0 ),
+    .debug_bus  ( 8'd0      ),
     .st_addr    ( st_addr   ),
     .st_dout    ( st_tile   ),
     .scr_bad    ( scr_bad   )
@@ -314,9 +314,8 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         .flip      ( flipx          ),
         .vrender   ( vrender        ),
         .hdump     ( hdump          ),
-        .pxl       ( obj_pxl        ),
-        .debug_bus ( debug_bus      )
-        //.debug_bus ( 8'd0      )
+        .pxl       ( obj_pxl        )
+        // .debug_bus ( debug_bus      )
     );
     assign obj_addr[1] = 0;
 `endif
@@ -348,9 +347,6 @@ jtoutrun_colmix u_colmix(
     .rd_pxl    ( rd_pxl         ),
     .rc        ( rc             ),
     .obj_pxl   ( obj_pxl        ),
-    // .sa        ( debug_bus[0]   ),
-    // .sb        ( debug_bus[1]   ),
-    // .fix       ( debug_bus[2]   ),
     .sa        ( sa             ),
     .sb        ( sb             ),
     .fix       ( fix            ),
@@ -360,7 +356,7 @@ jtoutrun_colmix u_colmix(
     .red       ( red            ),
     .green     ( green          ),
     .blue      ( blue           ),
-    .debug_bus ( debug_bus      )
+    .debug_bus ( /*debug_bus*/ 8'd0      )
 );
 
 endmodule
