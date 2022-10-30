@@ -32,7 +32,7 @@ module jts16_char(
 
     // SDRAM interface
     input              char_ok,
-    output     [12:0]  char_addr, // 9 addr + 3 vertical = 12 bits
+    output     [13:2]  char_addr, // 9 addr + 3 vertical + 2 (x32 bits) = 14 bits
     input      [31:0]  char_data,
 
     // In-RAM data
@@ -92,7 +92,7 @@ jtframe_dual_ram16 #(
 localparam [4:0] ROWREAD=8;
 localparam [8:0] FLIPOFFSET = 9'ha3;
 
-assign char_addr = { code, vf[2:0], 1'b0 };
+assign char_addr = { code, vf[2:0] };
 assign scr_start = hdump[8:4]==ROWREAD+1;
 
 // Flip

@@ -16,7 +16,7 @@
     Version: 1.0
     Date: 6-3-2021 */
 
-module `GAMETOP(
+module jts16_game(
     input           rst,
     input           clk,
     input           rst24,
@@ -46,42 +46,6 @@ module `GAMETOP(
     input   [15:0]  joyana_r3,
     input   [15:0]  joyana_r4,
 
-    // SDRAM interface
-    input           downloading,
-    output          dwnld_busy,
-
-    // Bank 0: allows R/W
-    output   [21:0] ba0_addr,
-    output   [21:0] ba1_addr,
-    output   [21:0] ba2_addr,
-    output   [21:0] ba3_addr,
-    output   [ 3:0] ba_rd,
-    output          ba_wr,
-    output   [15:0] ba0_din,
-    output   [ 1:0] ba0_din_m,  // write mask
-    input    [ 3:0] ba_ack,
-    input    [ 3:0] ba_dst,
-    input    [ 3:0] ba_dok,
-    input    [ 3:0] ba_rdy,
-
-    input    [15:0] data_read,
-
-    // RAM/ROM LOAD
-    input   [24:0]  ioctl_addr,
-    input   [ 7:0]  ioctl_dout,
-    input           ioctl_wr,
-    output  [ 7:0]  ioctl_din,
-    input           ioctl_ram, // 0 - ROM, 1 - RAM(EEPROM)
-    output  [21:0]  prog_addr,
-    output  [15:0]  prog_data,
-    output  [ 1:0]  prog_mask,
-    output  [ 1:0]  prog_ba,
-    output          prog_we,
-    output          prog_rd,
-    input           prog_ack,
-    input           prog_dok,
-    input           prog_dst,
-    input           prog_rdy,
     // DIP switches
     input   [31:0]  status,
     input   [31:0]  dipsw,
@@ -102,12 +66,76 @@ module `GAMETOP(
     output  [7:0]   debug_view,
     // status dump
     input   [ 7:0]  st_addr,
-    output reg [ 7:0]  st_dout
+    output reg [ 7:0]  st_dout,
+    // SDRAM interface
+    input   [21:0]  prog_addr,
+    input   [ 7:0]  prog_data,
+    input           prog_we,
+    input           prom_we,
+    /* jtframe mem_ports */
+`ifdef JTFRAME_HEADER
+    input           header,
+`endif
+`ifdef JTFRAME_IOCTL_RD
+    // input           ioctl_ram,
+    output   [ 7:0] ioctl_din,
+`endif
+    output          gfx_cs,
+
+    output   [18:1] xram_addr,
+    input    [15:0] xram_data,
+    output          xram_we,
+    output   [15:0] xram_din,
+    output   [ 1:0] xram_dsn,
+    output          xram_cs,
+    input           xram_ok,
+
+    output   [18:1] main_addr,
+    input    [15:0] main_data,
+    output          main_cs,
+    input           main_ok,
+
+    output   [15:1] map1_addr,
+    input    [15:0] map1_data,
+    input           map1_ok,
+
+    output   [15:1] map2_addr,
+    input    [15:0] map2_data,
+    input           map2_ok,
+
+    output   [18:0] snd_addr,
+    input    [ 7:0] snd_data,
+    output          snd_cs,
+    input           snd_ok,
+
+    output   [16:0] pcm_addr,
+    input    [ 7:0] pcm_data,
+    output          pcm_cs,
+    input           pcm_ok,
+
+    output   [19:2] char_addr,
+    input    [31:0] char_data,
+    input           char_ok,
+
+    output   [19:2] scr1_addr,
+    input    [31:0] scr1_data,
+    input           scr1_ok,
+
+    output   [19:2] scr2_addr,
+    input    [31:0] scr2_data,
+    input           scr2_ok,
+
+    output   [20:1] obj_addr,
+    input    [15:0] obj_data,
+    output          obj_cs,
+    input           obj_ok
 );
 
 `ifndef S16B
     localparam SNDW=15;
     wire [7:0] sndmap_dout=0;
+
+    assign snd_addr[18:16]=0;
 `else
     localparam SNDW=19;
 
@@ -128,26 +156,10 @@ wire [ 5:0] tile_bank;
 wire        scr_bad;
 
 // SDRAM interface
-wire        main_cs, vram_cs, ram_cs;
-wire [18:1] main_addr;
-wire [15:0] main_data, ram_data;
-wire        main_ok, ram_ok;
-
-wire        char_ok;
-wire [12:0] char_addr;
-wire [31:0] char_data;
-
-wire        map1_ok, map2_ok;
-wire [14:0] map1_addr, map2_addr; // 3(+1 S16B) pages + 11 addr = 14 (32 kB)
-wire [15:0] map1_data, map2_data;
-
-wire        scr1_ok, scr2_ok;
-wire [16:0] scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
-wire [31:0] scr1_data, scr2_data;
-
-wire        obj_ok, obj_cs;
-wire [19:0] obj_addr;
-wire [15:0] obj_data;
+wire        vram_cs, ram_cs;
+wire [13:2] pre_char_addr;
+wire [17:2] pre_scr1_addr, pre_scr2_addr;
+wire [20:1] pre_obj_addr;
 
 // CPU interface
 wire [12:1] cpu_addr;
@@ -157,17 +169,11 @@ wire        UDSWn, LDSWn, main_rnw;
 wire        char_cs, scr1_cs, pal_cs, objram_cs;
 
 // Sound CPU
-wire [SNDW-1:0] snd_addr;
-wire [ 7:0] snd_data;
-wire        snd_cs, snd_ok;
+wire [SNDW-1:0] pre_snd_addr;
 wire        mc8123_we; // only for S16B2 core
 wire        snd_clip;
 
 // PCM
-wire [16:0] pcm_addr;
-wire        pcm_cs;
-wire [ 7:0] pcm_data;
-wire        pcm_ok;
 wire        n7751_prom;
 
 // Protection
@@ -194,15 +200,14 @@ assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn                  = { UDSWn, LDSWn };
 assign game_led             = 1;
 assign debug_view           = st_dout;
+assign xram_dsn             = dsn;
+assign xram_we              = ~main_rnw;
+assign xram_din             = main_dout;
 
 jts16_cen u_cen(
-    .rst        ( rst       ),
-
     .clk        ( clk       ),
     .pxl2_cen   ( pxl2_cen  ),
     .pxl_cen    ( pxl_cen   ),
-    .cpu_cen    (           ),
-    .cpu_cenb   (           ),
 
     .clk24      ( clk24     ),
     .mcu_cen    ( mcu_cen   ),
@@ -239,8 +244,8 @@ jts16_cen u_cen(
     .rowscr_en  ( rowscr_en ),
     // RAM access
     .ram_cs     ( ram_cs    ),
-    .ram_data   ( ram_data  ),
-    .ram_ok     ( ram_ok    ),
+    .ram_data   ( xram_data ),
+    .ram_ok     ( xram_ok   ),
     // CPU bus
     .cpu_dout   ( main_dout ),
     .UDSWn      ( UDSWn     ),
@@ -308,12 +313,14 @@ jts16_cen u_cen(
     .st_dout     ( st_main    ),
     // NVRAM dump
     .ioctl_din   ( ioctl_din  ),
-    .ioctl_addr  ( ioctl_addr[16:0] )
+    .ioctl_addr  ( prog_addr[16:0] )
 );
 `else
     assign flip      = 0;
+    assign main_addr = 0;
     assign main_cs   = 0;
     assign ram_cs    = 0;
+    assign pal_cs    = 0;
     assign vram_cs   = 0;
     assign UDSWn     = 1;
     assign LDSWn     = 1;
@@ -471,7 +478,7 @@ jts16_video u_video(
 
     // SDRAM interface
     .char_ok    ( char_ok   ),
-    .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    .char_addr  ( pre_char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
     .char_data  ( char_data ),
 
     .map1_ok    ( map1_ok   ),
@@ -479,7 +486,7 @@ jts16_video u_video(
     .map1_data  ( map1_data ),
 
     .scr1_ok    ( scr1_ok   ),
-    .scr1_addr  ( scr1_addr ),
+    .scr1_addr  ( pre_scr1_addr ),
     .scr1_data  ( scr1_data ),
 
     .map2_ok    ( map2_ok   ),
@@ -487,12 +494,12 @@ jts16_video u_video(
     .map2_data  ( map2_data ),
 
     .scr2_ok    ( scr2_ok   ),
-    .scr2_addr  ( scr2_addr ),
+    .scr2_addr  ( pre_scr2_addr ),
     .scr2_data  ( scr2_data ),
 
     .obj_ok     ( obj_ok    ),
     .obj_cs     ( obj_cs    ),
-    .obj_addr   ( obj_addr  ),
+    .obj_addr   ( pre_obj_addr  ),
     .obj_data   ( obj_data  ),
 
     // Video signal
@@ -513,16 +520,16 @@ jts16_video u_video(
     .scr_bad    ( scr_bad   )
 );
 
-jts16_sdram #(.SNDW(SNDW)) u_sdram(
+jts16_mem u_mem(
     .rst        ( rst       ),
     .clk        ( clk       ),
-    .ioctl_ram  ( ioctl_ram ),
 
     .vrender    ( vrender   ),
     .LVBL       ( LVBL      ),
     .game_id    ( game_id   ),
     .tile_bank  ( tile_bank ),
-    //.tile_bank  ( debug_bus[5:0] ),
+    .gfx_cs     ( gfx_cs    ),
+    .n7751_prom ( n7751_prom),
 
     .dec_en     ( dec_en    ),
     .fd1089_en  ( fd1089_en ),
@@ -543,94 +550,30 @@ jts16_sdram #(.SNDW(SNDW)) u_sdram(
     .main_cs    ( main_cs   ),
     .vram_cs    ( vram_cs   ),
     .ram_cs     ( ram_cs    ),
-
     .main_addr  ( main_addr ),
-    .main_data  ( main_data ),
-    .ram_data   ( ram_data  ),
-
-    .main_ok    ( main_ok   ),
-    .ram_ok     ( ram_ok    ),
-
-    .dsn        ( dsn       ),
-    .main_dout  ( main_dout ),
-    .main_rnw   ( main_rnw  ),
+    .xram_cs    ( xram_cs   ),
+    .xram_addr  ( xram_addr ),
 
     // Sound CPU
-    .snd_addr   ( snd_addr  ),
-    .snd_cs     ( snd_cs    ),
-    .snd_data   ( snd_data  ),
-    .snd_ok     ( snd_ok    ),
     .mc8123_we  ( mc8123_we ),
 
-    // ADPCM ROM
-    .pcm_addr   ( pcm_addr  ),
-    .pcm_cs     ( pcm_cs    ),
-    .pcm_data   ( pcm_data  ),
-    .pcm_ok     ( pcm_ok    ),
+    // video addresses before gating and banking
+    .char_addr  ( pre_char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    .scr1_addr  ( pre_scr1_addr ),
+    .scr2_addr  ( pre_scr2_addr ),
+    .obj_addr   ( pre_obj_addr  ),
 
-    // Char interface
-    .char_ok    ( char_ok   ),
-    .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    .char_data  ( char_data ),
+    // and after:
+    .char_adj   ( char_addr  ),
+    .scr1_adj   ( scr1_addr  ),
+    .scr2_adj   ( scr2_addr  ),
+    .obj_addr_g ( obj_addr   ),
 
-    // Scroll 1
-    .map1_ok    ( map1_ok   ),
-    .map1_addr  ( map1_addr ),
-    .map1_data  ( map1_data ),
-
-    .scr1_ok    ( scr1_ok   ),
-    .scr1_addr  ( scr1_addr ),
-    .scr1_data  ( scr1_data ),
-
-    // Scroll 1
-    .map2_ok    ( map2_ok   ),
-    .map2_addr  ( map2_addr ),
-    .map2_data  ( map2_data ),
-
-    .scr2_ok    ( scr2_ok   ),
-    .scr2_addr  ( scr2_addr ),
-    .scr2_data  ( scr2_data ),
-
-    // Sprite interface
-    .obj_ok     ( obj_ok    ),
-    .obj_cs     ( obj_cs    ),
-    .obj_addr   ( obj_addr  ),
-    .obj_data   ( obj_data  ),
-
-    // Bank 0: allows R/W
-    .ba0_addr    ( ba0_addr      ),
-    .ba1_addr    ( ba1_addr      ),
-    .ba2_addr    ( ba2_addr      ),
-    .ba3_addr    ( ba3_addr      ),
-    .ba_rd       ( ba_rd         ),
-    .ba_wr       ( ba_wr         ),
-    .ba_ack      ( ba_ack        ),
-    .ba_dst      ( ba_dst        ),
-    .ba_dok      ( ba_dok        ),
-    .ba_rdy      ( ba_rdy        ),
-    .ba0_din     ( ba0_din       ),
-    .ba0_din_m   ( ba0_din_m     ),
-
-    //.debug_bus   ( debug_bus     ),
-
-    .data_read   ( data_read     ),
-
-    // ROM load
-    .downloading(downloading ),
-    .dwnld_busy (dwnld_busy  ),
-
-    .ioctl_addr ( ioctl_addr ),
-    .ioctl_dout ( ioctl_dout ),
-    .ioctl_wr   ( ioctl_wr   ),
     .prog_addr  ( prog_addr  ),
     .prog_data  ( prog_data  ),
-    .prog_mask  ( prog_mask  ),
-    .prog_ba    ( prog_ba    ),
     .prog_we    ( prog_we    ),
-    .n7751_prom ( n7751_prom ),
-    .prog_rd    ( prog_rd    ),
-    .prog_ack   ( prog_ack   ),
-    .prog_rdy   ( prog_rdy   )
+    .prom_we    ( prom_we    ),
+    .header     ( header     )
 );
 
 endmodule

@@ -21,6 +21,11 @@ module jtoutrun_game(
     input           clk,
     input           rst24,
     input           clk24,
+`ifdef JTFRAME_CLK48
+    input           rst48,
+    input           clk48,
+`endif
+
     output          pxl2_cen,   // 12   MHz
     output          pxl_cen,    //  6   MHz
     output   [4:0]  red,
@@ -40,42 +45,6 @@ module jtoutrun_game(
     input   [15:0]  joyana_r1,
     input   [15:0]  joyana_r2,
 
-    // SDRAM interface
-    input           downloading,
-    output          dwnld_busy,
-
-    // Bank 0: allows R/W
-    output   [21:0] ba0_addr,
-    output   [21:0] ba1_addr,
-    output   [21:0] ba2_addr,
-    output   [21:0] ba3_addr,
-    output   [ 3:0] ba_rd,
-    output          ba_wr,
-    output   [15:0] ba0_din,
-    output   [ 1:0] ba0_din_m,  // write mask
-    input    [ 3:0] ba_ack,
-    input    [ 3:0] ba_dst,
-    input    [ 3:0] ba_dok,
-    input    [ 3:0] ba_rdy,
-
-    input    [15:0] data_read,
-
-    // RAM/ROM LOAD
-    input   [24:0]  ioctl_addr,
-    input   [ 7:0]  ioctl_dout,
-    input           ioctl_wr,
-    // output  [ 7:0]  ioctl_din,
-    // input           ioctl_ram, // 0 - ROM, 1 - RAM(EEPROM)
-    output  [21:0]  prog_addr,
-    output  [15:0]  prog_data,
-    output  [ 1:0]  prog_mask,
-    output  [ 1:0]  prog_ba,
-    output          prog_we,
-    output          prog_rd,
-    input           prog_ack,
-    input           prog_dok,
-    input           prog_dst,
-    input           prog_rdy,
     // DIP switches
     input   [31:0]  status,
     input   [31:0]  dipsw,
@@ -97,8 +66,28 @@ module jtoutrun_game(
     output  [7:0]   debug_view,
     // status dump
     input   [ 7:0]  st_addr,
-    output reg [ 7:0]  st_dout
+    output reg [7:0] st_dout,
+    // SDRAM interface
+    input   [21:0]  prog_addr,
+    input   [ 7:0]  prog_data,
+    input           prog_we,
+    input           prom_we,
+    // Memory ports
+    `include "mem_ports.inc"
 );
+
+localparam [24:0] KEY_PROM = `KEY_START,
+                  FD_PROM  = `FD1089_START;
+
+`ifndef JTFRAME_CLK48
+wire clk48, rst48;
+assign clk48 = clk;
+assign rst48 = rst;
+`endif
+
+
+// Main CPU RAM access
+wire    ram_cs, vram_cs;
 
 // clock enable signals
 wire    cpu_cen, cpu_cenb,
@@ -110,32 +99,7 @@ wire [ 8:0] vrender;
 wire        hstart, vint;
 wire        scr_bad;
 wire [ 1:0] obj_cfg;
-
-// SDRAM interface
-wire        main_cs, vram_cs, ram_cs;
-wire [19:1] main_addr;
-wire [15:0] main_data, ram_data;
-wire        main_ok, ram_ok;
-
-wire        char_ok;
-wire [12:0] char_addr;
-wire [31:0] char_data;
-
-wire        map1_ok, map2_ok;
-wire [14:0] map1_addr, map2_addr; // 3(+1 S16B) pages + 11 addr = 14 (32 kB)
-wire [15:0] map1_data, map2_data;
-
-wire        scr1_ok, scr2_ok;
-wire [16:0] scr1_addr, scr2_addr; // 1 bank + 12 addr + 3 vertical + 1 (32-bit) = 15 bits
-wire [31:0] scr1_data, scr2_data;
-
-wire        obj_ok, obj_cs, obj_swap;
-wire [19:1] obj_addr;
-`ifdef SHANON
-    wire [15:0] obj_data;
-`else
-    wire [31:0] obj_data;
-`endif
+wire        obj_swap;
 
 // CPU interface
 wire        creset;
@@ -143,37 +107,25 @@ wire [15:0] main_dout, char_dout, pal_dout, obj_dout;
 wire [ 1:0] main_dsn, main_dswn;
 wire        main_rnw, sub_br,
             char_cs, scr1_cs, pal_cs, objram_cs;
+wire [19:1] full_addr;
 
 // Sub CPU
+wire        sio_cs, main_br, sub_rnw,
+            sub_ok, road_cs;  // not SDRAM signals
 wire [18:1] sub_addr;
-wire [15:0] sub_din, sub_dout, sram_data, srom_data, road_dout;
 wire [ 1:0] sub_dsn;
-wire        sub_rnw, srom_cs, sram_cs, sub_ok,
-            srom_ok, sram_ok, road_cs, sio_cs, main_br;
+wire [15:0] sub_dout, road_dout, sub_din; // not SDRAM signals
 // Sound CPU
-wire [15:0] snd_addr;
-wire [ 7:0] snd_data;
-wire        snd_cs, snd_ok;
 wire [ 7:0] sndmap_din, sndmap_dout;
 wire        sndmap_rd, sndmap_wr, sndmap_pbf, snd_rstb, mute;
 
 // PCM
-wire [18:0] pcm_addr;
-wire        pcm_cs;
-wire [ 7:0] pcm_data;
-wire        pcm_ok;
 wire        snd_clip;
-
-// Road ROMs
-wire        rd0_cs,   rd1_cs,
-            rd0_ok,   rd1_ok;
-wire [13:0] rd0_addr, rd1_addr;
-wire [15:0] rd0_data, rd1_data;
 
 // Protection
 wire        key_we, fd1089_we;
-wire        dec_en, dec_type,
-            fd1089_en, fd1094_en, mc8123_en;
+reg         dec_en, dec_type,
+            fd1089_en, fd1094_en;
 wire [ 7:0] key_data;
 wire [12:0] key_addr;
 
@@ -181,7 +133,7 @@ wire        flip, video_en, sound_en, line_intn;
 
 // Cabinet inputs
 wire [ 7:0] dipsw_a, dipsw_b;
-wire [ 1:0] game_id;
+reg  [ 1:0] game_id;
 wire [ 2:0] ctrl_type = status[22:20];
 
 // Status report
@@ -192,14 +144,80 @@ assign debug_view           = st_dout;
 assign main_dswn            = {2{main_rnw}} | main_dsn;
 assign game_led             = snd_clip;
 
-jts16_cen u_cen(
-    .rst        ( rst       ),
+// SDRAM memory
+assign main_addr = full_addr[18:1];
+assign gfx_cs    = LVBL || vrender==0 || vrender[8];
+assign xram_addr = { ram_cs, main_addr[15]&~ram_cs, main_addr[14:1] }; // RAM is mapped up
+assign xram_cs   = ram_cs | vram_cs;
+assign xram_din  = main_dout;
+assign xram_dsn  = main_dsn;
+assign xram_we   = ~main_rnw;
+assign subram_addr = sub_addr[14:1];
+assign subram_dsn  = sub_dsn;
+assign subram_we   = ~sub_rnw;
+assign subram_din  = sub_dout;
+assign subrom_addr = sub_addr;
 
+assign key_we    = prom_we && prog_addr[21:13]==KEY_PROM[21:13];
+assign fd1089_we = prom_we && prog_addr[21: 8]==FD_PROM [21: 8];
+
+initial begin
+    fd1089_en = 0;
+    fd1094_en = 0;
+    dec_type  = 0;
+end
+
+always @(posedge clk48) begin
+    case( st_addr[7:6] )
+        0: st_dout <= st_main;
+        1: st_dout <= st_sub;
+        2: st_dout <= st_video;
+        3: case( st_addr[3:0] )
+            0: st_dout <= sndmap_dout;
+            1: st_dout <= { 2'd0, obj_cfg, 3'b0, obj_swap };
+            2: st_dout <= {obj_cfg, mute, video_en, 1'b0, snd_rstb, game_id};
+        endcase
+    endcase
+end
+
+always @(posedge clk) begin
+    if( header && prog_we ) begin
+        if( prog_addr[3:0]==0 ) begin
+            fd1089_en <= prog_data[1];
+            dec_type  <= prog_data[0];
+            fd1094_en <= prog_data[2];
+        end
+        if( prog_addr[3:0]==1 ) game_id <= prog_data[1:0];
+    end
+    dec_en <= fd1089_en | fd1094_en;
+end
+
+`ifndef NODEC
+jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
+    .clk    ( clk             ),
+    .cen    ( 1'b1            ),
+    // Program
+    .wr_addr( prog_addr[12:0] ),
+    .we     ( key_we          ),
+    .data   ( prog_data       ),
+    // Read
+    .rd_addr( key_addr        ),
+    .q      ( key_data        )
+);
+`else
+    assign key_data = 0;
+`endif
+
+jts16_cen #(
+`ifdef JTFRAME_SDRAM96
+    .CLK96(1)
+`else
+    .CLK96(0)
+`endif
+) u_cen(
     .clk        ( clk       ),
     .pxl2_cen   ( pxl2_cen  ),
     .pxl_cen    ( pxl_cen   ),
-    .cpu_cen    (           ),
-    .cpu_cenb   (           ),
 
     .clk24      ( clk24     ),
     .mcu_cen    ( cen_pcm   ), // 8 MHz
@@ -212,9 +230,8 @@ jts16_cen u_cen(
 
 `ifndef NOMAIN
 jtoutrun_main u_main(
-    .rst         ( rst        ),
-    .clk         ( clk        ),
-    .clk_rom     ( clk        ),  // same clock - at least for now
+    .rst         ( rst48      ),
+    .clk         ( clk48      ),
     .cpu_cen     ( cpu_cen    ),
     .cpu_cenb    ( cpu_cenb   ),
     .pxl_cen     ( pxl_cen    ),
@@ -238,8 +255,8 @@ jtoutrun_main u_main(
     .flip        ( flip       ),
     // RAM access
     .ram_cs      ( ram_cs     ),
-    .ram_data    ( ram_data   ),
-    .ram_ok      ( ram_ok     ),
+    .ram_data    ( xram_data  ),
+    .ram_ok      ( xram_ok    ),
     // CPU bus
     .cpu_dout    ( main_dout  ),
     .dsn         ( main_dsn   ),
@@ -258,7 +275,7 @@ jtoutrun_main u_main(
     .coin_input  ( coin_input ),
     .service     ( service    ),
     // ROM access
-    .addr        ( main_addr  ),
+    .addr        ( full_addr  ),
     .rom_cs      ( main_cs    ),
     .rom_data    ( main_data  ),
     .rom_ok      ( main_ok    ),
@@ -293,7 +310,7 @@ jtoutrun_main u_main(
     assign flip        = 0;
     assign sndmap_dout = 0;
     assign main_cs     = 0;
-    assign main_addr   = 0;
+    assign full_addr   = 0;
     assign obj_swap    = 0;
     assign main_dsn    = 3;
     assign char_cs     = 0;
@@ -313,14 +330,14 @@ jtoutrun_main u_main(
 
 `ifndef NOSUB
 jtoutrun_sub u_sub(
-    .rst        ( rst       ),
+    .rst        ( rst48     ),
+    .clk        ( clk48     ),
     .creset     ( creset    ),
-    .clk        ( clk       ),
 
     .irqn       ( ~vint     ),    // common with main CPU
 
     // From main CPU
-    .main_A     ( main_addr ),
+    .main_A     ( full_addr ),
     .main_dsn   ( main_dsn  ),
     .main_rnw   ( main_rnw  ),
     .sub_br     ( sub_br    ), // bus request
@@ -333,13 +350,13 @@ jtoutrun_sub u_sub(
     .cpu_dout   ( sub_dout  ),
     .sub_addr   ( sub_addr  ),
 
-    .rom_cs     ( srom_cs   ),
-    .rom_ok     ( srom_ok   ),
-    .rom_data   ( srom_data ),
+    .rom_cs     ( subrom_cs   ),
+    .rom_ok     ( subrom_ok   ),
+    .rom_data   ( subrom_data ),
 
-    .ram_cs     ( sram_cs   ),
-    .ram_ok     ( sram_ok   ),
-    .ram_data   ( sram_data ),
+    .ram_cs     ( subram_cs   ),
+    .ram_ok     ( subram_ok   ),
+    .ram_data   ( subram_data ),
 
     .road_cs    ( road_cs   ),
     .sio_cs     ( sio_cs    ),
@@ -352,8 +369,8 @@ jtoutrun_sub u_sub(
 `else
     assign sub_addr = 0;
     assign sub_dout = 0;
-    assign srom_cs  = 0;
-    assign sram_cs  = 0;
+    assign subrom_cs  = 0;
+    assign subram_cs  = 0;
     assign road_cs  = 0;
     assign sio_cs   = 0;
     assign sub_dsn  = 3;
@@ -365,7 +382,7 @@ jtoutrun_sub u_sub(
 
 `ifndef NOSOUND
 jtoutrun_snd u_sound(
-    .rst        ( rst       ),
+    .rst        ( rst24     ),
     .clk        ( clk24     ),
     .snd_rstb   ( snd_rstb  ),
 
@@ -418,19 +435,6 @@ jtoutrun_snd u_sound(
     assign sndmap_wr = 0;
 `endif
 
-always @(posedge clk) begin
-    case( st_addr[7:6] )
-        0: st_dout <= st_main;
-        1: st_dout <= st_sub;
-        2: st_dout <= st_video;
-        3: case( st_addr[3:0] )
-            0: st_dout <= sndmap_dout;
-            1: st_dout <= { 2'd0, obj_cfg, 3'b0, obj_swap };
-            2: st_dout <= {obj_cfg, mute, video_en, 1'b0, snd_rstb, game_id};
-        endcase
-    endcase
-end
-
 jtoutrun_video u_video(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -440,7 +444,7 @@ jtoutrun_video u_video(
 
     .video_en   ( video_en  ),
     // CPU interface
-    .cpu_addr   ( main_addr[13:1]),
+    .cpu_addr   ( full_addr[13:1]),
     .sub_addr   ( sub_addr[11:1] ),
     .road_cs    ( road_cs   ),
     .sub_io_cs  ( sio_cs    ),
@@ -517,140 +521,12 @@ jtoutrun_video u_video(
     .debug_bus  ( debug_bus ),
     .st_addr    ( st_addr   ),
     .st_dout    ( st_video  ),
-    .scr_bad    ( scr_bad   )
-);
+    .scr_bad    ( scr_bad   ),
 
-jtoutrun_sdram u_sdram(
-    .rst        ( rst       ),
-    .clk        ( clk       ),
-
-    .vrender    ( vrender   ),
-    .LVBL       ( LVBL      ),
-    .game_id    ( game_id   ),
-
-    .dec_en     ( dec_en    ),
-    .fd1089_en  ( fd1089_en ),
-    .fd1094_en  ( fd1094_en ),
-    .dec_type   ( dec_type  ),
-    .key_we     ( key_we    ),
-    .fd1089_we  ( fd1089_we ),
-    .key_addr   ( key_addr  ),
-    .key_data   ( key_data  ),
-
-    // Main CPU
-    .main_cs    ( main_cs   ),
-    .vram_cs    ( vram_cs   ),
-    .ram_cs     ( ram_cs    ),
-
-    .main_addr  ( main_addr[18:1] ),
-    .main_data  ( main_data ),
-    .ram_data   ( ram_data  ),
-
-    .main_ok    ( main_ok   ),
-    .ram_ok     ( ram_ok    ),
-
-    .main_dsn   ( main_dsn  ),
-    .main_dout  ( main_dout ),
-    .main_rnw   ( main_rnw  ),
-
-    // Sub CPU
-    .srom_cs    ( srom_cs   ),
-    .sram_cs    ( sram_cs   ),
-
-    .sub_addr   ( sub_addr  ),
-    .srom_data  ( srom_data ),
-    .sram_data  ( sram_data ),
-
-    .srom_ok    ( srom_ok   ),
-    .sram_ok    ( sram_ok   ),
-
-    .sub_dsn    ( sub_dsn   ),
-    .sub_dout   ( sub_dout  ),
-    .sub_rnw    ( sub_rnw   ),
-
-    // Sound CPU
-    .snd_addr   ( snd_addr  ),
-    .snd_cs     ( snd_cs    ),
-    .snd_data   ( snd_data  ),
-    .snd_ok     ( snd_ok    ),
-
-    // PCM ROM
-    .pcm_addr   ( pcm_addr  ),
-    .pcm_cs     ( pcm_cs    ),
-    .pcm_data   ( pcm_data  ),
-    .pcm_ok     ( pcm_ok    ),
-
-    // Char interface
-    .char_ok    ( char_ok   ),
-    .char_addr  ( char_addr ), // 9 addr + 3 vertical + 2 horizontal = 14 bits
-    .char_data  ( char_data ),
-
-    // Scroll 1
-    .map1_ok    ( map1_ok   ),
-    .map1_addr  ( map1_addr ),
-    .map1_data  ( map1_data ),
-
-    .scr1_ok    ( scr1_ok   ),
-    .scr1_addr  ( scr1_addr ),
-    .scr1_data  ( scr1_data ),
-
-    // Scroll 1
-    .map2_ok    ( map2_ok   ),
-    .map2_addr  ( map2_addr ),
-    .map2_data  ( map2_data ),
-
-    .scr2_ok    ( scr2_ok   ),
-    .scr2_addr  ( scr2_addr ),
-    .scr2_data  ( scr2_data ),
-
-    // Sprite interface
-    .obj_ok     ( obj_ok    ),
-    .obj_cs     ( obj_cs    ),
-    .obj_addr   ( obj_addr  ),
-    .obj_data   ( obj_data  ),
-
-    // Road ROMs
-    .rd0_ok     ( rd0_ok     ),
-    .rd0_cs     ( rd0_cs     ),
-    .rd0_addr   ( rd0_addr   ),
-    .rd0_data   ( rd0_data   ),
-
-    .rd1_ok     ( rd1_ok     ),
-    .rd1_cs     ( rd1_cs     ),
-    .rd1_addr   ( rd1_addr   ),
-    .rd1_data   ( rd1_data   ),
-
-    // Bank 0: allows R/W
-    .ba0_addr   ( ba0_addr   ),
-    .ba1_addr   ( ba1_addr   ),
-    .ba2_addr   ( ba2_addr   ),
-    .ba3_addr   ( ba3_addr   ),
-    .ba_rd      ( ba_rd      ),
-    .ba_wr      ( ba_wr      ),
-    .ba_ack     ( ba_ack     ),
-    .ba_dst     ( ba_dst     ),
-    .ba_dok     ( ba_dok     ),
-    .ba_rdy     ( ba_rdy     ),
-    .ba0_din    ( ba0_din    ),
-    .ba0_din_m  ( ba0_din_m  ),
-
-    .data_read  ( data_read  ),
-
-    // ROM load
-    .downloading(downloading ),
-    .dwnld_busy (dwnld_busy  ),
-
-    .ioctl_addr ( ioctl_addr ),
-    .ioctl_dout ( ioctl_dout ),
-    .ioctl_wr   ( ioctl_wr   ),
-    .prog_addr  ( prog_addr  ),
-    .prog_data  ( prog_data  ),
-    .prog_mask  ( prog_mask  ),
-    .prog_ba    ( prog_ba    ),
-    .prog_we    ( prog_we    ),
-    .prog_rd    ( prog_rd    ),
-    .prog_ack   ( prog_ack   ),
-    .prog_rdy   ( prog_rdy   )
+    // SD card dumps
+    .ioctl_addr ( prog_addr ),
+    .ioctl_din  ( ioctl_din ),
+    .ioctl_ram  ( ioctl_ram )
 );
 
 endmodule

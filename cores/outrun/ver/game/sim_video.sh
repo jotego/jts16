@@ -4,4 +4,10 @@
 # the ,1 is for the sub cpu
 # Use special MAME compilation for sprite dumps
 
-sim.sh -d NOMAIN -d NOSUB -nosnd -video 2 -d GRAY -verilator $*
+EXTRA=
+
+if [ ! -e OUTRUN.RAM ]; then
+    EXTRA="$EXTRA -d GRAY"
+fi
+
+sim.sh -d NOMAIN -d NOSUB -nosnd -video 1 $EXTRA -verilator $*

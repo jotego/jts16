@@ -97,11 +97,11 @@ always @(posedge clk, posedge rst) begin
         BGACKnl <= BGACKn;
         if( (!BGACKn && sub_br) || (!ASn && FC!=7) ) begin
             case( A[19:17] )
-                0,1,2: rom_cs <= 1;  // <6'0000
-                3: ram_cs <= ~BUSn;  //  6'0000
-                4: begin            //  8'0000
-                    road_cs <= !A[16]; // 8'0000 road RAM
-                    sio_cs  <=  A[16]; // 9'0000 road other
+                0,1,2: rom_cs <= 1;    // <6'0000
+                3: ram_cs <= ~BUSn;    //  6'0000
+                4: begin
+                    road_cs <= !A[16]; //  8'0000 road RAM
+                    sio_cs  <=  A[16]; //  9'0000 road other
                 end
             endcase
         end else begin

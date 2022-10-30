@@ -5,7 +5,9 @@ You can show your appreciation through
 * Paypal: https://paypal.me/topapate
 * Github: https://github.com/sponsors/jotego
 
-SEGA System 16 compatible verilog core for FPGA by Jose Tejada (jotego). This core was developed with the help of a SEGA System 16B model 171-5358 board lent by FunkyCochise.
+SEGA System 16 compatible verilog core for FPGA by Jose Tejada (jotego). This core was developed with the help of a SEGA System 16B model 171-5358 board lent by FunkyCochise and the Out Run board donated by Travis Brown.
+
+This project aims to be compatible with System 16, Out Run and derivatives.
 
 # Supported Games
 
@@ -23,16 +25,19 @@ Sukeban        |    1     |            | Keyboard-like
 Major League   |    1     |  3 axis    |
 Dump Matsumoto |    1     |            | inputs via 8751
 Ace Attack     |    1     |            | inputs via CXD1095
+Out Run        |    1     |  2 axis    |
 
 
 # Core Division
 
 Because of the hardware variety, there are different cores targeted for each of them
 
-System               |  Core   | Logic Usage | BRAM Usage
----------------------|---------|-------------|-------------
-16A                  | jts16   | 22,149      | 374,458
-16B i8751            | jts16b  | 23,073      | 364,218
+System               |  Core    | Logic Usage | BRAM Usage
+---------------------|----------|-------------|-------------
+16A                  | jts16    | 22,149      | 374,458
+16B i8751            | jts16b   | 23,073      | 364,218
+Super Hang-On        | jtshanon |             |
+Out Run              | jtoutrun | 22,719      | 441,238
 
 MiST has 608,256 memory bits and 24,624 logic elements.
 Although the MCU can be synthesized in MiST and SiDi, timings are usually broken and requires several runs with different seeds because the FPGA is almost full. For MiSTer it seems to always go well.
@@ -41,7 +46,7 @@ Although the MCU can be synthesized in MiST and SiDi, timings are usually broken
 
 These items need double checking on the PCB
 
-* How much shadow is created by sprite palette 3F? The core assumes a 25% attenuation
+* How much shadow is created by sprite palette 3F? The core assumes 25% attenuation
 
 # Clocks
 

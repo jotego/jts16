@@ -2,15 +2,7 @@
 
 SYSNAME=outrun
 GAME=jtoutrun
-SIMULATOR=-verilator
-
-# eval `jtframe cfgstr outrun --target=mist --output=bash`
-
-if which ncverilog >/dev/null; then
-    # Options for non-verilator simulation
-    SIMULATOR=
-    HEXDUMP=
-fi
+EXTRA=
 
 if [ -e obj.bin ]; then
     drop1    < obj.bin >  obj_hi.bin
@@ -19,9 +11,21 @@ if [ -e obj.bin ]; then
     drop1 -l < obj.bin >> obj_lo.bin
 fi
 
-if [ -e rdram.bin ]; then
-    drop1    < rdram.bin > rdram_lo.bin
-    drop1 -l < rdram.bin > rdram_hi.bin
+if [ -e roadram.bin ]; then
+    drop1    < roadram.bin > roadram_lo.bin
+    drop1 -l < roadram.bin > roadram_hi.bin
+    EXTRA="$EXTRA -d SIM_ROAD_CTRL"
+fi
+
+# Core dump from MiST
+if [ -e OUTRUN.RAM ]; then
+    dd if=OUTRUN.RAM of=pal.bin count=16
+    drop1 -l < pal.bin > pal_lo.bin
+    drop1    < pal.bin > pal_hi.bin
+    dd if=OUTRUN.RAM of=roadram.bin count=8 skip=16
+    drop1 -l < pal.bin > roadram_lo.bin
+    drop1    < pal.bin > roadram_hi.bin
+    rm -f pal.bin roadram.bin
 fi
 
 # Fast load
@@ -31,4 +35,4 @@ $JTFRAME/bin/rom2sdram.sh $SYSNAME --header 16 --swab || exit $?
 
 jtsim -mist -sysname $SYSNAME $SIMULATOR \
 	-d JTFRAME_DWNLD_PROM_ONLY -d JTFRAME_SIM_DIPS=$(printf "%d" 0xfeff) \
-    -d JTFRAME_SIM_ROMRQ_NOCHECK $* || exit $?
+    -d JTFRAME_SIM_ROMRQ_NOCHECK $EXTRA $* || exit $?

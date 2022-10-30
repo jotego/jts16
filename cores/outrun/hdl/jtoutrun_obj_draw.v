@@ -129,7 +129,7 @@ always @(posedge clk, posedge rst) begin
                     cnt[3]   <= 0;
                     if( last_data ) begin
                         busy <= 0;  // done
-                        $display("\tdrawing for %d ticks",ticks);
+                        // $display("\tdrawing for %d ticks",ticks);
                     end
                 end
                 if( !first && draw ) begin

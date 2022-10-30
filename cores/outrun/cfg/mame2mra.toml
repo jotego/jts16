@@ -27,7 +27,7 @@ delete = [ "Unused", "Unknown" ]
 bitcnt = 16
 
 [header]
-len=16
+len=$JTFRAME_HEADER
 fill=0
 dev = [
     { byte=0, dev="fd1089a", value=2 },

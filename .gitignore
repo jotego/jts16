@@ -2,6 +2,7 @@
 *.bin
 *.cdf
 *.F
+*.fbak
 *.fst
 *.gtkw
 *.hex
@@ -9,6 +10,7 @@
 *.key
 *.log
 *.lst
+*.lxt
 *.nvm
 *.qpf
 *.qsf
@@ -17,8 +19,11 @@
 *.rbf_r
 *.rom
 *.vlt
+*.wav
 *.xml
 *.zip
+*_game_sdram.v
+*.RAM
 .DS_Store
 a.out
 cheat/*.bin
@@ -41,9 +46,11 @@ jtsim.f
 jtsim_vhdl.f
 log
 macros.f
+mem_ports.inc
 obj_dir
 test.cpp
 ver/game/*.bin
 ver/game/*.f
 ver/game/*.jpg
 waiver
+x

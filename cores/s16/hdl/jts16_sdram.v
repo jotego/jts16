@@ -73,7 +73,7 @@ module jts16_sdram #(
 
     // Char
     output           char_ok,
-    input    [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    input    [13:2]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
     output   [31:0]  char_data,
 
     // Scroll 1
@@ -155,7 +155,8 @@ localparam VRAMW = `VRAMW;
 localparam [7:0] DUNKSHOT='h14;
 
 // Scroll address after banking
-wire [18:0] char_adj, scr1_adj, scr2_adj;
+wire [18:1] char_adj;
+wire [18:0] scr1_adj, scr2_adj;
 reg  [19:0] obj_addr_g;
 wire [ 7:0] key_din;
 wire [12:0] key_mux;
@@ -240,8 +241,8 @@ jtframe_prom #(.aw(13),.simfile("317-5021.key")) u_key(
                       scr2_addr[16] ? tile_bank[5:3] : tile_bank[2:0], scr2_addr[15:0] };
 `else
     assign char_adj = { 6'd0, char_addr };
-    assign scr1_adj = { 2'd0, scr1_addr[16:0] };
-    assign scr2_adj = { 2'd0, scr2_addr[16:0] };
+    assign scr1_adj = { 2'd0, scr1_addr };
+    assign scr2_adj = { 2'd0, scr2_addr };
 `endif
 
 always @(*) begin
@@ -354,7 +355,7 @@ jtframe_rom_3slots #(
     .rst        ( rst       ),
     .clk        ( clk       ),
 
-    .slot0_addr ( char_adj  ),
+    .slot0_addr ( {char_adj, 1'b0 } ),
     .slot1_addr ( scr1_adj  ),
     .slot2_addr ( scr2_adj  ),
 

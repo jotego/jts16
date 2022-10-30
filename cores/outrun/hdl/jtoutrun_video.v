@@ -54,40 +54,41 @@ module jtoutrun_video(
 
     // SDRAM interface
     input              char_ok,
-    output     [12:0]  char_addr,
+    output     [13:2]  char_addr,
     input      [31:0]  char_data,
 
     input              map1_ok,
-    output     [14:0]  map1_addr,
+    output     [15:1]  map1_addr,
     input      [15:0]  map1_data,
 
     input              scr1_ok,
-    output     [16:0]  scr1_addr,
+    output     [17:2]  scr1_addr,
     input      [31:0]  scr1_data,
 
     input              map2_ok,
-    output     [14:0]  map2_addr,
+    output     [15:1]  map2_addr,
     input      [15:0]  map2_data,
 
     input              scr2_ok,
-    output     [16:0]  scr2_addr,
+    output     [17:2]  scr2_addr,
     input      [31:0]  scr2_data,
 
     input              obj_ok,
     output             obj_cs,
-    output     [19:1]  obj_addr,
 `ifdef SHANON
+    output     [19:1]  obj_addr,
     input      [15:0]  obj_data,
 `else
+    output     [19:2]  obj_addr,
     input      [31:0]  obj_data,
 `endif
 
-    output      [13:0] rd0_addr,
+    output      [14:1] rd0_addr,
     input       [15:0] rd0_data,
     output             rd0_cs,
     input              rd0_ok,
 
-    output      [13:0] rd1_addr,
+    output      [14:1] rd1_addr,
     input       [15:0] rd1_data,
     output             rd1_cs,
     input              rd1_ok,
@@ -110,7 +111,11 @@ module jtoutrun_video(
     // status dump
     input      [ 7:0]  st_addr,
     output reg [ 7:0]  st_dout,
-    output             scr_bad
+    output             scr_bad,
+    // SD card dumps
+    input      [21:0]  ioctl_addr,
+    input              ioctl_ram,
+    output     [ 7:0]  ioctl_din
 );
 
 localparam [8:0] OBJ_DLY = 22;
@@ -120,12 +125,15 @@ wire        preLHBL, preLVBL;
 wire        flipx;
 wire        sa, sb, fix;
 
+// SD card dump
+wire [ 7:0] pal_dump, road_dump;
+
 // video layers
 wire [ 4:3] rc;
 wire [ 7:0] rd_pxl;
 wire [10:0] tmap_addr;
 wire        shadow;
-wire [ 7:0] st_tile;
+wire [ 7:0] st_tile, st_obj, st_road;
 wire [11:0] obj2tile;   // object pixel going into the tile mapper
 `ifdef SHANON
 wire [11:0] obj_pxl;
@@ -137,10 +145,13 @@ wire [13:0] obj_pxl;
 assign obj2tile = { obj_pxl[5:4], {2{obj_pxl[6]}}, {2{obj_pxl[3:0]}}^8'h50 }; // schematics video 1/7
 `endif
 
+assign ioctl_din = ioctl_addr[14] ? road_dump : pal_dump;
+
 always @(posedge clk) begin
-    case(st_addr[5])
+    case(st_addr[5:4])
         0: st_dout <= st_tile;
-        1: st_dout <= obj_pxl[7:0];
+        1: st_dout <= st_obj;
+        2: st_dout <= st_road;
     endcase
 end
 
@@ -182,7 +193,14 @@ jtoutrun_road u_road(
 
     .pxl        ( rd_pxl    ),
     .rc         ( rc        ),
-    .debug_bus  ( debug_bus )
+    .debug_bus  ( debug_bus ),
+
+    .st_addr    ( st_addr   ),
+    .st_dout    ( st_road   ),
+
+    .ioctl_ram  ( ioctl_ram  ),
+    .ioctl_din  ( road_dump  ),
+    .ioctl_addr ( ioctl_addr )
 );
 
 jts16_tilemap #(.MODEL(1)) u_tilemap(
@@ -288,6 +306,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         //.debug_bus ( debug_bus      )
         .debug_bus ( 8'd0      )
     );
+    assign st_obj = 0;
 `else
     jtoutrun_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
         .rst       ( rst            ),
@@ -305,7 +324,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         // SDRAM interface
         .obj_ok    ( obj_ok         ),
         .obj_cs    ( obj_cs         ),
-        .obj_addr  ( obj_addr[19:2] ), // 9 addr + 3 vertical = 12 bits
+        .obj_addr  ( obj_addr       ), // 9 addr + 3 vertical = 12 bits
         .obj_data  ( obj_data       ),
 
         // Video signal
@@ -314,10 +333,11 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         .flip      ( flipx          ),
         .vrender   ( vrender        ),
         .hdump     ( hdump          ),
-        .pxl       ( obj_pxl        )
+        .pxl       ( obj_pxl        ),
+        .st_addr   ( st_addr        ),
+        .st_dout   ( st_obj         )
         // .debug_bus ( debug_bus      )
     );
-    assign obj_addr[1] = 0;
 `endif
 
 `ifdef SHANON
@@ -356,7 +376,11 @@ jtoutrun_colmix u_colmix(
     .red       ( red            ),
     .green     ( green          ),
     .blue      ( blue           ),
-    .debug_bus ( /*debug_bus*/ 8'd0      )
+    .debug_bus ( /*debug_bus*/ 8'd0 ),
+
+    .ioctl_ram ( ioctl_ram      ),
+    .ioctl_din ( pal_dump       ),
+    .ioctl_addr( ioctl_addr     )
 );
 
 endmodule

@@ -1,5 +1,5 @@
 CORENAME=JTOUTRUN
-GAMETOP=jtoutrun_game
+GAMETOP=jtoutrun_game_sdram
 JTFRAME_BUTTONS=4
 JTFRAME_SDRAM_BANKS
 JTFRAME_ANALOG
@@ -10,8 +10,11 @@ JTFRAME_STEREO
 # omitted by default to save BRAM
 NODEC
 
-# Use 64-bit bursts on bank 3
-# JTFRAME_BA3_LEN=64
+JTFRAME_HEADER=16
+# Use 64-bit bursts to speed up graphics
+JTFRAME_BA0_LEN=64
+JTFRAME_BA2_LEN=64
+JTFRAME_BA3_LEN=64
 
 # Screen parameters
 JTFRAME_PLL=jtframe_pll6293
@@ -22,8 +25,11 @@ JTFRAME_HEIGHT=224
 # Debug
 JTFRAME_DEBUG
 JTFRAME_STATUS
+JTFRAME_IOCTL_RD=12288
 
-# For audio section
+# Clock domains
+JTFRAME_SDRAM96
+JTFRAME_CLK48
 JTFRAME_CLK24
 
 # OSD options

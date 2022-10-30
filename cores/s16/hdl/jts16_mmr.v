@@ -107,47 +107,74 @@ endfunction
     end
 `endif
 
-always @(posedge clk) begin
-    if( MODEL==0 ) begin
-        scr1_pages <= flip ? scr1_pages_flip : scr1_pages_nofl;
-        scr2_pages <= flip ? scr2_pages_flip : scr2_pages_nofl;
-    end else begin
-        scr1_pages <= altscr1_en ? scr1_pages_alt : scr1_pages_std;
-        scr2_pages <= altscr2_en ? scr2_pages_alt : scr2_pages_std;
-        scr1_vpos  <= altscr1_en ? scr1_vpos_alt : scr1_vpos_std;
-        scr2_vpos  <= altscr2_en ? scr2_vpos_alt : scr2_vpos_std;
-        scr1_hpos  <= altscr1_en ? scr1_hpos_alt : scr1_hpos_std;
-        scr2_hpos  <= altscr2_en ? scr2_hpos_alt : scr2_hpos_std;
-    end
-    if( char_cs && cpu_addr[11:9]==3'b111 && dswn!=2'b11) begin
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        scr1_pages      <= 0;
+        scr2_pages      <= 0;
+        scr1_pages_alt  <= 0;
+        scr1_pages_std  <= 0;
+        scr2_pages_alt  <= 0;
+        scr2_pages_std  <= 0;
+        scr1_vpos_alt   <= 0;
+        scr2_vpos_alt   <= 0;
+        scr1_hpos_alt   <= 0;
+        scr2_hpos_alt   <= 0;
+        scr1_vpos_std   <= 0;
+        scr2_vpos_std   <= 0;
+        scr1_hpos_std   <= 0;
+        scr2_hpos_std   <= 0;
+        scr1_vpos       <= 0;
+        scr2_vpos       <= 0;
+        scr1_hpos       <= 0;
+        scr2_hpos       <= 0;
         if( MODEL==0 ) begin
-            case( {cpu_addr[8:1], 1'b0} )
-                9'h08e: scr1_pages_flip <= bytemux( scr1_pages_flip );
-                9'h09e: scr1_pages_nofl <= bytemux( scr1_pages_nofl );
-                9'h08c: scr2_pages_flip <= bytemux( scr2_pages_flip );
-                9'h09c: scr2_pages_nofl <= bytemux( scr2_pages_nofl );
-                9'h124: scr1_vpos       <= bytemux( scr1_vpos       );
-                9'h126: scr2_vpos       <= bytemux( scr2_vpos       );
-                9'h1f8: scr1_hpos       <= bytemux( scr1_hpos       );
-                9'h1fa: scr2_hpos       <= bytemux( scr2_hpos       );
-                default:;
-            endcase
-        end else begin // System 16B
-            case( {cpu_addr[8:1], 1'b0} )
-                9'h080: scr1_pages_std  <= bytemux( scr1_pages      );
-                9'h082: scr2_pages_std  <= bytemux( scr2_pages      );
-                9'h084: scr1_pages_alt  <= bytemux( scr1_pages_alt  );
-                9'h086: scr2_pages_alt  <= bytemux( scr2_pages_alt  );
-                9'h090: scr1_vpos_std   <= bytemux( scr1_vpos       );
-                9'h092: scr2_vpos_std   <= bytemux( scr2_vpos       );
-                9'h094: scr1_vpos_alt   <= bytemux( scr1_vpos_alt   );
-                9'h096: scr2_vpos_alt   <= bytemux( scr2_vpos_alt   );
-                9'h098: scr1_hpos_std   <= bytemux( scr1_hpos       );
-                9'h09a: scr2_hpos_std   <= bytemux( scr2_hpos       );
-                9'h09c: scr1_hpos_alt   <= bytemux( scr1_hpos_alt   );
-                9'h09e: scr2_hpos_alt   <= bytemux( scr2_hpos_alt   );
-                default:;
-            endcase
+            scr1_pages_flip <= 0;
+            scr2_pages_flip <= 0;
+            scr1_pages_nofl <= 0;
+            scr2_pages_nofl <= 0;
+        end
+    end else begin
+        if( MODEL==0 ) begin
+            scr1_pages <= flip ? scr1_pages_flip : scr1_pages_nofl;
+            scr2_pages <= flip ? scr2_pages_flip : scr2_pages_nofl;
+        end else begin
+            scr1_pages <= altscr1_en ? scr1_pages_alt : scr1_pages_std;
+            scr2_pages <= altscr2_en ? scr2_pages_alt : scr2_pages_std;
+            scr1_vpos  <= altscr1_en ? scr1_vpos_alt : scr1_vpos_std;
+            scr2_vpos  <= altscr2_en ? scr2_vpos_alt : scr2_vpos_std;
+            scr1_hpos  <= altscr1_en ? scr1_hpos_alt : scr1_hpos_std;
+            scr2_hpos  <= altscr2_en ? scr2_hpos_alt : scr2_hpos_std;
+        end
+        if( char_cs && cpu_addr[11:9]==3'b111 && dswn!=2'b11) begin
+            if( MODEL==0 ) begin
+                case( {cpu_addr[8:1], 1'b0} )
+                    9'h08e: scr1_pages_flip <= bytemux( scr1_pages_flip );
+                    9'h09e: scr1_pages_nofl <= bytemux( scr1_pages_nofl );
+                    9'h08c: scr2_pages_flip <= bytemux( scr2_pages_flip );
+                    9'h09c: scr2_pages_nofl <= bytemux( scr2_pages_nofl );
+                    9'h124: scr1_vpos       <= bytemux( scr1_vpos       );
+                    9'h126: scr2_vpos       <= bytemux( scr2_vpos       );
+                    9'h1f8: scr1_hpos       <= bytemux( scr1_hpos       );
+                    9'h1fa: scr2_hpos       <= bytemux( scr2_hpos       );
+                    default:;
+                endcase
+            end else begin // System 16B
+                case( {cpu_addr[8:1], 1'b0} )
+                    9'h080: scr1_pages_std  <= bytemux( scr1_pages      );
+                    9'h082: scr2_pages_std  <= bytemux( scr2_pages      );
+                    9'h084: scr1_pages_alt  <= bytemux( scr1_pages_alt  );
+                    9'h086: scr2_pages_alt  <= bytemux( scr2_pages_alt  );
+                    9'h090: scr1_vpos_std   <= bytemux( scr1_vpos       );
+                    9'h092: scr2_vpos_std   <= bytemux( scr2_vpos       );
+                    9'h094: scr1_vpos_alt   <= bytemux( scr1_vpos_alt   );
+                    9'h096: scr2_vpos_alt   <= bytemux( scr2_vpos_alt   );
+                    9'h098: scr1_hpos_std   <= bytemux( scr1_hpos       );
+                    9'h09a: scr2_hpos_std   <= bytemux( scr2_hpos       );
+                    9'h09c: scr1_hpos_alt   <= bytemux( scr1_hpos_alt   );
+                    9'h09e: scr2_hpos_alt   <= bytemux( scr2_hpos_alt   );
+                    default:;
+                endcase
+            end
         end
     end
 end

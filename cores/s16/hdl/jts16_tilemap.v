@@ -55,23 +55,23 @@ module jts16_tilemap(
 
     // SDRAM interface
     input              char_ok,
-    output     [12:0]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
+    output     [13:2]  char_addr, // 9 addr + 3 vertical + 2 horizontal = 14 bits
     input      [31:0]  char_data,
 
     input              map1_ok,
-    output     [14:0]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output     [15:1]  map1_addr, // 3 pages + 11 addr = 14 (32 kB)
     input      [15:0]  map1_data,
 
     input              scr1_ok,
-    output     [16:0]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output     [17:2]  scr1_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
     input      [31:0]  scr1_data,
 
     input              map2_ok,
-    output     [14:0]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
+    output     [15:1]  map2_addr, // 3 pages + 11 addr = 14 (32 kB)
     input      [15:0]  map2_data,
 
     input              scr2_ok,
-    output     [16:0]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
+    output     [17:2]  scr2_addr, // 1 bank + 12 addr + 3 vertical = 15 bits
     input      [31:0]  scr2_data,    
 
     // Video signal

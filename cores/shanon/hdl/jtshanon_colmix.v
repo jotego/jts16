@@ -51,7 +51,11 @@ module jtshanon_colmix(
     output     [ 4:0]  blue,
     output             LVBL,
     output             LHBL,
-    input      [ 7:0]  debug_bus
+    input      [ 7:0]  debug_bus,
+    // SD card dumps
+    input      [21:0]  ioctl_addr,
+    input              ioctl_ram,
+    output     [ 7:0]  ioctl_din
 );
 
 wire [ 1:0] we;
@@ -83,6 +87,15 @@ function [4:0] dim;
     dim = a - (a>>2);
 endfunction
 
+function [4:0] light;
+    input [4:0] a;
+    begin : fn_light
+        reg [5:0] aux;
+        aux = {1'b0, a } + ( {1'b0, a } >>2);
+        light = aux[5] ? 5'h1f : aux[4:0];
+    end
+endfunction
+
 reg [14:0] gated;
 
 // Super Hang On Equations 315-5251
@@ -95,9 +108,10 @@ always @(posedge clk) if(pxl_cen) begin
     pal_addr <= pre_addr;
     objl     <= obj_pxl;
 
-    gated <= /*!video_en ? 15'd0 :
-        ((shadow & ~pal_out[15])&~debug_bus[0]) ? { dim(rpal), dim(gpal), dim(bpal) } :*/
-        { rpal, gpal, bpal };
+    gated <= // !video_en ? 15'd0 :
+         !shadow     ? { rpal, gpal, bpal }                      : // no shade effect
+         pal_out[15] ? { light(rpal), light(gpal), light(bpal) } : // brighter
+                       { dim(rpal), dim(gpal), dim(bpal) };        // dimmer
 end
 
 always @(*) begin
@@ -109,8 +123,12 @@ always @(*) begin
         3: rd_mux[5:4] = rd_pxl[5:4];
     endcase
     rd_mux[10:6] = {5{rc[4]}};
+    // The shadow doesn't seem to be used in the trees and other road objects
+    // Not clear whether it is used for the bike
+    // The schematics show a *shade* signal coming from pin 17 of the 315-5251
+    // not from the tile mapper, as it is connected now here
     muxsel = !fix && (
-            (objl[3:0]==4'h0  && (!rc[3] || (!sa && !sb) )) ||
+            ((objl[3:0]==4'h0 || shadow)  && (!rc[3] || (!sa && !sb) )) ||
             (objl[11:10]==~2'b01 && objl[3:0]==~4'b1010 ));
     // muxsel = (objl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
     //          (objl[11:10]==2'b01 && objl[3:0]==4'b1010 && !fix );
@@ -129,7 +147,7 @@ end
 //     if( LVBLl && !LVBL ) blink <= blink+2'd1;
 // end
 
-jtframe_dual_ram16 #(
+jtframe_dual_nvram16 #(
     .aw        (13          ),
     .simfile_lo("pal_lo.bin"),
     .simfile_hi("pal_hi.bin")
@@ -144,10 +162,14 @@ jtframe_dual_ram16 #(
     .q0     ( cpu_din   ),
 
     // Video reads
-    .addr1  ( { 1'd0, pal_addr } ),
+    .addr1a ( {1'b0, pal_addr } ),
+    .q1a    ( pal_out   ),
+    // SD card dumps
+    .we1b   ( 1'b0      ),
     .data1  (           ),
-    .we1    ( 2'b0      ),
-    .q1     ( pal_out   )
+    .addr1b ( ioctl_addr[13:0]),
+    .sel_b  ( ioctl_ram ),
+    .q1b    ( ioctl_din )
 );
 
 jtframe_blank #(.DLY(3),.DW(15)) u_blank(

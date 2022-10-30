@@ -46,7 +46,14 @@ module jtoutrun_road(
     // Pixel output
     input       [ 7:0] debug_bus,
     output reg  [ 7:0] pxl,
-    output reg  [ 4:3] rc
+    output reg  [ 4:3] rc,
+
+    input       [ 7:0] st_addr,
+    output reg  [ 7:0] st_dout,
+    // SD card dumps
+    input      [21:0]  ioctl_addr,
+    input              ioctl_ram,
+    output     [ 7:0]  ioctl_din
 );
 
     reg  [10:0] rd_addr;
@@ -72,6 +79,16 @@ module jtoutrun_road(
 
     assign rd_we   = {2{road_cs & ~cpu_rnw}} & ~cpu_dsn;
 
+    always @(posedge clk) begin
+        case( st_addr[2:0] )
+            0: st_dout <= {  3'd0, ram_half, 2'd0, ctrl };
+            1: st_dout <= rd0_scr[11:4];
+            2: st_dout <= rd0_idx[11:4];
+            3: st_dout <= rd1_scr[11:4];
+            4: st_dout <= rd1_idx[11:4];
+        endcase
+    end
+
     always @(posedge clk, posedge rst) begin
         if( rst ) begin
             ram_half  <= 0;
@@ -88,20 +105,24 @@ module jtoutrun_road(
         end
     end
 
-    jtframe_dual_ram16 #(.aw(12),.simfile_lo("rdram_lo.bin"),.simfile_hi("rdram_hi.bin"))
+    jtframe_dual_nvram16 #(.aw(12),.simfile_lo("roadram_lo.bin"),.simfile_hi("roadram_hi.bin"))
     u_vram0(
         // CPU
-        .clk0 ( clk      ),
-        .data0( cpu_dout ),
-        .addr0( {~ram_half, cpu_addr } ),
-        .we0  ( rd_we    ),
-        .q0   ( cpu_din  ),
+        .clk0   ( clk       ),
+        .data0  ( cpu_dout  ),
+        .addr0  ( {~ram_half, cpu_addr } ),
+        .we0    ( rd_we     ),
+        .q0     ( cpu_din   ),
         // Road engine
-        .clk1 ( clk      ),
-        .data1(          ),
-        .addr1( { ram_half, rd_addr } ),
-        .we1  ( 2'd0     ),
-        .q1   ( rd_gfx   )
+        .clk1   ( clk       ),
+        .addr1a ( { ram_half, rd_addr } ),
+        .q1a    ( rd_gfx    ),
+        // SD card dumps
+        .we1b   ( 1'b0      ),
+        .data1  (           ),
+        .addr1b ( ioctl_addr[12:0]),
+        .sel_b  ( ioctl_ram ),
+        .q1b    ( ioctl_din )
     );
 
     always @* begin
@@ -143,8 +164,8 @@ module jtoutrun_road(
         end
     end
 
-    wire only_road0 = ctrl==ONLY_ROAD0 || debug_bus[0],
-         only_road1 = ctrl==ONLY_ROAD1 || debug_bus[1],
+    wire only_road0 = ctrl==ONLY_ROAD0,// || debug_bus[0],
+         only_road1 = ctrl==ONLY_ROAD1,// && !debug_bus[0],
          road0_prio = ctrl==ROAD0_PRIO,// && !debug_bus[0],
          road1_prio = ctrl==ROAD1_PRIO;// && !debug_bus[0];
 
@@ -276,8 +297,8 @@ module jtoutrun_rdrom(
                 rom_cs <= en;
                 hpos   <= hpos + 11'd1;
                 case( {j,k} )
-                    1:  cent <= 0;
-                    2:  cent <= 1;
+                    1:  cent <= 1;
+                    2:  cent <= 0;
                     3:  cent <= ~cent;
                 endcase
                 if( hpos[2:0]==3 ) begin // 3 pixel delay, to give time to the SDRAM

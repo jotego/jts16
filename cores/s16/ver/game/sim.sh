@@ -60,22 +60,26 @@ else
     rm -f char_*.bin pal_*.bin obj_*.bin scr.bin
 fi
 
-if which ncverilog >/dev/null; then
+if which ncverilog 2&> /dev/null; then
     # Options for non-verilator simulation
     SIMULATOR=
     HEXDUMP=
 fi
 
-rm -f sdram_bank?.*
-jtsim_sdram $HEXDUMP -header 32 \
-    -banks $BA1_START $BA2_START $BA3_START \
-    -stop $MCU_START \
-    -dumpbin mcu.bin      $MCU_START     0x2000 \
-    -dumpbin 317-5021.key $MAINKEY_START 0x2000 \
-    -dumpbin fd1089.bin   $FD1089_START  0x0100 \
-    $SDRAM_SNAP || exit $?
+# Verilator does the job fast enough
+# for iVerilog, jtsim_sdram is more convenient
+if which jtsim_sdram 2&> /dev/null; then
+    rm -f sdram_bank?.*
+    jtsim_sdram $HEXDUMP -header 32 \
+        -banks $JTFRAME_BA1_START $JTFRAME_BA2_START $JTFRAME_BA3_START \
+        -stop $MCU_START \
+        -dumpbin mcu.bin      $MCU_START     0x2000 \
+        -dumpbin 317-5021.key $MAINKEY_START 0x2000 \
+        -dumpbin fd1089.bin   $FD1089_START  0x0100 \
+        $SDRAM_SNAP || exit $?
 
-jtsim_sdram -header 32 -dumpbin fd1094.bin 0x182000 8192
+    jtsim_sdram -header 32 -dumpbin fd1094.bin 0x182000 8192
+fi
 
 jtsim -mist -sysname $SYSNAME $SIMULATOR \
         -d JTFRAME_SIM_ROMRQ_NOCHECK $OTHER || exit $?

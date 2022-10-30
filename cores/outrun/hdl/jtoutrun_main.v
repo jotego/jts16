@@ -19,7 +19,6 @@
 module jtoutrun_main(
     input              rst,
     input              clk,
-    input              clk_rom,
     input              pxl_cen,
     output             cpu_cen,
     output             cpu_cenb,

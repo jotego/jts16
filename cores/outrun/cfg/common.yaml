@@ -4,7 +4,6 @@ game:
       - jtoutrun_game.v
       - jtoutrun_main.v
       - jtoutrun_sub.v
-      - jtoutrun_sdram.v
       - jtoutrun_video.v
       - jtoutrun_road.v
       - jtoutrun_snd.v

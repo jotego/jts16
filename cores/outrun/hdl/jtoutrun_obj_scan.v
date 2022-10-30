@@ -42,17 +42,20 @@ module jtoutrun_obj_scan(
     // Video signal
     input              flip,
     input              hstart,
-    input      [ 8:0]  vrender
+    input      [ 8:0]  vrender,
+
+    // System info
+    input      [ 7:0]  st_addr,
+    output reg [ 7:0]  st_dout        // late or max number of sprites drawn in a line
 );
 
 parameter [8:0] PXL_DLY=8;
 
 localparam STW = 4;
 
-reg  [6:0] cur_obj;  // current object
+reg  [6:0] cur_obj, drawn_cnt, worst_cnt;  // current object
 reg  [2:0] idx;
 reg  [STW-1:0] st;
-reg [15:0] zoom;
 reg        first, stop, visible, backwd;
 
 // Object data
@@ -64,7 +67,7 @@ reg        [15:0] offset;
 reg        [ 2:0] bank;
 reg        [ 1:0] prio;
 reg        [ 6:0] pal;
-reg               zoom_sel, hflip, vflip, shadow;
+reg               zoom_sel, hflip, vflip, shadow, hstartl, late;
 reg        [15:0] nx_offset;
 reg        [10:0] vacc;
 wire       [10:0] nx_vacc;
@@ -77,8 +80,6 @@ assign endline   = vflip ? top - {1'd0,tbl_dout[15:8]} : top + {1'd0,tbl_dout[15
 assign is_first  = top == vrender[8:0];
 assign nx_vacc   = {1'b0, vzoom} + {2'd0, is_first ? 9'd0 : tbl_dout[8:0]};
 
-initial zoom = 0;
-
 always @* begin
     nx_offset = offset;
     if( !first ) begin
@@ -90,10 +91,6 @@ always @* begin
         endcase
     end
 end
-
-`ifdef SIMULATION
-reg late;
-`endif
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
@@ -108,7 +105,10 @@ always @(posedge clk, posedge rst) begin
         dr_bank   <= 0;
         dr_prio   <= 0;
         dr_pal    <= 0;
+        hstartl   <= 0;
+        late      <= 0;
     end else begin
+        hstartl <= hstart;
         if( idx < 7 ) idx <= idx + 3'd1;
         if( !stop ) begin
             st <= st+1'd1;
@@ -121,15 +121,22 @@ always @(posedge clk, posedge rst) begin
                 cur_obj  <= 0;
                 stop     <= 0;
                 dr_start <= 0;
+                if( hstart ) begin
+                    drawn_cnt <= 0;
+                    if( drawn_cnt > worst_cnt ) worst_cnt <= drawn_cnt;
+                    if( vrender==0 ) begin
+                        st_dout   <= st_addr[0] ? { 1'b0, worst_cnt } : { 7'd0, late };
+                        late <= 0;
+                        worst_cnt <= 0;
+                    end
+                end
                 if( !hstart || vrender>223 ) begin // holds the state
                     st  <= 0;
                     idx <= 0;
-`ifdef SIMULATION
-                end else begin
-                    late <= 0;
-                    $display("--------- line %0d -----------", vrender);
-`endif
-
+// `ifdef SIMULATION
+//                 end else begin
+//                     $display("--------- line %0d -----------", vrender);
+// `endif
                 end
             end
             1: if( !stop ) begin
@@ -195,10 +202,10 @@ always @(posedge clk, posedge rst) begin
             10: begin
                 if( !dr_busy ) begin
 `ifdef SIMULATION
-                    if( /*cur_obj == 7'h2e*/ 1 ) begin
-                        $display("Object 0x%0x.From %0d to %0d (hflip=%0d, vflip=%0d) x=%d %s",cur_obj, top, bottom, hflip, vflip, xpos, first ? "FIRST" : "" );
-                        $display("offset 0x%4X. Pitch=%0d (0x%X). V-zoom 0x%X / 0x%x",offset,pitch, pitch, vzoom, vacc );
-                    end
+                    // if( /*cur_obj == 7'h2e*/ 1 ) begin
+                    //     $display("Object 0x%0x.From %0d to %0d (hflip=%0d, vflip=%0d) x=%d %s",cur_obj, top, bottom, hflip, vflip, xpos, first ? "FIRST" : "" );
+                    //     $display("offset 0x%4X. Pitch=%0d (0x%X). V-zoom 0x%X / 0x%x",offset,pitch, pitch, vzoom, vacc );
+                    // end
                     if( pitch==0 && vrender<224 ) begin
                         $display("Assertion failed: object drawn with pitch==0 (%m)");
                         $finish;
@@ -214,6 +221,7 @@ always @(posedge clk, posedge rst) begin
                     dr_backwd <= backwd;
                     dr_hzoom  <= hzoom;
                     dr_bank   <= bank;
+                    drawn_cnt <= drawn_cnt + 1'd1;
                     // next
                     if( &cur_obj )
                         st <= 0; // Done
@@ -228,14 +236,14 @@ always @(posedge clk, posedge rst) begin
                 end
             end
         endcase
-        if( hstart && cur_obj!=0 ) begin
+        if( hstart && !hstartl && cur_obj!=0 ) begin
             cur_obj  <= 0;
             stop     <= 1;
             dr_start <= 0;
             idx      <= 0;
             st       <= 1;
-`ifdef SIMULATION
             late     <= 1;
+`ifdef SIMULATION
             $display("Assertion failed: objects not parsed within one scanline. vrender=0x%0x,cur_obj=0x%0x\n",vrender,cur_obj);
             // $finish;
 `endif

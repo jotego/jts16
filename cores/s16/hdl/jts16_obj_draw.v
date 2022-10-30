@@ -36,7 +36,7 @@ module jts16_obj_draw#(
     // SDRAM interface
     input              obj_ok,
     output reg         obj_cs,
-    output     [19:0]  obj_addr, // 3 bank + 15 offset = 18
+    output     [20:1]  obj_addr, // 3 bank + 15 offset = 18
     input      [15:0]  obj_data,
 
     // Buffer

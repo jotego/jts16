@@ -41,7 +41,9 @@ module jtoutrun_obj(
     input              LHBL,
     input      [ 8:0]  vrender,
     input      [ 8:0]  hdump,
-    output     [13:0]  pxl
+    output     [13:0]  pxl,
+    input      [ 7:0]  st_addr,
+    output     [ 7:0]  st_dout
     // input      [ 7:0]  debug_bus
 );
 
@@ -111,7 +113,9 @@ jtoutrun_obj_scan #(.PXL_DLY(0)) u_scan(
     // Video signal
     .flip      ( flip           ),
     .hstart    ( hstart         ),
-    .vrender   ( vrender        )
+    .vrender   ( vrender        ),
+    .st_addr   ( st_addr        ),
+    .st_dout   ( st_dout        )
     // .debug_bus ( debug_bus      )
 );
 

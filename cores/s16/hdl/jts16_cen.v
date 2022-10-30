@@ -17,13 +17,9 @@
     Date: 10-3-2021 */
 
 module jts16_cen(
-    input              rst,
-
     input              clk,       // main CPU & video (50.3496 MHz)
     output             pxl2_cen,  // pixel clock enable (2x)
     output             pxl_cen,   // pixel clock enable
-    output             cpu_cen,   // 10 MHz
-    output             cpu_cenb,
 
     input              clk24,     // sound subsystem (25.1748 MHz)
     output             mcu_cen,   // 8 MHz
@@ -34,32 +30,18 @@ module jts16_cen(
     output             pcm_cenb
 );
 
+parameter CLK96=0;
+
 wire nc, ncb, nc2, ncb2, nc3, nc4;
 
 jtframe_frac_cen #(2) u_pxlcen(
     .clk    ( clk       ),
     .n      ( 10'd1     ),
-    .m      ( 10'd4     ),
+    .m      ( CLK96 ? 10'd8 : 10'd4  ),
     .cen    ( {pxl_cen, pxl2_cen }   ),
     .cenb   (           )
 );
 
-`ifndef FAST_CPU
-jtframe_frac_cen u_cpucen(
-    .clk    ( clk       ),
-    .n      ( 10'd29    ),
-    .m      ( 10'd146   ),
-    .cen    ( { nc,  cpu_cen  } ),
-    .cenb   ( { ncb, cpu_cenb } )
-);
-`else
-reg fastx=0;
-always @(posedge clk) begin
-    fastx <= ~fastx;
-end
-assign cpu_cen = fastx;
-assign cpu_cenb = ~fastx;
-`endif
 
 // Sound subsystem uses clk24 = 25.1748 MHz
 

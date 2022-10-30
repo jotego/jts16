@@ -269,6 +269,12 @@ jtframe_ram2_6slots #(
     // VRAM access by SCR2
     .SLOT5_AW   (15),
     .SLOT5_DW   (16)
+`ifdef JTFRAME_BA0_LEN
+    ,.SLOT2_DOUBLE(1)
+    ,.SLOT3_DOUBLE(1)
+    ,.SLOT4_DOUBLE(1)
+    ,.SLOT5_DOUBLE(1)
+`endif
 ) u_bank0(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -343,6 +349,10 @@ jtframe_rom_2slots #(
     .SLOT1_AW(  19),
 
     .SLOT1_OFFSET( PCM_OFFSET )
+`ifdef JTFRAME_BA1_LEN
+    ,.SLOT0_DOUBLE(1)
+    ,.SLOT1_DOUBLE(1)
+`endif
 ) u_bank1(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -366,6 +376,7 @@ jtframe_rom_2slots #(
     .data_read  ( data_read )
 );
 
+// Bank 2: tile maps
 jtframe_rom_3slots #(
     .SLOT0_DW(32),
     .SLOT0_AW(13),
@@ -375,6 +386,11 @@ jtframe_rom_3slots #(
 
     .SLOT2_DW(32),
     .SLOT2_AW(17)
+`ifdef JTFRAME_BA2_LEN
+    ,.SLOT0_DOUBLE(1)
+    ,.SLOT1_DOUBLE(1)
+    ,.SLOT2_DOUBLE(1)
+`endif
 ) u_bank2(
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -405,8 +421,7 @@ jtframe_rom_3slots #(
     .data_read  ( data_read )
 );
 
-// OBJ
-
+// Bank 3: Road and objects
 jtframe_rom_3slots #(
     .SLOT0_AW    ( 19         ),
 `ifdef SHANON
@@ -422,9 +437,11 @@ jtframe_rom_3slots #(
     .SLOT2_AW    ( 14         ),
     .SLOT2_DW    ( 16         ),
     .SLOT2_OFFSET( RD1_OFFSET )
-    // ,.SLOT0_DOUBLE(  1         )
-    // ,.SLOT1_DOUBLE(  1         )
-    // ,.SLOT2_DOUBLE(  1         )
+`ifdef JTFRAME_BA3_LEN
+    ,.SLOT0_DOUBLE( 1          )
+    ,.SLOT1_DOUBLE( 1          )
+    ,.SLOT2_DOUBLE( 1          )
+`endif
 ) u_bank3(
     .rst        ( rst       ),
     .clk        ( clk       ),

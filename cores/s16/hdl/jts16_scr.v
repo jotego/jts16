@@ -40,11 +40,11 @@ module jts16_scr(
 
     // SDRAM interface
     input              map_ok,
-    output reg [14:0]  map_addr, // 3(+1 S16B) pages + 11 addr = 14 (32 kB)
+    output reg [15:1]  map_addr, // 3(+1 S16B) pages + 11 addr = 14 (32 kB)
     input      [15:0]  map_data,
 
     input              scr_ok,
-    output reg [16:0]  scr_addr, // 1 bank + 12 addr + 3 vertical + 1'b0 = 17 bits => 512kB
+    output reg [17:2]  scr_addr, // 1 bank + 12 addr + 3 vertical + 1'b0 = 17 bits => 512kB
     input      [31:0]  scr_data,
 
     // Video signal
@@ -166,6 +166,8 @@ always @(posedge clk, posedge rst) begin
         busy      <= 0;
         hscan     <= 0;
         bad       <= 0;
+        scr_addr  <= 0;
+        vscan     <= 0;
     end else begin
         last_LHBL <= LHBL;
         scr_good  <= { scr_good[0] & scr_ok, scr_ok };
@@ -191,7 +193,7 @@ always @(posedge clk, posedge rst) begin
                         ) : map_data[12:5]; // S16A
             busy     <= ~8'd0;
             scr_addr <= { MODEL ? map_data[12:0] : { bank, map_data[11:0] }, // code
-                        vpos[2:0], 1'b0 };
+                        vpos[2:0] };
             scr_good <= 2'd0;
         end else if( busy!=0 && &scr_good && pxl2_cen) begin // This could work
             // without pxl2_cen, but it stresses the SDRAM too much, causing
