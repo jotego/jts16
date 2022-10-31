@@ -155,7 +155,7 @@ localparam [8:0] HOBJ_START = 9'haa-PXL_DLY; //a6
 localparam [8:0] FLIP_START = 9'hc0-HOBJ_START;
 
 always @(posedge clk) begin
-    if( !LHBL ) hobj <= (flip ? (9'h1ff+FLIP_START) : HOBJ_START) + {debug_bus[7], debug_bus};
+    if( !LHBL ) hobj <= (flip ? (9'h1ff+FLIP_START) : HOBJ_START); // + {debug_bus[7], debug_bus};
     else if(pxl_cen) hobj<= flip ? hobj-1'd1 : hobj+1'd1;
 end
 
