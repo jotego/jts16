@@ -1,7 +1,7 @@
 params:
   - { name: ROAD_START }
   - { name: FD_PROM,     value: "`FD1089_START" }
-  - { name: SROM_OFFSET, value: "`SUB_START>>1" }
+  - { name: SND_OFFSET, value: "(`SND_START-BA1_START)>>1" }
   - { name: PCM_OFFSET,  value: (`PCM_START-BA1_START)>>1 }
   - { name: VRAM_OFFSET, value: 22'h10_0000 }
   - { name: SRAM_OFFSET, value: 22'h18_0000 }
@@ -17,7 +17,6 @@ sdram:
         - { name: xram,   addr_width: 17, data_width: 16, offset: VRAM_OFFSET, rw: true }
         - { name: subram, addr_width: 15, data_width: 16, offset: SRAM_OFFSET, rw: true }
         - { name: main,   addr_width: 19, data_width: 16 } # ok latch 0
-        - { name: subrom, addr_width: 19, data_width: 16, offset: SROM_OFFSET } # ok latch 0, # latch 0
         - { name: map1,   addr_width: 16, data_width: 16, offset: VRAM_OFFSET, cs: gfx_cs }
         - { name: map2,   addr_width: 16, data_width: 16, offset: VRAM_OFFSET, cs: gfx_cs }
       # dump:
@@ -26,7 +25,8 @@ sdram:
     # Bank 1 for sound & frame buffer
     -
       buses:
-        - { name: snd, addr_width: 16, data_width: 8 }
+        - { name: subrom, addr_width: 19, data_width: 16 } # ok latch 0, # latch 0
+        - { name: snd, addr_width: 16, data_width: 8, offset: SND_OFFSET }
         - { name: pcm, addr_width: 19, data_width: 8, offset: PCM_OFFSET }
 
     # Bank 2 for tile graphics
