@@ -118,8 +118,6 @@ module jtoutrun_video(
     output     [ 7:0]  ioctl_din
 );
 
-localparam [8:0] OBJ_DLY = 22;
-
 wire [ 8:0] hdump;
 wire        preLHBL, preLVBL;
 wire        flipx;
@@ -276,8 +274,9 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
 
 `ifdef SHANON
     wire nc;
+
     // Super Hang On uses the System 16 object chip
-    jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(1)) u_obj(
+    jts16_obj #(.PXL_DLY(9'd22),.MODEL(1)) u_obj(
         .rst       ( rst            ),
         .clk       ( clk            ),
         .pxl_cen   ( pxl_cen        ),
@@ -308,7 +307,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
     );
     assign st_obj = 0;
 `else
-    jtoutrun_obj #(.PXL_DLY(OBJ_DLY)) u_obj(
+    jtoutrun_obj #(.PXL_DLY(9'd14)) u_obj(
         .rst       ( rst            ),
         .clk       ( clk            ),
         .pxl_cen   ( pxl_cen        ),
@@ -335,8 +334,8 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         .hdump     ( hdump          ),
         .pxl       ( obj_pxl        ),
         .st_addr   ( st_addr        ),
-        .st_dout   ( st_obj         )
-        // .debug_bus ( debug_bus      )
+        .st_dout   ( st_obj         ),
+        .debug_bus ( debug_bus      )
     );
 `endif
 

@@ -67,11 +67,6 @@ module jtoutrun_game(
     // status dump
     input   [ 7:0]  st_addr,
     output reg [7:0] st_dout,
-    // SDRAM interface
-    input   [21:0]  prog_addr,
-    input   [ 7:0]  prog_data,
-    input           prog_we,
-    input           prom_we,
     // Memory ports
     `include "mem_ports.inc"
 );
@@ -175,7 +170,8 @@ always @(posedge clk48) begin
         3: case( st_addr[3:0] )
             0: st_dout <= sndmap_dout;
             1: st_dout <= { 2'd0, obj_cfg, 3'b0, obj_swap };
-            2: st_dout <= {obj_cfg, mute, video_en, 1'b0, snd_rstb, game_id};
+            2: st_dout <= {obj_cfg, mute, 2'b0, snd_rstb, game_id};
+            3: st_dout <= { 3'd0, flip, 3'd0, video_en };
         endcase
     endcase
 end

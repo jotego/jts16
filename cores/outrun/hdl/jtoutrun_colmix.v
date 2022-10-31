@@ -108,9 +108,9 @@ always @(posedge clk) if(pxl_cen) begin
     objl     <= obj_pxl;
 
     gated <= //!video_en ? 15'd0 :
-         !shadow                      ? { rpal, gpal, bpal }                      : // no shade effect
-         (pal_out[15] | debug_bus[2]) ? { light(rpal), light(gpal), light(bpal) } : // brighter
-                                        { dim(rpal), dim(gpal), dim(bpal) };        // dimmer
+         !shadow      ? { rpal, gpal, bpal }                      : // no shade effect
+          pal_out[15] ? { light(rpal), light(gpal), light(bpal) } : // brighter
+                        { dim(rpal), dim(gpal), dim(bpal) };        // dimmer
 end
 
 always @(*) begin
@@ -119,7 +119,8 @@ always @(*) begin
     // wrong. Active high/low in PAL equations can be confusing...
     muxsel = !fix && (
             ((objl[3:0]==4'h0 || shadow)  && (!rc[3] || (!sa && !sb) )) ||
-            (objl[11:10]==~2'b01 && objl[3:0]==~4'b1010 ));
+            ( objl[11:10]==2'b01 && objl[3:0]==4'b1010 )); // using the signal polarity in the
+                // original equation breaks the columns in stage 2 left
     // muxsel = (objl[3:0]==4'hf && !fix && (!rc[3] || (!sa && !sb) )) ||
     //          (objl[11:10]==2'b01 && objl[3:0]==4'b1010 && !fix );
     //if( debug_bus[7] ) muxsel=0;

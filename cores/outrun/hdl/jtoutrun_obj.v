@@ -43,8 +43,8 @@ module jtoutrun_obj(
     input      [ 8:0]  hdump,
     output     [13:0]  pxl,
     input      [ 7:0]  st_addr,
-    output     [ 7:0]  st_dout
-    // input      [ 7:0]  debug_bus
+    output     [ 7:0]  st_dout,
+    input      [ 7:0]  debug_bus
 );
 
 parameter [8:0] PXL_DLY=8;
@@ -155,7 +155,7 @@ localparam [8:0] HOBJ_START = 9'haa-PXL_DLY; //a6
 localparam [8:0] FLIP_START = 9'hc0-HOBJ_START;
 
 always @(posedge clk) begin
-    if( !LHBL ) hobj <= (flip ? (9'h1ff+FLIP_START) : HOBJ_START);// + {debug_bus[7], debug_bus};
+    if( !LHBL ) hobj <= (flip ? (9'h1ff+FLIP_START) : HOBJ_START) + {debug_bus[7], debug_bus};
     else if(pxl_cen) hobj<= flip ? hobj-1'd1 : hobj+1'd1;
 end
 
