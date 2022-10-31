@@ -71,7 +71,7 @@ module jtoutrun_game(
     `include "mem_ports.inc"
 );
 
-localparam [24:0] KEY_PROM = `KEY_START,
+localparam [24:0] KEY_PROM = `JTFRAME_PROM_START,
                   FD_PROM  = `FD1089_START;
 
 `ifndef JTFRAME_CLK48

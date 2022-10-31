@@ -73,11 +73,18 @@ module jts16_game(
     input           prog_we,
     input           prom_we,
     /* jtframe mem_ports */
+    // From this line down, do not modify ports manually:
+`ifdef JTFRAME_PROM_START
+    input   [21:0]  prog_addr,
+    input   [ 7:0]  prog_data,
+    input           prog_we,
+    input           prom_we,
+`endif
 `ifdef JTFRAME_HEADER
     input           header,
 `endif
 `ifdef JTFRAME_IOCTL_RD
-    // input           ioctl_ram,
+    input           ioctl_ram,
     output   [ 7:0] ioctl_din,
 `endif
     output          gfx_cs,
