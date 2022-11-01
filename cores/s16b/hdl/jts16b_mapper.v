@@ -359,7 +359,13 @@ always @(posedge clk) begin
             endcase
             if( asel == 3 )
                 sndmap_pbf <= 1;
-            if( asel==5 && !bus_rq ) begin
+            // wredge_mcu prevents the CPU from accessing the
+            // memory through the mapper latches. It makes no sense
+            // for the CPU to do it. Also, unless this is prevented
+            // the whole muxing scheme around the bus_mcu signal will
+            // be kept by the synthesizer even if the input mcu_en is
+            // disabled.
+            if( asel==5 && !bus_rq && wredge_mcu ) begin
                 wrmem <= din[1:0]==2'b01;
                 rdmem <= din[1:0]==2'b10;
                 if( din[1:0]==2'b01 || din[1:0]==2'b10 ) begin
