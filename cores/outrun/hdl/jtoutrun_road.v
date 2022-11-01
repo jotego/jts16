@@ -191,16 +191,18 @@ module jtoutrun_road(
                  ( !rd_a[0] && rd_b==0 && road1_prio ) ||
                  ( !rd_a[1] && rd_b==0 && road1_prio );
         // road bit 0 set
+        // cent here does not affect whether the line in the road center
         rrc[0] = rrc[2] ? ( rd_b==1 || (cent_b && rd_b==3) ) :
                           ( rd_a==1 || (cent_a && rd_a==3) );
         // road bit 1 set
         rrc[1] = rrc[2] ? ( rd_b==2 || (cent_b && rd_b==3) ) :
                           ( rd_a==2 || (cent_a && rd_a==3) );
-        // road not from ROM -solid color-
+        // road not from ROM -sky solid color-
         rrc[3] = (rd0_idx[11] && rd1_idx[11]) ||
                  (rd0_idx[11] && only_road0 ) ||
                  (rd1_idx[11] && only_road1 );
-        // road not from ROM or blank pixel
+        // road not from ROM or blank pixel. cent here does not
+        // affect whether the line in the road center
         rrc[4] = rrc[3] ||
                 ( !cent_a && rd_a==3 && !cent_b && rd_b==3 ) ||
                 ( !cent_b && rd_b==3 && only_road1 ) ||
