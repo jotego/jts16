@@ -51,12 +51,13 @@ JTFRAME_OSD_NOLOGO
 # Make it the same as KEY_START
 JTFRAME_PROM_START=0x298000
 
+[pocket|mister]
+-JTFRAME_OSD_NOLOGO
+-NODEC
+
 [mister]
 # Controller options have only been tested on MiSTer
 CORE_OSD=OKM,Control Type,A.Stick,A.Triggers,A.Wheel;
-# MiSTer has enough memory for decryption
--NODEC
--JTFRAME_OSD_NOLOGO
 #JTFRAME_CHEAT
 JTFRAME_CREDITS
 JTFRAME_CREDITS_PAGES=3
