@@ -1,0 +1,38 @@
+
+name: shanon for mc2
+
+on:
+  push:
+    branches:
+      - build
+      - mc2
+      - build_shanon
+
+  workflow_dispatch:
+
+  repository_dispatch:
+    types: rebuild
+
+jobs:
+
+  mc2_compilation:
+
+    env:
+      FTPUSER: ${{ secrets.FTPUSER }}
+      FTPPASS: ${{ secrets.FTPPASS }}
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: jotego/jtcore13
+      credentials:
+        username: jotego
+        password: ${{ secrets.DOCKER_LOGIN }}
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+      - name: compile for mc2
+        run: /docked_build.sh shanon -mc2  
