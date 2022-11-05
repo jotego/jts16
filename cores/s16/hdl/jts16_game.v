@@ -67,75 +67,8 @@ module jts16_game(
     // status dump
     input   [ 7:0]  st_addr,
     output reg [ 7:0]  st_dout,
-    // SDRAM interface
-    input   [21:0]  prog_addr,
-    input   [ 7:0]  prog_data,
-    input           prog_we,
-    input           prom_we,
-    /* jtframe mem_ports */
     // From this line down, do not modify ports manually:
-`ifdef JTFRAME_PROM_START
-    input   [21:0]  prog_addr,
-    input   [ 7:0]  prog_data,
-    input           prog_we,
-    input           prom_we,
-`endif
-`ifdef JTFRAME_HEADER
-    input           header,
-`endif
-`ifdef JTFRAME_IOCTL_RD
-    input           ioctl_ram,
-    output   [ 7:0] ioctl_din,
-`endif
-    output          gfx_cs,
-
-    output   [18:1] xram_addr,
-    input    [15:0] xram_data,
-    output          xram_we,
-    output   [15:0] xram_din,
-    output   [ 1:0] xram_dsn,
-    output          xram_cs,
-    input           xram_ok,
-
-    output   [18:1] main_addr,
-    input    [15:0] main_data,
-    output          main_cs,
-    input           main_ok,
-
-    output   [15:1] map1_addr,
-    input    [15:0] map1_data,
-    input           map1_ok,
-
-    output   [15:1] map2_addr,
-    input    [15:0] map2_data,
-    input           map2_ok,
-
-    output   [18:0] snd_addr,
-    input    [ 7:0] snd_data,
-    output          snd_cs,
-    input           snd_ok,
-
-    output   [16:0] pcm_addr,
-    input    [ 7:0] pcm_data,
-    output          pcm_cs,
-    input           pcm_ok,
-
-    output   [19:2] char_addr,
-    input    [31:0] char_data,
-    input           char_ok,
-
-    output   [19:2] scr1_addr,
-    input    [31:0] scr1_data,
-    input           scr1_ok,
-
-    output   [19:2] scr2_addr,
-    input    [31:0] scr2_data,
-    input           scr2_ok,
-
-    output   [20:1] obj_addr,
-    input    [15:0] obj_data,
-    output          obj_cs,
-    input           obj_ok
+    `include "mem_ports.inc"
 );
 
 `ifndef S16B
