@@ -74,7 +74,7 @@ JTFRAME_CHEAT
 JTFRAME_NOHQ2X
 
 # Needed for Action Fighter
-JTFRAME_MR_ROTCCW
+JTFRAME_ROTCCW
 
 # Debug - only mister
 JTFRAME_IOCTL_RD
