@@ -24,7 +24,7 @@
     <name>Turbo Out Run (deluxe cockpit) (FD1094 317-0109)</name>
     <setname>toutrun1</setname>
     <rbf>jtoutrun</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1989</year>
     <manufacturer>Sega</manufacturer>
     <players>1</players>
@@ -96,10 +96,10 @@
             <part name="opr-12318.20" crc="d1afdea9" map="1000"/>
         </interleave>
         <interleave output="32">
-            <part name="opr-12320.22" crc="7931e446" map="0001"/>
-            <part name="opr-12321.23" crc="830bacd4" map="0010"/>
-            <part name="opr-12322.24" crc="8b812492" map="0100"/>
-            <part name="opr-12319.25" crc="df23baf9" map="1000"/>
+            <part name="opr-12319.25" crc="df23baf9" map="0001"/>
+            <part name="opr-12320.22" crc="7931e446" map="0010"/>
+            <part name="opr-12321.23" crc="830bacd4" map="0100"/>
+            <part name="opr-12322.24" crc="8b812492" map="1000"/>
         </interleave>
         <!-- segaic16road - starts at 0x270000 -->
         <!-- Singleton region. The files are merged with themselves. -->
