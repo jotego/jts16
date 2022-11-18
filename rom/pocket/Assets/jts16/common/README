@@ -1,0 +1,46 @@
+Place the following files in this folder:
+
+aceataca.rom
+afighter.rom
+afighera.rom
+afigherb.rom
+afigherc.rom
+afigherd.rom
+alexkidd.rom
+alexkdd1.rom
+alienyn2.rom
+alienyn5.rom
+aliennjo.rom
+bodyslam.rom
+dumpmtmt.rom
+fantzone.rom
+fantzne1.rom
+fantznee.rom
+fantznep.rom
+fantzepr.rom
+mjleague.rom
+passs16a.rom
+quartet.rom
+quartet2.rom
+quartt2a.rom
+quarteta.rom
+sdi.rom
+sdia.rom
+shinobi.rom
+shinobi1.rom
+sjryuko1.rom
+tetris.rom
+tetris3.rom
+timesan1.rom
+wb31.rom
+wb35.rom
+
+These files are generated using the mra tool in:
+https://github.com/sebdel/mra-tools-c/tree/master/release
+
+Check out the short tutorial in:
+https://github.com/jotego/jtbin/wiki/Analogue-Pocket-Cores
+
+DISCLAIMER: This PocketFPGA core is licensed to be used only
+with legally owned dumps of videogame data. It is also licensed
+to be used with freeware (homebrew) compatible with the platform.

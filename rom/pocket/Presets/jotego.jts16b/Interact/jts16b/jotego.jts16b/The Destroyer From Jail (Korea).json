@@ -9,9 +9,7 @@
 				"enabled": false,
 				"persist": false,
 				"address": "0xFF000000",
-				"defaultval": 0,
-				"mask": "",
-				"options": null
+				"value": 0
 			},
 			{
 				"name": "Coinage",
@@ -21,6 +19,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 15,
+				"value": 0,
 				"mask": "0xFFFFFFF0",
 				"options": [
 					{
@@ -97,6 +96,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 5,
+				"value": 0,
 				"mask": "0xFFFFFF8F",
 				"options": [
 					{
@@ -136,62 +136,66 @@
 			{
 				"name": "Service Mode",
 				"id": 3,
-				"type": "list",
+				"type": "check",
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 1,
-				"mask": "0xFFFFFF7F",
-				"options": [
-					{
-						"name": "On",
-						"value": "0x0"
-					},
-					{
-						"name": "Off",
-						"value": "0x80"
-					}
-				]
+				"defaultval": 128,
+				"value": 0,
+				"value_off": 128,
+				"mask": "0xFFFFFF7F"
 			},
 			{
-				"name": "Demo Sounds",
+				"name": "Difficulty",
 				"id": 4,
 				"type": "list",
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 0,
-				"mask": "0xFFFFFBFF",
+				"defaultval": 2,
+				"value": 0,
+				"mask": "0xFFFFFCFF",
 				"options": [
 					{
-						"name": "On",
+						"name": "Hardest",
 						"value": "0x0"
 					},
 					{
-						"name": "Off",
-						"value": "0x400"
+						"name": "Hard",
+						"value": "0x100"
+					},
+					{
+						"name": "Normal",
+						"value": "0x200"
+					},
+					{
+						"name": "Easy",
+						"value": "0x300"
 					}
 				]
 			},
 			{
-				"name": "Flip Screen",
+				"name": "Demo Sounds",
 				"id": 5,
-				"type": "list",
+				"type": "check",
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 1,
-				"mask": "0xFFFFF7FF",
-				"options": [
-					{
-						"name": "On",
-						"value": "0x0"
-					},
-					{
-						"name": "Off",
-						"value": "0x800"
-					}
-				]
+				"value": 0,
+				"value_off": 1024,
+				"mask": "0xFFFFFBFF"
+			},
+			{
+				"name": "Flip Screen",
+				"id": 6,
+				"type": "check",
+				"enabled": true,
+				"persist": true,
+				"address": "0xfa000000",
+				"defaultval": 2048,
+				"value": 0,
+				"value_off": 2048,
+				"mask": "0xFFFFF7FF"
 			}
 		],
 		"messages": []

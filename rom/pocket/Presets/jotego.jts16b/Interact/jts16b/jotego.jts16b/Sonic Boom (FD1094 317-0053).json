@@ -9,20 +9,18 @@
 				"enabled": false,
 				"persist": false,
 				"address": "0xFF000000",
-				"defaultval": 0,
-				"mask": "",
-				"options": null
+				"value": 0
 			},
 			{
-				"name": "Rotate controls",
+				"name": "Rotate screen",
 				"id": 1,
 				"type": "check",
 				"enabled": true,
 				"persist": true,
+				"writeonly": true,
 				"address": "0xfb000000",
-				"defaultval": 0,
-				"mask": "0x-5",
-				"options": null
+				"defaultval": 4,
+				"value": 4
 			},
 			{
 				"name": "Coin A",
@@ -32,6 +30,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 15,
+				"value": 0,
 				"mask": "0xFFFFFFF0",
 				"options": [
 					{
@@ -108,6 +107,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 15,
+				"value": 0,
 				"mask": "0xFFFFFF0F",
 				"options": [
 					{
@@ -184,6 +184,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 7,
+				"value": 0,
 				"mask": "0xFFFFF8FF",
 				"options": [
 					{
@@ -228,6 +229,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 3,
+				"value": 0,
 				"mask": "0xFFFFE7FF",
 				"options": [
 					{
@@ -256,6 +258,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 3,
+				"value": 0,
 				"mask": "0xFFFF9FFF",
 				"options": [
 					{
@@ -283,7 +286,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 0,
+				"value": 0,
 				"mask": "0xFFFF7FFF",
 				"options": [
 					{

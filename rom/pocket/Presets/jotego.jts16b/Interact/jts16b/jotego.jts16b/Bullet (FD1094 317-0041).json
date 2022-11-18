@@ -9,9 +9,7 @@
 				"enabled": false,
 				"persist": false,
 				"address": "0xFF000000",
-				"defaultval": 0,
-				"mask": "",
-				"options": null
+				"value": 0
 			},
 			{
 				"name": "Coin A",
@@ -21,6 +19,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 15,
+				"value": 0,
 				"mask": "0xFFFFFFF0",
 				"options": [
 					{
@@ -97,6 +96,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 15,
+				"value": 0,
 				"mask": "0xFFFFFF0F",
 				"options": [
 					{
@@ -173,6 +173,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 1,
+				"value": 0,
 				"mask": "0xFFFFFEFF",
 				"options": [
 					{
@@ -188,22 +189,13 @@
 			{
 				"name": "Demo Sounds",
 				"id": 4,
-				"type": "list",
+				"type": "check",
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 0,
-				"mask": "0xFFFFFDFF",
-				"options": [
-					{
-						"name": "On",
-						"value": "0x0"
-					},
-					{
-						"name": "Off",
-						"value": "0x200"
-					}
-				]
+				"value": 0,
+				"value_off": 512,
+				"mask": "0xFFFFFDFF"
 			},
 			{
 				"name": "Lives",
@@ -213,6 +205,7 @@
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 3,
+				"value": 0,
 				"mask": "0xFFFFF3FF",
 				"options": [
 					{
