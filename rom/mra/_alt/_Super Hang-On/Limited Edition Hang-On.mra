@@ -115,7 +115,7 @@
             <part name="epr-10642.47" crc="7836bcc3" map="10" length="0x4000" offset="0x4000"/>
         </interleave>
         <part name="epr-10642.47" crc="7836bcc3"/>
-        <!-- Total 0x278000 bytes - 2528 kBytes -->
+        <!-- Total 0x280000 bytes - 2560 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>

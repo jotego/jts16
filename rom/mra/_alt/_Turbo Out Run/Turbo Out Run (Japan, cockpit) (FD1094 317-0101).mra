@@ -111,7 +111,7 @@
             <part name="epr-12298.ic28" crc="fc9bc41b" map="10" length="0x4000"/>
             <part name="epr-12298.ic28" crc="fc9bc41b" map="01" length="0x4000" offset="0x4000"/>
         </interleave>
-        <part repeat="0x28000"> FF</part>
+        <part repeat="0x18000"> FF</part>
         <!-- maincpu:key - starts at 0x298000 -->
         <part name="317-0101.key" crc="eb636314"/>
         <!-- Total 0x29A000 bytes - 2664 kBytes -->

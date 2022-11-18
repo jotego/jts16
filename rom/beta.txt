@@ -1,39 +1,35 @@
 shangon
 shangonle
 
-outrun.rom
-outrunra.rom
-outrueha.rom
-outruneh.rom
+outrun
+outrunra
+outrueha
+outruneh
 
 # Long blank screen before booting, but ok
 # in MAME the "motor warming up" can be seen
 # palette not ready?
 # wait is longer than in MAME too
-outrundx.rom
-outrudxa.rom
-outrudxeha.rom
+outrundx
+outrundxa
+outrundxeha
+outrundxeh
+outrundxj
 
-# Scrambled graphics
-outrudxeha.rom
-
-# Motor warming up message (but boots)
-# obj scrambled
-# outruxeh.rom
-
-# not booting (protection problem?)
-# outrudxj.rom
-# toutrnj1.rom
-# toutrun.rom
-# toutrun1.rom
+toutrun
+toutrnj1
+toutrun2
+toutrun3
+toutrunj
+# Motor trouble, but boots
+toutrun1
 
 
-# toutrun2.rom
-# toutrun3.rom
-# toutrunj.rom
 
-# Fails
+# Fails (protection problem?)
 # shangon1
 # shangon2
 # shangon3
 
+# Bad graphics
+# shangonle

@@ -109,7 +109,7 @@
             <part name="opr-10185.11" crc="22794426" map="10" length="0x4000"/>
             <part name="opr-10185.11" crc="22794426" map="01" length="0x4000" offset="0x4000"/>
         </interleave>
-        <!-- Total 0x270000 bytes - 2496 kBytes -->
+        <!-- Total 0x280000 bytes - 2560 kBytes -->
     </rom>
     <rom index="17" zip="jtbeta.zip" md5="None">
         <part name="beta.bin"/>
