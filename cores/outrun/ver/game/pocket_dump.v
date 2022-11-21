@@ -17,17 +17,13 @@ module pocket_dump(
             $dumpvars(0,test);
         `else
             $display("NC Verilog: will dump selected signals");
-            $dumpvars(frame_cnt);
-            $dumpvars(1,UUT.u_game);
+            // $dumpvars(frame_cnt);
+            $dumpvars(2,UUT.u_frame.u_base.u_lf_buf);
+            $dumpvars(1,UUT.u_game.u_game.u_video);
+            $dumpvars(2,UUT.u_game.u_game.u_video.u_obj);
 
             `ifndef NOMAIN
                 $dumpvars(1,UUT.u_game.u_main);
-            `endif
-            $dumpvars(1,UUT.u_game.u_sdram);
-            //$dumpvars(1,UUT.u_game.u_sdram.u_dwnld);
-            //$dumpvars(1,UUT.u_game.u_video);
-            `ifndef NOSOUND
-                $dumpvars(1,UUT.u_game.u_sound);
             `endif
         `endif
     end

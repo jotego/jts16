@@ -88,7 +88,7 @@ wire [7:0] st_video, st_main;
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn                  = { UDSWn, LDSWn };
 assign game_led             = 1;
-assign debug_view           = st_dout;
+always @* debug_view        = st_dout;
 assign xram_dsn             = dsn;
 assign xram_we              = ~main_rnw;
 assign xram_din             = main_dout;

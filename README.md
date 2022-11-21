@@ -42,6 +42,12 @@ Out Run              | jtoutrun | 22,719      | 441,238
 MiST has 608,256 memory bits and 24,624 logic elements.
 Although the MCU can be synthesized in MiST and SiDi, timings are usually broken and requires several runs with different seeds because the FPGA is almost full. For MiSTer it seems to always go well.
 
+The original Out Run design used a frame buffer to draw the sprites. The frame buffer is maintained for Pocket and MiSTer but it is not supported on some FPGA systems, like MiST. Because of the large number of sprites, it is not possible to process all sprite data in one scan line, so MiST and other systems some times have garbled lines as a result. This problem is minimized by doubling the video clock in those systems (up to 100MHz) but it still is visible in some scenes. Another side effect of missing the frame buffer is that sprites appear one-frame ahead of time in those systems.
+
+Because of lack of sufficient internal FPGA RAM (called BRAM), MiST and other smaller systems cannot run the encrypted versions of these games.
+
+Despite these problems, the MiST version is fully playable.
+
 # PCB Check List
 
 These items need double checking on the PCB
