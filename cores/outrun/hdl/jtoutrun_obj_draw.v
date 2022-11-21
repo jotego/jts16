@@ -81,9 +81,12 @@ reg late;
 
 always @(posedge clk, posedge rst) begin
     if( rst ) begin
-        busy   <= 0;
-        obj_cs <= 0;
-        cur    <= 0;
+        busy     <= 0;
+        obj_cs   <= 0;
+        cur      <= 0;
+        bf_addr  <= 0;
+        first    <= 0;
+        pxl_data <= 0;
     end else begin
         late   <= 0;
         halted <= 0;

@@ -17,58 +17,7 @@
     Date: 10-7-2022 */
 
 module jtoutrun_game(
-    input           rst,
-    input           clk,
-    input           rst24,
-    input           clk24,
-`ifdef JTFRAME_CLK48
-    input           rst48,
-    input           clk48,
-`endif
-
-    output          pxl2_cen,   // 12   MHz
-    output          pxl_cen,    //  6   MHz
-    output   [4:0]  red,
-    output   [4:0]  green,
-    output   [4:0]  blue,
-    output          LHBL,
-    output          LVBL,
-    output          HS,
-    output          VS,
-    // cabinet I/O
-    input   [ 1:0]  start_button,
-    input   [ 1:0]  coin_input,
-    input   [ 7:0]  joystick1,
-    input   [ 7:0]  joystick2,
-    input   [15:0]  joyana_l1,
-    input   [15:0]  joyana_l2,
-    input   [15:0]  joyana_r1,
-    input   [15:0]  joyana_r2,
-
-    // DIP switches
-    input   [31:0]  status,
-    input   [31:0]  dipsw,
-    input           service,
-    input           dip_pause,
-    inout           dip_flip,
-    input           dip_test,
-    input   [ 1:0]  dip_fxlevel, // Not a DIP on the original PCB
-    // Sound output
-    output  signed [15:0] snd_left,
-    output  signed [15:0] snd_right,
-    output          sample,
-    output          game_led,
-    input           enable_psg,
-    input           enable_fm,
-    // Debug
-    input   [3:0]   gfx_en,
-    input   [7:0]   debug_bus,
-    output  [7:0]   debug_view,
-    // status dump
-    input   [ 7:0]  st_addr,
-    output reg [7:0] st_dout,
-    // Memory ports
-    `include "mem_ports.inc"
+    `include "jtframe_game_ports.inc" // see $JTFRAME/hdl/inc/jtframe_game_ports.inc
 );
 
 localparam [24:0] KEY_PROM = `JTFRAME_PROM_START,
@@ -90,7 +39,7 @@ wire    cpu_cen, cpu_cenb,
         cen_pcm;
 
 // video signals
-wire [ 8:0] vrender;
+wire [ 8:0] vrender, hdump;
 wire        hstart, vint;
 wire        scr_bad;
 wire [ 1:0] obj_cfg;
@@ -135,9 +84,9 @@ wire [ 2:0] ctrl_type = status[22:20];
 wire [7:0] st_video, st_main, st_sub;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
-assign debug_view           = st_dout;
 assign main_dswn            = {2{main_rnw}} | main_dsn;
 assign game_led             = snd_clip;
+always @* debug_view = st_dout;
 
 // SDRAM memory
 assign main_addr = full_addr[18:1];
@@ -155,6 +104,11 @@ assign subrom_addr = sub_addr;
 
 assign key_we    = prom_we && prog_addr[21:13]==KEY_PROM[21:13];
 assign fd1089_we = prom_we && prog_addr[21: 8]==FD_PROM [21: 8];
+
+`ifdef JTFRAME_LF_BUFFER
+    assign game_hdump = hdump;
+    assign game_vrender = vrender[7:0];
+`endif
 
 initial begin
     fd1089_en = 0;
@@ -490,6 +444,15 @@ jtoutrun_video u_video(
     .obj_cs     ( obj_cs    ),
     .obj_addr   ( obj_addr  ),
     .obj_data   ( obj_data  ),
+`ifdef JTFRAME_LF_BUFFER
+    .ln_addr   ( ln_addr        ),
+    .ln_data   ( ln_data        ),
+    .ln_done   ( ln_done        ),
+    .ln_hs     ( ln_hs          ),
+    .ln_pxl    ( ln_pxl         ),
+    .ln_v      ( ln_v           ),
+    .ln_we     ( ln_we          ),
+`endif
 
     // Road ROMs
     .rd0_ok     ( rd0_ok     ),
@@ -510,6 +473,7 @@ jtoutrun_video u_video(
     .vdump      (           ),
     .vrender    ( vrender   ),
     .hstart     ( hstart    ),
+    .hdump      ( hdump     ),
     .red        ( red       ),
     .green      ( green     ),
     .blue       ( blue      ),

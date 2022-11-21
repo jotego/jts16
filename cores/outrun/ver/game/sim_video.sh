@@ -10,4 +10,4 @@ if [ ! -e OUTRUN.RAM ]; then
     EXTRA="$EXTRA -d GRAY"
 fi
 
-sim.sh -d NOMAIN -d NOSUB -nosnd -video 1 $EXTRA -verilator $*
+sim.sh -d NOMAIN -d NOSUB -nosnd -video 3 $EXTRA -verilator $*

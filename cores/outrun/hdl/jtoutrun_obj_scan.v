@@ -20,6 +20,7 @@ module jtoutrun_obj_scan(
     input              rst,
     input              clk,
 
+    output reg         ln_done,
     // Obj table
     output     [10:1]  tbl_addr,
     input      [15:0]  tbl_dout,
@@ -109,6 +110,7 @@ always @(posedge clk, posedge rst) begin
         late      <= 0;
     end else begin
         hstartl <= hstart;
+        ln_done <= 0;
         if( idx < 7 ) idx <= idx + 3'd1;
         if( !stop ) begin
             st <= st+1'd1;
@@ -145,7 +147,8 @@ always @(posedge clk, posedge rst) begin
                 bank    <= tbl_dout[11:9];
                 first   <= 0;
                 if( tbl_dout[15] ) begin
-                    st <= 0; // Done
+                    ln_done <= 1;
+                    st      <= 0;
                 end
             end
             2: begin
@@ -183,8 +186,10 @@ always @(posedge clk, posedge rst) begin
                     idx     <= 0;
                     st      <= 1;
                     stop    <= 1;
-                    if( &cur_obj )
-                        st <= 0; // we're done
+                    if( &cur_obj ) begin
+                        ln_done <= 1;
+                        st      <= 0;
+                    end
                 end
                 vacc <= nx_vacc;
             end
@@ -223,8 +228,10 @@ always @(posedge clk, posedge rst) begin
                     dr_bank   <= bank;
                     drawn_cnt <= drawn_cnt + 1'd1;
                     // next
-                    if( &cur_obj )
-                        st <= 0; // Done
+                    if( &cur_obj ) begin
+                        ln_done <= 0;
+                        st      <= 0;
+                    end
                     else begin
                         cur_obj <= cur_obj + 1'd1;
                         idx     <= 0;

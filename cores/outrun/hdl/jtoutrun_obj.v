@@ -35,6 +35,12 @@ module jtoutrun_obj(
     output     [19:2]  obj_addr,
     input      [31:0]  obj_data,
 
+    // Line buffer
+    output     [ 8:0]  buf_addr,
+    output     [13:0]  buf_data,
+    output             buf_we,
+    output             ln_done,
+
     // Video signal
     input              flip,
     input              hstart,
@@ -65,11 +71,6 @@ wire [ 6:0] dr_pal;
 wire [ 9:0] dr_hzoom;
 wire        dr_hflip, dr_backwd, dr_shadow;
 
-// Line buffer
-wire [13:0] buf_data;
-wire [ 8:0] buf_addr;
-wire        buf_we;
-
 jtoutrun_obj_ram u_ram(
     .rst       ( rst            ),
     .clk       ( clk            ),
@@ -90,6 +91,7 @@ jtoutrun_obj_ram u_ram(
 jtoutrun_obj_scan #(.PXL_DLY(0)) u_scan(
     .rst       ( rst            ),
     .clk       ( clk            ),
+    .ln_done   ( ln_done        ),
 
     // Obj table
     .tbl_addr  ( tbl_addr       ),

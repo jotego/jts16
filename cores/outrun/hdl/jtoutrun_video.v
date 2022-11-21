@@ -99,12 +99,22 @@ module jtoutrun_video(
     output             LHBL,
     output             LVBL,
     output             hstart,
+    output     [ 8:0]  hdump,
     output     [ 8:0]  vdump,
     output     [ 8:0]  vrender,
     output     [ 4:0]  red,
     output     [ 4:0]  green,
     output     [ 4:0]  blue,
 
+`ifdef JTFRAME_LF_BUFFER
+    output     [ 8:0]  ln_addr,
+    output     [15:0]  ln_data,
+    output             ln_done,
+    input              ln_hs,
+    input      [15:0]  ln_pxl,
+    input      [ 7:0]  ln_v,
+    output             ln_we,
+`endif
     // Debug
     input      [ 3:0]  gfx_en,
     input      [ 7:0]  debug_bus,
@@ -118,7 +128,6 @@ module jtoutrun_video(
     output     [ 7:0]  ioctl_din
 );
 
-wire [ 8:0] hdump;
 wire        preLHBL, preLVBL;
 wire        flipx;
 wire        sa, sb, fix;
@@ -327,16 +336,33 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
         .obj_data  ( obj_data       ),
 
         // Video signal
+`ifdef JTFRAME_LF_BUFFER
+        .hstart    ( ln_hs          ),
+        .vrender   ( { 1'd0, ln_v } ),
+        .buf_addr  ( ln_addr        ),
+        .buf_data  ( ln_data[13:0]  ),
+        .buf_we    ( ln_we          ),
+        .ln_done   ( ln_done        ),
+        .pxl       (                ),
+`else
+        .vrender   ( vrender        ),
         .hstart    ( hstart         ),
+        .buf_addr  (                ),
+        .buf_data  (                ),
+        .buf_we    (                ),
+        .pxl       ( obj_pxl        ),
+`endif
         .LHBL      ( ~HS            ),
         .flip      ( flipx          ),
-        .vrender   ( vrender        ),
         .hdump     ( hdump          ),
-        .pxl       ( obj_pxl        ),
         .st_addr   ( st_addr        ),
         .st_dout   ( st_obj         ),
         .debug_bus ( debug_bus      )
     );
+`ifdef JTFRAME_LF_BUFFER
+    assign obj_pxl        = ln_pxl[13:0];
+    assign ln_data[15:14] = 0;
+`endif
 `endif
 
 `ifdef SHANON

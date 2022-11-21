@@ -17,58 +17,7 @@
     Date: 6-3-2021 */
 
 module jts16_game(
-    input           rst,
-    input           clk,
-    input           rst24,
-    input           clk24,
-    output          pxl2_cen,   // 12   MHz
-    output          pxl_cen,    //  6   MHz
-    output   [4:0]  red,
-    output   [4:0]  green,
-    output   [4:0]  blue,
-    output          LHBL,
-    output          LVBL,
-    output          HS,
-    output          VS,
-    // cabinet I/O
-    input   [ 3:0]  start_button,
-    input   [ 3:0]  coin_input,
-    input   [ 7:0]  joystick1,
-    input   [ 7:0]  joystick2,
-    input   [ 7:0]  joystick3,
-    input   [ 7:0]  joystick4,
-    input   [15:0]  joyana_l1,
-    input   [15:0]  joyana_l2,
-    input   [15:0]  joyana_l3,
-    input   [15:0]  joyana_l4,
-    input   [15:0]  joyana_r1,
-    input   [15:0]  joyana_r2,
-    input   [15:0]  joyana_r3,
-    input   [15:0]  joyana_r4,
-
-    // DIP switches
-    input   [31:0]  status,
-    input   [31:0]  dipsw,
-    input           service,
-    input           dip_pause,
-    inout           dip_flip,
-    input           dip_test,
-    input   [ 1:0]  dip_fxlevel, // Not a DIP on the original PCB
-    // Sound output
-    output  signed [15:0] snd,
-    output          sample,
-    output          game_led,
-    input           enable_psg,
-    input           enable_fm,
-    // Debug
-    input   [3:0]   gfx_en,
-    input   [7:0]   debug_bus,
-    output  [7:0]   debug_view,
-    // status dump
-    input   [ 7:0]  st_addr,
-    output reg [ 7:0]  st_dout,
-    // From this line down, do not modify ports manually:
-    `include "mem_ports.inc"
+    `include "jtframe_game_ports.inc" // see $JTFRAME/hdl/inc/jtframe_game_ports.inc
 );
 
 `ifndef S16B

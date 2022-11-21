@@ -38,10 +38,15 @@ module jtoutrun_obj_ram(
 wire [1:0] cpu_we = ~dswn & {2{obj_cs}};
 reg  half, swap_l;
 
-always @(posedge clk) begin
-    swap_l <= swap;
-    if ( swap && !swap_l )
-        half <= ~half;
+always @(posedge clk, posedge rst) begin
+    if( rst ) begin
+        swap_l <= 0;
+        half   <= 0;
+    end else begin
+        swap_l <= swap;
+        if ( swap && !swap_l )
+            half <= ~half;
+    end
 end
 
 jtframe_dual_ram16 #(
