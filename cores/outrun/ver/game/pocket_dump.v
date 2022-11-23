@@ -13,14 +13,15 @@ module pocket_dump(
     `endif
         $dumpfile("test.lxt");
         `ifdef DEEPDUMP
-            $display("NC Verilog: will dump all signals");
+            $display("Verilog sim will dump all signals");
             $dumpvars(0,test);
         `else
-            $display("NC Verilog: will dump selected signals");
+            $display("Verilog sim will dump selected signals");
             // $dumpvars(frame_cnt);
             $dumpvars(2,UUT.u_frame.u_base.u_lf_buf);
             $dumpvars(1,UUT.u_game.u_game.u_video);
             $dumpvars(2,UUT.u_game.u_game.u_video.u_obj);
+            $dumpvars(0,u_harness.u_cram0);
 
             `ifndef NOMAIN
                 $dumpvars(1,UUT.u_game.u_main);

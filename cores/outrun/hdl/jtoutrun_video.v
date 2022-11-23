@@ -306,7 +306,7 @@ jts16_tilemap #(.MODEL(1)) u_tilemap(
 
         // Video signal
         .hstart    ( hstart         ),
-        .LHBL      ( ~HS            ),
+        .hsn       ( ~HS            ),
         .flip      ( flipx          ),
         .vrender   ( vrender        ),
         .hdump     ( hdump          ),

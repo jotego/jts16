@@ -59,7 +59,8 @@ assign cur_pxl  = hflip ? pxl_data[3:0] : pxl_data[31-:4];
 assign obj_addr = { bank[1:0], cur };
 assign bf_data  = { pal, shadow, prio, cur_pxl }; // 14 bits,
 
-assign bf_we   = busy & ~first & draw & data_ok & ~&cur_pxl;
+assign bf_we   = busy & ~first & draw & data_ok & ~&cur_pxl // color 15 used to set sprite limits
+    & (|cur_pxl); // color 0 used as transparent
 assign data_ok = obj_ok || cnt[2:0]!=0 || last_data;
 
 // Sprite scaling
