@@ -486,7 +486,11 @@ jtoutrun_video u_video(
     // SD card dumps
     .ioctl_addr ( prog_addr ),
     .ioctl_din  ( ioctl_din ),
-    .ioctl_ram  ( ioctl_ram )
+    .ioctl_ram  ( ioctl_ram ),
+    // Get some random data during start-up for the palette
+    .prog_addr  ( prog_addr ),
+    .prog_data  ( prog_data ),
+    .prog_we    ( prog_we   )
 );
 
 endmodule

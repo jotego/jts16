@@ -22,6 +22,7 @@ module pocket_dump(
             $dumpvars(1,UUT.u_game.u_game.u_video);
             $dumpvars(2,UUT.u_game.u_game.u_video.u_obj);
             $dumpvars(0,u_harness.u_cram0);
+            $dumpvars(2,UUT);
 
             `ifndef NOMAIN
                 $dumpvars(1,UUT.u_game.u_main);

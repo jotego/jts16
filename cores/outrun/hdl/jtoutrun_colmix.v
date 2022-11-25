@@ -52,10 +52,15 @@ module jtoutrun_colmix(
     output             LVBL,
     output             LHBL,
     input      [ 7:0]  debug_bus,
+
     // SD card dumps
     input      [21:0]  ioctl_addr,
     input              ioctl_ram,
-    output     [ 7:0]  ioctl_din
+    output     [ 7:0]  ioctl_din,
+    // Get some random data during start-up for the palette
+    input      [21:0]  prog_addr,
+    input      [ 7:0]  prog_data,
+    input              prog_we
 );
 
 wire [ 1:0] we;
@@ -151,13 +156,17 @@ jtframe_dual_nvram16 #(
     .q0     ( cpu_din   ),
 
     // Video reads
-    .addr1a ( {1'b0, pal_addr } ),
+    .addr1a ( {1'b0, prog_we ? prog_addr[11:0] : pal_addr } ),
     .q1a    ( pal_out   ),
     // SD card dumps
-    .we1b   ( 1'b0      ),
-    .data1  (           ),
+`ifdef SIMULATION
+    .we1b   ( 1'd0      ),
+`else
+    .we1b   ( prog_we   ),
+`endif
+    .data1  ( prog_addr[7:0]  ),
     .addr1b ( ioctl_addr[13:0]),
-    .sel_b  ( ioctl_ram ),
+    .sel_b  ( ioctl_ram | prog_we ),
     .q1b    ( ioctl_din )
 );
 

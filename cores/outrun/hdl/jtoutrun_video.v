@@ -125,7 +125,11 @@ module jtoutrun_video(
     // SD card dumps
     input      [21:0]  ioctl_addr,
     input              ioctl_ram,
-    output     [ 7:0]  ioctl_din
+    output     [ 7:0]  ioctl_din,
+    // Get some random data during start-up for the palette
+    input      [21:0]  prog_addr,
+    input      [ 7:0]  prog_data,
+    input              prog_we
 );
 
 wire        preLHBL, preLVBL;
@@ -402,6 +406,11 @@ jtoutrun_colmix u_colmix(
     .green     ( green          ),
     .blue      ( blue           ),
     .debug_bus ( /*debug_bus*/ 8'd0 ),
+`ifndef SHANON
+    .prog_addr ( prog_addr      ),
+    .prog_data ( prog_data      ),
+    .prog_we   ( prog_we        ),
+`endif
 
     .ioctl_ram ( ioctl_ram      ),
     .ioctl_din ( pal_dump       ),
