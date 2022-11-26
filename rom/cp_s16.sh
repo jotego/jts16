@@ -1,0 +1,36 @@
+#!/bin/bash
+
+cp aceataca.rom /media/$USER/POCKET/Assets/jts16/common
+cp afighter.rom /media/$USER/POCKET/Assets/jts16/common
+cp afighera.rom /media/$USER/POCKET/Assets/jts16/common
+cp afigherb.rom /media/$USER/POCKET/Assets/jts16/common
+cp afigherc.rom /media/$USER/POCKET/Assets/jts16/common
+cp afigherd.rom /media/$USER/POCKET/Assets/jts16/common
+cp alexkidd.rom /media/$USER/POCKET/Assets/jts16/common
+cp alexkdd1.rom /media/$USER/POCKET/Assets/jts16/common
+cp alienyn2.rom /media/$USER/POCKET/Assets/jts16/common
+cp alienyn5.rom /media/$USER/POCKET/Assets/jts16/common
+cp aliennjo.rom /media/$USER/POCKET/Assets/jts16/common
+cp bodyslam.rom /media/$USER/POCKET/Assets/jts16/common
+cp dumpmtmt.rom /media/$USER/POCKET/Assets/jts16/common
+cp fantzone.rom /media/$USER/POCKET/Assets/jts16/common
+cp fantzne1.rom /media/$USER/POCKET/Assets/jts16/common
+cp fantznee.rom /media/$USER/POCKET/Assets/jts16/common
+cp fantznep.rom /media/$USER/POCKET/Assets/jts16/common
+cp fantzepr.rom /media/$USER/POCKET/Assets/jts16/common
+cp mjleague.rom /media/$USER/POCKET/Assets/jts16/common
+cp passs16a.rom /media/$USER/POCKET/Assets/jts16/common
+cp quartet.rom /media/$USER/POCKET/Assets/jts16/common
+cp quartet2.rom /media/$USER/POCKET/Assets/jts16/common
+cp quartt2a.rom /media/$USER/POCKET/Assets/jts16/common
+cp quarteta.rom /media/$USER/POCKET/Assets/jts16/common
+cp sdi.rom /media/$USER/POCKET/Assets/jts16/common
+cp sdia.rom /media/$USER/POCKET/Assets/jts16/common
+cp shinobi.rom /media/$USER/POCKET/Assets/jts16/common
+cp shinobi1.rom /media/$USER/POCKET/Assets/jts16/common
+cp sjryuko1.rom /media/$USER/POCKET/Assets/jts16/common
+cp tetris.rom /media/$USER/POCKET/Assets/jts16/common
+cp tetris3.rom /media/$USER/POCKET/Assets/jts16/common
+cp timesan1.rom /media/$USER/POCKET/Assets/jts16/common
+cp wb31.rom /media/$USER/POCKET/Assets/jts16/common
+cp wb35.rom /media/$USER/POCKET/Assets/jts16/common

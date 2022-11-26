@@ -199,7 +199,7 @@ jts16_obj #(.PXL_DLY(OBJ_DLY),.MODEL(MODEL)) u_obj(
 
     // Video signal
     .hstart    ( hstart         ),
-    .LHBL      ( ~HS            ),
+    .hsn       ( ~HS            ),
     .flip      ( flipx          ),
     .vrender   ( vrender        ),
     .hdump     ( hdump          ),
