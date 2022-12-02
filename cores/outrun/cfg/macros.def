@@ -54,7 +54,7 @@ JTFRAME_PROM_START=0x298000
 [pocket|mister]
 # Take clock down to 50MHz and use the
 # line-based frame buffer for objects
-JTFRAME_LF_BUFFER
+# JTFRAME_LF_BUFFER
 -JTFRAME_SDRAM96
 -JTFRAME_OSD_NOLOGO
 -NODEC
