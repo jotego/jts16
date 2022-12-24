@@ -37,7 +37,7 @@
             04 02 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x60000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12508.118" crc="9fa2fc20" map="01"/>
             <part name="epr-12509.133" crc="de226e8a" map="10"/>
@@ -50,7 +50,7 @@
             <part name="epr-12292.116" crc="51d98af0" map="01"/>
             <part name="epr-12293.131" crc="f4321eea" map="10"/>
         </interleave>
-        <!-- subcpu - starts at 0x60000 -->
+        <!-- subcpu - starts at 0x60000 - length 0x60000 (19 bits) -->
         <interleave output="16">
             <part name="opr-12294.58" crc="27cdcfd3" map="01"/>
             <part name="opr-12295.76" crc="d43a3a84" map="10"/>
@@ -60,23 +60,23 @@
             <part name="opr-12297.75" crc="1d9b5677" map="10"/>
         </interleave>
         <part repeat="0x20000"> FF</part>
-        <!-- soundcpu - starts at 0xC0000 -->
+        <!-- soundcpu - starts at 0xC0000 - length 0x10000 (16 bits) -->
         <part name="epr-12300.88" crc="e8ff7011"/>
-        <!-- pcm - starts at 0xD0000 -->
+        <!-- pcm - starts at 0xD0000 - length 0x60000 (19 bits) -->
         <part name="opr-12301.66" crc="6e78ad15"/>
         <part name="opr-12302.67" crc="e72928af"/>
         <part name="opr-12303.68" crc="8384205c"/>
         <part name="opr-12304.69" crc="e1762ac3"/>
         <part name="opr-12305.70" crc="ba9ce677"/>
         <part name="opr-12306.71" crc="e49249fd"/>
-        <!-- gfx1 - starts at 0x130000 -->
+        <!-- gfx1 - starts at 0x130000 - length 0x40000 (18 bits) -->
         <interleave output="32">
             <part name="opr-12323.102" crc="4de43a6f" map="0001"/>
             <part name="opr-12324.103" crc="24607a55" map="0010"/>
             <part name="opr-12325.104" crc="1405137a" map="0100"/>
             <part name="opr-12325.104" crc="1405137a" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x170000 -->
+        <!-- sprites - starts at 0x170000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="mpr-12336.9" crc="dda465c7" map="0001"/>
             <part name="mpr-12337.10" crc="828233d1" map="0010"/>
@@ -89,18 +89,18 @@
             <part name="mpr-12366.15" crc="385cb3ab" map="0100"/>
             <part name="mpr-12367.16" crc="4930254a" map="1000"/>
         </interleave>
-        <!-- segaic16road - starts at 0x270000 -->
+        <!-- segaic16road - starts at 0x270000 - length 0x28000 (18 bits) -->
         <!-- Singleton region. The files are merged with themselves. -->
         <interleave output="16">
-            <part name="epr-12299.47" crc="fc9bc41b" map="01" length="0x4000"/>
-            <part name="epr-12299.47" crc="fc9bc41b" map="10" length="0x4000" offset="0x4000"/>
+            <part name="epr-12299.47" crc="fc9bc41b" offset="0x0000" map="01" length="0x4000"/>
+            <part name="epr-12299.47" crc="fc9bc41b" offset="0x4000" map="10" length="0x4000"/>
         </interleave>
         <interleave output="16">
-            <part name="epr-12298.11" crc="fc9bc41b" map="10" length="0x4000"/>
-            <part name="epr-12298.11" crc="fc9bc41b" map="01" length="0x4000" offset="0x4000"/>
+            <part name="epr-12298.11" crc="fc9bc41b" offset="0x0000" map="01" length="0x4000"/>
+            <part name="epr-12298.11" crc="fc9bc41b" offset="0x4000" map="10" length="0x4000"/>
         </interleave>
         <part repeat="0x18000"> FF</part>
-        <!-- maincpu:key - starts at 0x298000 -->
+        <!-- maincpu:key - starts at 0x298000 - length 0x2000 (13 bits) -->
         <part name="317-0117.key" crc="dcac383e"/>
         <!-- Total 0x29A000 bytes - 2664 kBytes -->
     </rom>
