@@ -82,11 +82,13 @@ wire [ 2:0] ctrl_type = status[22:20];
 
 // Status report
 wire [7:0] st_video, st_main, st_sub;
+reg  [7:0] st_mux;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign main_dswn            = {2{main_rnw}} | main_dsn;
 assign game_led             = snd_clip;
-always @* debug_view = st_dout;
+assign debug_view           = st_dout;
+assign st_dout              = st_mux;
 
 // SDRAM memory
 assign main_addr = full_addr[18:1];
@@ -118,14 +120,14 @@ end
 
 always @(posedge clk48) begin
     case( st_addr[7:6] )
-        0: st_dout <= st_main;
-        1: st_dout <= st_sub;
-        2: st_dout <= st_video;
+        0: st_mux <= st_main;
+        1: st_mux <= st_sub;
+        2: st_mux <= st_video;
         3: case( st_addr[3:0] )
-            0: st_dout <= sndmap_dout;
-            1: st_dout <= { 2'd0, obj_cfg, 3'b0, obj_swap };
-            2: st_dout <= {obj_cfg, mute, 2'b0, snd_rstb, game_id};
-            3: st_dout <= { 3'd0, flip, 3'd0, video_en };
+            0: st_mux <= sndmap_dout;
+            1: st_mux <= { 2'd0, obj_cfg, 3'b0, obj_swap };
+            2: st_mux <= {obj_cfg, mute, 2'b0, snd_rstb, game_id};
+            3: st_mux <= { 3'd0, flip, 3'd0, video_en };
         endcase
     endcase
 end

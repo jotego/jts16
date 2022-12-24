@@ -84,11 +84,13 @@ wire [ 7:0] game_id;
 
 // Status report
 wire [7:0] st_video, st_main;
+reg  [7:0] st_mux;
 
 assign { dipsw_b, dipsw_a } = dipsw[15:0];
 assign dsn                  = { UDSWn, LDSWn };
 assign game_led             = 1;
-always @* debug_view        = st_dout;
+assign debug_view           = st_dout;
+assign st_dout              = st_mux;
 assign xram_dsn             = dsn;
 assign xram_we              = ~main_rnw;
 assign xram_din             = main_dout;
@@ -327,13 +329,13 @@ assign tile_bank = 0; // unused on S16A
 
 always @(posedge clk) begin
     case( st_addr[7:4] )
-        0: st_dout <= st_video;
+        0: st_mux <= st_video;
         1: case( st_addr[3:0] )
-                0: st_dout <= sndmap_dout;
-                1: st_dout <= {2'd0, tile_bank};
-                2: st_dout <= game_id;
+                0: st_mux <= sndmap_dout;
+                1: st_mux <= {2'd0, tile_bank};
+                2: st_mux <= game_id;
             endcase
-        2,3: st_dout <= st_main;
+        2,3: st_mux <= st_main;
     endcase
 end
 
