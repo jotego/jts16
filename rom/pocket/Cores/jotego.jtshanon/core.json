@@ -7,10 +7,10 @@
 			],
 			"shortname": "jtshanon",
 			"description": "Arcade hardware",
-			"author": "JOTEGO",
+			"author": "jotego",
 			"url": "https://patreon.com/jotego",
 			"version": "noversion",
-			"date_release": "2022-11-26"
+			"date_release": "2022-12-24"
 		},
 		"framework": {
 			"target_product": "Analogue Pocket",
@@ -29,7 +29,7 @@
 			{
 				"name": "jtshanon",
 				"id": 0,
-				"filename": "JTSHANON.rbf_r"
+				"filename": "jtshanon.rbf_r"
 			}
 		]
 	}

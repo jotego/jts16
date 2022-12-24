@@ -23,7 +23,7 @@
     <about author="jotego" webpage="https://patreon.com/jotego" source="https://github.com/jotego" twitter="@topapate"/>
     <name>Limited Edition Hang-On</name>
     <setname>shangonle</setname>
-    <rbf>jtoutrun</rbf>
+    <rbf>jtshanon</rbf>
     <mameversion>0243</mameversion>
     <year>1991</year>
     <manufacturer>Sega</manufacturer>
@@ -115,9 +115,6 @@
             <part name="epr-10642.47" crc="7836bcc3" offset="0x4000" map="10" length="0x4000"/>
         </interleave>
         <!-- Total 0x278000 bytes - 2528 kBytes -->
-    </rom>
-    <rom index="17" zip="jtbeta.zip" md5="None">
-        <part name="beta.bin"/>
     </rom>
     <nvram index="2" size="12288"/>
     <rom index="1">
