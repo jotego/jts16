@@ -1,7 +1,6 @@
 [global]
 # info = [ {tag="mameversion", value="0229"} ]
 mraauthor=["jotego","atrac17"]
-zip = { alt="s16mcu_alt.zip" }
 info=[
     {tag="platform", value="SEGA S16B"}
 ]
@@ -95,7 +94,7 @@ bitcnt = 16
 # or arguments passed to mame2mra
 regions = [
     { name="maincpu",       width=16, reverse=true },
-    { name="mcu",           start=$MCU_START, len=0x1000 },
+    { name="mcu",           start=$MCU_START, len=0x1000, custom={ dev="i8751" } },
     { name="soundcpu",      start=$JTFRAME_BA1_START },
     { name="gfx1",          start=$JTFRAME_BA2_START, frac={ bytes=1, parts=4}, sort_byext=true, len=0x100000 },
     { name="sprites",       start=$JTFRAME_BA3_START, width=16, reverse=true },

@@ -24,7 +24,7 @@
     <name>Cotton (set 3, US) (FD1094 317-0180)</name>
     <setname>cottonu</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1991</year>
     <manufacturer>Success / Sega</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="cottonu.zip|cotton.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="cottonu.zip|cotton.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             40 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="cotton.a5" crc="abe4f83e" map="01"/>
             <part name="cotton.a7" crc="e7ef7d10" map="10"/>
@@ -49,12 +49,12 @@
             <part name="cotton.a6" crc="f50f1ea2" map="01"/>
             <part name="cotton.a8" crc="fc0f4401" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-13892.a10" crc="fdfbe6ad"/>
         <part repeat="0x8000"> FF</part>
         <part name="opr-13893.a11" crc="384233df"/>
         <part repeat="0x90000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="opr-13862.a14" crc="a47354b6" map="0001"/>
             <part name="opr-13863.a15" crc="8c990026" map="0010"/>
@@ -67,7 +67,7 @@
             <part name="opr-13879.b16" crc="b9d62531" map="0100"/>
             <part name="opr-13879.b16" crc="b9d62531" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="opr-13865.b1" crc="7024f404" map="01"/>
             <part name="opr-13869.b5" crc="ab4b3468" map="10"/>
@@ -101,7 +101,7 @@
             <part name="opr-13876.b13" crc="1c5ffad8" map="10"/>
         </interleave>
         <part repeat="0x2000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0180.key" crc="a236b915"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

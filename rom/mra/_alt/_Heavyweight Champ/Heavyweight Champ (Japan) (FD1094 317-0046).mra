@@ -24,7 +24,7 @@
     <name>Heavyweight Champ (Japan) (FD1094 317-0046)</name>
     <setname>hwchampj</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,26 +33,26 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="hwchampj.zip|hwchamp.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="hwchampj.zip|hwchamp.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             01 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-11153.a5" crc="84a743de" map="01"/>
             <part name="epr-11152.a7" crc="8ab0ce62" map="10"/>
         </interleave>
         <part repeat="0x40000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-11154.a10" crc="65791275"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-11200.a11" crc="5c41a68a"/>
         <part name="epr-11201.a12" crc="9a993120"/>
         <part repeat="0x70000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-11202.a14" crc="7c94ede3" map="0001"/>
             <part name="epr-11203.a15" crc="327754f7" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="epr-11215.b16" crc="5b8494a8" map="0100"/>
             <part name="epr-11215.b16" crc="5b8494a8" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="epr-11205.b1" crc="fc098a13" map="01"/>
             <part name="epr-11209.b5" crc="5db934a8" map="10"/>
@@ -83,7 +83,7 @@
             <part name="epr-11212.b8" crc="57e8f9d2" map="10"/>
         </interleave>
         <part repeat="0x102000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0046.key" crc="488b3f8b"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

@@ -9,6 +9,7 @@
 				"enabled": false,
 				"persist": false,
 				"address": "0xFF000000",
+				"defaultval": 0,
 				"value": 0
 			},
 			{
@@ -277,23 +278,13 @@
 			{
 				"name": "Number Match",
 				"id": 6,
-				"type": "list",
+				"type": "check",
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 1,
-				"value": 0,
-				"mask": "0xFFFFDFFF",
-				"options": [
-					{
-						"name": "No",
-						"value": "0x0"
-					},
-					{
-						"name": "Yes",
-						"value": "0x2000"
-					}
-				]
+				"value": 8192,
+				"mask": "0xFFFFDFFF"
 			},
 			{
 				"name": "Pin Rebound",
@@ -344,7 +335,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 65536,
+				"defaultval": 0,
 				"value": 0,
 				"value_off": 65536,
 				"mask": "0xFFFEFFFF"
@@ -402,23 +393,24 @@
 			{
 				"name": "Allow Continue",
 				"id": 12,
-				"type": "list",
+				"type": "check",
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 1,
-				"value": 0,
-				"mask": "0xFFEFFFFF",
-				"options": [
-					{
-						"name": "No",
-						"value": "0x0"
-					},
-					{
-						"name": "Yes",
-						"value": "0x100000"
-					}
-				]
+				"value": 1048576,
+				"mask": "0xFFEFFFFF"
+			},
+			{
+				"name": "Default",
+				"id": 1015,
+				"type": "number_u32",
+				"enabled": false,
+				"persist": false,
+				"writeonly": true,
+				"address": "0xfa000000",
+				"defaultval": 16777215,
+				"value": 0
 			}
 		],
 		"messages": []

@@ -24,7 +24,7 @@
     <name>Sonic Boom (FD1094 317-0053)</name>
     <setname>sonicbom</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="sonicbom.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="sonicbom.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             10 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-11340.a1" crc="03ba3fed" map="01"/>
             <part name="epr-11342.a4" crc="454693f1" map="10"/>
@@ -50,14 +50,14 @@
             <part name="epr-11343.a5" crc="edfeb7d4" map="10"/>
         </interleave>
         <part repeat="0x40000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-11347.a7" crc="b41f0ced"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-11348.a8" crc="89924588"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-11349.a9" crc="8e4b6204"/>
         <part repeat="0x98000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="opr-11344.b9" crc="59a9f940" map="0001"/>
             <part name="opr-11345.b10" crc="b44c068b" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="opr-11346.b11" crc="e5ada66c" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="opr-11350.b1" crc="525ba1df" map="01"/>
             <part name="opr-11354.b5" crc="793fa3ac" map="10"/>
@@ -83,7 +83,7 @@
             <part name="opr-11357.b8" crc="a7c5ea41" map="10"/>
         </interleave>
         <part repeat="0x182000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0053.key" crc="91c80c88"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

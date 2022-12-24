@@ -24,7 +24,7 @@
     <name>Dunk Shot (FD1089A 317-0022)</name>
     <setname>dunkshoto</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1986</year>
     <manufacturer>Sega</manufacturer>
     <players>4</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="dunkshoto.zip|dunkshot.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="dunkshoto.zip|dunkshot.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             01 00 00 00 00 00 00 00
             14 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-10467.a1" crc="29774114" map="01"/>
             <part name="epr-10470.a4" crc="8c60761f" map="10"/>
@@ -54,7 +54,7 @@
             <part name="epr-10472.a6" crc="206027a6" map="10"/>
         </interleave>
         <part repeat="0x50000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-10473.a7" crc="7f1f5a27"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-10474.a8" crc="419a656e"/>
@@ -63,7 +63,7 @@
         <part repeat="0x8000"> FF</part>
         <part name="epr-10476.a10" crc="a6be0956"/>
         <part repeat="0x88000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-10485.b9" crc="f16dda29" map="0001"/>
             <part name="epr-10486.b10" crc="311d973c" map="0010"/>
@@ -71,7 +71,7 @@
             <part name="epr-10487.b11" crc="a8fb179f" map="1000"/>
         </interleave>
         <part repeat="0xE0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="epr-10477.b1" crc="f9d3b2cb" map="01"/>
             <part name="epr-10481.b5" crc="feb04bc9" map="10"/>
@@ -92,7 +92,7 @@
             <part name="epr-10484.b8" crc="bcb5fcc9" map="10"/>
         </interleave>
         <part repeat="0x192000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0022.key" crc="3f218333"/>
         <part repeat="0x6000"> FF</part>
         <!-- FD1089 base table starts at 0x44A000 -->

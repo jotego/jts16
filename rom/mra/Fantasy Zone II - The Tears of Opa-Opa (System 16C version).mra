@@ -24,7 +24,7 @@
     <name>Fantasy Zone II - The Tears of Opa-Opa (System 16C version)</name>
     <setname>fantzn2x</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>2008</year>
     <manufacturer>Sega / M2</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="fantzn2x.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="fantzn2x.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             43 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="fz2.a5" crc="f3526895" map="01"/>
             <part name="fz2.a7" crc="94c05f0b" map="10"/>
@@ -49,12 +49,12 @@
             <part name="fz2.a6" crc="6833f546" map="01"/>
             <part name="fz2.a8" crc="b2ebb209" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="fz2.a10" crc="92c92924"/>
         <part repeat="0x8000"> FF</part>
         <part name="fz2.a11" crc="8c641bb9"/>
         <part repeat="0x90000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="fz2.a14" crc="1c0a4537" map="0001"/>
             <part name="fz2.a15" crc="2b933344" map="0010"/>
@@ -62,7 +62,7 @@
             <part name="fz2.a16" crc="e63281a1" map="1000"/>
         </interleave>
         <part repeat="0x80000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x180000 (21 bits) -->
         <interleave output="16">
             <part name="fz2.b1" crc="46bba615" map="01"/>
             <part name="fz2.b5" crc="bebeee5d" map="10"/>

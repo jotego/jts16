@@ -24,7 +24,7 @@
     <name>Atomic Point (Korea)</name>
     <setname>atomicp</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1990</year>
     <manufacturer>Philko</manufacturer>
     <players>2</players>
@@ -33,20 +33,20 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="atomicp.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="atomicp.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             08 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x140000 (21 bits) -->
         <interleave output="16">
             <part name="ap-t1.bin" crc="5c65fe56" map="01"/>
             <part name="ap-t2.bin" crc="97421047" map="10"/>
         </interleave>
         <part repeat="0x120000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="ap-t3.bin" crc="dddc122c" map="0001"/>
             <part name="ap-t4.bin" crc="332e58f4" map="0010"/>

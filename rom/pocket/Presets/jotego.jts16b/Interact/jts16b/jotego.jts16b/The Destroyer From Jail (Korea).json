@@ -9,6 +9,7 @@
 				"enabled": false,
 				"persist": false,
 				"address": "0xFF000000",
+				"defaultval": 0,
 				"value": 0
 			},
 			{
@@ -140,7 +141,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 128,
+				"defaultval": 0,
 				"value": 0,
 				"value_off": 128,
 				"mask": "0xFFFFFF7F"
@@ -181,6 +182,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
+				"defaultval": 1,
 				"value": 0,
 				"value_off": 1024,
 				"mask": "0xFFFFFBFF"
@@ -192,10 +194,21 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 2048,
+				"defaultval": 0,
 				"value": 0,
 				"value_off": 2048,
 				"mask": "0xFFFFF7FF"
+			},
+			{
+				"name": "Default",
+				"id": 1015,
+				"type": "number_u32",
+				"enabled": false,
+				"persist": false,
+				"writeonly": true,
+				"address": "0xfa000000",
+				"defaultval": 57338,
+				"value": 0
 			}
 		],
 		"messages": []

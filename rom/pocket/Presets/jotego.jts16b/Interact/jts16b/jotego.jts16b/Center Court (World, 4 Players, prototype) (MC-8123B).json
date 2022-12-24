@@ -9,6 +9,7 @@
 				"enabled": false,
 				"persist": false,
 				"address": "0xFF000000",
+				"defaultval": 0,
 				"value": 0
 			},
 			{
@@ -183,7 +184,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 256,
+				"defaultval": 0,
 				"value": 0,
 				"value_off": 256,
 				"mask": "0xFFFFFEFF"
@@ -195,6 +196,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
+				"defaultval": 0,
 				"value": 0,
 				"mask": "0xFFFFF1FF",
 				"options": [
@@ -289,6 +291,17 @@
 						"value": "0xC000"
 					}
 				]
+			},
+			{
+				"name": "Default",
+				"id": 1015,
+				"type": "number_u32",
+				"enabled": false,
+				"persist": false,
+				"writeonly": true,
+				"address": "0xfa000000",
+				"defaultval": 65521,
+				"value": 0
 			}
 		],
 		"messages": []

@@ -24,7 +24,7 @@
     <name>Bay Route (set 2, Japan) (FD1094 317-0115)</name>
     <setname>bayroutej</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1989</year>
     <manufacturer>Sunsoft / Sega</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>Japan</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="bayroutej.zip|bayroute.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="bayroutej.zip|bayroute.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             40 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12455.a5" crc="b6a722eb" map="01"/>
             <part name="epr-12457.a7" crc="bc726255" map="10"/>
@@ -49,13 +49,13 @@
             <part name="epr-12456.a6" crc="25dc2eaf" map="01"/>
             <part name="epr-12458.a8" crc="e7c7476a" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-12459.a10" crc="3e1d29d0"/>
         <part repeat="0x8000"> FF</part>
         <part name="mpr-12460.a11" crc="0bae570d"/>
         <part name="mpr-12461.a12" crc="b03b8b46"/>
         <part repeat="0x70000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="opr-12462.a14" crc="a19943b5" map="0001"/>
             <part name="opr-12463.a15" crc="62f8200d" map="0010"/>
@@ -63,7 +63,7 @@
             <part name="opr-12464.a16" crc="c8c59703" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="mpr-12465.b1" crc="11d61b45" map="01"/>
             <part name="mpr-12467.b5" crc="c3b4e4c0" map="10"/>
@@ -73,7 +73,7 @@
             <part name="mpr-12468.b6" crc="d89c77de" map="10"/>
         </interleave>
         <part repeat="0x182000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0115.key" crc="75a55614"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

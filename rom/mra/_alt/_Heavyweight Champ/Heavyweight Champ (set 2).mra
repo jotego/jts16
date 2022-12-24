@@ -24,7 +24,7 @@
     <name>Heavyweight Champ (set 2)</name>
     <setname>hwchampa</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,26 +33,26 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="hwchampa.zip|hwchamp.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="hwchampa.zip|hwchamp.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-11238.a5" crc="25180124" map="01"/>
             <part name="epr-11239.a7" crc="42d59e4b" map="10"/>
         </interleave>
         <part repeat="0x40000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-11240.a10" crc="96a12d9d"/>
         <part repeat="0x8000"> FF</part>
         <part name="mpr-11244.a11" crc="4191c03d"/>
         <part name="mpr-11245.a12" crc="a4d53f7b"/>
         <part repeat="0x70000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="mpr-11241.a14" crc="fc586a86" map="0001"/>
             <part name="mpr-11242.a15" crc="7715a742" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="mpr-11168.b16" crc="5b8494a8" map="0100"/>
             <part name="mpr-11168.b16" crc="5b8494a8" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x100000 (20 bits) -->
         <interleave output="16">
             <part name="mpr-11158.b1" crc="fc098a13" map="01"/>
             <part name="mpr-11162.b5" crc="5db934a8" map="10"/>

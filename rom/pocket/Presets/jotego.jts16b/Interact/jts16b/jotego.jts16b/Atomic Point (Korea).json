@@ -9,6 +9,7 @@
 				"enabled": false,
 				"persist": false,
 				"address": "0xFF000000",
+				"defaultval": 0,
 				"value": 0
 			},
 			{
@@ -47,7 +48,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 4,
+				"defaultval": 0,
 				"value": 0,
 				"value_off": 4,
 				"mask": "0xFFFFFFFB"
@@ -59,7 +60,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 8,
+				"defaultval": 0,
 				"value": 0,
 				"value_off": 8,
 				"mask": "0xFFFFFFF7"
@@ -71,6 +72,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
+				"defaultval": 1,
 				"value": 0,
 				"value_off": 16,
 				"mask": "0xFFFFFFEF"
@@ -78,23 +80,13 @@
 			{
 				"name": "Allow Continue",
 				"id": 5,
-				"type": "list",
+				"type": "check",
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
 				"defaultval": 1,
-				"value": 0,
-				"mask": "0xFFFFFFDF",
-				"options": [
-					{
-						"name": "No",
-						"value": "0x0"
-					},
-					{
-						"name": "Yes",
-						"value": "0x20"
-					}
-				]
+				"value": 32,
+				"mask": "0xFFFFFFDF"
 			},
 			{
 				"name": "Game Mode",
@@ -103,6 +95,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
+				"defaultval": 0,
 				"value": 0,
 				"mask": "0xFFFFFFBF",
 				"options": [
@@ -123,6 +116,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
+				"defaultval": 0,
 				"value": 128,
 				"mask": "0xFFFFFF7F"
 			},
@@ -244,6 +238,17 @@
 						"value": "0xC000"
 					}
 				]
+			},
+			{
+				"name": "Default",
+				"id": 1015,
+				"type": "number_u32",
+				"enabled": false,
+				"persist": false,
+				"writeonly": true,
+				"address": "0xfa000000",
+				"defaultval": 12287,
+				"value": 0
 			}
 		],
 		"messages": []

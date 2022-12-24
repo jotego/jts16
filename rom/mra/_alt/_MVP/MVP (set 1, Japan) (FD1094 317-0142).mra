@@ -24,7 +24,7 @@
     <name>MVP (set 1, Japan) (FD1094 317-0142)</name>
     <setname>mvpj</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1989</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>Japan</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="mvpj.zip|mvp.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="mvpj.zip|mvp.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             40 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12965.a5" crc="4266cb9e" map="01"/>
             <part name="epr-12967.a7" crc="e53ac137" map="10"/>
@@ -49,12 +49,12 @@
             <part name="epr-12966.a6" crc="39365a79" map="01"/>
             <part name="epr-12968.a8" crc="91c772ac" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-12969.a10" crc="ec621893"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-12970.a11" crc="8f7d7657"/>
         <part repeat="0x90000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-12971.a14" crc="245dcd1f" map="0001"/>
             <part name="epr-12972.a15" crc="ff7c4278" map="0010"/>
@@ -67,7 +67,7 @@
             <part name="epr-12985.b16" crc="e3f33a8a" map="0100"/>
             <part name="epr-12985.b16" crc="e3f33a8a" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="epr-12974.b1" crc="e1da5597" map="01"/>
             <part name="epr-12977.b5" crc="b9eb9762" map="10"/>
@@ -94,7 +94,7 @@
             <part name="epr-12982.b12" crc="c4453292" map="10"/>
         </interleave>
         <part repeat="0x42000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0142.key" crc="90468045"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

@@ -24,7 +24,7 @@
     <name>Tetris (set 1, Japan, System 16B) (FD1094 317-0091)</name>
     <setname>tetris1</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1988</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,23 +33,23 @@
     <region>Japan</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="tetris1.zip|tetris.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="tetris1.zip|tetris.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             11 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12163.a1" crc="d372d3f3" map="01"/>
             <part name="epr-12164.a4" crc="b329cd6f" map="10"/>
         </interleave>
         <part repeat="0x70000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-12168.a7" crc="bd9ba01b"/>
         <part repeat="0xB8000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-12165.b9" crc="62640221" map="0001"/>
             <part name="epr-12166.b10" crc="9abd183b" map="0010"/>
@@ -57,13 +57,13 @@
             <part name="epr-12167.b11" crc="2495fd4e" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="epr-12169.b1" crc="dacc6165" map="01"/>
             <part name="epr-12170.b5" crc="87354e42" map="10"/>
         </interleave>
         <part repeat="0x1F2000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0091.key" crc="a7937661"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

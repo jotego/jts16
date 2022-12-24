@@ -24,7 +24,7 @@
     <name>Action Fighter (System 16B, FD1089A 317-0018)</name>
     <setname>afighterh</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1986</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="afighterh.zip|afighter.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="afighterh.zip|afighter.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             01 00 00 00 00 00 00 00
             11 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr10354.bin" crc="6dad6dd1" map="01"/>
             <part name="epr10357.bin" crc="69777a15" map="10"/>
@@ -54,10 +54,10 @@
             <part name="epr10359.bin" crc="1dc12296" map="10"/>
         </interleave>
         <part repeat="0x50000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr10039.bin" crc="b04757b0"/>
         <part repeat="0xB8000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr10048.bin" crc="643ca883" map="0001"/>
             <part name="epr10049.bin" crc="f8b5058b" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="epr10050.bin" crc="0ffb48dd" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="epr10040.bin" crc="5a9f81f9" map="01"/>
             <part name="epr10044.bin" crc="71d0db1f" map="10"/>
@@ -86,7 +86,7 @@
             <part name="epr10047.bin" crc="84a49518" map="10"/>
         </interleave>
         <part repeat="0x192000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0018.key" crc="65b5b1af"/>
         <part repeat="0x6000"> FF</part>
         <!-- FD1089 base table starts at 0x44A000 -->

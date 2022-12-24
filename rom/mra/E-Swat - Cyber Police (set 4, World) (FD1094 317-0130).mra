@@ -24,7 +24,7 @@
     <name>E-Swat - Cyber Police (set 4, World) (FD1094 317-0130)</name>
     <setname>eswat</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1989</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,31 +33,31 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="eswat.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="eswat.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             20 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12658.a1" crc="af40bd71" map="01"/>
             <part name="epr-12659.a2" crc="c5ab2db9" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-12617.a13" crc="7efecf23"/>
         <part repeat="0x8000"> FF</part>
         <part name="mpr-12616.a11" crc="254347c2"/>
         <part repeat="0x70000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="mpr-12624.b11" crc="375a5ec4" map="0001"/>
             <part name="mpr-12625.b12" crc="3b8c757e" map="0010"/>
             <part name="mpr-12626.b13" crc="3efca25c" map="0100"/>
             <part name="mpr-12626.b13" crc="3efca25c" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="mpr-12618.b1" crc="0d1530bf" map="01" length="0x20000"/>
             <part name="mpr-12621.b4" crc="18ff0799" map="10" length="0x20000"/>
@@ -85,7 +85,7 @@
             <part name="mpr-12623.b6" crc="6773fef6" map="10" length="0x20000" offset="0x20000"/>
         </interleave>
         <part repeat="0x42000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0130.key" crc="ba7b717b"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

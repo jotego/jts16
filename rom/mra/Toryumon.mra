@@ -24,7 +24,7 @@
     <name>Toryumon</name>
     <setname>toryumon</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1994</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,32 +33,32 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="toryumon.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="toryumon.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             20 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-17688.a1" crc="717d81c7" map="01"/>
             <part name="epr-17689.a2" crc="4f0dee19" map="10"/>
         </interleave>
         <part repeat="0x40000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-17691.a13" crc="14205388"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-17690.a11" crc="4f9ba4e4"/>
         <part repeat="0x70000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-17700.b11" crc="8f288b37" map="0001"/>
             <part name="epr-17701.b12" crc="6dfb025b" map="0010"/>
             <part name="epr-17702.b13" crc="ae0b7eab" map="0100"/>
             <part name="epr-17702.b13" crc="ae0b7eab" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x100000 (20 bits) -->
         <interleave output="16">
             <part name="epr-17692.b1" crc="543c4327" map="01"/>
             <part name="epr-17695.b4" crc="ee60f244" map="10"/>

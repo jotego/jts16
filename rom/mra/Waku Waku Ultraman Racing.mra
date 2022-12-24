@@ -24,7 +24,7 @@
     <name>Waku Waku Ultraman Racing</name>
     <setname>ultracin</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1996</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,25 +33,25 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="ultracin.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="ultracin.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             20 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-18945.ic1" crc="22bc0fd9" map="01"/>
             <part name="epr-18946.ic2" crc="7e70d62f" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-18949.ic8" crc="4f7f8bf5"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-18947.ic6" crc="23122c51"/>
         <part name="epr-18948.ic7" crc="6d060a08"/>
         <part repeat="0x30000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-18956.ic19" crc="58ce183b" map="0001"/>
             <part name="epr-18957.ic20" crc="c807b164" map="0010"/>
@@ -59,7 +59,7 @@
             <part name="epr-18958.ic21" crc="b263bd0c" map="1000"/>
         </interleave>
         <part repeat="0x80000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x1C0000 (21 bits) -->
         <interleave output="16">
             <part name="epr-18950.ic9" crc="a2724dc5" map="01" length="0x20000"/>
             <part name="epr-18953.ic12" crc="f58fdf96" map="10" length="0x20000"/>

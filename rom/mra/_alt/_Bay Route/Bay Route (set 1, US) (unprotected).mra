@@ -24,7 +24,7 @@
     <name>Bay Route (set 1, US) (unprotected)</name>
     <setname>bayroute1</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1989</year>
     <manufacturer>Sunsoft / Sega</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="bayroute1.zip|bayroute.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="bayroute1.zip|bayroute.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             10 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x140000 (21 bits) -->
         <interleave output="16">
             <part name="br.a1" crc="76954bf3" map="01"/>
             <part name="br.a4" crc="91c6424b" map="10"/>
@@ -55,7 +55,7 @@
         </interleave>
         <!-- Skipping region soundcpu because there is no dump known -->
         <part repeat="0xE0000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="opr-12462.a14" crc="a19943b5" map="0001"/>
             <part name="opr-12463.a15" crc="62f8200d" map="0010"/>
@@ -63,7 +63,7 @@
             <part name="opr-12464.a16" crc="c8c59703" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="br_obj0o.b1" crc="098a5e82" map="01"/>
             <part name="br_obj0e.b5" crc="85238af9" map="10"/>

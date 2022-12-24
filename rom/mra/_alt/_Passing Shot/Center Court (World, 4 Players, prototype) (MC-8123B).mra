@@ -24,7 +24,7 @@
     <name>Center Court (World, 4 Players, prototype) (MC-8123B)</name>
     <setname>cencourt</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1988</year>
     <manufacturer>Sega</manufacturer>
     <players>4</players>
@@ -33,20 +33,20 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="cencourt.zip|passsht.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="cencourt.zip|passsht.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 01 00 00 00 00 00
             18 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="a1_478b.a1" crc="37beb770" map="01"/>
             <part name="a4_56f6.a4" crc="7116dce6" map="10"/>
         </interleave>
         <part repeat="0x60000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-a-7.a7" crc="9e1b81c6"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-a-8.a8" crc="08ab0018"/>
@@ -57,7 +57,7 @@
         <part repeat="0x8000"> FF</part>
         <part name="epr-a-11.a11" crc="38b54a71"/>
         <part repeat="0x78000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-b-9.b9" crc="9a55cd88" map="0001"/>
             <part name="epr-b-10.b10" crc="fc13ca35" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="epr-b-11.b11" crc="1503c203" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x208000 (22 bits) -->
         <interleave output="16">
             <part name="epr-b-1.b1" crc="b18bfccf" map="01"/>
             <part name="epr-b-5.b5" crc="3481a8e8" map="10"/>
@@ -83,7 +83,7 @@
             <part name="epr-b-8.b8" crc="88a90641" map="10"/>
         </interleave>
         <part repeat="0x188000"> FF</part>
-        <!-- soundcpu:key - starts at 0x448000 -->
+        <!-- soundcpu:key - starts at 0x448000 - length 0x2000 (13 bits) -->
         <part name="mc-8123b_center_court.key" crc="2be5c90b"/>
         <!-- Total 0x44A000 bytes - 4392 kBytes -->
     </rom>

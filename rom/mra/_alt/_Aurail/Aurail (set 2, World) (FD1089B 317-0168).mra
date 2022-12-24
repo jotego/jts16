@@ -24,7 +24,7 @@
     <name>Aurail (set 2, World) (FD1089B 317-0168)</name>
     <setname>aurail1</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1990</year>
     <manufacturer>Sega / Westone</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="aurail1.zip|aurail.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="aurail1.zip|aurail.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             02 00 00 00 00 00 00 00
             40 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-13468.a5" crc="ce092218" map="01"/>
             <part name="epr-13469.a7" crc="c628b69d" map="10"/>
@@ -49,12 +49,12 @@
             <part name="epr-13445.a6" crc="28dfc3dd" map="01"/>
             <part name="epr-13447.a8" crc="70a52167" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-13448.a10" crc="b5183fb9"/>
         <part repeat="0x8000"> FF</part>
         <part name="mpr-13449.a11" crc="d3d9aaf9"/>
         <part repeat="0x90000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="mpr-13450.a14" crc="0fc4a7a8" map="0001"/>
             <part name="mpr-13451.a15" crc="1c49852f" map="0010"/>
@@ -67,7 +67,7 @@
             <part name="mpr-13467.b16" crc="6309fec4" map="0100"/>
             <part name="mpr-13467.b16" crc="6309fec4" map="1000"/>
         </interleave>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="mpr-13453.b1" crc="5fa0a9f8" map="01"/>
             <part name="mpr-13457.b5" crc="0d1b54da" map="10"/>
@@ -101,7 +101,7 @@
             <part name="mpr-13464.b13" crc="551df422" map="10"/>
         </interleave>
         <part repeat="0x2000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0168.key" crc="fed38390"/>
         <part repeat="0x6000"> FF</part>
         <!-- FD1089 base table starts at 0x44A000 -->

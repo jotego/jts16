@@ -24,7 +24,7 @@
     <name>Alien Syndrome (set 7, System 16B, MC-8123B 317-00xx)</name>
     <setname>aliensyn7</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="aliensyn7.zip|aliensyn.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="aliensyn7.zip|aliensyn.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 01 00 00 00 00 00
             11 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-11080.a1" crc="fe7378d9" map="01"/>
             <part name="epr-11083.a4" crc="cb2ad9b3" map="10"/>
@@ -54,7 +54,7 @@
             <part name="epr-11085.a6" crc="cff78f39" map="10"/>
         </interleave>
         <part repeat="0x50000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-11086.a7" crc="c7fddc28"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-10724.a8" crc="f971a817"/>
@@ -63,7 +63,7 @@
         <part repeat="0x8000"> FF</part>
         <part name="epr-10726.a10" crc="d50b7736"/>
         <part repeat="0x88000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-10702.b9" crc="393bc813" map="0001"/>
             <part name="epr-10703.b10" crc="6b6dd9f5" map="0010"/>
@@ -71,7 +71,7 @@
             <part name="epr-10704.b11" crc="911e7ebc" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x208000 (22 bits) -->
         <interleave output="16">
             <part name="epr-10709.b1" crc="addf0a90" map="01"/>
             <part name="epr-10713.b5" crc="ececde3a" map="10"/>
@@ -89,7 +89,7 @@
             <part name="epr-10716.b8" crc="40ba1d48" map="10"/>
         </interleave>
         <part repeat="0x188000"> FF</part>
-        <!-- soundcpu:key - starts at 0x448000 -->
+        <!-- soundcpu:key - starts at 0x448000 - length 0x2000 (13 bits) -->
         <part name="317-00xx.key" crc="76b370cd"/>
         <!-- Total 0x44A000 bytes - 4392 kBytes -->
     </rom>

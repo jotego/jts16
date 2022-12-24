@@ -24,7 +24,7 @@
     <name>Tough Turf (set 1, US) (8751 317-0099)</name>
     <setname>tturfu</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1989</year>
     <manufacturer>Sega / Sunsoft</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="tturfu.zip|tturf.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="tturfu.zip|tturf.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 01 00 00 00 00
             10 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12264.a1" crc="f7cdb289" map="01"/>
             <part name="epr-12266.a4" crc="f549def8" map="10"/>
@@ -50,7 +50,7 @@
             <part name="epr-12267.a5" crc="3c3ce191" map="10"/>
         </interleave>
         <part repeat="0x40000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-12271.a7" crc="99671e52"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-12272.a8" crc="7cf7e69f"/>
@@ -61,7 +61,7 @@
         <part repeat="0x8000"> FF</part>
         <part name="epr-12275.a11" crc="182f3c3d"/>
         <part repeat="0x78000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-12268.b9" crc="e0dac07f" map="0001"/>
             <part name="epr-12269.b10" crc="457a8790" map="0010"/>
@@ -69,7 +69,7 @@
             <part name="epr-12270.b11" crc="69fc025b" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x200000 (21 bits) -->
         <interleave output="16">
             <part name="epr-12276.b1" crc="838bd71f" map="01"/>
             <part name="epr-12280.b5" crc="639a57cb" map="10"/>
@@ -87,7 +87,7 @@
             <part name="epr-12283.b8" crc="ae0fa085" map="10"/>
         </interleave>
         <part repeat="0x180000"> FF</part>
-        <!-- mcu - starts at 0x440000 -->
+        <!-- mcu - starts at 0x440000 - length 0x1000 (12 bits) -->
         <part name="317-0099.c2" crc="f676e3e4"/>
         <!-- Total 0x441000 bytes - 4356 kBytes -->
     </rom>

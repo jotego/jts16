@@ -24,7 +24,7 @@
     <name>Golden Axe (set 5, US) (FD1094 317-0122)</name>
     <setname>goldnaxeu</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1989</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,24 +33,24 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="goldnaxeu.zip|goldnaxe.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="goldnaxeu.zip|goldnaxe.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             20 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12542.ic1" crc="b7994d3c" map="01"/>
             <part name="epr-12543.ic2" crc="b0df9ca4" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-12390.ic8" crc="399fc5f5"/>
         <part repeat="0x8000"> FF</part>
         <part name="mpr-12384.ic6" crc="6218d8e7"/>
         <part repeat="0x90000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-12385.ic19" crc="b8a4e7e0" map="0001"/>
             <part name="epr-12386.ic20" crc="25d7d779" map="0010"/>
@@ -58,7 +58,7 @@
             <part name="epr-12387.ic21" crc="c7fcadf3" map="1000"/>
         </interleave>
         <part repeat="0x80000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="mpr-12378.ic9" crc="119e5a82" map="01" length="0x20000"/>
             <part name="mpr-12379.ic12" crc="1a0e8c57" map="10" length="0x20000"/>
@@ -86,7 +86,7 @@
             <part name="mpr-12383.ic14" crc="5dbacf7a" map="10" length="0x20000" offset="0x20000"/>
         </interleave>
         <part repeat="0x42000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0122.key" crc="f123c2fb"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

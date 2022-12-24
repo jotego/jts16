@@ -24,7 +24,7 @@
     <name>Tough Turf (set 2, Japan) (8751 317-0104)</name>
     <setname>tturf</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1989</year>
     <manufacturer>Sega / Sunsoft</manufacturer>
     <players>2</players>
@@ -33,27 +33,27 @@
     <region>Japan</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="tturf.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="tturf.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 01 00 00 00 00
             41 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12326.a5" crc="f998862b" map="01"/>
             <part name="epr-12327.a7" crc="0376c593" map="10"/>
         </interleave>
         <part repeat="0x40000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-12328.a10" crc="13a346de"/>
         <part repeat="0x8000"> FF</part>
         <part name="opr-12329.a11" crc="ed9a686d"/>
         <part repeat="0x10000"> FF</part>
         <part name="opr-12330.a12" crc="fb762bca"/>
         <part repeat="0x80000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="opr-12268.a14" crc="e0dac07f" map="0001"/>
             <part name="opr-12269.a15" crc="457a8790" map="0010"/>
@@ -61,7 +61,7 @@
             <part name="opr-12270.a16" crc="69fc025b" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0xE0000 (20 bits) -->
         <interleave output="16">
             <part name="opr-12279.b1" crc="7a169fb1" map="01"/>
             <part name="opr-12283.b5" crc="ae0fa085" map="10"/>
@@ -81,7 +81,6 @@
             <part name="opr-12276.b4" crc="838bd71f" map="01"/>
             <part name="opr-12280.b8" crc="639a57cb" map="10"/>
         </interleave>
-        <!-- Skipping region mcu because there is no dump known -->
         <!-- Total 0x320000 bytes - 3200 kBytes -->
     </rom>
     <nvram index="2" size="75777"/>

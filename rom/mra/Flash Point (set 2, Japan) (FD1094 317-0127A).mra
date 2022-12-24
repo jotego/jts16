@@ -24,7 +24,7 @@
     <name>Flash Point (set 2, Japan) (FD1094 317-0127A)</name>
     <setname>fpoint</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1989</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,23 +33,23 @@
     <region>Japan</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="fpoint.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="fpoint.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             10 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12598b.a1" crc="c0f2c97d" map="01"/>
             <part name="epr-12599b.a4" crc="26e3f354" map="10"/>
         </interleave>
         <part repeat="0x60000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-12592.a10" crc="9a8c11bb"/>
         <part repeat="0xB8000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="opr-12593.a14" crc="cc0582d8" map="0001"/>
             <part name="opr-12594.a15" crc="8bfc4815" map="0010"/>
@@ -57,13 +57,13 @@
             <part name="opr-12595.a16" crc="5b18d60b" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="opr-12596.b1" crc="4a4041f3" map="01"/>
             <part name="opr-12597.b5" crc="6961e676" map="10"/>
         </interleave>
         <part repeat="0x1E2000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0127a.key" crc="5adb0042"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

@@ -24,7 +24,7 @@
     <name>Sukeban Jansi Ryuko (set 2, System 16B, FD1089B 317-5021)</name>
     <setname>sjryuko</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1988</year>
     <manufacturer>White Board</manufacturer>
     <players>1</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="sjryuko.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="sjryuko.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             02 00 00 00 00 00 00 00
             1B 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-12253.a1" crc="26a822df" map="01"/>
             <part name="epr-12256.a4" crc="5987ee1b" map="10"/>
@@ -50,7 +50,7 @@
             <part name="epr-12257.a5" crc="3a2acc3f" map="10"/>
         </interleave>
         <part repeat="0x60000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-12244.a7" crc="cb2a47e5"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-12245.a8" crc="66164134"/>
@@ -61,7 +61,7 @@
         <part repeat="0x8000"> FF</part>
         <part name="epr-12248.a11" crc="d1eabdab"/>
         <part repeat="0x78000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-12224-95.b9" crc="eac17ba1" map="0001"/>
             <part name="epr-12225-94.b10" crc="2310fc98" map="0010"/>
@@ -69,7 +69,7 @@
             <part name="epr-12226-93.b11" crc="210e6999" map="1000"/>
         </interleave>
         <part repeat="0xE0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="epr-12232-10.b1" crc="0adec62b" map="01"/>
             <part name="epr-12236-11.b5" crc="286b9af8" map="10"/>
@@ -87,7 +87,7 @@
             <part name="epr-12239-30.b8" crc="91f70c8b" map="10"/>
         </interleave>
         <part repeat="0x182000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-5021.key" crc="8e40b2ab"/>
         <part repeat="0x6000"> FF</part>
         <!-- FD1089 base table starts at 0x44A000 -->

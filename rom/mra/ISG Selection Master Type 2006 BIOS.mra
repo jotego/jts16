@@ -24,7 +24,7 @@
     <name>ISG Selection Master Type 2006 BIOS</name>
     <setname>isgsm</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>2006</year>
     <manufacturer>bootleg (ISG)</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="isgsm.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="isgsm.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- bios - starts at 0x0 -->
+        <!-- bios - starts at 0x0 - length 0x20000 (17 bits) -->
         <part name="ism2006v00.u1" crc="2292585c"/>
         <!-- Total 0x20000 bytes - 128 kBytes -->
     </rom>

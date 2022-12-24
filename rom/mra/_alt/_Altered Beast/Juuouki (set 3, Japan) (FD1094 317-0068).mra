@@ -24,7 +24,7 @@
     <name>Juuouki (set 3, Japan) (FD1094 317-0068)</name>
     <setname>altbeastj3</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1988</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,26 +33,26 @@
     <region>Japan</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="altbeastj3.zip|altbeast.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="altbeastj3.zip|altbeast.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-11720.a5" crc="735350cf" map="01"/>
             <part name="epr-11721.a7" crc="1c5d11de" map="10"/>
         </interleave>
         <part repeat="0x40000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-11671.a10" crc="2b71343b"/>
         <part repeat="0x8000"> FF</part>
         <part name="opr-11672.a11" crc="bbd7f460"/>
         <part name="opr-11673.a12" crc="400c4a36"/>
         <part repeat="0x70000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-11722.a14" crc="adaa8db5" map="0001"/>
             <part name="epr-11723.a15" crc="131a3f9a" map="0010"/>
@@ -67,7 +67,7 @@
             <part name="epr-11738.b16" crc="de3d6d02" map="1000"/>
         </interleave>
         <part repeat="0x40000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="epr-11725.b1" crc="f8b3684e" map="01"/>
             <part name="epr-11729.b5" crc="ae3c2793" map="10"/>
@@ -103,7 +103,7 @@
             <part name="epr-11735.b12" crc="4fe406aa" map="10"/>
         </interleave>
         <part repeat="0x62000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0068.key" crc="c1ed4310"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

@@ -24,7 +24,7 @@
     <name>Snapper (Korea)</name>
     <setname>snapper</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1990</year>
     <manufacturer>Philko</manufacturer>
     <players>1</players>
@@ -33,20 +33,20 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="snapper.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="snapper.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             09 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x140000 (21 bits) -->
         <interleave output="16">
             <part name="snap1.r02" crc="cd468d6a" map="01"/>
             <part name="snap2.r01" crc="9a9e4ed3" map="10"/>
         </interleave>
         <part repeat="0x120000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="snap4.r03" crc="0f848e1e" map="0001"/>
             <part name="snap3.r04" crc="c7f8cf0e" map="0010"/>

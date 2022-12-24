@@ -24,7 +24,7 @@
     <name>SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)</name>
     <setname>sdib</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="sdib.zip|sdi.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="sdib.zip|sdi.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             01 00 00 00 00 00 00 00
             19 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-10984a.a1" crc="44bf3cf5" map="01"/>
             <part name="epr-10986a.a4" crc="3e136215" map="10"/>
@@ -54,10 +54,10 @@
             <part name="epr-10829.a6" crc="a431ab08" map="10"/>
         </interleave>
         <part repeat="0x50000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="10775.a7" crc="4cbd55a8"/>
         <part repeat="0xB8000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-10772.b9" crc="182b6301" map="0001"/>
             <part name="epr-10773.b10" crc="8f7129a2" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="epr-10774.b11" crc="4409411f" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="10760.b1" crc="70de327b" map="01"/>
             <part name="10763.b5" crc="99ec5cb5" map="10"/>
@@ -79,7 +79,7 @@
             <part name="10765.b7" crc="0a73a057" map="10"/>
         </interleave>
         <part repeat="0x1A2000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0028.key" crc="1514662f"/>
         <part repeat="0x6000"> FF</part>
         <!-- FD1089 base table starts at 0x44A000 -->

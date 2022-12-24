@@ -24,7 +24,7 @@
     <name>Super League (FD1094 317-0045)</name>
     <setname>suprleag</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,14 +33,14 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="suprleag.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="suprleag.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 01 00 00 00 00 00 00
             15 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-11130.a1" crc="e2451676" map="01"/>
             <part name="epr-11133.a4" crc="eed72f37" map="10"/>
@@ -54,7 +54,7 @@
             <part name="epr-11135.a6" crc="3735e0e1" map="10"/>
         </interleave>
         <part repeat="0x20000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-11139.a7" crc="9cbd99da"/>
         <part repeat="0x8000"> FF</part>
         <part name="epr-11140.a8" crc="b297371b"/>
@@ -65,7 +65,7 @@
         <part repeat="0x8000"> FF</part>
         <part name="epr-11143.a11" crc="848b7b77"/>
         <part repeat="0x78000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="epr-11136.b9" crc="c3860ce4" map="0001"/>
             <part name="epr-11137.b10" crc="92d96187" map="0010"/>
@@ -73,7 +73,7 @@
             <part name="epr-11138.b11" crc="c01dc773" map="1000"/>
         </interleave>
         <part repeat="0xC0000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x202000 (22 bits) -->
         <interleave output="16">
             <part name="epr-11144.b1" crc="b31de51c" map="01"/>
             <part name="epr-11148.b5" crc="126e1309" map="10"/>
@@ -91,7 +91,7 @@
             <part name="epr-11151.b8" crc="9de95169" map="10"/>
         </interleave>
         <part repeat="0x182000"> FF</part>
-        <!-- maincpu:key - starts at 0x442000 -->
+        <!-- maincpu:key - starts at 0x442000 - length 0x2000 (13 bits) -->
         <part name="317-0045.key" crc="0594cc2e"/>
         <!-- Total 0x444000 bytes - 4368 kBytes -->
     </rom>

@@ -9,6 +9,7 @@
 				"enabled": false,
 				"persist": false,
 				"address": "0xFF000000",
+				"defaultval": 0,
 				"value": 0
 			},
 			{
@@ -172,6 +173,7 @@
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
+				"defaultval": 1,
 				"value": 0,
 				"value_off": 512,
 				"mask": "0xFFFFFDFF"
@@ -250,23 +252,25 @@
 			{
 				"name": "Test Mode",
 				"id": 7,
-				"type": "list",
+				"type": "check",
 				"enabled": true,
 				"persist": true,
 				"address": "0xfa000000",
-				"defaultval": 1,
+				"defaultval": 0,
 				"value": 0,
-				"mask": "0xFFFFBFFF",
-				"options": [
-					{
-						"name": "Yes",
-						"value": "0x0"
-					},
-					{
-						"name": "No",
-						"value": "0x4000"
-					}
-				]
+				"value_off": 16384,
+				"mask": "0xFFFFBFFF"
+			},
+			{
+				"name": "Default",
+				"id": 1015,
+				"type": "number_u32",
+				"enabled": false,
+				"persist": false,
+				"writeonly": true,
+				"address": "0xfa000000",
+				"defaultval": 65533,
+				"value": 0
 			}
 		],
 		"messages": []

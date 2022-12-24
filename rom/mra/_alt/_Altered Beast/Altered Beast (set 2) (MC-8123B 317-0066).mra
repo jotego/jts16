@@ -24,7 +24,7 @@
     <name>Altered Beast (set 2) (MC-8123B 317-0066)</name>
     <setname>altbeast2</setname>
     <rbf>jts16b</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1988</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -33,26 +33,26 @@
     <region>World</region>
     <platform>SEGA S16B</platform>
     <mraauthor>jotego,atrac17</mraauthor>
-    <rom index="0" zip="altbeast2.zip|altbeast.zip|s16mcu_alt.zip" md5="None">
+    <rom index="0" zip="altbeast2.zip|altbeast.zip" md5="None">
         <part>
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
             00 00 01 00 00 00 00 00
             03 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-11704.a5" crc="33bbcf07" map="01"/>
             <part name="epr-11705.a7" crc="57dc5c7a" map="10"/>
         </interleave>
         <part repeat="0x40000"> FF</part>
-        <!-- soundcpu - starts at 0x80000 -->
+        <!-- soundcpu - starts at 0x80000 - length 0xC0000 (20 bits) -->
         <part name="epr-11686.a10" crc="828a45b3"/>
         <part repeat="0x8000"> FF</part>
         <part name="opr-11672.a11" crc="bbd7f460"/>
         <part name="opr-11673.a12" crc="400c4a36"/>
         <part repeat="0x70000"> FF</part>
-        <!-- gfx1 - starts at 0x140000 -->
+        <!-- gfx1 - starts at 0x140000 - length 0x100000 (20 bits) -->
         <interleave output="32">
             <part name="opr-11674.a14" crc="a57a66d5" map="0001"/>
             <part name="opr-11675.a15" crc="2ef2f144" map="0010"/>
@@ -60,7 +60,7 @@
             <part name="opr-11676.a16" crc="0c04acac" map="1000"/>
         </interleave>
         <part repeat="0x80000"> FF</part>
-        <!-- sprites - starts at 0x240000 -->
+        <!-- sprites - starts at 0x240000 - length 0x208000 (22 bits) -->
         <interleave output="16">
             <part name="epr-11677.b1" crc="a01425cd" map="01"/>
             <part name="epr-11681.b5" crc="d9e03363" map="10"/>
@@ -78,7 +78,7 @@
             <part name="epr-11684.b8" crc="b20c0edb" map="10"/>
         </interleave>
         <part repeat="0x108000"> FF</part>
-        <!-- soundcpu:key - starts at 0x448000 -->
+        <!-- soundcpu:key - starts at 0x448000 - length 0x2000 (13 bits) -->
         <part name="317-0066.key" crc="ed85a054"/>
         <!-- Total 0x44A000 bytes - 4392 kBytes -->
     </rom>
