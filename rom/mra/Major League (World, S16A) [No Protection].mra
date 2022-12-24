@@ -24,7 +24,7 @@
     <name>Major League (World, S16A) [No Protection]</name>
     <setname>mjleague</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1985</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -40,7 +40,7 @@
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-7401.6b" crc="2befa5e0" map="01"/>
             <part name="epr-7404.9b" crc="ec1655b5" map="10"/>
@@ -54,15 +54,15 @@
             <part name="epr-7406a.11b" crc="bb743639" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x8000 (15 bits) -->
         <part name="epr-7054c.1b" crc="4443b744"/>
-        <!-- n7751data - starts at 0x48000 -->
+        <!-- n7751data - starts at 0x48000 - length 0x40000 (18 bits) -->
         <part name="epr-7063.1a" crc="45d8908a"/>
         <part name="epr-7065.2a" crc="8c8f8cff"/>
         <part name="epr-7064.3a" crc="159f6636"/>
         <part name="epr-7066.4a" crc="f5cfa91f"/>
         <part repeat="0x20000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-7051.9a" crc="10ca255a" map="0001"/>
             <part name="epr-7052.10a" crc="2550db0e" map="0010"/>
@@ -70,7 +70,7 @@
             <part name="epr-7053.11a" crc="5bfea038" map="1000"/>
         </interleave>
         <part repeat="0x58000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x84000 (20 bits) -->
         <interleave output="16">
             <part name="epr-7055.5a" crc="1fb860bd" map="01"/>
             <part name="epr-7059.2b" crc="3d14091d" map="10"/>
@@ -91,7 +91,7 @@
             <part name="epr-7062.5b" crc="9168eb47" map="10"/>
         </interleave>
         <part repeat="0x14000"> FF</part>
-        <!-- n7751 - starts at 0x184000 -->
+        <!-- n7751 - starts at 0x184000 - length 0x400 (10 bits) -->
         <part name="7751.bin" crc="6a9534fc"/>
         <!-- Total 0x184400 bytes - 1553 kBytes -->
     </rom>

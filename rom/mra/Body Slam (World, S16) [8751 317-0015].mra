@@ -24,7 +24,7 @@
     <name>Body Slam (World, S16) [8751 317-0015]</name>
     <setname>bodyslam</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1986</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -40,7 +40,7 @@
             00 00 00 01 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-10063.b6" crc="dd849a16" map="01"/>
             <part name="epr-10066.b9" crc="6cd53290" map="10"/>
@@ -54,15 +54,15 @@
             <part name="epr-10068.b11" crc="15ccc665" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x8000 (15 bits) -->
         <part name="epr-10026.b1" crc="123b69b8"/>
-        <!-- n7751data - starts at 0x48000 -->
+        <!-- n7751data - starts at 0x48000 - length 0x40000 (18 bits) -->
         <part name="epr-10029.c1" crc="7e4aca83"/>
         <part name="epr-10030.c2" crc="dcc1df0b"/>
         <part name="epr-10031.c3" crc="ea3c4472"/>
         <part name="epr-10032.c4" crc="0aabebce"/>
         <part repeat="0x20000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-10321.c9" crc="cd3e7cba" map="0001"/>
             <part name="epr-10322.c10" crc="b53d3217" map="0010"/>
@@ -70,7 +70,7 @@
             <part name="epr-10323.c11" crc="915a3e61" map="1000"/>
         </interleave>
         <part repeat="0x58000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x80000 (19 bits) -->
         <interleave output="16">
             <part name="epr-10012.c5" crc="990824e8" map="01"/>
             <part name="epr-10016.b2" crc="af5dc72f" map="10"/>
@@ -91,10 +91,10 @@
             <part name="epr-10019.b5" crc="e020c38b" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF</part>
-        <!-- mcu - starts at 0x180000 -->
+        <!-- mcu - starts at 0x180000 - length 0x4000 (14 bits) -->
         <part name="317-0015.bin" crc="833869e2"/>
         <part repeat="0x3000"> FF</part>
-        <!-- n7751 - starts at 0x184000 -->
+        <!-- n7751 - starts at 0x184000 - length 0x400 (10 bits) -->
         <part name="7751.bin" crc="6a9534fc"/>
         <!-- Total 0x184400 bytes - 1553 kBytes -->
     </rom>

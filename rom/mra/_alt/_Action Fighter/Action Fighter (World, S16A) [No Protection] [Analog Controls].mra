@@ -24,7 +24,7 @@
     <name>Action Fighter (World, S16A) [No Protection] [Analog Controls]</name>
     <setname>afighterb</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1986</year>
     <manufacturer>Sega</manufacturer>
     <players>1</players>
@@ -40,7 +40,7 @@
             00 00 00 00 00 00 00 00
             1D 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr10293.bin" crc="186ae21a" map="01"/>
             <part name="epr10296.bin" crc="7370e889" map="10"/>
@@ -54,10 +54,10 @@
             <part name="epr10298.bin" crc="f6bab36e" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x48000 (19 bits) -->
         <part name="epr-10284.12" crc="8ff09116"/>
         <part repeat="0x40000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-10281.95" crc="30e92cda" map="0001"/>
             <part name="epr-10282.94" crc="b67b8910" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="epr-10283.93" crc="e7dbfd2d" map="1000"/>
         </interleave>
         <part repeat="0x38000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x70000 (19 bits) -->
         <interleave output="16">
             <part name="epr-10285" crc="98aa3d04" map="01"/>
             <part name="epr-10289" crc="c59d1b98" map="10"/>

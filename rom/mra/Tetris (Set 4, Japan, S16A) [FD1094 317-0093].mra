@@ -24,7 +24,7 @@
     <name>Tetris (Set 4, Japan, S16A) [FD1094 317-0093]</name>
     <setname>tetris</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1988</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -40,16 +40,16 @@
             00 01 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-12200.rom" crc="fb058779" map="01"/>
             <part name="epr-12201.rom" crc="338e9b51" map="10"/>
         </interleave>
         <part repeat="0x30000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x48000 (19 bits) -->
         <part name="epr-12205.rom" crc="6695dc99"/>
         <part repeat="0x40000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-12202.rom" crc="2f7da741" map="0001"/>
             <part name="epr-12203.rom" crc="a6e58ec5" map="0010"/>
@@ -57,13 +57,13 @@
             <part name="epr-12204.rom" crc="0ae98e23" map="1000"/>
         </interleave>
         <part repeat="0x38000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x82000 (20 bits) -->
         <interleave output="16">
             <part name="epr-12169.b1" crc="dacc6165" map="01"/>
             <part name="epr-12170.b5" crc="87354e42" map="10"/>
         </interleave>
         <part repeat="0x72000"> FF</part>
-        <!-- maincpu:key - starts at 0x182000 -->
+        <!-- maincpu:key - starts at 0x182000 - length 0x2000 (13 bits) -->
         <part name="317-0093.key" crc="e0064442"/>
         <!-- Total 0x184000 bytes - 1552 kBytes -->
     </rom>

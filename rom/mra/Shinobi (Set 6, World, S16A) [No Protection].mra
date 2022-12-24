@@ -24,7 +24,7 @@
     <name>Shinobi (Set 6, World, S16A) [No Protection]</name>
     <setname>shinobi</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -40,7 +40,7 @@
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-12008.26" crc="f5ae64cd" map="01"/>
             <part name="epr-12010.43" crc="7df7f4a2" map="10"/>
@@ -49,12 +49,12 @@
             <part name="epr-12009.25" crc="7961d07e" map="01"/>
             <part name="epr-12011.42" crc="9d46e707" map="10"/>
         </interleave>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x8000 (15 bits) -->
         <part name="epr-11267.12" crc="dd50b745"/>
-        <!-- n7751data - starts at 0x48000 -->
+        <!-- n7751data - starts at 0x48000 - length 0x40000 (18 bits) -->
         <part name="epr-11268.1" crc="6d7966da"/>
         <part repeat="0x38000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-11264.95" crc="46627e7d" map="0001"/>
             <part name="epr-11265.94" crc="87d0f321" map="0010"/>
@@ -62,7 +62,7 @@
             <part name="epr-11266.93" crc="efb4af87" map="1000"/>
         </interleave>
         <part repeat="0x38000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x84000 (20 bits) -->
         <interleave output="16">
             <part name="epr-11290.10" crc="611f413a" map="01"/>
             <part name="epr-11294.11" crc="5eb00fc1" map="10"/>
@@ -80,7 +80,7 @@
             <part name="epr-11297.30" crc="b6e1fd72" map="10"/>
         </interleave>
         <part repeat="0x4000"> FF</part>
-        <!-- n7751 - starts at 0x184000 -->
+        <!-- n7751 - starts at 0x184000 - length 0x400 (10 bits) -->
         <part name="7751.bin" crc="6a9534fc"/>
         <!-- Total 0x184400 bytes - 1553 kBytes -->
     </rom>

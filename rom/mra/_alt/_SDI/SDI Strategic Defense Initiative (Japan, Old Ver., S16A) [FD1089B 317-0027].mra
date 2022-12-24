@@ -24,7 +24,7 @@
     <name>SDI: Strategic Defense Initiative (Japan, Old Ver., S16A) [FD1089B 317-0027]</name>
     <setname>sdia</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -40,7 +40,7 @@
             02 00 00 00 00 00 00 00
             19 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-10879.26" crc="3ec416de" map="01"/>
             <part name="epr-10881.43" crc="3455a6a0" map="10"/>
@@ -54,10 +54,10 @@
             <part name="epr-10755.41" crc="405e3969" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x48000 (19 bits) -->
         <part name="epr-10759.12" crc="d7f9649f"/>
         <part repeat="0x40000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-10756.95" crc="44d8a506" map="0001"/>
             <part name="epr-10757.94" crc="497e1740" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="epr-10758.93" crc="61d61486" map="1000"/>
         </interleave>
         <part repeat="0x38000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x82000 (20 bits) -->
         <interleave output="16">
             <part name="epr-10760.10" crc="30e2c50a" map="01"/>
             <part name="epr-10763.11" crc="794e3e8b" map="10"/>
@@ -79,7 +79,7 @@
             <part name="epr-10765.24" crc="0a73a057" map="10"/>
         </interleave>
         <part repeat="0x22000"> FF</part>
-        <!-- maincpu:key - starts at 0x182000 -->
+        <!-- maincpu:key - starts at 0x182000 - length 0x2000 (13 bits) -->
         <part name="317-0027.key" crc="7bdeed05"/>
         <part repeat="0x2000"> FF</part>
         <!-- FD1089 base table starts at 0x186000 -->

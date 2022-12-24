@@ -24,7 +24,7 @@
     <name>Passing Shot (Japan, 4p, S16A) [FD1094 317-0071]</name>
     <setname>passsht16a</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1988</year>
     <manufacturer>Sega</manufacturer>
     <players>4</players>
@@ -40,21 +40,21 @@
             00 01 00 00 00 00 00 00
             02 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-11832.26" crc="718a3fe4" map="01"/>
             <part name="epr-11833.43" crc="5eb1405c" map="10"/>
         </interleave>
         <part repeat="0x20000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x8000 (15 bits) -->
         <part name="epr-11837.12" crc="74d11552"/>
-        <!-- n7751data - starts at 0x48000 -->
+        <!-- n7751data - starts at 0x48000 - length 0x40000 (18 bits) -->
         <part name="epr-11838.1" crc="a465cd69"/>
         <part name="epr-11839.2" crc="99de6197"/>
         <part name="epr-11840.4" crc="9854e8b3"/>
         <part name="epr-11841.5" crc="1e89877e"/>
         <part repeat="0x20000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-11834.95" crc="df4e18ab" map="0001"/>
             <part name="epr-11835.94" crc="6a07acc0" map="0010"/>
@@ -62,7 +62,7 @@
             <part name="epr-11836.93" crc="93c74928" map="1000"/>
         </interleave>
         <part repeat="0x38000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x82000 (20 bits) -->
         <interleave output="16">
             <part name="epr-11842.10" crc="b6e94727" map="01"/>
             <part name="epr-11845.11" crc="17e8d5d5" map="10"/>
@@ -76,9 +76,9 @@
             <part name="epr-11847.24" crc="81e49697" map="10"/>
         </interleave>
         <part repeat="0x22000"> FF</part>
-        <!-- maincpu:key - starts at 0x182000 -->
+        <!-- maincpu:key - starts at 0x182000 - length 0x2000 (13 bits) -->
         <part name="317-0071.key" crc="c69949ec"/>
-        <!-- n7751 - starts at 0x184000 -->
+        <!-- n7751 - starts at 0x184000 - length 0x400 (10 bits) -->
         <part name="7751.bin" crc="6a9534fc"/>
         <!-- Total 0x184400 bytes - 1553 kBytes -->
     </rom>

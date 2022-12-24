@@ -24,7 +24,7 @@
     <name>Sukeban Jansi Ryuko (Set 1, Japan, S16A) [FD1089B 317-5021]</name>
     <setname>sjryuko1</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>White Board</manufacturer>
     <players>1</players>
@@ -40,7 +40,7 @@
             02 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-12249.26" crc="743d467d" map="01"/>
             <part name="epr-12251.43" crc="1af3cd0b" map="10"/>
@@ -50,15 +50,15 @@
             <part name="epr-12252.42" crc="7ae309d6" map="10"/>
         </interleave>
         <part repeat="0x20000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x8000 (15 bits) -->
         <part name="epr-12227.12" crc="5b12409d"/>
-        <!-- n7751data - starts at 0x48000 -->
+        <!-- n7751data - starts at 0x48000 - length 0x40000 (18 bits) -->
         <part name="epr-12228.1" crc="6b2e6aef"/>
         <part name="epr-12229.2" crc="b7aa015c"/>
         <part name="epr-12230.4" crc="d0f61fd4"/>
         <part name="epr-12231.5" crc="780bdc57"/>
         <part repeat="0x20000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="12224-95.b9" crc="eac17ba1" map="0001"/>
             <part name="12225-94.b10" crc="2310fc98" map="0010"/>
@@ -66,7 +66,7 @@
             <part name="12226-93.b11" crc="210e6999" map="1000"/>
         </interleave>
         <part repeat="0x58000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x82000 (20 bits) -->
         <interleave output="16">
             <part name="12232-10.b1" crc="0adec62b" map="01"/>
             <part name="12236-11.b5" crc="286b9af8" map="10"/>
@@ -84,9 +84,9 @@
             <part name="12239-30.b8" crc="91f70c8b" map="10"/>
         </interleave>
         <part repeat="0x2000"> FF</part>
-        <!-- maincpu:key - starts at 0x182000 -->
+        <!-- maincpu:key - starts at 0x182000 - length 0x2000 (13 bits) -->
         <part name="317-5021.key" crc="8e40b2ab"/>
-        <!-- n7751 - starts at 0x184000 -->
+        <!-- n7751 - starts at 0x184000 - length 0x400 (10 bits) -->
         <part name="7751.bin" crc="6a9534fc"/>
         <part repeat="0x1C00"> FF</part>
         <!-- FD1089 base table starts at 0x186000 -->

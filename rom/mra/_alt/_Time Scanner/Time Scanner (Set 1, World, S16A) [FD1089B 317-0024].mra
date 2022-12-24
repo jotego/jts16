@@ -24,7 +24,7 @@
     <name>Time Scanner (Set 1, World, S16A) [FD1089B 317-0024]</name>
     <setname>timescan1</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1987</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -40,7 +40,7 @@
             02 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-10537a.26" crc="4ddc434a" map="01"/>
             <part name="epr-10540a.43" crc="76848b0b" map="10"/>
@@ -54,12 +54,12 @@
             <part name="epr-10542.41" crc="10217dfa" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x8000 (15 bits) -->
         <part name="epr-10546.12" crc="1ebee5cc"/>
-        <!-- n7751data - starts at 0x48000 -->
+        <!-- n7751data - starts at 0x48000 - length 0x40000 (18 bits) -->
         <part name="epr-10547.1" crc="d24ffc4b"/>
         <part repeat="0x38000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-10543.95" crc="07dccc37" map="0001"/>
             <part name="epr-10544.94" crc="84fb9a3a" map="0010"/>
@@ -67,7 +67,7 @@
             <part name="epr-10545.93" crc="c8694bc0" map="1000"/>
         </interleave>
         <part repeat="0x58000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x82000 (20 bits) -->
         <interleave output="16">
             <part name="epr-10548.10" crc="aa150735" map="01"/>
             <part name="epr-10552.11" crc="6fcbb9f7" map="10"/>
@@ -88,9 +88,9 @@
             <part name="epr-10555.30" crc="2143c471" map="10"/>
         </interleave>
         <part repeat="0x12000"> FF</part>
-        <!-- maincpu:key - starts at 0x182000 -->
+        <!-- maincpu:key - starts at 0x182000 - length 0x2000 (13 bits) -->
         <part name="317-0024.key" crc="dcd41d24"/>
-        <!-- n7751 - starts at 0x184000 -->
+        <!-- n7751 - starts at 0x184000 - length 0x400 (10 bits) -->
         <part name="7751.bin" crc="6a9534fc"/>
         <part repeat="0x1C00"> FF</part>
         <!-- FD1089 base table starts at 0x186000 -->

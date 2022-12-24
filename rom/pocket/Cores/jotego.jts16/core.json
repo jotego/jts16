@@ -7,10 +7,10 @@
 			],
 			"shortname": "jts16",
 			"description": "Arcade hardware",
-			"author": "JOTEGO",
+			"author": "jotego",
 			"url": "https://patreon.com/jotego",
 			"version": "noversion",
-			"date_release": "2022-11-26"
+			"date_release": "2022-12-24"
 		},
 		"framework": {
 			"target_product": "Analogue Pocket",
@@ -29,7 +29,7 @@
 			{
 				"name": "jts16",
 				"id": 0,
-				"filename": "JTS16.rbf_r"
+				"filename": "jts16.rbf_r"
 			}
 		]
 	}

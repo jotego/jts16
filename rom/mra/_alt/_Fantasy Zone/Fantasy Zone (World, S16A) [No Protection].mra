@@ -24,7 +24,7 @@
     <name>Fantasy Zone (World, S16A) [No Protection]</name>
     <setname>fantzone1</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1986</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -40,7 +40,7 @@
             00 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-7382.26" crc="3fda7416" map="01"/>
             <part name="epr-7385.43" crc="5cb64450" map="10"/>
@@ -54,10 +54,10 @@
             <part name="epr-7387.41" crc="0acd335d" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x48000 (19 bits) -->
         <part name="epr-7535.12" crc="0cb2126a"/>
         <part repeat="0x40000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-7388.95" crc="8eb02f6b" map="0001"/>
             <part name="epr-7389.94" crc="2f4f71b8" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="epr-7390.93" crc="d90609c6" map="1000"/>
         </interleave>
         <part repeat="0x58000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x50000 (19 bits) -->
         <interleave output="16">
             <part name="epr-7392.10" crc="5bb7c8b6" map="01"/>
             <part name="epr-7396.11" crc="74ae4b57" map="10"/>

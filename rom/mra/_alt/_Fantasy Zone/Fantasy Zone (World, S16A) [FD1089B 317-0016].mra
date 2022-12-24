@@ -24,7 +24,7 @@
     <name>Fantasy Zone (World, S16A) [FD1089B 317-0016]</name>
     <setname>fantzonee</setname>
     <rbf>jts16</rbf>
-    <mameversion>0232</mameversion>
+    <mameversion>0243</mameversion>
     <year>1986</year>
     <manufacturer>Sega</manufacturer>
     <players>2</players>
@@ -40,7 +40,7 @@
             02 00 00 00 00 00 00 00
             00 00 00 00 00 00 00 00
         </part>
-        <!-- maincpu - starts at 0x0 -->
+        <!-- maincpu - starts at 0x0 - length 0x40000 (18 bits) -->
         <interleave output="16">
             <part name="epr-10167.26" crc="0ee190b0" map="01"/>
             <part name="epr-10170.43" crc="063c6d76" map="10"/>
@@ -54,10 +54,10 @@
             <part name="epr-10172.41" crc="b5b624f0" map="10"/>
         </interleave>
         <part repeat="0x10000"> FF</part>
-        <!-- soundcpu - starts at 0x40000 -->
+        <!-- soundcpu - starts at 0x40000 - length 0x48000 (19 bits) -->
         <part name="epr-7535a.12" crc="bc1374fa"/>
         <part repeat="0x40000"> FF</part>
-        <!-- gfx1 - starts at 0x88000 -->
+        <!-- gfx1 - starts at 0x88000 - length 0x78000 (19 bits) -->
         <interleave output="32">
             <part name="epr-7388.95" crc="8eb02f6b" map="0001"/>
             <part name="epr-7389.94" crc="2f4f71b8" map="0010"/>
@@ -65,7 +65,7 @@
             <part name="epr-7390.93" crc="d90609c6" map="1000"/>
         </interleave>
         <part repeat="0x58000"> FF</part>
-        <!-- sprites - starts at 0x100000 -->
+        <!-- sprites - starts at 0x100000 - length 0x82000 (20 bits) -->
         <interleave output="16">
             <part name="epr-7392.10" crc="5bb7c8b6" map="01"/>
             <part name="epr-7396.11" crc="74ae4b57" map="10"/>
@@ -81,7 +81,7 @@
             <part name="epr-7398.24" crc="68807b49" map="10"/>
         </interleave>
         <part repeat="0x32000"> FF</part>
-        <!-- maincpu:key - starts at 0x182000 -->
+        <!-- maincpu:key - starts at 0x182000 - length 0x2000 (13 bits) -->
         <part name="317-0016.key" crc="16869a2c"/>
         <part repeat="0x2000"> FF</part>
         <!-- FD1089 base table starts at 0x186000 -->
